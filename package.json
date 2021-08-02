@@ -1,0 +1,14 @@
+{
+  "name": "cosma",
+  "version": "1.3.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "HyperOtlet",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^13.1.7"
+  }
+}
