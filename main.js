@@ -1,6 +1,8 @@
 const {
-        app, // application's event lifecycle, events
-        BrowserWindow, // application's windows
+        app, // app event lifecycle, events
+        BrowserWindow, // app windows generator
+        dialog, // app dialog generator
+        ipcMain // event emitter
     } = require('electron')
     , path = require('path');
 
@@ -12,7 +14,7 @@ process.env.version = '0.3.0';
 
 function createWindow () {
     const window = new BrowserWindow ({
-        width: 800,
+        width: 1200,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'functions/hello_world.js')
@@ -62,3 +64,7 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
 });
+
+
+const state = require('./core/models/state');
+console.log(state.needConfiguration());
