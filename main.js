@@ -9,23 +9,6 @@ const {
 process.env.version = '0.3.0';
 
 /**
- * Open a window for the app.
- */
-
-function createWindow () {
-    const window = new BrowserWindow ({
-        width: 1200,
-        height: 600,
-        webPreferences: {
-            preload: path.join(__dirname, 'functions/hello_world.js')
-        },
-        title: 'Cosma'
-    });
-
-    window.loadFile('template/home.html');
-}
-
-/**
  * Test if a window is stored into 'BrowserWindow' object.
  * @returns {boolean}
  */
@@ -43,7 +26,7 @@ function noWindowOpen () {
 
 app.whenReady().then(() => {
 
-    createWindow();
+    require('./core/controllers/window');
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -51,7 +34,7 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { createWindow(); }
+        if (noWindowOpen()) { require('./core/controllers/window'); }
     });
 });
 
@@ -64,7 +47,3 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
 });
-
-
-const state = require('./core/models/state');
-console.log(state.needConfiguration());
