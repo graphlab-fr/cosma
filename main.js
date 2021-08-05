@@ -1,8 +1,6 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        dialog, // app dialog generator
-        ipcMain // event emitter
     } = require('electron')
     , path = require('path');
 

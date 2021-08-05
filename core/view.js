@@ -1,7 +1,8 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        ipcMain
+        ipcMain, // interface of data exchange
+        Menu // top bar menu manager
     } = require('electron')
     , path = require('path')
     , fs = require('fs');
@@ -22,6 +23,9 @@ let window = new BrowserWindow ({
     },
     title: 'Cosma'
 })
+
+const appMenu = require('./models/menu');
+Menu.setApplicationMenu(appMenu);
 
 // window.webContents.openDevTools();
 
