@@ -1,14 +1,18 @@
+/**
+ * @file Cosmoscope displaying
+ * @author Guillaume Brioudes
+ * @copyright MIT License ANR HyperOtlet
+ */
+
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        ipcMain, // interface of data exchange
         Menu // top bar menu manager
     } = require('electron')
     , path = require('path')
     , fs = require('fs');
 
-const state = require('./models/state')
-    , Config = require('./models/config');
+const state = require('./models/state');
 
 let window = new BrowserWindow ({
     width: 1200,
@@ -27,44 +31,34 @@ let window = new BrowserWindow ({
 const appMenu = require('./models/menu');
 Menu.setApplicationMenu(appMenu);
 
-// window.webContents.openDevTools();
+const Config = require('./models/config')
+    , config = new Config()
+
+config.get();
+exports.config = config.opts;
+
+
+const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
+
+let cosmoscope;
 
 switch (state.needConfiguration()) {
+
+    /**
+     * If the config is not complete or contain errors
+     * the app show the exemple graph while waiting for a valid config
+     */
+
     case true:
-        window.loadFile('./views/form.html');
+        const exempleGraph = require('./data/exemple-graph');
+        cosmoscope = require('./models/template')(exempleGraph.files, exempleGraph.entities);
         break;
+
     case false:
-        loadCosmoscope();
+        const graph = require('./models/graph')()
+        cosmoscope = require('./models/template')(graph.files, graph.entities);
         break;
 }
 
-function loadCosmoscope () {
-    const config = new Config();
-    config.get();
-    exports.config = config.opts;
-
-    const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
-
-    const graph = require('./models/graph')();
-    const cosmoscope = require('./models/template')(graph.files, graph.entities);
-
-    fs.writeFileSync(cosmoscopePath, cosmoscope);
-
-    window.loadFile(cosmoscopePath);
-}
-
-ipcMain.on("sendConfigOptions", (event, data) => {
-    const config = new Config({
-            files_origin: data.files_origin,
-            export_target: data.export_target,
-            focus_max: data.focus_max
-        });
-
-    config.save();
-
-    if (config.isSet()) {
-        window.webContents.send("confirmConfigRegistration", true);
-    } else {
-        window.webContents.send("confirmConfigRegistration", false);
-    }
-});
+fs.writeFileSync(cosmoscopePath, cosmoscope);
+window.loadFile(cosmoscopePath);

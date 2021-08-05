@@ -1,0 +1,38 @@
+:root {
+    --cosma-blue: #147899;
+	--cosma-blue-dark: #02385c;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', 'Helevetica', 'Arial', sans-serif;
+	font-size: 1.4rem;
+    padding: 20px;
+}
+
+.wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    display: flex;
+    flex-direction: column;
+    margin: 2px 0;
+    line-height: 150%;
+}
+
+form button {
+    margin-top: 20px;
+    max-width: 150px;
+}

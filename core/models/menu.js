@@ -1,6 +1,8 @@
 const {
-    Menu // top bar menu manager
-} = require('electron');
+        Menu, // top bar menu manager
+        BrowserWindow
+    } = require('electron')
+    , path = require('path');
 
 const template = [
     {
@@ -13,7 +15,10 @@ const template = [
             {
                 label: 'Préférences…',
                 accelerator: 'CommandOrControl+V',
-                role: 'options'
+                role: 'options',
+                click () {
+                    require('../views/config');
+                }
             }
         ]
     },

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - configuration</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1 class="game-title">Configuration</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+            <form id="form-config">
+                <label>
+                    Répertoire des fiches
+                    <input type="text" name="files_origin">
+                </label>
+    
+                <label>
+                    Répertoire d'export
+                    <input type="text" name="export_target">
+                </label>
+    
+                <label>
+                    Niveaux maximum de focus
+                    <input type="number" name="focus_max">
+                </label>
+    
+                <button type="submit">Enregistrer</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="render.js"></script>
+</body>
+
+</html>
