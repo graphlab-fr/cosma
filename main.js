@@ -6,8 +6,6 @@ const {
     } = require('electron')
     , path = require('path');
 
-process.env.version = '0.3.0';
-
 /**
  * Test if a window is stored into 'BrowserWindow' object.
  * @returns {boolean}
@@ -26,7 +24,7 @@ function noWindowOpen () {
 
 app.whenReady().then(() => {
 
-    require('./core/controllers/window');
+    require('./core/view');
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -34,7 +32,7 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { require('./core/controllers/window'); }
+        if (noWindowOpen()) { require('./core/view'); }
     });
 });
 

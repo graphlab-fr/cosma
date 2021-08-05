@@ -16,7 +16,7 @@ module.exports = class {
 
     /**
      * Create a user config.
-     * @param {number} opts - Options to change from the default config.
+     * @param {object} opts - Options to change from the default config.
      */
 
     constructor (opts) {

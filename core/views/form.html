@@ -15,12 +15,24 @@
         <h1 class="game-title">Configuration</h1>
     </header>
 
-    <main class="app">
-        <form action="">
-            <input type="text" name="" id="" placeholder="Nom">
-            <input type="text" name="" id="" placeholder="Prénom">
-            <input type="number" name="" id="" placeholder="5">
-            <textarea name="" id="" cols="30" rows="10">Du texte</textarea>
+    <main>
+        <form id="form-config">
+            <label>
+                Répertoire des fiches
+                <input type="text" name="files_origin">
+            </label>
+
+            <label>
+                Répertoire d'export
+                <input type="text" name="export_target">
+            </label>
+
+            <label>
+                Niveaux maximum de focus
+                <input type="number" name="focus_max">
+            </label>
+
+            <button type="submit">Enregistrer</button>
         </form>
 
         <button id="btn">Enter fullscreen</button>
