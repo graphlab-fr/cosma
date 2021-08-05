@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - nouvelle fiche</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1 class="game-title">Nouvelle fiche</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+            <form id="form-record">
+                <label>
+                    Titre
+                    <input type="text" name="title">
+                </label>
+    
+                <label>
+                    Type
+                    <input type="text" name="type">
+                </label>
+    
+                <label>
+                    Mots-clés
+                    <input type="text" name="tags">
+                </label>
+    
+                <button type="submit">Enregistrer</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="record-render.js"></script>
+</body>
+
+</html>

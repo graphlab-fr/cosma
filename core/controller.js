@@ -4,8 +4,14 @@ const {
 } = require('electron');
 
 const channels = {
-    input: ['confirmConfigRegistration'],
-    output: ['sendConfigOptions']
+    input: [
+        'confirmConfigRegistration',
+        'confirmRecordSaving'
+    ],
+    output: [
+        'sendConfigOptions',
+        'sendRecordContent'
+    ]
 }
 
 contextBridge.exposeInMainWorld(

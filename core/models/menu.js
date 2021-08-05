@@ -27,7 +27,10 @@ const template = [
         submenu: [
             {
                 label: 'Nouvelle fiche…',
-                role: 'new-record'
+                role: 'new-record',
+                click () {
+                    require('../views/record');
+                }
             },
             {
                 label: 'Nouveau cosmoscope…',
