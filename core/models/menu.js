@@ -1,3 +1,9 @@
+/**
+ * @file Define menus headlines, shortcuts and their functions
+ * @author Guillaume Brioudes
+ * @copyright MIT License ANR HyperOtlet
+ */
+
 const {
         Menu, // top bar menu manager
         BrowserWindow
@@ -17,7 +23,7 @@ const template = [
                 accelerator: 'CommandOrControl+V',
                 role: 'options',
                 click () {
-                    require('../views/config');
+                    require('../views/config-launcher')();
                 }
             }
         ]
@@ -29,7 +35,7 @@ const template = [
                 label: 'Nouvelle fiche…',
                 role: 'new-record',
                 click () {
-                    require('../views/record');
+                    require('../views/record-launcher')();
                 }
             },
             {

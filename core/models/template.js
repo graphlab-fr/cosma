@@ -1,5 +1,5 @@
 /**
- * @file Generate graph styles from config & cosmoscope from modelling.
+ * @file Generate the Cosmoscope's source code
  * @author Guillaume Brioudes
  * @copyright MIT License ANR HyperOtlet
  */
