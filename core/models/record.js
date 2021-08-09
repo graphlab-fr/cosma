@@ -6,7 +6,9 @@
 
 const { app } = require('electron')
     , path = require('path')
-    , fs = require('fs');
+    , fs = require('fs')
+    , yml = require('js-yaml')
+    , moment = require('moment');
 
 const Config = require('./config')
     , config = new Config()
@@ -27,14 +29,15 @@ module.exports = class {
         this.type = type;
         this.tags = tags;
         this.path = path.join(config.opts.files_origin, `${title}.md`);
-        this.content =
-`A record from Cosma
 
-Title : ${title}
-Type : ${type}
-Tags : ${tags}
+        this.content = yml.safeDump({
+            title: title,
+            id: generateId(),
+            type: type,
+            tags: [tags]
+        });
 
-Lorem ipsum dolor est héhé`
+        this.content = '---\n' + this.content + '---\n\n';
     }
 
     /**
@@ -53,3 +56,13 @@ Lorem ipsum dolor est héhé`
     }
 
 };
+
+/**
+ * Get a number (14 caracters) from the time stats :
+ * year + month + day + hour + minute + second
+ * @return {number} - unique 14 caracters number from the second
+ */
+
+function generateId () {
+    return Number(moment().format('YYYYMMDDHHmmss'));
+}
