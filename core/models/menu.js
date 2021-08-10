@@ -5,6 +5,7 @@
  */
 
 const {
+        app,
         Menu, // top bar menu manager
         BrowserWindow
     } = require('electron')
@@ -24,6 +25,14 @@ const template = [
                 role: 'options',
                 click () {
                     require('../views/config-launcher')();
+                }
+            },
+            {
+                label: 'Quitter',
+                accelerator: 'CommandOrControl+Q',
+                role: 'quit',
+                click () {
+                    app.quit();
                 }
             }
         ]

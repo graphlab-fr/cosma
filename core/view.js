@@ -17,6 +17,7 @@ const state = require('./models/state');
 let window = new BrowserWindow ({
     width: 1200,
     height: 600,
+    show: false,
     webPreferences: {
         allowRunningInsecureContent: false,
         contextIsolation: true,
@@ -62,3 +63,7 @@ switch (state.needConfiguration()) {
 
 fs.writeFileSync(cosmoscopePath, cosmoscope);
 window.loadFile(cosmoscopePath);
+
+window.once('ready-to-show', () => {
+    window.show();
+})

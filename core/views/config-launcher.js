@@ -5,13 +5,17 @@ const {
     } = require('electron')
     , path = require('path');
 
-const Config = require('../models/config');
+const Config = require('../models/config')
+    , state = require('../models/state');
 
 module.exports = function () {
+
+    if (state.openedWindows.config === true) { return; }
 
     let window = new BrowserWindow ({
         width: 800,
         height: 500,
+        show: false,
         webPreferences: {
             allowRunningInsecureContent: false,
             contextIsolation: true,
@@ -52,6 +56,15 @@ module.exports = function () {
         }
 
         window.webContents.send("confirmConfigRegistration", response);
+    });
+
+    window.once('ready-to-show', () => {
+        window.show();
+        state.openedWindows.config = true;
+    });
+
+    window.once('closed', () => {
+        state.openedWindows.config = false;
     });
 
 }

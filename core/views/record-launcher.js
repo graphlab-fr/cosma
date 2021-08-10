@@ -5,11 +5,16 @@ const {
 } = require('electron')
 , path = require('path');
 
+const state = require('../models/state');
+
 module.exports = function () {
+
+    if (state.openedWindows.record === true) { return; }
 
     let window = new BrowserWindow ({
     width: 800,
     height: 500,
+    show: false,
     webPreferences: {
         allowRunningInsecureContent: false,
         contextIsolation: true,
@@ -51,6 +56,15 @@ module.exports = function () {
         }
 
         window.webContents.send("confirmRecordSaving", response);
+    });
+
+    window.once('ready-to-show', () => {
+        window.show();
+        state.openedWindows.record = true;
+    });
+
+    window.once('closed', () => {
+        state.openedWindows.record = false;
     });
 
 }
