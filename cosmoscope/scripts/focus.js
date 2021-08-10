@@ -10,7 +10,7 @@
  * @param {string} nodeIdsList - List of ids from nodes to keep displayed
  */
 
- function nodeFocus(nodeIdsList) {
+function nodeFocus(nodeIdsList) {
     view.focusMode = false; // for reset display
 
     let idsToHide = [];
@@ -51,6 +51,7 @@ const focus = {
      * @param {string | number} focusedNodeId - Id of the current activated record
      */
     init : function(focusedNodeId = view.openedRecordId) {
+        if (!this.checkbox) { return; }
         if (focusedNodeId === undefined) { this.hide(); return; }
 
         this.focusedNodeId = Number(focusedNodeId);
@@ -121,27 +122,30 @@ const focus = {
     }
 }
 
-focus.checkbox.addEventListener('change', () => {
-    if (focus.checkbox.checked == true) {
-        focus.init();
-    } else {
-        focus.disable();
-    }
-});
+if (focus.checkbox) {
+    focus.checkbox.addEventListener('change', () => {
+        if (focus.checkbox.checked == true) {
+            focus.init();
+        } else {
+            focus.disable();
+        }
+    });
 
-focus.range.addEventListener('change', () => {
-    if (focus.range.value <= 1) {
-        focus.range.value = 1; }
+    focus.range.addEventListener('change', () => {
+        if (focus.range.value <= 1) {
+            focus.range.value = 1; }
+    
+        focus.set(focus.range.value);
+    });
+}
 
-    focus.set(focus.range.value);
-});
 
 /**
  * Display nodes hidden by nodeFocus(),
  * if their are not filtered
  */
 
- function resetFocus() {
+function resetFocus() {
     view.focus = undefined;
 
     const filteredNodes = getNodesHideByFilter();
