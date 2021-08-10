@@ -13,10 +13,7 @@ form.addEventListener('submit', (e) => {
 
     let data = new FormData(form);
     data = Object.fromEntries(data);
-    console.log(data);
     data = serializeData(data);
-
-    // return console.log(data);
 
     window.api.send("sendConfigOptions", data);
 

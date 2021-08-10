@@ -43,11 +43,10 @@ module.exports = function () {
                 consolMsg: "La configuration n'a pas pu être enregistrée.",
                 data: {}
             };
-        }
-        else {
+        } else {
             response = {
                 isOk: false,
-                consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes :" + result.join(' '),
+                consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
                 data: {}
             };
         }

@@ -22,18 +22,23 @@
             <form id="form-record">
                 <label>
                     Titre
-                    <input type="text" name="title">
+                    <input type="text" name="title" required>
                 </label>
     
                 <label>
                     Type
-                    <input type="text" name="type">
+                    <select name="type">
+                        <option value="undefined" selected>undefined</option>
+                        <option value="wrong">wrong</option>
+                    </select>
                 </label>
     
                 <label>
                     Mots-clés
                     <input type="text" name="tags">
                 </label>
+
+                <output></output>
     
                 <button type="submit">Enregistrer</button>
             </form>

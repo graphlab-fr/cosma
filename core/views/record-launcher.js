@@ -27,13 +27,30 @@ module.exports = function () {
         const Record = require('../models/record')
             , record = new Record(data.title, data.type, data.tags);
     
-        const result = record.save();
+        let result = record.save()
+            , response;
     
         if (result === true) {
-            window.webContents.send("confirmRecordSaving", true);
+            response = {
+                isOk: true,
+                consolMsg: "La fiche a bien été enregistrée.",
+                data: {}
+            };
+        } else if (result === false) {
+            response = {
+                isOk: false,
+                consolMsg: "Erreur d'enregistrement de la fiche.",
+                data: {}
+            };
         } else {
-            window.webContents.send("confirmRecordSaving", false);
+            response = {
+                isOk: false,
+                consolMsg: "Les métadonnées de la fiche sont incorrectes. Veuillez apporter les corrections suivantes : " + result.join(' '),
+                data: {}
+            };
         }
+
+        window.webContents.send("confirmRecordSaving", response);
     });
 
 }

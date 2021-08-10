@@ -45,7 +45,7 @@ module.exports = class Config {
 
     /**
      * Save the config options to the (file) path
-     * @return {mixed} - True if the config file is saved, false if erros 
+     * @return {mixed} - True if the config file is saved, false if fatal error
      * or the errors array
      */
 
@@ -61,7 +61,6 @@ module.exports = class Config {
 
             return true;
         } catch (error) {
-            console.log(error);
             return false;
         }
     }
