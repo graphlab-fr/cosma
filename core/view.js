@@ -18,6 +18,7 @@ let window = new BrowserWindow ({
     width: 1200,
     height: 600,
     show: false,
+    icon: path.join(__dirname, '../assets/icons/64x64.png'),
     webPreferences: {
         allowRunningInsecureContent: false,
         contextIsolation: true,

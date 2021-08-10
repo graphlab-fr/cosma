@@ -16,6 +16,7 @@ module.exports = function () {
         width: 800,
         height: 500,
         show: false,
+        icon: path.join(__dirname, '../../assets/icons/64x64.png'),
         webPreferences: {
             allowRunningInsecureContent: false,
             contextIsolation: true,
