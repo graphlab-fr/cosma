@@ -25,6 +25,13 @@ form {
     flex-direction: column;
 }
 
+form fieldset {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+    border-radius: 2px;
+}
+
 form label {
     display: flex;
     flex-direction: column;
@@ -32,7 +39,16 @@ form label {
     line-height: 150%;
 }
 
-form button {
+form button[type="submit"] {
     margin-top: 20px;
-    max-width: 150px;
+    width: 100%;
 }
+
+form output {
+    display: block;
+    padding: 5px;
+    border-radius: 2px;
+    margin-top: 20px;
+}
+form output[data-valid="false"] { border: 2px solid red; }
+form output[data-valid="true"] { border: 2px solid green; }

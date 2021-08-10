@@ -26,25 +26,33 @@ module.exports = function () {
     window.loadFile(path.join(__dirname, './config-source.html'));
     
     ipcMain.on("sendConfigOptions", (event, data) => {
-        const config = new Config({
-                files_origin: data.files_origin,
-                export_target: data.export_target,
-                focus_max: data.focus_max
-            });
+        const config = new Config(data);
     
-        config.save();
+        let result = config.save()
+            , response;
     
-        if (config.isSet()) {
-            window.webContents.send("confirmConfigRegistration", true);
-        } else {
-            window.webContents.send("confirmConfigRegistration", false);
+        if (result === true) {
+            response = {
+                isOk: true,
+                consolMsg: "La configuration a bien été enregistrée. Veuillez relancer l'application.",
+                data: {}
+            };
+        } else if (result === false) {
+            response = {
+                isOk: false,
+                consolMsg: "La configuration n'a pas pu être enregistrée.",
+                data: {}
+            };
         }
-    });
-    
-    window.on('closed', () => {
-        // windows.delete(window);
-        // window = null;
-        // console.log('close');
+        else {
+            response = {
+                isOk: false,
+                consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes :" + result.join(' '),
+                data: {}
+            };
+        }
+
+        window.webContents.send("confirmConfigRegistration", response);
     });
 
 }

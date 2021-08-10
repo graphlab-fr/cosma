@@ -6,16 +6,16 @@
 
 module.exports = {
     files_origin: '',
-    export_target: '',
     focus_max: 2,
     record_types: { undefined: 'grey' },
     link_types: { undefined: { stroke: 'simple', color: 'rgb(225, 225, 225)' } },
-    graph: {
-        background_color: 'white',
-        highlight_color: 'red',
-        highlight_on_hover: true,
-        text_size: 10,
-        attraction: { force: -50, distance_max: 250, verticale: 0, horizontale: 0 },
-        arrows: false
-    }
+    graph_background_color: 'white',
+    graph_highlight_color: 'red',
+    graph_highlight_on_hover: true,
+    graph_text_size: 10,
+    graph_arrows: false,
+    graph_attraction_force: -50,
+    graph_attraction_distance_max: 250,
+    graph_attraction_verticale: 0,
+    graph_attraction_horizontale: 0
 }

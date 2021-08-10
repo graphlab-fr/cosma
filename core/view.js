@@ -35,7 +35,7 @@ const Config = require('./models/config')
     , config = new Config()
 
 config.get();
-exports.config = config.opts;
+exports.config = config.serialize();
 
 
 const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');

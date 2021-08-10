@@ -26,14 +26,110 @@
                 </label>
     
                 <label>
-                    Répertoire d'export
-                    <input type="text" name="export_target">
-                </label>
-    
-                <label>
                     Niveaux maximum de focus
-                    <input type="number" name="focus_max">
+                    <input type="number" name="focus_max" min="0">
                 </label>
+
+                <div id="add-type-record">
+                    <h2>Types de fiches</h2>
+                    
+                    <button type="button">Ajouter un type de fiche</button>
+
+                    <fieldset>
+                        <legend>Type fiches 1</legend>
+
+                        <label>
+                            Nom
+                            <input type="text" name="1_record_types_name" value="undefined" readonly>
+                        </label>
+    
+                        <label>
+                            Couleur
+                            <input type="color" name="1_record_types_color">
+                        </label>
+                    </fieldset>
+                </div>
+
+                <div id="add-type-link">
+                    <h2>Types de liens</h2>
+                    
+                    <button type="button">Ajouter un type de lien</button>
+
+                    <fieldset>
+                        <legend>Type liens 1</legend>
+
+                        <label>
+                            Nom
+                            <input type="text" name="1_link_types_name" value="undefined" readonly>
+                        </label>
+    
+                        <label>
+                            Couleur
+                            <input type="color" name="1_link_types_color">
+                        </label>
+    
+                        <label>
+                            Trait
+                            <select name="1_link_types_stroke">
+                                <option value="simple">simple</option>
+                                <option value="double">double</option>
+                                <option value="dash">tirets</option>
+                                <option value="dotted">pointillé</option>
+                            </select>
+                        </label>
+                    </fieldset>
+                </div>
+
+                <h2>Graphe</h2>
+
+                <label>
+                    Couleur de fond
+                    <input type="color" name="graph_background_color">
+                </label>
+
+                <label>
+                    Couleur de surbrillance
+                    <input type="color" name="graph_highlight_color">
+                </label>
+
+                <label>
+                    Surbrillance au survol des nœuds
+                    <input type="checkbox" name="graph_highlight_on_hover" checked>
+                </label>
+
+                <label>
+                    Flèchage de la direction des liens
+                    <input type="checkbox" name="graph_arrows">
+                </label>
+
+                <label>
+                    Taille du texte des étiquettes
+                    <input type="number" name="graph_text_size">
+                </label>
+
+                <h3>Spatialisation des nœuds</h3>
+
+                <label>
+                    Force d'attraction
+                    <input type="number" name="graph_attraction_force">
+                </label>
+
+                <label>
+                    Distance maximum
+                    <input type="number" name="graph_attraction_distance_max">
+                </label>
+
+                <label>
+                    Force verticale
+                    <input type="number" name="graph_attraction_verticale">
+                </label>
+
+                <label>
+                    Force horizontale
+                    <input type="number" name="graph_attraction_horizontale">
+                </label>
+
+                <output></output>
     
                 <button type="submit">Enregistrer</button>
             </form>
