@@ -4,12 +4,15 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build-win": "electron-packager ./ Cosma --platform=win32 --arch=x64",
+    "build-mac": "electron-packager ./ Cosma --platform=darwin --arch=x64"
   },
   "author": "HyperOtlet",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^13.1.7"
+    "electron": "^13.1.7",
+    "electron-packager": "^15.3.0"
   },
   "dependencies": {
     "@minify-html/js": "^0.4.3",
