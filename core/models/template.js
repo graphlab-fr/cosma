@@ -9,8 +9,13 @@ const nunjucks = require('nunjucks')
     , mdItAttr = require('markdown-it-attrs')
     , path = require('path');
 
-const config = require('../view').config
+const Config = require('../models/config')
     , linksTools = require('./links');
+
+let config = new Config();
+
+config.get();
+config = config.serialize();
 
 let types = {}
     , tags = {};

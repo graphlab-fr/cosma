@@ -9,8 +9,13 @@ const fs = require('fs')
     , ymlFM = require('yaml-front-matter')
     , moment = require('moment');
 
-const config = require('../view').config
+const Config = require('../models/config')
     , linksTools = require('./links');
+
+let config = new Config();
+
+config.get();
+config = config.serialize();
 
 let fileIds = []
     , logs = { warn: [], err: [] }

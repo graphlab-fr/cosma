@@ -6,10 +6,10 @@
 
 const {
         app,
-        Menu, // top bar menu manager
-        BrowserWindow
-    } = require('electron')
-    , path = require('path');
+        Menu, // top bar menu manager 
+    } = require('electron');
+
+const cosmoscopeGenerationDisplaying = require('../view').cosmoscopeGenerationDisplaying;
 
 const template = [
     {
@@ -50,7 +50,10 @@ const template = [
             {
                 label: 'Nouveau cosmoscope…',
                 accelerator: 'CommandOrControl+N',
-                role: 'new-cosmoscope'
+                role: 'new-cosmoscope',
+                click () {
+                    cosmoscopeGenerationDisplaying();
+                }
             },
             {
                 label: 'Historique…',
