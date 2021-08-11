@@ -21,7 +21,7 @@ const template = [
             },
             {
                 label: 'Préférences…',
-                accelerator: 'CommandOrControl+V',
+                accelerator: 'CommandOrControl+O',
                 role: 'options',
                 click () {
                     require('../views/config-launcher')();
@@ -42,6 +42,7 @@ const template = [
         submenu: [
             {
                 label: 'Nouvelle fiche…',
+                accelerator: 'CommandOrControl+N',
                 role: 'new-record',
                 click () {
                     require('../views/record-launcher')();
@@ -49,7 +50,6 @@ const template = [
             },
             {
                 label: 'Nouveau cosmoscope…',
-                accelerator: 'CommandOrControl+N',
                 role: 'new-cosmoscope',
                 click () {
                     cosmoscopeGenerationDisplaying();
