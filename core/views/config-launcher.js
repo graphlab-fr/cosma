@@ -8,6 +8,7 @@ const {
 const Config = require('../models/config')
     , state = require('../models/state')
     , windowsModel = require('../models/windows');
+const windows = require('../models/windows');
 
 let window, newRecordModal;
 
@@ -137,7 +138,7 @@ module.exports = function () {
             response = {
                 isOk: false,
                 consolMsg: "Le nouveau type de fiche n'a pas pu être enregistrée dans la configuration.",
-                data: data
+                data: {}
             };
 
             newRecordModal.webContents.send("confirmNewRecordTypeFromConfig", response);
@@ -145,11 +146,47 @@ module.exports = function () {
             response = {
                 isOk: false,
                 consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
-                data: data
+                data: {}
             };
 
             newRecordModal.webContents.send("confirmNewRecordTypeFromConfig", response);
         }
+    });
+
+    ipcMain.on("askDeleteRecordType", (event, data) => {
+        let config = new Config();
+        let recordTypes = config.opts.record_types;
+
+        delete recordTypes[data.name];
+
+        config = new Config({
+            record_types: recordTypes
+        });
+
+        let result = config.save()
+            , response;
+    
+        if (result === true) {
+            response = {
+                isOk: true,
+                consolMsg: "Le type de fiche a bien été supprimé de la configuration.",
+                data: data
+            };
+        } else if (result === false) {
+            response = {
+                isOk: false,
+                consolMsg: "Le type de fiche n'a pas pu être supprimé de la configuration.",
+                data: {}
+            };
+        } else {
+            response = {
+                isOk: false,
+                consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+                data: {}
+            };
+        }
+
+        window.webContents.send("confirmDeleteRecordTypeFromConfig", response);
     });
 
 }

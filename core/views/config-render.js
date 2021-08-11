@@ -121,13 +121,34 @@ function setRecordTypeTable (recordTypes) {
 function getRecordTypeRow (typeName, typeColor) {
     const row = document.createElement('tr')
         , colName = document.createElement('td')
-        , colColor = document.createElement('td');
+        , colColor = document.createElement('td')
+        , colTools = document.createElement('td')
+        , btnUpdate = document.createElement('button')
+        , btnDelete = document.createElement('button');
 
     colName.textContent = typeName;
     colColor.textContent = typeColor;
+    btnUpdate.textContent = 'Modif.';
+    btnUpdate.setAttribute('type', 'button');
+    btnDelete.textContent = 'Suppr.';
+    btnDelete.setAttribute('type', 'button');
+    // colTools.appendChild(btnUpdate);
+    colTools.appendChild(btnDelete);
 
     row.appendChild(colName);
     row.appendChild(colColor);
+    row.appendChild(colTools);
+
+    btnDelete.addEventListener('click', () => {
+        window.api.send("askDeleteRecordType", { name: typeName });
+
+        window.api.receive("confirmDeleteRecordTypeFromConfig", (response) => {
+            if (response.isOk === true) {
+                console.log('delete ' + typeName);
+                row.remove();
+            }
+        });
+    })
 
     return row;
 }
