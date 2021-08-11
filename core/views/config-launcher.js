@@ -9,6 +9,8 @@ const Config = require('../models/config')
     , state = require('../models/state')
     , windowsModel = require('../models/windows');
 
+let window, newRecordModal;
+
 module.exports = function () {
 
     if (state.openedWindows.config === true) { return; }
@@ -18,8 +20,6 @@ module.exports = function () {
      * ---
      * manage displaying
      */
-
-    let window, newRecordModal;
 
     window = new BrowserWindow (
         Object.assign(windowsModel.forms, {
