@@ -12,23 +12,10 @@ const {
     , path = require('path')
     , fs = require('fs');
 
-const state = require('./models/state');
+const state = require('./models/state')
+    , windowsModel = require('./models/windows');
 
-let window = new BrowserWindow ({
-    width: 1200,
-    height: 600,
-    show: false,
-    icon: path.join(__dirname, '../assets/icons/64x64.png'),
-    webPreferences: {
-        allowRunningInsecureContent: false,
-        contextIsolation: true,
-        enableRemoteModule: false,
-        nodeIntegration: false,
-        sandbox: true,
-        preload: path.join(__dirname, 'controller.js')
-    },
-    title: 'Cosma'
-});
+let window = new BrowserWindow(windowsModel.main);
 
 const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
 

@@ -6,7 +6,8 @@ const {
     , path = require('path');
 
 const Config = require('../models/config')
-    , state = require('../models/state');
+    , state = require('../models/state')
+    , windowsModel = require('../models/windows');
 
 module.exports = function () {
 
@@ -20,22 +21,11 @@ module.exports = function () {
 
     let window, newRecordModal;
 
-    window = new BrowserWindow ({
-        width: 800,
-        height: 500,
-        show: false,
-        icon: path.join(__dirname, '../../assets/icons/64x64.png'),
-        webPreferences: {
-            devTools: true,
-            allowRunningInsecureContent: false,
-            contextIsolation: true,
-            enableRemoteModule: false,
-            nodeIntegration: false,
-            sandbox: true,
-            preload: path.join(__dirname, '../controller.js')
-        },
-        title: 'Configuration'
-    })
+    window = new BrowserWindow (
+        Object.assign(windowsModel.forms, {
+            title: 'Configuration'
+        })
+    );
     
     window.loadFile(path.join(__dirname, './config-source.html'));
 
@@ -107,27 +97,12 @@ module.exports = function () {
     });
 
     ipcMain.on("askNewRecordTypeModal", (event, data) => {
-        newRecordModal = new BrowserWindow ({
-            width: 300,
-            height: 400,
-            minimizable: false, maximizable: false, fullscreenable: false,
-            skipTaskbar: true,
-            autoHideMenuBar: true,
-            frame: true,
-            show: false,
-            parent: window,
-            modal: true,
-            icon: path.join(__dirname, '../../assets/icons/64x64.png'),
-            webPreferences: {
-                allowRunningInsecureContent: false,
-                contextIsolation: true,
-                enableRemoteModule: false,
-                nodeIntegration: false,
-                sandbox: true,
-                preload: path.join(__dirname, '../controller.js')
-            },
-            title: 'Configuration'
-        })
+        newRecordModal = new BrowserWindow (
+            Object.assign(windowsModel.modal, {
+                parent: window,
+                title: 'Nouvelle fiche'
+            })
+        );
 
         newRecordModal.loadFile(path.join(__dirname, './config-modal-add-source.html'));
 

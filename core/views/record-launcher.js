@@ -5,7 +5,8 @@ const {
 } = require('electron')
 , path = require('path');
 
-const state = require('../models/state');
+const state = require('../models/state')
+    , windowsModel = require('../models/windows');
 
 module.exports = function () {
 
@@ -17,22 +18,12 @@ module.exports = function () {
      * manage displaying
      */
 
-    let window = new BrowserWindow ({
-    width: 800,
-    height: 500,
-    show: false,
-    icon: path.join(__dirname, '../../assets/icons/64x64.png'),
-    webPreferences: {
-        allowRunningInsecureContent: false,
-        contextIsolation: true,
-        enableRemoteModule: false,
-        nodeIntegration: false,
-        sandbox: true,
-        preload: path.join(__dirname, '../controller.js')
-    },
-    title: 'Nouvelle fiche'
-    })
-    
+    let window = new BrowserWindow (
+        Object.assign(windowsModel.forms, {
+            title: 'Nouvelle fiche'
+        })
+    );
+
     window.loadFile(path.join(__dirname, './record-source.html'));
 
     window.once('ready-to-show', () => {
