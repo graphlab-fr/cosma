@@ -10,7 +10,7 @@ const Config = require('../models/config')
     , windowsModel = require('../models/windows');
 const windows = require('../models/windows');
 
-let window, newRecordModal;
+let window, newRecordModal, updateRecordModal;
 
 module.exports = function () {
 
@@ -101,7 +101,7 @@ module.exports = function () {
         newRecordModal = new BrowserWindow (
             Object.assign(windowsModel.modal, {
                 parent: window,
-                title: 'Nouvelle fiche'
+                title: 'Nouveau type de fiche'
             })
         );
 
@@ -187,6 +187,69 @@ module.exports = function () {
         }
 
         window.webContents.send("confirmDeleteRecordTypeFromConfig", response);
+    });
+
+    ipcMain.on("askUpdateRecordTypeModal", (event, data) => {
+        updateRecordModal = new BrowserWindow (
+            Object.assign(windowsModel.modal, {
+                parent: window,
+                title: 'Éditer un type de fiche'
+            })
+        );
+
+        updateRecordModal.loadFile(path.join(__dirname, './config-modal-update-source.html'));
+
+        updateRecordModal.once('ready-to-show', () => {
+            updateRecordModal.show();
+            updateRecordModal.webContents.send("getRecordTypeToUpdate", data);
+        });
+
+    });
+
+    ipcMain.on("sendUpdateRecordTypeToConfig", (event, data) => {
+        let config = new Config();
+        let recordTypes = config.opts.record_types;
+
+        if (data.originalName === data.name) {
+            recordTypes[data.name] = data.color
+        } else {
+            delete recordTypes[data.originalName];
+            recordTypes[data.name] = data.color;
+        }
+
+        config = new Config({
+            record_types: recordTypes
+        });
+
+        let result = config.save()
+            , response;
+    
+        if (result === true) {
+            response = {
+                isOk: true,
+                consolMsg: "Le type de fiche a bien été mis à jour dans la configuration.",
+                data: data
+            };
+
+            window.webContents.send("confirmUpdateRecordTypeFromConfig", response);
+            updateRecordModal.close();
+        } else if (result === false) {
+            response = {
+                isOk: false,
+                consolMsg: "Le type de fiche n'a pas pu être mis à jour dans la configuration.",
+                data: {}
+            };
+
+            updateRecordModal.webContents.send("confirmUpdateRecordTypeFromConfig", response);
+        } else {
+            response = {
+                isOk: false,
+                consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+                data: {}
+            };
+
+            updateRecordModal.webContents.send("confirmUpdateRecordTypeFromConfig", response);
+        }
     });
 
 }

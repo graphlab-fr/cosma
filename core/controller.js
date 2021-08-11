@@ -10,7 +10,9 @@ const channels = {
         'getConfig',
         'confirmNewRecordTypeFromConfig',
         'getRecordTypes',
-        'confirmDeleteRecordTypeFromConfig'
+        'confirmDeleteRecordTypeFromConfig',
+        'confirmUpdateRecordTypeFromConfig',
+        'getRecordTypeToUpdate'
     ],
     output: [
         'sendConfigOptions',
@@ -19,7 +21,10 @@ const channels = {
         'askNewRecordTypeModal',
         'sendNewRecordTypeToConfig',
         'askRecordTypes',
-        'askDeleteRecordType'
+        'askDeleteRecordType',
+        'askUpdateRecordTypeModal',
+        'askUpdateRecordType',
+        'sendUpdateRecordTypeToConfig'
     ]
 }
 

@@ -127,12 +127,12 @@ function getRecordTypeRow (typeName, typeColor) {
         , btnDelete = document.createElement('button');
 
     colName.textContent = typeName;
-    colColor.textContent = typeColor;
+    colColor.style.backgroundColor = typeColor;
     btnUpdate.textContent = 'Modif.';
     btnUpdate.setAttribute('type', 'button');
     btnDelete.textContent = 'Suppr.';
     btnDelete.setAttribute('type', 'button');
-    // colTools.appendChild(btnUpdate);
+    colTools.appendChild(btnUpdate);
     colTools.appendChild(btnDelete);
 
     row.appendChild(colName);
@@ -144,11 +144,22 @@ function getRecordTypeRow (typeName, typeColor) {
 
         window.api.receive("confirmDeleteRecordTypeFromConfig", (response) => {
             if (response.isOk === true) {
-                console.log('delete ' + typeName);
                 row.remove();
             }
         });
-    })
+    });
+
+    btnUpdate.addEventListener('click', () => {
+        window.api.send("askUpdateRecordTypeModal", { name: typeName, color: typeColor });
+
+        window.api.receive("confirmUpdateRecordTypeFromConfig", (response) => {
+            if (response.isOk === true) {
+                colName.textContent = response.data.name;
+                colColor.style.backgroundColor = response.data.color;
+                console.log(colColor);
+            }
+        });
+    });
 
     return row;
 }
