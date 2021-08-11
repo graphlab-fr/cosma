@@ -8,14 +8,16 @@ const channels = {
         'confirmConfigRegistration',
         'confirmRecordSaving',
         'getConfig',
-        'confirmNewRecordTypeFromConfig'
+        'confirmNewRecordTypeFromConfig',
+        'getRecordTypes'
     ],
     output: [
         'sendConfigOptions',
         'sendRecordContent',
         'askConfig',
         'askNewRecordTypeModal',
-        'sendNewRecordTypeToConfig'
+        'sendNewRecordTypeToConfig',
+        'askRecordTypes'
     ]
 }
 

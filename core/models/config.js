@@ -145,7 +145,7 @@ module.exports = class Config {
      */
 
     isCompleted () {
-        for (const opt in this.opts) {
+        for (const opt in baseConfig) {
             if (this.opts[opt] === '' ||
                 this.opts[opt] === undefined ||
                 this.opts[opt] === null)

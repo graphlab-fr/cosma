@@ -1,7 +1,8 @@
+const form = document.getElementById('form-record');
+
 (function () {
 
-    const form = document.getElementById('form-record')
-        , output = form.querySelector('output');
+    const output = form.querySelector('output');
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -17,4 +18,25 @@
         });
     })
     
+})();
+
+(function () {
+
+const recordTypeSelect = form.querySelector('select[name="type"]')
+    , recordTypeSelectContent = document.createDocumentFragment();
+
+window.api.send("askRecordTypes", null);
+
+window.api.receive("getRecordTypes", (response) => {
+    for (const recordType in response.data) {
+        const option = document.createElement('option');
+        option.value = recordType;
+        option.textContent = recordType;
+
+        recordTypeSelectContent.appendChild(option);
+    }
+
+    recordTypeSelect.appendChild(recordTypeSelectContent);
+});
+
 })();

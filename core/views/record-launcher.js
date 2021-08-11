@@ -11,6 +11,12 @@ module.exports = function () {
 
     if (state.openedWindows.record === true) { return; }
 
+    /**
+     * Window
+     * ---
+     * manage displaying
+     */
+
     let window = new BrowserWindow ({
     width: 800,
     height: 500,
@@ -28,6 +34,21 @@ module.exports = function () {
     })
     
     window.loadFile(path.join(__dirname, './record-source.html'));
+
+    window.once('ready-to-show', () => {
+        window.show();
+        state.openedWindows.record = true;
+    });
+
+    window.once('closed', () => {
+        state.openedWindows.record = false;
+    });
+
+    /**
+     * API
+     * ---
+     * manage data
+     */
     
     ipcMain.on("sendRecordContent", (event, data) => {
         const Record = require('../models/record')
@@ -58,14 +79,29 @@ module.exports = function () {
 
         window.webContents.send("confirmRecordSaving", response);
     });
+    
+    ipcMain.on("askRecordTypes", (event, data) => {
+        const Config = require('../models/config')
+            , config = new Config();
+    
+        let result = config.get()
+            , response;
 
-    window.once('ready-to-show', () => {
-        window.show();
-        state.openedWindows.record = true;
-    });
+        if (result === true) {
+            response = {
+                isOk: true,
+                consolMsg: "Les types de fiche ont bien été transmis depuis la configuration.",
+                data: config.opts.record_types
+            };
+        } else {
+            response = {
+                isOk: false,
+                consolMsg: "Les types de fiche n'ont pu être transmis depuis la configuration.",
+                data: {}
+            };
+        }
 
-    window.once('closed', () => {
-        state.openedWindows.record = false;
+        window.webContents.send("getRecordTypes", response);
     });
 
 }
