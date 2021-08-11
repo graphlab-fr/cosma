@@ -13,8 +13,6 @@ const Config = require('../models/config')
     , linksTools = require('./links');
 
 let config = new Config();
-
-config.get();
 config = config.serialize();
 
 let types = {}

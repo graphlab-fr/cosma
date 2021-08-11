@@ -14,7 +14,7 @@ module.exports = {
     graph_highlight_on_hover: true,
     graph_text_size: 10,
     graph_arrows: false,
-    graph_attraction_force: -50,
+    graph_attraction_force: 50,
     graph_attraction_distance_max: 250,
     graph_attraction_verticale: 0,
     graph_attraction_horizontale: 0

@@ -50,78 +50,84 @@ function serializeData (data) {
     return data;
 }
 
-/**
- * Add NODE TYPE field
- * On click on the button, add a fieldset for input a node type
- */
-
 (function () {
 
-const addTypeField = document.getElementById('add-type-record')
-    , addTypeAddBtn = addTypeField.querySelector('button');
+window.api.send("askConfig", null);
 
-let counter = 1;
+window.api.receive("getConfig", (response) => {
+    if (response.isOk === true) {
+        for (const option in response.data) {
 
-addTypeAddBtn.addEventListener('click', () => {
-    counter++;
+            if (option === 'record_types') {
+                setRecordTypeTable(response.data[option]);
+                continue;
+            }
 
-    addTypeField.insertAdjacentHTML('beforeend', 
-`<fieldset>
-    <legend>Type fiches ${counter}</legend>
+            if (option === 'link_types') {
+                continue;
+            }
 
-    <label>
-        Nom
-        <input type="text" name="${counter}_record_types_name">
-    </label>
+            const input = form.querySelector(`[name="${option}"]`);
 
-    <label>
-        Couleur
-        <input type="color" name="${counter}_record_types_color">
-    </label>
-</fieldset>`)
+            if (!input) { continue; }
+
+            if (['graph_arrows', 'graph_highlight_on_hover'].includes(option)) {
+
+                switch (response.data[option]) {
+                    case true:
+                        input.checked = true;
+                        continue;
+                    case false:
+                        input.checked = false;
+                        continue;
+                }
+            }
+            
+            input.value = response.data[option];
+        }
+    }
 });
-    
+
 })();
 
-/**
- * Add LINK TYPE field
- * On click on the button, add a fieldset for input a link type
- */
+function setRecordTypeTable (recordTypes) {
+    const typeContainer = document.getElementById('add-type-record')
+        , tableBody = typeContainer.querySelector('tbody')
+        , btnAdd = typeContainer.querySelector('button[data-fx="add"]');
 
-(function () {
+    const tableBodyContent = document.createDocumentFragment();
 
-const addTypeField = document.getElementById('add-type-link')
-    , addTypeAddBtn = addTypeField.querySelector('button');
+    for (const type in recordTypes) {
+        tableBodyContent.appendChild(
+            getRecordTypeRow(type, recordTypes[type])
+        );
+    }
 
-let counter = 1;
+    tableBody.appendChild(tableBodyContent);
 
-addTypeAddBtn.addEventListener('click', () => {
-    counter++;
+    btnAdd.addEventListener('click', () => {
+        window.api.send("askNewRecordTypeModal", null);
 
-    addTypeField.insertAdjacentHTML('beforeend', 
-`<fieldset>
-<legend>Type liens ${counter}</legend>
+        window.api.receive("confirmNewRecordTypeFromConfig", (response) => {
+            tableBodyContent.appendChild(
+                getRecordTypeRow(response.data.name, response.data.color)
+            );
 
-<label>
-    Nom
-    <input type="text" name="${counter}_link_types_name" value="undefined" readonly>
-</label>
+            tableBody.appendChild(tableBodyContent);
+        });
+    });
+}
 
-<label>
-    Couleur
-    <input type="color" name="${counter}_link_types_color">
-</label>
+function getRecordTypeRow (typeName, typeColor) {
+    const row = document.createElement('tr')
+        , colName = document.createElement('td')
+        , colColor = document.createElement('td');
 
-<label>
-    Trait
-    <select name="${counter}_link_types_stroke">
-        <option value="simple">simple</option>
-        <option value="double">double</option>
-        <option value="dash">tirets</option>
-        <option value="dotted">pointillé</option>
-    </select>
-</label>
-</fieldset>`)
-});
-    
-})();
+    colName.textContent = typeName;
+    colColor.textContent = typeColor;
+
+    row.appendChild(colName);
+    row.appendChild(colColor);
+
+    return row;
+}

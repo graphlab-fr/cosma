@@ -25,8 +25,6 @@ module.exports = {
             return true;
         }
 
-        config.get();
-
         if (config.isCompleted() === false) {
             return true;
         }

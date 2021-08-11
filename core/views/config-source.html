@@ -32,52 +32,21 @@
 
                 <div id="add-type-record">
                     <h2>Types de fiches</h2>
-                    
-                    <button type="button">Ajouter un type de fiche</button>
 
-                    <fieldset>
-                        <legend>Type fiches 1</legend>
+                    <button type="button" data-fx="add">Ajouter un type</button>
+                    <button type="button" data-fx="modif">Modifier</button>
+                    <button type="button" data-fx="delete">Supprimer</button>
 
-                        <label>
-                            Nom
-                            <input type="text" name="1_record_types_name" value="undefined" readonly>
-                        </label>
-    
-                        <label>
-                            Couleur
-                            <input type="color" name="1_record_types_color">
-                        </label>
-                    </fieldset>
-                </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Couleur</th>
+                            </tr>
+                        </thead>
 
-                <div id="add-type-link">
-                    <h2>Types de liens</h2>
-                    
-                    <button type="button">Ajouter un type de lien</button>
-
-                    <fieldset>
-                        <legend>Type liens 1</legend>
-
-                        <label>
-                            Nom
-                            <input type="text" name="1_link_types_name" value="undefined" readonly>
-                        </label>
-    
-                        <label>
-                            Couleur
-                            <input type="color" name="1_link_types_color">
-                        </label>
-    
-                        <label>
-                            Trait
-                            <select name="1_link_types_stroke">
-                                <option value="simple">simple</option>
-                                <option value="double">double</option>
-                                <option value="dash">tirets</option>
-                                <option value="dotted">pointillé</option>
-                            </select>
-                        </label>
-                    </fieldset>
+                        <tbody></tbody>
+                    </table>
                 </div>
 
                 <h2>Graphe</h2>

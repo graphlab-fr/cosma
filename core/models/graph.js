@@ -14,7 +14,6 @@ const Config = require('../models/config')
 
 let config = new Config();
 
-config.get();
 config = config.serialize();
 
 let fileIds = []

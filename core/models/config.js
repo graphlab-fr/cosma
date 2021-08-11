@@ -29,9 +29,10 @@ module.exports = class Config {
      */
 
     constructor (opts) {
-        this.opts = baseConfig
         // path to save config file
         this.path = path.join(app.getPath('userData'), 'config.json');
+
+        this.get();
 
         if (!opts) { return; }
 
@@ -71,7 +72,10 @@ module.exports = class Config {
      */
 
     get () {
-        if (this.isSet() === false) { return false; }
+        if (this.isSet() === false) {
+            this.opts = baseConfig;
+            return false;
+        }
 
         try {
             const configFileContent = fs.readFileSync(this.path, 'utf8');
@@ -79,6 +83,8 @@ module.exports = class Config {
 
             return true;
         } catch (error) {
+            this.opts = baseConfig;
+            console.log('lecture error');
             return false;
         }
     }
@@ -185,19 +191,15 @@ module.exports = class Config {
             errs.push('L\'option des liens flèchés est une valeur binaire.'); }
 
         if (Config.confirmNumberValue(this.opts.graph_attraction_force, Config.minValues.graph_attraction_force)) {
-            console.log(this.opts.graph_attraction_force);
             errs.push(`La force de répulsion du graphe doit être un nombre supérieur ou égal à ${Config.minValues.graph_attraction_force}.`); }
 
         if (Config.confirmNumberValue(this.opts.graph_attraction_distance_max, Config.minValues.graph_attraction_distance_max)) {
-            console.log(this.opts.graph_attraction_distance_max);
             errs.push(`La force de répulsion maximum du graphe doit être un nombre supérieur ou égal à ${Config.minValues.graph_attraction_distance_max}.`); }
 
         if (Config.confirmNumberValue(this.opts.graph_attraction_verticale, Config.minValues.graph_attraction_verticale)) {
-            console.log(this.opts.graph_attraction_verticale);
             errs.push(`La force de répulsion verticale du graphe doit être un nombre supérieur ou égal à ${Config.minValues.graph_attraction_verticale}.`); }
 
         if (Config.confirmNumberValue(this.opts.graph_attraction_horizontale, Config.minValues.graph_attraction_horizontale)) {
-            console.log(this.opts.graph_attraction_horizontale);
             errs.push(`La force de répulsion horizontale du graphe doit être un nombre supérieur ou égal à ${Config.minValues.graph_attraction_horizontale}.`); }
 
         return errs;

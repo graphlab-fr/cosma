@@ -11,9 +11,7 @@ const { app } = require('electron')
     , moment = require('moment');
 
 const Config = require('./config')
-    , config = new Config()
-
-config.get();
+    , config = new Config();
 
 module.exports = class {
 

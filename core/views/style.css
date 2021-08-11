@@ -52,3 +52,13 @@ form output {
 }
 form output[data-valid="false"] { border: 2px solid red; }
 form output[data-valid="true"] { border: 2px solid green; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table, th, td { border: 1px solid rgb(36, 36, 36); }
+
+th, td { padding: 5px; }
