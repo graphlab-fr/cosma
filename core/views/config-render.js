@@ -47,6 +47,10 @@ function serializeData (data) {
         data['graph_arrows'] = false;
     }
 
+    if (data['metas_keywords'] !== '') {
+        data['metas_keywords'] = data['metas_keywords'].split(',');
+    }
+
     return data;
 }
 

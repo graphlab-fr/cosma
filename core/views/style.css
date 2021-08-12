@@ -40,6 +40,11 @@ form label {
     line-height: 150%;
 }
 
+form textarea, form input {
+    font: inherit;
+    resize: vertical;
+}
+
 form button[type="submit"] {
     margin-top: 20px;
     width: 100%;
