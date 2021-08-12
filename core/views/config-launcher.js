@@ -256,14 +256,15 @@ module.exports = function () {
     ipcMain.on("askFilesOriginPath", (event, data) => {
 
         dialog.showOpenDialog(window, {
-            title: 'Sélectionner le répertoire contenant vos fiches',
+            title: 'Sélectionner répertoire des fiches',
+            defaultPath: app.getPath('documents'),
             properties: ['openDirectory']
         }).then((response) => {
             window.webContents.send("getFilesOriginPath", {
                 isOk: !response.canceled,
                 data: response.filePaths
             });
-        })
+        });
 
     });
 

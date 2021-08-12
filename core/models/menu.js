@@ -56,6 +56,13 @@ const template = [
                 }
             },
             {
+                label: 'Exporter cosmoscope…',
+                role: 'export-cosmoscope',
+                click () {
+                    require('../views/cosmoscope-export')();
+                }
+            },
+            {
                 label: 'Historique…',
                 accelerator: 'CommandOrControl+H',
                 role: 'history'
