@@ -12,7 +12,8 @@ const channels = {
         'getRecordTypes',
         'confirmDeleteRecordTypeFromConfig',
         'confirmUpdateRecordTypeFromConfig',
-        'getRecordTypeToUpdate'
+        'getRecordTypeToUpdate',
+        'getFilesOriginPath'
     ],
     output: [
         'sendConfigOptions',
@@ -24,7 +25,8 @@ const channels = {
         'askDeleteRecordType',
         'askUpdateRecordTypeModal',
         'askUpdateRecordType',
-        'sendUpdateRecordTypeToConfig'
+        'sendUpdateRecordTypeToConfig',
+        'askFilesOriginPath'
     ]
 }
 

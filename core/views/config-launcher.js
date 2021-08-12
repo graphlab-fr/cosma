@@ -1,7 +1,8 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        ipcMain // interface of data exchange
+        ipcMain, // interface of data exchange
+        dialog
     } = require('electron')
     , path = require('path');
 
@@ -250,6 +251,20 @@ module.exports = function () {
 
             updateRecordModal.webContents.send("confirmUpdateRecordTypeFromConfig", response);
         }
+    });
+
+    ipcMain.on("askFilesOriginPath", (event, data) => {
+
+        dialog.showOpenDialog(window, {
+            title: 'Sélectionner le répertoire contenant vos fiches',
+            properties: ['openDirectory']
+        }).then((response) => {
+            window.webContents.send("getFilesOriginPath", {
+                isOk: !response.canceled,
+                data: response.filePaths
+            });
+        })
+
     });
 
 }

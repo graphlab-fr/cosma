@@ -163,3 +163,20 @@ function getRecordTypeRow (typeName, typeColor) {
 
     return row;
 }
+
+(function () {
+
+const btnDialog = document.getElementById('dialog-path-fileorigin')
+    , input = form.querySelector('[name="files_origin"]');
+
+btnDialog.addEventListener('click', () => {
+    window.api.send("askFilesOriginPath", null);
+
+    window.api.receive("getFilesOriginPath", (response) => {
+        if (response.isOk === true) {
+            input.value = response.data[0];
+        }
+    });
+});
+
+})();
