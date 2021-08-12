@@ -60,7 +60,10 @@ const template = [
             {
                 label: 'Historique…',
                 accelerator: 'CommandOrControl+H',
-                role: 'history'
+                role: 'history',
+                click () {
+                    require('../views/history-launcher')();
+                }
             }
         ]
     },

@@ -17,8 +17,7 @@ module.exports = class History {
     static path = path.join(app.getPath('temp'), 'cosma-history');
 
     static getList () {
-        const dir = fs.readdirSync(History.path, 'utf8')
-        console.log(dir);
+        return fs.readdirSync(History.path, 'utf8');
     }
 
     constructor () {

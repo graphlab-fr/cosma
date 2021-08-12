@@ -19,7 +19,8 @@ const channels = {
         'getExportPathFromConfig',
         'getBibliographyPath',
         'getCslPath',
-        'getOptionMinimumFromConfig'
+        'getOptionMinimumFromConfig',
+        'getHistoryList'
     ],
     output: [
         'sendConfigOptions',
@@ -38,7 +39,9 @@ const channels = {
         'askExportPathFromConfig',
         'askBibliographyPath',
         'askCslPath',
-        'askOptionMinimumFromConfig'
+        'askOptionMinimumFromConfig',
+        'askHistoryList',
+        'sendCosmoscopeFromHistoryList'
     ]
 }
 

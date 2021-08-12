@@ -5,7 +5,8 @@ const {
     } = require('electron')
     , path = require('path');
 
-const appMenu = require('./core/models/menu');
+const appMenu = require('./core/models/menu')
+    , windowsModel = require('./core/models/windows');
 
 /**
  * Test if a window is stored into 'BrowserWindow' object.
@@ -26,6 +27,9 @@ function noWindowOpen () {
 app.whenReady().then(() => {
 
     Menu.setApplicationMenu(appMenu);
+
+    const mainWindow = new BrowserWindow(windowsModel.main);
+    exports.mainWindow = mainWindow;
 
     require('./core/views/cosmoscope')();
 

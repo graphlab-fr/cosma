@@ -12,15 +12,13 @@ const {
     , fs = require('fs');
 
 const state = require('../models/state')
-    , windowsModel = require('../models/windows');
+    , window = require('../../main').mainWindow;
 
-let window, cosmoscope, windowPath;
+let cosmoscope, windowPath;
 
 const History = require('../models/history');
 
 module.exports = function () {
-
-    window = new BrowserWindow(windowsModel.main);
     
     switch (state.needConfiguration()) {
 
