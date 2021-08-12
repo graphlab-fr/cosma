@@ -76,19 +76,25 @@ window.api.receive("getConfig", (response) => {
             if (!input) { continue; }
 
             if (['graph_arrows', 'graph_highlight_on_hover'].includes(option)) {
-
-                switch (response.data[option]) {
-                    case true:
-                        input.checked = true;
-                        continue;
-                    case false:
-                        input.checked = false;
-                        continue;
-                }
+                input.checked = response.data[option];
+                continue;
             }
             
             input.value = response.data[option];
         }
+    }
+});
+
+})();
+
+(function () {
+
+window.api.send("askOptionMinimumFromConfig", null);
+
+window.api.receive("getOptionMinimumFromConfig", (data) => {
+    for (const option in data) {
+        form.querySelector('input[name="' + option + '"]')
+            .setAttribute('min', data[option]);
     }
 });
 

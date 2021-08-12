@@ -18,7 +18,8 @@ const channels = {
         'confirmExport',
         'getExportPathFromConfig',
         'getBibliographyPath',
-        'getCslPath'
+        'getCslPath',
+        'getOptionMinimumFromConfig'
     ],
     output: [
         'sendConfigOptions',
@@ -36,7 +37,8 @@ const channels = {
         'sendExportOptions',
         'askExportPathFromConfig',
         'askBibliographyPath',
-        'askCslPath'
+        'askCslPath',
+        'askOptionMinimumFromConfig'
     ]
 }
 

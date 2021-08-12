@@ -97,6 +97,10 @@ module.exports = function () {
         window.webContents.send("getConfig", response);
     });
 
+    ipcMain.on("askOptionMinimumFromConfig", (event, data) => {
+        window.webContents.send("getOptionMinimumFromConfig", Config.minValues);
+    });
+
     ipcMain.on("askNewRecordTypeModal", (event, data) => {
         newRecordModal = new BrowserWindow (
             Object.assign(windowsModel.modal, {
