@@ -9,7 +9,6 @@ const {
 const Config = require('../models/config')
     , state = require('../models/state')
     , windowsModel = require('../models/windows');
-const windows = require('../models/windows');
 
 let window, newRecordModal, updateRecordModal;
 

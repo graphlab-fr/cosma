@@ -13,6 +13,7 @@ body {
     font-family: 'Roboto', 'Helevetica', 'Arial', sans-serif;
 	font-size: 1.4rem;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .wrapper {

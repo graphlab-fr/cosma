@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - Exporter un cosmoscope</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Exporter un cosmoscope</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+
+            <form id="form-cosmoscope-export">
+                <label>
+                    Chemin d'export
+                    <input type="text" name="export_path">
+                    <button type="button" id="dialog-path-export">Sélectionner</button>
+                </label>
+
+                <label>
+                    Traitement des citations
+                    <input type="checkbox" name="mode_citeproc">
+                </label>
+
+                <label>
+                    Mode publication
+                    <input type="checkbox" name="mode_publish">
+                </label>
+
+                <output></output>
+    
+                <button type="submit">Exporter</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="cosmoscope-export-rend.js"></script>
+</body>
+
+</html>

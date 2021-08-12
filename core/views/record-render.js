@@ -2,6 +2,13 @@ const form = document.getElementById('form-record');
 
 (function () {
 
+const firstInput = form.querySelector('input');
+firstInput.focus();
+
+})();
+
+(function () {
+
     const output = form.querySelector('output');
 
     form.addEventListener('submit', (e) => {

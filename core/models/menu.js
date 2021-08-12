@@ -16,10 +16,6 @@ const template = [
         label: 'Cosma',
         submenu: [
             {
-                label: 'À propos de Cosma',
-                role: 'about'
-            },
-            {
                 label: 'Préférences…',
                 accelerator: 'CommandOrControl+O',
                 role: 'options',
@@ -57,6 +53,7 @@ const template = [
             },
             {
                 label: 'Exporter cosmoscope…',
+                accelerator: 'CommandOrControl+E',
                 role: 'export-cosmoscope',
                 click (item, window) {
                     require('../views/cosmoscope-export')(window);
