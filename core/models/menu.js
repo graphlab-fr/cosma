@@ -58,14 +58,35 @@ const template = [
             {
                 label: 'Exporter cosmoscope…',
                 role: 'export-cosmoscope',
-                click () {
-                    require('../views/cosmoscope-export')();
+                click (item, window) {
+                    require('../views/cosmoscope-export')(window);
                 }
             },
             {
                 label: 'Historique…',
                 accelerator: 'CommandOrControl+H',
                 role: 'history'
+            }
+        ]
+    },
+    {
+        label: 'Affichage',
+        submenu: [
+            {
+                label: 'En arrière',
+                accelerator: 'CommandOrControl+Left',
+                role: 'back',
+                click(item, window) {
+                    if (window && window.webContents.canGoBack()) { window.webContents.goBack() };
+                }
+            },
+            {
+                label: 'En avant',
+                accelerator: 'CommandOrControl+Right',
+                role: 'forward',
+                click(item, window) {
+                    if (window && window.webContents.canGoForward()) { window.webContents.goForward() };
+                }
             }
         ]
     },

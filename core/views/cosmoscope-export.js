@@ -9,9 +9,9 @@ const {
 
 const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
 
-module.exports = function () {
+module.exports = function (window) {
 
-    dialog.showOpenDialog({
+    dialog.showOpenDialog(window, {
         title: 'Sélectionner répertoire d\'export cosmoscope',
         properties: ['openDirectory']
     }).then((response) => {
