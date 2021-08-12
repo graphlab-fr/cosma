@@ -14,13 +14,13 @@ const {
 const state = require('../models/state')
     , windowsModel = require('../models/windows');
 
-let window, cosmoscope;
+let window, cosmoscope, windowPath;
+
+const History = require('../models/history');
 
 module.exports = function () {
 
     window = new BrowserWindow(windowsModel.main);
-    
-    const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
     
     switch (state.needConfiguration()) {
 
@@ -32,16 +32,24 @@ module.exports = function () {
         case true:
             const exempleGraph = require('../data/exemple-graph');
             cosmoscope = require('../models/template')(exempleGraph.files, exempleGraph.entities);
+
+            windowPath = path.join(app.getPath('temp'), 'cosmoscope-exemple.html');
+
+            fs.writeFileSync(windowPath, cosmoscope);
             break;
     
         case false:
             const graph = require('../models/graph')()
             cosmoscope = require('../models/template')(graph.files, graph.entities);
+
+            const history = new History();
+            windowPath = path.join(history.pathToStore, 'cosmoscope.html');
+
+            history.store('cosmoscope.html', cosmoscope);
             break;
     }
-    
-    fs.writeFileSync(cosmoscopePath, cosmoscope);
-    window.loadFile(cosmoscopePath);
+
+    window.loadFile(windowPath);
     
     window.once('ready-to-show', () => {
         window.show();

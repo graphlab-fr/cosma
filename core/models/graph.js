@@ -29,10 +29,11 @@ module.exports = function () {
     let files = fs.readdirSync(config.files_origin, 'utf8') // files name list
         .filter(fileName => path.extname(fileName) === '.md') // throw no .md file
         .map(function(file) { // file analysis
-            const mTime = fs.statSync(`${config.files_origin}/${file}`).mtime; // last modif date
+            const filePath = path.join(config.files_origin, file);
+            const mTime = fs.statSync(filePath).mtime; // last modif date
             const fileName = file;
 
-            file = fs.readFileSync(`${config.files_origin}/${file}`, 'utf8')
+            file = fs.readFileSync(filePath, 'utf8')
             // YAML Front Matter extract = file metas + file content
             file = ymlFM.loadFront(file);
             // file content extract
