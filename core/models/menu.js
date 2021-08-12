@@ -9,8 +9,6 @@ const {
         Menu, // top bar menu manager 
     } = require('electron');
 
-const cosmoscopeGenerationDisplaying = require('../view').cosmoscopeGenerationDisplaying;
-
 const template = [
     {
         label: 'Cosma',
@@ -48,7 +46,7 @@ const template = [
                 label: 'Nouveau cosmoscope…',
                 role: 'new-cosmoscope',
                 click () {
-                    cosmoscopeGenerationDisplaying();
+                    require('../views/cosmoscope')();
                 }
             },
             {

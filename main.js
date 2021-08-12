@@ -1,8 +1,11 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
+        Menu // top bar menu manager
     } = require('electron')
     , path = require('path');
+
+const appMenu = require('./core/models/menu');
 
 /**
  * Test if a window is stored into 'BrowserWindow' object.
@@ -22,7 +25,9 @@ function noWindowOpen () {
 
 app.whenReady().then(() => {
 
-    require('./core/view');
+    Menu.setApplicationMenu(appMenu);
+
+    require('./core/views/cosmoscope')();
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -30,7 +35,7 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { require('./core/view'); }
+        if (noWindowOpen()) { require('./core/views/cosmoscope')(); }
     });
 });
 
