@@ -180,3 +180,37 @@ btnDialog.addEventListener('click', () => {
 });
 
 })();
+
+(function () {
+
+const btnDialog = document.getElementById('dialog-path-bibliography')
+    , input = form.querySelector('[name="bibliography"]');
+
+btnDialog.addEventListener('click', () => {
+    window.api.send("askBibliographyPath", null);
+
+    window.api.receive("getBibliographyPath", (response) => {
+        if (response.isOk === true) {
+            input.value = response.data[0];
+        }
+    });
+});
+
+})();
+
+(function () {
+
+const btnDialog = document.getElementById('dialog-path-csl')
+    , input = form.querySelector('[name="csl"]');
+
+btnDialog.addEventListener('click', () => {
+    window.api.send("askCslPath", null);
+
+    window.api.receive("getCslPath", (response) => {
+        if (response.isOk === true) {
+            input.value = response.data[0];
+        }
+    });
+});
+
+})();

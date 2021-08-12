@@ -267,4 +267,40 @@ module.exports = function () {
 
     });
 
+    ipcMain.on("askBibliographyPath", (event, data) => {
+
+        dialog.showOpenDialog(window, {
+            title: 'Sélectionner catalogue de références',
+            defaultPath: app.getPath('documents'),
+            filters: [
+                { name: 'Type de fichier personnalisé', extensions: ['json'] }
+            ],
+            properties: ['openFile']
+        }).then((response) => {
+            window.webContents.send("getBibliographyPath", {
+                isOk: !response.canceled,
+                data: response.filePaths
+            });
+        });
+
+    });
+
+    ipcMain.on("askCslPath", (event, data) => {
+
+        dialog.showOpenDialog(window, {
+            title: 'Sélectionner fichier style bibliographique',
+            defaultPath: app.getPath('documents'),
+            filters: [
+                { name: 'Type de fichier personnalisé', extensions: ['csl'] }
+            ],
+            properties: ['openFile']
+        }).then((response) => {
+            window.webContents.send("getCslPath", {
+                isOk: !response.canceled,
+                data: response.filePaths
+            });
+        });
+
+    });
+
 }

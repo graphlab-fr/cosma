@@ -16,7 +16,9 @@ const channels = {
         'getFilesOriginPath',
         'getExportPath',
         'confirmExport',
-        'getExportPathFromConfig'
+        'getExportPathFromConfig',
+        'getBibliographyPath',
+        'getCslPath'
     ],
     output: [
         'sendConfigOptions',
@@ -32,7 +34,9 @@ const channels = {
         'askFilesOriginPath',
         'askExportPath',
         'sendExportOptions',
-        'askExportPathFromConfig'
+        'askExportPathFromConfig',
+        'askBibliographyPath',
+        'askCslPath'
     ]
 }
 
