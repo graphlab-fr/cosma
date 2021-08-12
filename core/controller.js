@@ -15,7 +15,8 @@ const channels = {
         'getRecordTypeToUpdate',
         'getFilesOriginPath',
         'getExportPath',
-        'confirmExport'
+        'confirmExport',
+        'getExportPathFromConfig'
     ],
     output: [
         'sendConfigOptions',
@@ -30,7 +31,8 @@ const channels = {
         'sendUpdateRecordTypeToConfig',
         'askFilesOriginPath',
         'askExportPath',
-        'sendExportOptions'
+        'sendExportOptions',
+        'askExportPathFromConfig'
     ]
 }
 

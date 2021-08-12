@@ -2,14 +2,13 @@ const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
         ipcMain, // interface of data exchange
-        dialog,
-        globalShortcut
+        dialog
     } = require('electron')
     , path = require('path')
     , fs = require('fs');
-const { resourceUsage } = require('process');
 
-const windowsModel = require('../models/windows');
+const windowsModel = require('../models/windows')
+    , Config = require('../models/config');
 
 const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
 
@@ -57,7 +56,26 @@ module.exports = function (window) {
 
     });
 
+    ipcMain.on("askExportPathFromConfig", (event, data) => {
+        let config = new Config();
+
+        if (config.opts.export_path !== undefined) {
+            modal.webContents.send("getExportPathFromConfig", {
+                isOk: true,
+                data: config.opts.export_path
+            });
+        } else {
+            modal.webContents.send("getExportPathFromConfig", {
+                isOk: false,
+                data: {}
+            });
+        }
+    });
+
     ipcMain.on("sendExportOptions", (event, data) => {
+
+        let config = new Config({ export_path: data.export_path });
+        config.save();
 
         fs.copyFile(cosmoscopePath, data.export_path, (err) => {
             if (err) {

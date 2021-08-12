@@ -36,12 +36,7 @@ module.exports = class Config {
 
         if (!opts) { return; }
 
-        for (const opt in opts) {
-            // if the option exist from default config
-            if (this.opts[opt] === undefined) { continue; }
-            // replace the default value by the new
-            this.opts = Object.assign(this.opts, opts);
-        }
+        this.opts = Object.assign(this.opts, opts);
     }
 
     /**

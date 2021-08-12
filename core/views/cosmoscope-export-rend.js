@@ -24,6 +24,20 @@ const form = document.getElementById('form-cosmoscope-export');
 
 (function () {
 
+    const input = form.querySelector('[name="export_path"]');
+    
+    window.api.send("askExportPathFromConfig", null);
+
+    window.api.receive("getExportPathFromConfig", (response) => {
+        if (response.isOk === true) {
+            input.value = response.data;
+        }
+    });
+    
+})();
+
+(function () {
+
     const btnDialog = document.getElementById('dialog-path-export')
         , input = form.querySelector('[name="export_path"]');
     
