@@ -20,7 +20,8 @@ const channels = {
         'getBibliographyPath',
         'getCslPath',
         'getOptionMinimumFromConfig',
-        'getHistoryList'
+        'getHistoryList',
+        'confirmHistoryDelete'
     ],
     output: [
         'sendConfigOptions',
@@ -41,7 +42,8 @@ const channels = {
         'askCslPath',
         'askOptionMinimumFromConfig',
         'askHistoryList',
-        'sendCosmoscopeFromHistoryList'
+        'sendCosmoscopeFromHistoryList',
+        'sendHistoryToDelete'
     ]
 }
 

@@ -21,9 +21,8 @@ module.exports = function () {
      */
 
     window = new BrowserWindow (
-        Object.assign(windowsModel.modal, {
-            title: 'Historique',
-            parent: mainWindow
+        Object.assign(windowsModel.forms, {
+            title: 'Historique'
         })
     );
 
@@ -56,5 +55,24 @@ module.exports = function () {
     ipcMain.on("sendCosmoscopeFromHistoryList", (event, date) => {
         const cosmoscopePath = path.join(History.path, date, 'cosmoscope.html');
         mainWindow.webContents.loadFile(cosmoscopePath);
+    });
+
+    ipcMain.on("sendHistoryToDelete", (event, date) => {
+        const result = History.delete(date);
+        let response;
+
+        if (result === true) {
+            response = {
+                isOk: true,
+                consolMsg: 'L\'entrée d\'historique a bien été supprimée'
+            }
+        } else {
+            response = {
+                isOk: false,
+                consolMsg: 'L\'entrée d\'historique n\'a pas été supprimée'
+            }
+        }
+
+        window.webContents.send("confirmHistoryDelete", response);
     });
 }

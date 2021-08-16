@@ -50,15 +50,6 @@ form button[type="submit"] {
     width: 100%;
 }
 
-form output {
-    display: block;
-    padding: 5px;
-    border-radius: 2px;
-    margin-top: 20px;
-}
-form output[data-valid="false"] { border: 2px solid red; }
-form output[data-valid="true"] { border: 2px solid green; }
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -68,3 +59,12 @@ table {
 table, th, td { border: 1px solid rgb(36, 36, 36); }
 
 th, td { padding: 5px; }
+
+output {
+    display: block;
+    padding: 5px;
+    border-radius: 2px;
+    margin-top: 20px;
+}
+output[data-valid="false"] { border: 2px solid red; }
+output[data-valid="true"] { border: 2px solid green; }

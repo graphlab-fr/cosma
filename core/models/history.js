@@ -6,11 +6,11 @@
 
 const {
         app, // app event lifecycle, events
-        BrowserWindow // app windows generator
     } = require('electron')
     , fs = require('fs')
     , path = require('path')
-    , moment = require('moment');
+    , moment = require('moment')
+    , rimraf = require('rimraf');
 
 moment.locale('fr-ca');
 
@@ -29,6 +29,21 @@ module.exports = class History {
 
     static getList () {
         return fs.readdirSync(History.path, 'utf8');
+    }
+
+    /**
+     * Dalate an history directory
+     * @return {boolean} - If the directory is delete
+     */
+
+    static delete (date) {
+        try {
+            rimraf.sync(path.join(History.path, date));
+
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
     constructor () {
@@ -50,6 +65,11 @@ module.exports = class History {
         }
 
     }
+
+    /**
+     * Save a file into the current history directory
+     * @return {boolean} - If the file is saved
+     */
 
     store (fileName, fileContent) {
         try {
