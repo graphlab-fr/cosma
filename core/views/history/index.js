@@ -1,9 +1,11 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        ipcMain // interface of data exchange
+        ipcMain, // interface of data exchange
+        dialog
     } = require('electron')
     , path = require('path')
+    , fs = require('fs')
     , moment = require('moment');
 
 moment.locale('fr-ca');
@@ -100,7 +102,7 @@ module.exports = function () {
     });
 
     ipcMain.on("sendNewHistoryName", (event, data) => {
-        const recordFromHistory = new History(data.id)
+        const recordFromHistory = new History(data.id);
         recordFromHistory.metas.name = data.name;
         const result = recordFromHistory.saveMetas();
 
@@ -113,5 +115,28 @@ module.exports = function () {
         modalRename.close();
 
         window.webContents.send("confirmRenameHistory", response);
+    });
+
+    ipcMain.on("askCosmoscopeExportFromHistory", (event, recordId) => {
+        const recordFromHistory = new History(recordId);
+
+        dialog.showSaveDialog(window, {
+            title: 'Enregistrer depuis l\'historique',
+            defaultPath: 'cosmoscope.html',
+            properties: ['createDirectory', 'showOverwriteConfirmation']
+        }).then((response) => {
+            if (response.canceled === false) {
+                let dialogPath = response.filePath;
+
+                if (['.html', '.htm'].includes(path.extname(response.filePath)) === false) {
+                    dialogPath = `${dialogPath}.html`
+                }
+
+                fs.copyFile(path.join(recordFromHistory.pathToStore, 'cosmoscope.html'), dialogPath, (err) => {
+                    if (err) { throw err; }
+                });
+            }
+        });
+
     });
 }

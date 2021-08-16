@@ -51,7 +51,8 @@ const channels = {
         'sendCosmoscopeFromHistoryList',
         'sendHistoryToDelete',
         'askRenameHistoryModal',
-        'sendNewHistoryName'
+        'sendNewHistoryName',
+        'askCosmoscopeExportFromHistory'
     ]
 }
 

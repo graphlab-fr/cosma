@@ -13,16 +13,19 @@ const table = document.getElementById('table-history');
                 , colTools = document.createElement('td')
                 , btnOpen = document.createElement('button')
                 , btnRename = document.createElement('button')
-                , btnDelete = document.createElement('button');
+                , btnDelete = document.createElement('button')
+                , btnExport = document.createElement('button');
 
             colName.textContent = record.name;
             btnOpen.textContent = 'Ouvrir';
             btnRename.textContent = 'Renommer';
             btnDelete.textContent = 'Supprimer';
+            btnExport.textContent = 'Télécharger au format HTML';
 
             colTools.appendChild(btnOpen);
             colTools.appendChild(btnRename);
             colTools.appendChild(btnDelete);
+            colTools.appendChild(btnExport);
 
             row.appendChild(colName);
             row.appendChild(colTools);
@@ -53,6 +56,10 @@ const table = document.getElementById('table-history');
                         row.remove();
                     }
                 });
+            });
+
+            btnExport.addEventListener('click', () => {
+                window.api.send("askCosmoscopeExportFromHistory", record.id);
             });
         }
 
