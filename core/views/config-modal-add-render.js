@@ -15,8 +15,6 @@ form.addEventListener('submit', (e) => {
     data = Object.fromEntries(data);
 
     window.api.send("sendNewRecordTypeToConfig", data);
-
-    console.log('coucou');
     
     window.api.receive("confirmNewRecordTypeFromConfig", (response) => {
         output.textContent = response.consolMsg;

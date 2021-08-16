@@ -52,3 +52,7 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
 });
+
+process.on("uncaughtException", (err) => {
+    console.log(err);
+});

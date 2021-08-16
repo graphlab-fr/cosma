@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - Historique</title>
+    
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Renommer une entrée de l'historique</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+
+            <form id="form-rename-history">
+                <label>
+                    Nom
+                    <input type="text" name="name">
+                </label>
+
+                <input type="hidden" name="id">
+
+                <output></output>
+    
+                <button type="submit">Enregistrer</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="modal-rename-source.js"></script>
+</body>
+
+</html>

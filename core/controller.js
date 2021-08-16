@@ -3,6 +3,10 @@ const {
     ipcRenderer
 } = require('electron');
 
+/**
+ * Valid channels name to secure the API bridge, control the data call
+ */
+
 const channels = {
     input: [
         'confirmConfigRegistration',
@@ -21,7 +25,9 @@ const channels = {
         'getCslPath',
         'getOptionMinimumFromConfig',
         'getHistoryList',
-        'confirmHistoryDelete'
+        'confirmHistoryDelete',
+        'getMetasHistory',
+        'confirmRenameHistory'
     ],
     output: [
         'sendConfigOptions',
@@ -43,7 +49,9 @@ const channels = {
         'askOptionMinimumFromConfig',
         'askHistoryList',
         'sendCosmoscopeFromHistoryList',
-        'sendHistoryToDelete'
+        'sendHistoryToDelete',
+        'askRenameHistoryModal',
+        'sendNewHistoryName'
     ]
 }
 

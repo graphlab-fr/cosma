@@ -20,7 +20,7 @@ const Config = require('./config')
 module.exports = class History {
 
     static path = path.join(app.getPath('temp'), 'cosma-history');
-    static noHistorypath = app.getPath('temp');
+    static noHistoryPath = app.getPath('temp');
 
     /**
      * Get list of the sub-directories name from the history directory
@@ -28,7 +28,15 @@ module.exports = class History {
      */
 
     static getList () {
-        return fs.readdirSync(History.path, 'utf8');
+        return fs.readdirSync(History.path, 'utf8')
+            .map(function (dirName) {
+                const hist = new History(dirName);
+
+                return {
+                    id: dirName,
+                    name: hist.metas.name
+                }
+            })
     }
 
     /**
@@ -46,22 +54,43 @@ module.exports = class History {
         }
     }
 
-    constructor () {
+    /**
+     * Dalate an history directory
+     * @param {string} id - Name of the directory to use as a history entry
+     */
 
-        this.moment = moment().format('YYYY-MM-DD-h-mm-ss');
+    constructor (id = '') {
 
-        if (config.opts.history) {
-            this.pathToStore = path.join(History.path, this.moment);
+        if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
+
+        if (id === '') {
+            this.id = moment().format('YYYY-MM-DD-h-mm-ss');
         } else {
-            this.pathToStore = History.noHistorypath;
+            const pathToStoreTest = path.join(History.path, id)
+                , pathToMetasTest = path.join(pathToStoreTest, 'metas.json');
+
+            if (!fs.existsSync(pathToStoreTest) || !fs.existsSync(pathToMetasTest)) {
+                throw 'Record history no exist';
+            }
+            this.id = id;
         }
 
-        if (!fs.existsSync(History.path)) {
-            fs.mkdirSync(History.path);
+        if (config.opts.history === false && id === '') {
+            this.pathToStore = History.noHistoryPath;
+            return;
         }
 
-        if (!fs.existsSync(this.pathToStore)) {
+        this.pathToStore = path.join(History.path, this.id);
+        this.pathToMetas = path.join(this.pathToStore, 'metas.json');
+
+        if (id === '') {
             fs.mkdirSync(this.pathToStore);
+            this.metas = {
+                name: this.id
+            };
+            this.saveMetas();
+        } else {
+            this.metas = this.getMetas();
         }
 
     }
@@ -79,6 +108,15 @@ module.exports = class History {
         } catch (error) {
             return false;
         }
+    }
+
+    saveMetas () {
+        fs.writeFileSync(this.pathToMetas, JSON.stringify(this.metas));
+    }
+
+    getMetas () {
+        let content = fs.readFileSync(this.pathToMetas, 'utf-8');
+        return JSON.parse(content);
     }
 
 }
