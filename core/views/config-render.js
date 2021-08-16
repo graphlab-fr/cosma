@@ -29,23 +29,14 @@ form.addEventListener('submit', (e) => {
  * Serialize data for the Config model
  * Assign form fields to config options
  * Several input must be serialize to an array for one option like types
- * @param {object} - Data from config form
+ * @param {object} data - Data from config form
  * @return {object} - Data serialized
  */
 
 function serializeData (data) {
-
-    if (data['graph_highlight_on_hover'] !== undefined && data['graph_highlight_on_hover'] === 'on') {
-        data['graph_highlight_on_hover'] = true;
-    } else {
-        data['graph_highlight_on_hover'] = false;
-    }
-
-    if (data['graph_arrows'] !== undefined && data['graph_arrows'] === 'on') {
-        data['graph_arrows'] = true;
-    } else {
-        data['graph_arrows'] = false;
-    }
+    data['graph_highlight_on_hover'] = booleanCheckbox(data['graph_highlight_on_hover']);
+    data['graph_arrows'] = booleanCheckbox(data['graph_arrows']);
+    data['history'] = booleanCheckbox(data['history']);
 
     if (data['metas_keywords'] !== '') {
         data['metas_keywords'] = data['metas_keywords'].split(',');
@@ -53,6 +44,27 @@ function serializeData (data) {
 
     return data;
 }
+
+/**
+ * Convert the value of a checkbox
+ * if 'on' → true
+ * if undefined → false
+ * @param {string} option - Checkbox input value
+ * @return {boolean} - Checkbox boolean value
+ */
+
+function booleanCheckbox (option) {
+    if (option !== undefined && option === 'on') {
+        return true; }
+
+        return false;
+}
+
+/**
+ * Autocomplete form from the current config
+ * For each option from the config, find the input from by its name
+ * and then set its value, or activate a specific function
+ */
 
 (function () {
 
@@ -75,7 +87,7 @@ window.api.receive("getConfig", (response) => {
 
             if (!input) { continue; }
 
-            if (['graph_arrows', 'graph_highlight_on_hover'].includes(option)) {
+            if (typeof response.data[option] === 'boolean') {
                 input.checked = response.data[option];
                 continue;
             }

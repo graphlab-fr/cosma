@@ -6,13 +6,13 @@ const table = document.getElementById('table-history');
     window.api.send("askHistoryList", null);
 
     window.api.receive("getHistoryList", (data) => {
-        for (const eltDate of data) {
+        for (const date of data) {
             const row = document.createElement('tr')
                 , colName = document.createElement('td')
                 , colTools = document.createElement('td')
                 , btnOpen = document.createElement('button');
 
-            colName.textContent = eltDate;
+            colName.textContent = date.forHuman;
             btnOpen.textContent = 'Ouvrir';
 
             colTools.appendChild(btnOpen);
@@ -22,7 +22,7 @@ const table = document.getElementById('table-history');
             tableContent.appendChild(row);
 
             btnOpen.addEventListener('click', () => {
-                window.api.send("sendCosmoscopeFromHistoryList", eltDate);
+                window.api.send("sendCosmoscopeFromHistoryList", date.forSystem);
             });
         }
 

@@ -12,9 +12,20 @@ const {
     , path = require('path')
     , moment = require('moment');
 
+moment.locale('fr-ca');
+
+const Config = require('./config')
+    config = new Config();
+
 module.exports = class History {
 
     static path = path.join(app.getPath('temp'), 'cosma-history');
+    static noHistorypath = app.getPath('temp');
+
+    /**
+     * Get list of the sub-directories name from the history directory
+     * @return {array} - List of sub-directories names
+     */
 
     static getList () {
         return fs.readdirSync(History.path, 'utf8');
@@ -23,7 +34,12 @@ module.exports = class History {
     constructor () {
 
         this.moment = moment().format('YYYY-MM-DD-h-mm-ss');
-        this.pathToStore = path.join(History.path, this.moment);
+
+        if (config.opts.history) {
+            this.pathToStore = path.join(History.path, this.moment);
+        } else {
+            this.pathToStore = History.noHistorypath;
+        }
 
         if (!fs.existsSync(History.path)) {
             fs.mkdirSync(History.path);
