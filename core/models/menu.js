@@ -36,7 +36,6 @@ const template = [
         submenu: [
             {
                 label: 'Nouvelle fiche…',
-                accelerator: 'CommandOrControl+N',
                 role: 'new-record',
                 click () {
                     require('../views/record-launcher')();
@@ -44,6 +43,7 @@ const template = [
             },
             {
                 label: 'Nouveau cosmoscope…',
+                accelerator: 'CommandOrControl+N',
                 role: 'new-cosmoscope',
                 click () {
                     require('../views/cosmoscope')();

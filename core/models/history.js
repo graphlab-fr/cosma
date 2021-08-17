@@ -13,8 +13,7 @@ const {
 
 moment.locale('fr-ca');
 
-const Config = require('./config')
-    config = new Config();
+const Config = require('./config');
 
 module.exports = class History {
 
@@ -79,6 +78,8 @@ module.exports = class History {
             }
             this.id = id;
         }
+
+        const config = new Config();
 
         if (config.opts.history === false && id === '') {
             this.pathToStore = History.noHistoryPath;

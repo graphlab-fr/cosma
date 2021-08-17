@@ -8,10 +8,7 @@ const {
     , fs = require('fs');
 
 const windowsModel = require('../models/windows')
-    , Config = require('../models/config')
-    , History = require('../models/history');
-
-const cosmoscopePath = path.join(History.getLast().pathToStore, 'cosmoscope.html');
+    , Config = require('../models/config');
 
 let modal;
 
