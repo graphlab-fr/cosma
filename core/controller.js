@@ -27,7 +27,9 @@ const channels = {
         'getHistoryList',
         'confirmHistoryDelete',
         'getMetasHistory',
-        'confirmRenameHistory'
+        'confirmRenameHistory',
+        'confirmViewRegistration',
+        'getNewViewKey'
     ],
     output: [
         'sendConfigOptions',
@@ -52,7 +54,8 @@ const channels = {
         'sendHistoryToDelete',
         'askRenameHistoryModal',
         'sendNewHistoryName',
-        'askCosmoscopeExportFromHistory'
+        'askCosmoscopeExportFromHistory',
+        'sendViewName'
     ]
 }
 

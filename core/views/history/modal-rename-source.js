@@ -37,7 +37,6 @@ let isReady = false;
 (function () {
 
     window.api.receive("getMetasHistory", (metas) => {
-        console.log(metas);
         form.querySelector('input[name="name"]')
             .value = metas.name;
         form.querySelector('input[name="id"]')

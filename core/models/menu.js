@@ -54,7 +54,7 @@ const template = [
                 accelerator: 'CommandOrControl+E',
                 role: 'export-cosmoscope',
                 click (item, window) {
-                    require('../views/cosmoscope-export')(window);
+                    require('../views/export/index')(window);
                 }
             },
             {

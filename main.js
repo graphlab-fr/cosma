@@ -31,7 +31,7 @@ app.whenReady().then(() => {
     const mainWindow = new BrowserWindow(windowsModel.main);
     exports.mainWindow = mainWindow;
 
-    require('./core/views/cosmoscope')();
+    require('./core/views/cosmoscope/index')();
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -39,7 +39,7 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { require('./core/views/cosmoscope')(); }
+        if (noWindowOpen()) { require('./core/views/cosmoscope/index')(); }
     });
 });
 

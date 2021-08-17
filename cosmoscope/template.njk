@@ -131,17 +131,17 @@
                 Vues <span class="badge">{{ views | length }}</span>
             </summary>
 
-            <button onclick="saveView()">Sauvegarder la vue actuelle</button>
+            <button id="view-save" onclick="saveView()" hidden>Sauvegarder la vue actuelle</button>
 
-            {% if views.length !== 0 %}
             <div class="menu-view-container" id="views-container">
+            {% if views.length !== 0 %}
                 {% for viewName, viewString in views %}
                 <button class="btn" data-view="{{ viewString }}" data-active="false" onclick="changeView(this)">
                     {{ viewName }}
                 </button>
                 {% endfor %}
-            </div>
             {% endif %}
+            </div>
         </details>
 
         <details class="menu-controls">

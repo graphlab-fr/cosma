@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - Nouvelle vue</title>
+    
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Nouvelle vue</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+
+            <form id="form-cosmoscope-view">
+                <label>
+                    Nom
+                    <input type="text" name="name">
+                </label>
+
+                <input type="hidden" name="key">
+
+                <output></output>
+    
+                <button type="submit">Enregistrer</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="modal-view-render.js"></script>
+</body>
+
+</html>

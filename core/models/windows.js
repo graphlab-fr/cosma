@@ -28,7 +28,7 @@ module.exports = {
             enableRemoteModule: false,
             nodeIntegration: false,
             sandbox: true,
-            preload: path.join(__dirname, '../controller.js')
+            preload: path.join(__dirname, '../views/cosmoscope/main-preload.js')
         },
         title: 'Cosma'
     },
