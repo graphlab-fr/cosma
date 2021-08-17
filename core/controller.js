@@ -4,58 +4,115 @@ const {
 } = require('electron');
 
 /**
- * Valid channels name to secure the API bridge, control the data call
+ * Valid channels name to secure the API bridge, control the data calls
  */
 
 const channels = {
     input: [
-        'confirmConfigRegistration',
-        'confirmRecordSaving',
-        'getConfig',
-        'confirmNewRecordTypeFromConfig',
-        'getRecordTypes',
-        'confirmDeleteRecordTypeFromConfig',
-        'confirmUpdateRecordTypeFromConfig',
-        'getRecordTypeToUpdate',
-        'getFilesOriginPath',
-        'getExportPath',
-        'confirmExport',
-        'getExportPathFromConfig',
-        'getBibliographyPath',
-        'getCslPath',
-        'getOptionMinimumFromConfig',
-        'getHistoryList',
-        'confirmHistoryDelete',
-        'getMetasHistory',
-        'confirmRenameHistory',
-        'confirmViewRegistration',
-        'getNewViewKey'
+
+        /**
+         * Configuration
+         */
+
+        'confirmConfigRegistration',         // config/index.js → config/main-render.js
+        'getConfig',                         // config/index.js → config/main-render.js
+        'getFilesOriginPath',                // config/index.js → config/main-render.js
+        'confirmNewRecordTypeFromConfig',    // config/index.js → config/main-render.js
+                                             //                 ↘ config/modal-addrecordtype-render.js
+        'confirmUpdateRecordTypeFromConfig', // config/index.js → config/main-render.js
+                                             //                 ↘ config/modal-updaterecordtype-render.js
+        'confirmDeleteRecordTypeFromConfig', // config/index.js → config/main-render.js
+        'getRecordTypeToUpdate',             // config/index.js → config/modal-updaterecordtype-render.js
+        'getBibliographyPath',               // config/index.js → config/main-render.js
+        'getCslPath',                        // config/index.js → config/main-render.js
+        'getOptionMinimumFromConfig',        // config/index.js → config/main-render.js
+
+        /**
+         * Record
+         */
+
+        'getRecordTypes', // record/index.js → record/main-render.js
+
+        /**
+         * Export
+         */
+
+        'getExportPath',           // export/index.js → export/main-render.js
+        'confirmExport',           // export/index.js → export/main-render.js
+        'getExportPathFromConfig', // export/index.js → export/main-render.js
+
+        /**
+         * Record
+         */
+
+        'confirmRecordSaving',  // record/index.js → record/main-render.js
+
+        /**
+         * History
+         */
+
+        'getHistoryList',       // history/index.js → history/main-render.js
+        'confirmRenameHistory', // history/index.js → history/main-render.js
+        'confirmHistoryDelete', // history/index.js → history/main-render.js
+        'getMetasHistory',      // history/index.js → history/modal-rename-render.js
+
+        /**
+         * Cosmoscope
+         */
+
+        'confirmViewRegistration', // cosmoscope/index.js → cosmoscope/main-preload.js
+                                   //                     ↘ cosmoscope/modal-view-render.js
+        'getNewViewKey'            // cosmoscope/index.js → cosmoscope/modal-view-render.js
     ],
     output: [
-        'sendConfigOptions',
-        'sendRecordContent',
-        'askConfig',
-        'askNewRecordTypeModal',
-        'sendNewRecordTypeToConfig',
-        'askRecordTypes',
-        'askDeleteRecordType',
-        'askUpdateRecordTypeModal',
-        'askUpdateRecordType',
-        'sendUpdateRecordTypeToConfig',
-        'askFilesOriginPath',
-        'askExportPath',
-        'sendExportOptions',
-        'askExportPathFromConfig',
-        'askBibliographyPath',
-        'askCslPath',
-        'askOptionMinimumFromConfig',
-        'askHistoryList',
-        'sendCosmoscopeFromHistoryList',
-        'sendHistoryToDelete',
-        'askRenameHistoryModal',
-        'sendNewHistoryName',
-        'askCosmoscopeExportFromHistory',
-        'sendViewName'
+
+        /**
+         * Configuration
+         */
+
+        'sendConfigOptions',           // config/index.js ← config/main-render.js
+        'askConfig',                   // config/index.js ← config/main-render.js
+        'askBibliographyPath',         // config/index.js ← config/main-render.js
+        'askCslPath',                  // config/index.js ← config/main-render.js
+        'askOptionMinimumFromConfig',  // config/index.js ← config/main-render.js
+        'askFilesOriginPath',          // config/index.js ← config/main-render.js
+        'askNewRecordTypeModal',       // config/index.js ← config/main-render.js
+        'askDeleteRecordType',         // config/index.js ← config/main-render.js
+        'askUpdateRecordTypeModal',    // config/index.js ← config/main-render.js
+        'sendNewRecordTypeToConfig',   // config/index.js ← config/modal-addrecordtype-render.js
+        'sendUpdateRecordTypeToConfig', // config/index.js ← config/modal-updaterecordtype-render.js
+
+        /**
+         * Record
+         */
+
+        'sendRecordContent', // record/index.js ← record/main-render.js
+        'askRecordTypes',    // record/index.js ← record/main-render.js
+
+        /**
+         * Export
+         */
+        
+        'askExportPath',           // export/index.js ← export/main-render.js
+        'sendExportOptions',       // export/index.js ← export/main-render.js
+        'askExportPathFromConfig', // export/index.js ← export/main-render.js
+
+        /**
+         * History
+         */
+        
+        'askHistoryList',                 // history/index.js ← history/main-render.js
+        'sendCosmoscopeFromHistoryList',  // history/index.js ← history/main-render.js
+        'sendHistoryToDelete',            // history/index.js ← history/main-render.js
+        'askRenameHistoryModal',          // history/index.js ← history/main-render.js
+        'askCosmoscopeExportFromHistory', // history/index.js ← history/main-render.js
+        'sendNewHistoryName',             // history/index.js ← history/modal-rename-render.js
+
+        /**
+         * Cosmoscope
+         */
+
+        'sendViewName' // cosmoscope/index.js ← cosmoscope/modal-view-render.js
     ]
 }
 
