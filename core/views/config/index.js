@@ -6,9 +6,9 @@ const {
     } = require('electron')
     , path = require('path');
 
-const Config = require('../models/config')
-    , state = require('../models/state')
-    , windowsModel = require('../models/windows');
+const Config = require('../../models/config')
+    , state = require('../../models/state')
+    , windowsModel = require('../../models/windows');
 
 let window, newRecordModal, updateRecordModal;
 
@@ -28,7 +28,7 @@ module.exports = function () {
         })
     );
     
-    window.loadFile(path.join(__dirname, './config-source.html'));
+    window.loadFile(path.join(__dirname, './main-source.html'));
 
     window.once('ready-to-show', () => {
         window.show();
@@ -111,7 +111,7 @@ ipcMain.on("askNewRecordTypeModal", (event, data) => {
         })
     );
 
-    newRecordModal.loadFile(path.join(__dirname, './config-modal-add-source.html'));
+    newRecordModal.loadFile(path.join(__dirname, './modal-addrecordtype-source.html'));
 
     newRecordModal.once('ready-to-show', () => {
         newRecordModal.show();
@@ -203,7 +203,7 @@ ipcMain.on("askUpdateRecordTypeModal", (event, data) => {
         })
     );
 
-    updateRecordModal.loadFile(path.join(__dirname, './config-modal-update-source.html'));
+    updateRecordModal.loadFile(path.join(__dirname, './modal-updaterecordtype-source.html'));
 
     updateRecordModal.once('ready-to-show', () => {
         updateRecordModal.show();

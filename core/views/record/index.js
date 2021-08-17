@@ -5,8 +5,8 @@ const {
 } = require('electron')
 , path = require('path');
 
-const state = require('../models/state')
-    , windowsModel = require('../models/windows');
+const state = require('../../models/state')
+    , windowsModel = require('../../models/windows');
 
 let window;
 
@@ -26,7 +26,7 @@ module.exports = function () {
         })
     );
 
-    window.loadFile(path.join(__dirname, './record-source.html'));
+    window.loadFile(path.join(__dirname, './main-source.html'));
 
     window.once('ready-to-show', () => {
         window.show();
@@ -46,7 +46,7 @@ module.exports = function () {
  */
 
 ipcMain.on("sendRecordContent", (event, data) => {
-    const Record = require('../models/record')
+    const Record = require('../../models/record')
         , record = new Record(data.title, data.type, data.tags);
 
     let result = record.save()
@@ -76,7 +76,7 @@ ipcMain.on("sendRecordContent", (event, data) => {
 });
 
 ipcMain.on("askRecordTypes", (event, data) => {
-    const Config = require('../models/config')
+    const Config = require('../../models/config')
         , config = new Config();
 
     let result = config.get()

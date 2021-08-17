@@ -18,7 +18,7 @@ const template = [
                 accelerator: 'CommandOrControl+O',
                 role: 'options',
                 click () {
-                    require('../views/config-launcher')();
+                    require('../views/config/index')();
                 }
             },
             {
@@ -38,7 +38,7 @@ const template = [
                 label: 'Nouvelle fiche…',
                 role: 'new-record',
                 click () {
-                    require('../views/record-launcher')();
+                    require('../views/record/index')();
                 }
             },
             {

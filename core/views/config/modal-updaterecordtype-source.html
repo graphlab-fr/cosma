@@ -5,35 +5,33 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
-    <title>Cosma - nouvelle fiche</title>
+    <title>Cosma - Éditer un type de fiche</title>
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
     <header>
-        <h1 class="game-title">Nouvelle fiche</h1>
+        <h1>Éditer un type de fiche</h1>
     </header>
 
     <div class="wrapper">
     
         <main>
-            <form id="form-record">
+
+            <form id="form-update-record-type">
                 <label>
-                    Titre
-                    <input type="text" name="title" required>
+                    Nom
+                    <input type="text" name="name">
                 </label>
-    
+
                 <label>
-                    Type
-                    <select name="type"></select>
+                    Couleur
+                    <input type="color" name="color">
                 </label>
-    
-                <label>
-                    Mots-clés
-                    <input type="text" name="tags">
-                </label>
+
+                <input type="hidden" name="originalName">
 
                 <output></output>
     
@@ -44,7 +42,7 @@
 
     </div>
 
-    <script src="record-render.js"></script>
+    <script src="modal-updaterecordtype-render.js"></script>
 </body>
 
 </html>

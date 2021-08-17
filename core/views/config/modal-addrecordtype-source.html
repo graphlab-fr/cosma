@@ -5,22 +5,22 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
-    <title>Cosma - Éditer un type de fiche</title>
+    <title>Cosma - nouveau type de fiche</title>
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
     <header>
-        <h1>Éditer un type de fiche</h1>
+        <h1>Nouveau type de fiche</h1>
     </header>
 
     <div class="wrapper">
     
         <main>
 
-            <form id="form-update-record-type">
+            <form id="form-add-record-type">
                 <label>
                     Nom
                     <input type="text" name="name">
@@ -31,8 +31,6 @@
                     <input type="color" name="color">
                 </label>
 
-                <input type="hidden" name="originalName">
-
                 <output></output>
     
                 <button type="submit">Enregistrer</button>
@@ -42,7 +40,7 @@
 
     </div>
 
-    <script src="config-modal-update-render.js"></script>
+    <script src="modal-addrecordtype-render.js"></script>
 </body>
 
 </html>
