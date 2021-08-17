@@ -16,7 +16,7 @@ const table = document.getElementById('table-history');
                 , btnDelete = document.createElement('button')
                 , btnExport = document.createElement('button');
 
-            colName.textContent = record.name;
+            colName.textContent = record.metas.name;
             btnOpen.textContent = 'Ouvrir';
             btnRename.textContent = 'Renommer';
             btnDelete.textContent = 'Supprimer';

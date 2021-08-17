@@ -12,12 +12,6 @@ const nunjucks = require('nunjucks')
 const Config = require('../models/config')
     , linksTools = require('./links');
 
-let config = new Config();
-config = config.serialize();
-
-let types = {}
-    , tags = {};
-
 // markdown-it plugin
 mdIt.use(mdItAttr, {
     leftDelimiter: '{',
@@ -32,6 +26,13 @@ mdIt.use(mdItAttr, {
  */
 
 module.exports = function (files, entities) {
+
+    let types = {}
+    , tags = {};
+
+    let config = new Config();
+    config = config.serialize();
+
     // let citeprocMode = quoteTools.citeprocModeIsActive()
     //     , publishMode = puslishModeIsActive();
 

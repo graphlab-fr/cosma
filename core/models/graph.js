@@ -12,16 +12,15 @@ const fs = require('fs')
 const Config = require('../models/config')
     , linksTools = require('./links');
 
-let config = new Config();
-
-config = config.serialize();
-
-let fileIds = []
-    , logs = { warn: [], err: [] }
-    , entities = { nodes: [], links: [] }
-    , id = 0;
-
 module.exports = function () {
+
+    let fileIds = []
+        , logs = { warn: [], err: [] }
+        , entities = { nodes: [], links: [] }
+        , id = 0
+        , config = new Config();
+
+    config = config.serialize();
 
     config.record_types_list = Object.keys(config.record_types)
         , config.link_types_list = Object.keys(config.link_types);

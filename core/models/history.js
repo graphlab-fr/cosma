@@ -9,8 +9,7 @@ const {
     } = require('electron')
     , fs = require('fs')
     , path = require('path')
-    , moment = require('moment')
-    , rimraf = require('rimraf');
+    , moment = require('moment');
 
 moment.locale('fr-ca');
 
@@ -32,26 +31,32 @@ module.exports = class History {
             .map(function (dirName) {
                 const hist = new History(dirName);
 
-                return {
-                    id: dirName,
-                    name: hist.metas.name
-                }
+                return hist;
             })
     }
 
     /**
      * Dalate an history directory
+     * @param {string} id - Name of the directory
      * @return {boolean} - If the directory is delete
      */
 
-    static delete (date) {
+    static delete (id) {
         try {
-            rimraf.sync(path.join(History.path, date));
+            fs.rmdirSync(path.join(History.path, id), { recursive: true })
 
             return true;
         } catch (error) {
+            console.log(error);
             return false;
         }
+    }
+
+    static getLast () {
+        const records = History.getList()
+            .sort((a, b) => { a.ctime - b.ctime })
+
+        return records[records.length - 1];
     }
 
     /**
@@ -92,6 +97,8 @@ module.exports = class History {
         } else {
             this.metas = this.getMetas();
         }
+
+        this.ctime = fs.statSync(this.pathToStore).ctime;
 
     }
 

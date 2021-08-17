@@ -8,9 +8,10 @@ const {
     , fs = require('fs');
 
 const windowsModel = require('../models/windows')
-    , Config = require('../models/config');
+    , Config = require('../models/config')
+    , History = require('../models/history');
 
-const cosmoscopePath = path.join(app.getPath('userData'), 'cosmoscope.html');
+const cosmoscopePath = path.join(History.getLast().pathToStore, 'cosmoscope.html');
 
 let modal;
 
@@ -74,10 +75,16 @@ module.exports = function (window) {
 
     ipcMain.on("sendExportOptions", (event, data) => {
 
+        // save the export path into the configuration
         let config = new Config({ export_path: data.export_path });
         config.save();
 
-        fs.copyFile(cosmoscopePath, data.export_path, (err) => {
+        data.export_path = path.join(data.export_path, 'cosmoscope.html');
+
+        const graph = require('../models/graph')()
+        cosmoscope = require('../models/template')(graph.files, graph.entities);
+
+        fs.writeFile(data.export_path, cosmoscope, (err) => {
             if (err) {
                 modal.webContents.send("confirmExport", {
                     isOk: false,

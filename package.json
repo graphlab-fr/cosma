@@ -23,7 +23,6 @@
     "markdown-it-attrs": "^4.0.0",
     "moment": "^2.29.1",
     "nunjucks": "^3.2.3",
-    "rimraf": "^3.0.2",
     "yaml-front-matter": "^4.1.0"
   }
 }
