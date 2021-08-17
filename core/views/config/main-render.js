@@ -176,9 +176,11 @@ function getRecordTypeRow (typeName, typeColor) {
 
         window.api.receive("confirmUpdateRecordTypeFromConfig", (response) => {
             if (response.isOk === true) {
-                colName.textContent = response.data.name;
-                colColor.style.backgroundColor = response.data.color;
-                console.log(colColor);
+                typeName = response.data.name;
+                typeColor = response.data.color;
+
+                colName.textContent = typeName;
+                colColor.style.backgroundColor = typeColor;
             }
         });
     });
