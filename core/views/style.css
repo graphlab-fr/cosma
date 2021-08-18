@@ -68,3 +68,10 @@ output {
 }
 output[data-valid="false"] { border: 2px solid red; }
 output[data-valid="true"] { border: 2px solid green; }
+
+.stroke-exemple {
+    display: block;
+    border-bottom: unset !important;
+    border-left: unset !important;
+    border-right: unset !important;
+}

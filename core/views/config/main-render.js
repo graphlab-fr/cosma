@@ -226,15 +226,16 @@ function setLinkTypeTable (linkTypes) {
 function getLinkTypeRow (typeName, typeColor, typeStroke) {
     const row = document.createElement('tr')
         , colName = document.createElement('td')
-        , colColor = document.createElement('td')
         , colStroke = document.createElement('td')
         , colTools = document.createElement('td')
+        , lineStrokeExemple = document.createElement('span')
         , btnUpdate = document.createElement('button')
         , btnDelete = document.createElement('button');
 
     colName.textContent = typeName;
-    colColor.style.backgroundColor = typeColor;
-    colStroke.textContent = typeStroke;
+    lineStrokeExemple.classList.add('stroke-exemple')
+    lineStrokeExemple.style.border = getBorderExemple(typeColor, typeStroke);
+    colStroke.appendChild(lineStrokeExemple);
     btnUpdate.textContent = 'Modif.';
     btnUpdate.setAttribute('type', 'button');
     btnDelete.textContent = 'Suppr.';
@@ -243,7 +244,6 @@ function getLinkTypeRow (typeName, typeColor, typeStroke) {
     colTools.appendChild(btnDelete);
 
     row.appendChild(colName);
-    row.appendChild(colColor);
     row.appendChild(colStroke);
     row.appendChild(colTools);
 
@@ -260,8 +260,7 @@ function getLinkTypeRow (typeName, typeColor, typeStroke) {
                 typeStroke = response.data.stroke;
 
                 colName.textContent = typeName;
-                colColor.style.backgroundColor = typeColor;
-                colStroke.textContent = typeStroke;
+                lineStrokeExemple.style.border = getBorderExemple(typeColor, typeStroke);
             }
         });
     }
@@ -275,6 +274,24 @@ function getLinkTypeRow (typeName, typeColor, typeStroke) {
             }
         });
     });
+
+    function getBorderExemple (typeColor, typeStroke) {
+        switch (typeStroke) {
+            case 'simple':
+                return `3px solid ${typeColor}`;
+
+            case 'double':
+                return `3px double ${typeColor}`;
+
+            case 'dotted':
+                return `3px dotted ${typeColor}`;
+
+            case 'dash':
+                return `3px dashed ${typeColor}`;
+        }
+
+        return `3px solid ${typeColor}`;
+    }
 
     return row;
 }
