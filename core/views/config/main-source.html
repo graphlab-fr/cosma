@@ -31,6 +31,11 @@
                     <input type="checkbox" name="history">
                 </label>
 
+                <label>
+                    Minifier les exports
+                    <input type="checkbox" name="minify">
+                </label>
+
                 <div id="add-type-record">
                     <h2>Types de fiches</h2>
 
@@ -72,7 +77,7 @@
 
                 <label>
                     Niveaux maximum de focus
-                    <input type="number" name="focus_max">
+                    <input type="number" name="focus_max" step="1">
                 </label>
 
                 <label>
@@ -97,29 +102,29 @@
 
                 <label>
                     Taille du texte des étiquettes
-                    <input type="number" name="graph_text_size">
+                    <input type="number" name="graph_text_size" step="1">
                 </label>
 
                 <h3>Spatialisation des nœuds</h3>
 
                 <label>
                     Force d'attraction
-                    <input type="number" name="graph_attraction_force" step="0.01">
+                    <input type="number" name="graph_attraction_force" step="1">
                 </label>
 
                 <label>
-                    Distance maximum
-                    <input type="number" name="graph_attraction_distance_max" step="0.01">
+                    Distance maximum entre les nœuds
+                    <input type="number" name="graph_attraction_distance_max" step="1">
                 </label>
 
                 <label>
-                    Force verticale
-                    <input type="number" name="graph_attraction_verticale" step="0.01">
+                    Attraction verticale
+                    <input type="number" name="graph_attraction_verticale" step="0.1">
                 </label>
 
                 <label>
-                    Force horizontale
-                    <input type="number" name="graph_attraction_horizontale" step="0.01">
+                    Attraction horizontale
+                    <input type="number" name="graph_attraction_horizontale" step="0.1">
                 </label>
                 
                 <h2>Signature</h2>
@@ -156,6 +161,24 @@
                     Fichier de style bibliographique
                     <input type="text" name="csl">
                     <button type="button" id="dialog-path-csl">Sélectionner</button>
+                </label>
+
+                <h2>Interface</h2>
+
+                <label>
+                    CSS personnalisé
+                    <input type="checkbox" name="custom_css">
+                </label>
+
+                <label>
+                    Fichier CSS personnalisé
+                    <input type="text" name="custom_css_path">
+                    <button type="button" id="dialog-path-css">Sélectionner</button>
+                </label>
+
+                <label>
+                    Activer les outils de développement
+                    <input type="checkbox" name="devtools">
                 </label>
 
                 <output></output>

@@ -37,6 +37,9 @@ function serializeData (data) {
     data['graph_highlight_on_hover'] = booleanCheckbox(data['graph_highlight_on_hover']);
     data['graph_arrows'] = booleanCheckbox(data['graph_arrows']);
     data['history'] = booleanCheckbox(data['history']);
+    data['minify'] = booleanCheckbox(data['minify']);
+    data['custom_css'] = booleanCheckbox(data['custom_css']);
+    data['devtools'] = booleanCheckbox(data['devtools']);
 
     if (data['metas_keywords'] !== '') {
         data['metas_keywords'] = data['metas_keywords'].split(',');
