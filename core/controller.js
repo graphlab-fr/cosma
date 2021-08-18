@@ -58,10 +58,11 @@ const channels = {
          * History
          */
 
-        'getHistoryList',       // history/index.js → history/main-render.js
-        'confirmRenameHistory', // history/index.js → history/main-render.js
-        'confirmHistoryDelete', // history/index.js → history/main-render.js
-        'getMetasHistory',      // history/index.js → history/modal-rename-render.js
+        'getHistoryList',          // history/index.js → history/main-render.js
+        'confirmRenameHistory',    // history/index.js → history/main-render.js
+        'confirmHistoryDelete',    // history/index.js → history/main-render.js
+        'confirmHistoryDeleteAll', // history/index.js → history/main-render.js
+        'getMetasHistory',         // history/index.js → history/modal-rename-render.js
 
         /**
          * Cosmoscope
@@ -118,6 +119,7 @@ const channels = {
         'askHistoryList',                 // history/index.js ← history/main-render.js
         'sendCosmoscopeFromHistoryList',  // history/index.js ← history/main-render.js
         'sendHistoryToDelete',            // history/index.js ← history/main-render.js
+        'askHistoryDeleteAll',            // history/index.js ← history/main-render.js
         'askRenameHistoryModal',          // history/index.js ← history/main-render.js
         'askCosmoscopeExportFromHistory', // history/index.js ← history/main-render.js
         'sendNewHistoryName',             // history/index.js ← history/modal-rename-render.js

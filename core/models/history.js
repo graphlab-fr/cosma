@@ -51,6 +51,21 @@ module.exports = class History {
         }
     }
 
+    static deleteAll () {
+        const records = History.getList();
+
+        try {
+            for (const record of records) {
+                fs.rmdirSync(record.pathToStore, { recursive: true })
+            }
+
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
     static getLast () {
         const records = History.getList()
             .sort((a, b) => { a.ctime - b.ctime })

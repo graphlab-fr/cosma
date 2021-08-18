@@ -35,24 +35,37 @@ module.exports = function () {
     window.once('ready-to-show', () => {
         window.show();
     });
+
+    /**
+     * API
+     * ---
+     * manage data
+     */
+
+    ipcMain.once("askHistoryDeleteAll", (event, data) => {
+
+        const result = History.deleteAll();
+    
+        let response;
+    
+        if (result) {
+            response = {
+                isOk: true,
+                consolMsg: "L'historique bien a été vidé."
+            }
+        } else {
+            response = {
+                isOk: false,
+                consolMsg: "L'historique n'a pu être vidé."
+            }
+        }
+    
+        window.webContents.send("confirmHistoryDeleteAll", response);
+    });
 }
 
-/**
- * API
- * ---
- * manage data
- */
-
 ipcMain.on("askHistoryList", (event, data) => {
-    const historyRecords = History.getList()
-        // .map(function (record) {
-        //     splitDate = record.split('-');
-
-        //     return {
-        //         name: moment(splitDate).format('L, LTS'),
-        //         id: record
-        //     };
-        // })
+    const historyRecords = History.getList();
     
     window.webContents.send("getHistoryList", historyRecords);
 });

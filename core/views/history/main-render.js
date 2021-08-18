@@ -67,3 +67,22 @@ const table = document.getElementById('table-history');
     });
     
 })();
+
+(function () {
+
+    const btn = document.getElementById('btn-delete-all');
+
+    btn.addEventListener('click', () => {
+        window.api.send("askHistoryDeleteAll", null);
+
+        window.api.receive("confirmHistoryDeleteAll", (response) => {
+            if (response.isOk === true) {
+                table.querySelectorAll('tr')
+                    .forEach(tr => {
+                        tr.remove();
+                    });
+            }
+        });
+    })
+
+})();
