@@ -175,7 +175,10 @@ function getRecordTypeRow (typeName, typeColor) {
         });
     });
 
-    btnUpdate.addEventListener('click', () => {
+    btnUpdate.addEventListener('click', update);
+    row.addEventListener('dblclick', update);
+
+    function update () {
         window.api.send("askUpdateRecordTypeModal", { name: typeName, color: typeColor });
 
         window.api.receive("confirmUpdateRecordTypeFromConfig", (response) => {
@@ -187,7 +190,7 @@ function getRecordTypeRow (typeName, typeColor) {
                 colColor.style.backgroundColor = typeColor;
             }
         });
-    });
+    }
 
     return row;
 }
@@ -244,7 +247,10 @@ function getLinkTypeRow (typeName, typeColor, typeStroke) {
     row.appendChild(colStroke);
     row.appendChild(colTools);
 
-    btnUpdate.addEventListener('click', () => {
+    btnUpdate.addEventListener('click', update);
+    row.addEventListener('dblclick', update);
+
+    function update () {
         window.api.send("askUpdateLinkTypeModal", { name: typeName, color: typeColor, stroke: typeStroke });
 
         window.api.receive("confirmUpdateLinkTypeFromConfig", (response) => {
@@ -258,7 +264,7 @@ function getLinkTypeRow (typeName, typeColor, typeStroke) {
                 colStroke.textContent = typeStroke;
             }
         });
-    });
+    }
 
     btnDelete.addEventListener('click', () => {
         window.api.send("askDeleteRecordType", { name: typeName });

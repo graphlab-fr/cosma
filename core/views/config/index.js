@@ -33,7 +33,6 @@ module.exports = function () {
     window.once('ready-to-show', () => {
         window.show();
         state.openedWindows.config = true;
-        // window.webContents.openDevTools();
     });
 
     window.once('closed', () => {
@@ -323,13 +322,11 @@ ipcMain.on("sendNewLinkTypeToConfig", (event, data) => {
 
 ipcMain.on("askUpdateLinkTypeModal", (event, data) => {
     modalLinkUpdate = new BrowserWindow (
-        Object.assign(windowsModel.forms, {
+        Object.assign(windowsModel.modal, {
             parent: window,
             title: 'Éditer un type de lien'
         })
     );
-
-    modalLinkUpdate.webContents.openDevTools();
 
     modalLinkUpdate.loadFile(path.join(__dirname, './modal-updatelinktype-source.html'));
 
