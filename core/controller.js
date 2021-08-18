@@ -22,10 +22,17 @@ const channels = {
         'confirmUpdateRecordTypeFromConfig', // config/index.js → config/main-render.js
                                              //                 ↘ config/modal-updaterecordtype-render.js
         'confirmDeleteRecordTypeFromConfig', // config/index.js → config/main-render.js
+        'confirmNewLinkTypeFromConfig',      // config/index.js → config/main-render.js
+                                             //                 ↘ config/modal-addlinktype-render.js
         'getRecordTypeToUpdate',             // config/index.js → config/modal-updaterecordtype-render.js
+        'getLinkTypeToUpdate',               // config/index.js → config/modal-updatelinktype-render.js
+        'confirmUpdateLinkTypeFromConfig',   // config/index.js → config/main-render.js
+                                             //                 ↘ config/modal-updatelinktype-render.js
+        'confirmDeleteLinkTypeFromConfig',   // config/index.js → config/main-render.js
         'getBibliographyPath',               // config/index.js → config/main-render.js
         'getCslPath',                        // config/index.js → config/main-render.js
         'getOptionMinimumFromConfig',        // config/index.js → config/main-render.js
+        'getLinkStokes',                     // config/index.js → config/modal-addlinktype-render.js
 
         /**
          * Record
@@ -70,17 +77,24 @@ const channels = {
          * Configuration
          */
 
-        'sendConfigOptions',           // config/index.js ← config/main-render.js
-        'askConfig',                   // config/index.js ← config/main-render.js
-        'askBibliographyPath',         // config/index.js ← config/main-render.js
-        'askCslPath',                  // config/index.js ← config/main-render.js
-        'askOptionMinimumFromConfig',  // config/index.js ← config/main-render.js
-        'askFilesOriginPath',          // config/index.js ← config/main-render.js
-        'askNewRecordTypeModal',       // config/index.js ← config/main-render.js
-        'askDeleteRecordType',         // config/index.js ← config/main-render.js
-        'askUpdateRecordTypeModal',    // config/index.js ← config/main-render.js
-        'sendNewRecordTypeToConfig',   // config/index.js ← config/modal-addrecordtype-render.js
+        'sendConfigOptions',            // config/index.js ← config/main-render.js
+        'askConfig',                    // config/index.js ← config/main-render.js
+        'askBibliographyPath',          // config/index.js ← config/main-render.js
+        'askCslPath',                   // config/index.js ← config/main-render.js
+        'askOptionMinimumFromConfig',   // config/index.js ← config/main-render.js
+        'askFilesOriginPath',           // config/index.js ← config/main-render.js
+        'askNewRecordTypeModal',        // config/index.js ← config/main-render.js
+        'askNewLinkTypeModal',          // config/index.js ← config/main-render.js
+        'askDeleteRecordType',          // config/index.js ← config/main-render.js
+        'askUpdateRecordTypeModal',     // config/index.js ← config/main-render.js
+        'sendNewRecordTypeToConfig',    // config/index.js ← config/modal-addrecordtype-render.js
         'sendUpdateRecordTypeToConfig', // config/index.js ← config/modal-updaterecordtype-render.js
+        'askLinkStokes',                // config/index.js ← config/modal-addlinktype-render.js
+                                        //                 ↖ config/modal-updatelinktype-render.js
+        'askUpdateLinkTypeModal',       // config/index.js ← config/modal-updatelinktype-render.js
+        'sendUpdateLinkTypeToConfig',   // config/index.js ← config/modal-updatelinktype-render.js
+        'askDeleteLinkType',            // config/index.js ← config/main-render.js
+        'sendNewLinkTypeToConfig',      // config/index.js ← config/modal-addlinktype-render.js
 
         /**
          * Record

@@ -23,6 +23,8 @@ module.exports = class Config {
         graph_attraction_horizontale: 0
     };
 
+    static linkStrokes = ['simple', 'double', 'dotted', 'dash'];
+
     /**
      * Create a user config.
      * @param {object} opts - Options to change from the default config.

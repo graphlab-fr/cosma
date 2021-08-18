@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - Éditer un type de lien</title>
+    
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Éditer un type de lien</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+
+            <form id="form-update-link-type">
+                <label>
+                    Nom
+                    <input type="text" name="name">
+                </label>
+
+                <label>
+                    Couleur
+                    <input type="color" name="color">
+                </label>
+
+                <label>
+                    Bordure
+                    <select name="stroke"></select>
+                </label>
+
+                <input type="hidden" name="originalName">
+
+                <output></output>
+    
+                <button type="submit">Enregistrer</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="modal-updatelinktype-render.js"></script>
+</body>
+
+</html>

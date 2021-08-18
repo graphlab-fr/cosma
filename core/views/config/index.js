@@ -10,7 +10,7 @@ const Config = require('../../models/config')
     , state = require('../../models/state')
     , windowsModel = require('../../models/windows');
 
-let window, newRecordModal, updateRecordModal;
+let window, modalRecordNew, modalRecordUpdate, modalLinkNew, modalLinkUpdate;
 
 module.exports = function () {
 
@@ -103,18 +103,22 @@ ipcMain.on("askOptionMinimumFromConfig", (event, data) => {
     window.webContents.send("getOptionMinimumFromConfig", Config.minValues);
 });
 
+ipcMain.on("askLinkStokes", (event, data) => {
+    event.reply("getLinkStokes", Config.linkStrokes);
+});
+
 ipcMain.on("askNewRecordTypeModal", (event, data) => {
-    newRecordModal = new BrowserWindow (
+    modalRecordNew = new BrowserWindow (
         Object.assign(windowsModel.modal, {
             parent: window,
             title: 'Nouveau type de fiche'
         })
     );
 
-    newRecordModal.loadFile(path.join(__dirname, './modal-addrecordtype-source.html'));
+    modalRecordNew.loadFile(path.join(__dirname, './modal-addrecordtype-source.html'));
 
-    newRecordModal.once('ready-to-show', () => {
-        newRecordModal.show();
+    modalRecordNew.once('ready-to-show', () => {
+        modalRecordNew.show();
     });
 });
 
@@ -139,7 +143,7 @@ ipcMain.on("sendNewRecordTypeToConfig", (event, data) => {
         };
 
         window.webContents.send("confirmNewRecordTypeFromConfig", response);
-        newRecordModal.close();
+        modalRecordNew.close();
     } else if (result === false) {
         response = {
             isOk: false,
@@ -147,7 +151,7 @@ ipcMain.on("sendNewRecordTypeToConfig", (event, data) => {
             data: {}
         };
 
-        newRecordModal.webContents.send("confirmNewRecordTypeFromConfig", response);
+        modalRecordNew.webContents.send("confirmNewRecordTypeFromConfig", response);
     } else {
         response = {
             isOk: false,
@@ -155,7 +159,7 @@ ipcMain.on("sendNewRecordTypeToConfig", (event, data) => {
             data: {}
         };
 
-        newRecordModal.webContents.send("confirmNewRecordTypeFromConfig", response);
+        modalRecordNew.webContents.send("confirmNewRecordTypeFromConfig", response);
     }
 });
 
@@ -196,18 +200,18 @@ ipcMain.on("askDeleteRecordType", (event, data) => {
 });
 
 ipcMain.on("askUpdateRecordTypeModal", (event, data) => {
-    updateRecordModal = new BrowserWindow (
+    modalRecordUpdate = new BrowserWindow (
         Object.assign(windowsModel.modal, {
             parent: window,
             title: 'Éditer un type de fiche'
         })
     );
 
-    updateRecordModal.loadFile(path.join(__dirname, './modal-updaterecordtype-source.html'));
+    modalRecordUpdate.loadFile(path.join(__dirname, './modal-updaterecordtype-source.html'));
 
-    updateRecordModal.once('ready-to-show', () => {
-        updateRecordModal.show();
-        updateRecordModal.webContents.send("getRecordTypeToUpdate", data);
+    modalRecordUpdate.once('ready-to-show', () => {
+        modalRecordUpdate.show();
+        modalRecordUpdate.webContents.send("getRecordTypeToUpdate", data);
     });
 
 });
@@ -238,7 +242,7 @@ ipcMain.on("sendUpdateRecordTypeToConfig", (event, data) => {
         };
 
         window.webContents.send("confirmUpdateRecordTypeFromConfig", response);
-        updateRecordModal.close();
+        modalRecordUpdate.close();
     } else if (result === false) {
         response = {
             isOk: false,
@@ -246,7 +250,7 @@ ipcMain.on("sendUpdateRecordTypeToConfig", (event, data) => {
             data: {}
         };
 
-        updateRecordModal.webContents.send("confirmUpdateRecordTypeFromConfig", response);
+        modalRecordUpdate.webContents.send("confirmUpdateRecordTypeFromConfig", response);
     } else {
         response = {
             isOk: false,
@@ -254,8 +258,174 @@ ipcMain.on("sendUpdateRecordTypeToConfig", (event, data) => {
             data: {}
         };
 
-        updateRecordModal.webContents.send("confirmUpdateRecordTypeFromConfig", response);
+        modalRecordUpdate.webContents.send("confirmUpdateRecordTypeFromConfig", response);
     }
+});
+
+ipcMain.on("askNewLinkTypeModal", (event, data) => {
+    modalLinkNew = new BrowserWindow (
+        Object.assign(windowsModel.modal, {
+            parent: window,
+            title: 'Nouveau type de lien'
+        })
+    );
+
+    modalLinkNew.loadFile(path.join(__dirname, './modal-addlinktype-source.html'));
+
+    modalLinkNew.once('ready-to-show', () => {
+        modalLinkNew.show();
+    });
+});
+
+ipcMain.on("sendNewLinkTypeToConfig", (event, data) => {
+    let config = new Config();
+    let linkTypes = config.opts.link_types;
+
+    linkTypes[data.name] = {
+        color: data.color,
+        stroke: data.stroke
+    };
+
+    config = new Config({
+        link_types: linkTypes
+    });
+
+    let result = config.save()
+        , response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "Le nouveau type de lien a bien été enregistré dans la configuration.",
+            data: data
+        };
+
+        window.webContents.send("confirmNewLinkTypeFromConfig", response);
+        modalLinkNew.close();
+    } else if (result === false) {
+        response = {
+            isOk: false,
+            consolMsg: "Le nouveau type de fiche n'a pas pu être enregistrée dans la configuration.",
+            data: {}
+        };
+
+        modalLinkNew.webContents.send("confirmNewLinkTypeFromConfig", response);
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            data: {}
+        };
+
+        modalLinkNew.webContents.send("confirmNewLinkTypeFromConfig", response);
+    }
+});
+
+ipcMain.on("askUpdateLinkTypeModal", (event, data) => {
+    modalLinkUpdate = new BrowserWindow (
+        Object.assign(windowsModel.forms, {
+            parent: window,
+            title: 'Éditer un type de lien'
+        })
+    );
+
+    modalLinkUpdate.webContents.openDevTools();
+
+    modalLinkUpdate.loadFile(path.join(__dirname, './modal-updatelinktype-source.html'));
+
+    modalLinkUpdate.once('ready-to-show', () => {
+        modalLinkUpdate.show();
+        modalLinkUpdate.webContents.send("getLinkTypeToUpdate", data);
+    });
+
+});
+
+ipcMain.on("sendUpdateLinkTypeToConfig", (event, data) => {
+    let config = new Config();
+    let linkTypes = config.opts.link_types;
+
+    if (data.originalName === data.name) {
+        linkTypes[data.name] = {
+            color: data.color,
+            stroke: data.stroke
+        };
+    } else {
+        delete linkTypes[data.originalName];
+        linkTypes[data.name] = {
+            color: data.color,
+            stroke: data.stroke
+        };
+    }
+
+    config = new Config({
+        link_types: linkTypes
+    });
+
+    let result = config.save()
+        , response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "Le type de lien a bien été mis à jour dans la configuration.",
+            data: data
+        };
+
+        window.webContents.send("confirmUpdateLinkTypeFromConfig", response);
+        modalLinkUpdate.close();
+    } else if (result === false) {
+        response = {
+            isOk: false,
+            consolMsg: "Le type de lien n'a pas pu être mis à jour dans la configuration.",
+            data: {}
+        };
+
+        modalLinkUpdate.webContents.send("confirmUpdateLinkTypeFromConfig", response);
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            data: {}
+        };
+
+        modalLinkUpdate.webContents.send("confirmUpdateLinkTypeFromConfig", response);
+    }
+});
+
+ipcMain.on("askDeleteRecordType", (event, data) => {
+    let config = new Config();
+    let linkTypes = config.opts.link_types;
+
+    delete linkTypes[data.name];
+
+    config = new Config({
+        link_types: linkTypes
+    });
+
+    let result = config.save()
+        , response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "Le type de lien a bien été supprimé de la configuration.",
+            data: data
+        };
+    } else if (result === false) {
+        response = {
+            isOk: false,
+            consolMsg: "Le type de lien n'a pas pu être supprimé de la configuration.",
+            data: {}
+        };
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            data: {}
+        };
+    }
+
+    window.webContents.send("confirmDeleteLinkTypeFromConfig", response);
 });
 
 ipcMain.on("askFilesOriginPath", (event, data) => {

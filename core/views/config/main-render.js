@@ -80,6 +80,7 @@ window.api.receive("getConfig", (response) => {
             }
 
             if (option === 'link_types') {
+                setLinkTypeTable(response.data[option]);
                 continue;
             }
 
@@ -181,6 +182,87 @@ function getRecordTypeRow (typeName, typeColor) {
 
                 colName.textContent = typeName;
                 colColor.style.backgroundColor = typeColor;
+            }
+        });
+    });
+
+    return row;
+}
+
+function setLinkTypeTable (linkTypes) {
+    const typeContainer = document.getElementById('add-type-links')
+        , tableBody = typeContainer.querySelector('tbody')
+        , btnAdd = typeContainer.querySelector('button[data-fx="add"]');
+
+    const tableBodyContent = document.createDocumentFragment();
+
+    for (const type in linkTypes) {
+        tableBodyContent.appendChild(
+            getLinkTypeRow(type, linkTypes[type].color, linkTypes[type].stroke)
+        );
+    }
+
+    tableBody.appendChild(tableBodyContent);
+
+    btnAdd.addEventListener('click', () => {
+        window.api.send("askNewLinkTypeModal", null);
+
+        window.api.receive("confirmNewLinkTypeFromConfig", (response) => {
+            tableBodyContent.appendChild(
+                getLinkTypeRow(response.data.name, response.data.color, response.data.stroke)
+            );
+
+            tableBody.appendChild(tableBodyContent);
+        });
+    });
+}
+
+function getLinkTypeRow (typeName, typeColor, typeStroke) {
+    const row = document.createElement('tr')
+        , colName = document.createElement('td')
+        , colColor = document.createElement('td')
+        , colStroke = document.createElement('td')
+        , colTools = document.createElement('td')
+        , btnUpdate = document.createElement('button')
+        , btnDelete = document.createElement('button');
+
+    colName.textContent = typeName;
+    colColor.style.backgroundColor = typeColor;
+    colStroke.textContent = typeStroke;
+    btnUpdate.textContent = 'Modif.';
+    btnUpdate.setAttribute('type', 'button');
+    btnDelete.textContent = 'Suppr.';
+    btnDelete.setAttribute('type', 'button');
+    colTools.appendChild(btnUpdate);
+    colTools.appendChild(btnDelete);
+
+    row.appendChild(colName);
+    row.appendChild(colColor);
+    row.appendChild(colStroke);
+    row.appendChild(colTools);
+
+    btnUpdate.addEventListener('click', () => {
+        window.api.send("askUpdateLinkTypeModal", { name: typeName, color: typeColor, stroke: typeStroke });
+
+        window.api.receive("confirmUpdateLinkTypeFromConfig", (response) => {
+            if (response.isOk === true) {
+                typeName = response.data.name;
+                typeColor = response.data.color;
+                typeStroke = response.data.stroke;
+
+                colName.textContent = typeName;
+                colColor.style.backgroundColor = typeColor;
+                colStroke.textContent = typeStroke;
+            }
+        });
+    });
+
+    btnDelete.addEventListener('click', () => {
+        window.api.send("askDeleteRecordType", { name: typeName });
+
+        window.api.receive("confirmDeleteLinkTypeFromConfig", (response) => {
+            if (response.isOk === true) {
+                row.remove();
             }
         });
     });

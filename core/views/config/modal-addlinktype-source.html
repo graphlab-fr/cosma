@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Cosma - Nouveau type de lien</title>
+    
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Nouveau type de lien</h1>
+    </header>
+
+    <div class="wrapper">
+    
+        <main>
+
+            <form id="form-add-record-type">
+                <label>
+                    Nom
+                    <input type="text" name="name">
+                </label>
+
+                <label>
+                    Couleur
+                    <input type="color" name="color">
+                </label>
+
+                <label>
+                    Bordure
+                    <select name="stroke"></select>
+                </label>
+
+                <output></output>
+    
+                <button type="submit">Enregistrer</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="modal-addlinktype-render.js"></script>
+</body>
+
+</html>
