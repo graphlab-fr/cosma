@@ -9,6 +9,7 @@ const form = document.getElementById('form-cosmoscope-export');
     
         let data = new FormData(form);
         data = Object.fromEntries(data);
+        data = serializeData(data);
     
         window.api.send("sendExportOptions", data);
     
@@ -19,6 +20,28 @@ const form = document.getElementById('form-cosmoscope-export');
     })
     
 })();
+
+function serializeData (data) {
+    data['citeproc'] = booleanCheckbox(data['citeproc']);
+    data['publish'] = booleanCheckbox(data['publish']);
+
+    return data;
+}
+
+/**
+ * Convert the value of a checkbox
+ * if 'on' → true
+ * if undefined → false
+ * @param {string} option - Checkbox input value
+ * @return {boolean} - Checkbox boolean value
+ */
+
+function booleanCheckbox (option) {
+    if (option !== undefined && option === 'on') {
+        return true; }
+
+        return false;
+}
 
 (function () {
 

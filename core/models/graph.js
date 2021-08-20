@@ -52,7 +52,10 @@ module.exports = class Graph {
     constructor (parms) {
 
         this.config = new Config().serializeForGraph();
-        this.parms = parms.filter(parm => Graph.validParms.includes(parm));
+
+        this.parms = [];
+        if (parms) {
+            this.parms = parms.filter(parm => Graph.validParms.includes(parm)); }
 
         this.report = {
             ignoredFiles: [],
@@ -519,6 +522,8 @@ module.exports = class Graph {
     }
 
     getUsedCitationReferences () {
+        if (this.parms.includes('citeproc') === false) { return []; }
+
         const refs = Object.values(this.library).filter(item => item.used === true);
 
         if (refs.length === 0) { return null; }

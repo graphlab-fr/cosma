@@ -43,7 +43,7 @@ module.exports = function () {
             break;
     
         case false:
-            const graph = new Graph(['publish', 'citeproc', 'wrongOne'])
+            const graph = new Graph()
                 , template = new Template(graph)
                 , history = new History();
 

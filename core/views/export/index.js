@@ -8,7 +8,9 @@ const {
     , fs = require('fs');
 
 const windowsModel = require('../../models/windows')
-    , Config = require('../../models/config');
+    , Config = require('../../models/config')
+    , Graph = require('../../models/graph')
+    , Template = require('../../models/template');
 
 let modal;
 
@@ -74,17 +76,24 @@ ipcMain.on("askExportPathFromConfig", (event, data) => {
 });
 
 ipcMain.on("sendExportOptions", (event, data) => {
-
     // save the export path into the configuration
     let config = new Config({ export_path: data.export_path });
     config.save();
 
-    data.export_path = path.join(data.export_path, 'cosmoscope.html');
+    const exportPath = path.join(data.export_path, 'cosmoscope.html');
 
-    const graph = require('../../models/graph')()
-    cosmoscope = require('../../models/template')(graph.files, graph.entities);
+    delete data.export_path;
 
-    fs.writeFile(data.export_path, cosmoscope, (err) => {
+    let activatedModes = [];
+    for (const mode in data) {
+        if (data[mode] === true) {
+            activatedModes.push(mode); }
+    }
+
+    const graph = new Graph(activatedModes)
+        , template = new Template(graph);
+
+    fs.writeFile(exportPath, template.html, (err) => {
         if (err) {
             modal.webContents.send("confirmExport", {
                 isOk: false,
