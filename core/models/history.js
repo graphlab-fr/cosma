@@ -103,6 +103,7 @@ module.exports = class History {
 
         this.pathToStore = path.join(History.path, this.id);
         this.pathToMetas = path.join(this.pathToStore, 'metas.json');
+        this.pathToReport = path.join(this.pathToStore, 'report.json');
 
         if (id === '') {
             fs.mkdirSync(this.pathToStore);
@@ -140,6 +141,16 @@ module.exports = class History {
     getMetas () {
         let content = fs.readFileSync(this.pathToMetas, 'utf-8');
         return JSON.parse(content);
+    }
+
+    getReport () {
+        try {
+            let content = fs.readFileSync(this.pathToReport, 'utf-8');
+
+            return JSON.parse(content);
+        } catch (error) {
+            return null;
+        }
     }
 
 }

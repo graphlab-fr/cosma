@@ -14,7 +14,7 @@ const windowsModel = require('../../models/windows')
     , mainWindow = require('../../../main').mainWindow
     , History = require('../../models/history');
 
-let window, modalRename;
+let window, modalRename, modalReport;
 
 module.exports = function () {
 
@@ -153,3 +153,40 @@ ipcMain.on("askCosmoscopeExportFromHistory", (event, recordId) => {
     });
 
 });
+
+ipcMain.on("askHistoryReportModal", (event, recordId) => {
+    modalReport = new BrowserWindow (
+        Object.assign(windowsModel.modal, {
+            parent: window,
+            title: 'Rapport'
+        })
+    );
+
+    modalReport.loadFile(path.join(__dirname, './modal-report-source.html'));
+
+    modalReport.once('ready-to-show', () => {
+        modalReport.show();
+
+        const recordFromHistory = new History(recordId)
+        , report = recordFromHistory.getReport();
+
+        modalReport.webContents.send("getHistoryReport", report);
+    });
+    
+});
+
+// ipcMain.on("askHistoryReport", (event, recordId) => {
+    
+//     // recordFromHistory.metas.name = data.name;
+//     // const result = recordFromHistory.saveMetas();
+
+//     // let response = {
+//     //     isOk: true,
+//     //     consolMsg: 'L\'entrée d\'historique a été renommée',
+//     //     data: data
+//     // }
+
+//     // modalRename.close();
+
+//     window.webContents.send("getHistoryReport", report);
+// });

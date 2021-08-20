@@ -50,6 +50,7 @@ module.exports = function () {
             windowPath = path.join(history.pathToStore, 'cosmoscope.html');
 
             history.store('cosmoscope.html', template.html);
+            history.store('report.json', JSON.stringify(graph.reportToSentences()));
             break;
     }
 

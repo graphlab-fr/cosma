@@ -63,6 +63,7 @@ const channels = {
         'confirmHistoryDelete',    // history/index.js → history/main-render.js
         'confirmHistoryDeleteAll', // history/index.js → history/main-render.js
         'getMetasHistory',         // history/index.js → history/modal-rename-render.js
+        'getHistoryReport',        // history/index.js → history/modal-report-render.js
 
         /**
          * Cosmoscope
@@ -121,6 +122,7 @@ const channels = {
         'sendHistoryToDelete',            // history/index.js ← history/main-render.js
         'askHistoryDeleteAll',            // history/index.js ← history/main-render.js
         'askRenameHistoryModal',          // history/index.js ← history/main-render.js
+        'askHistoryReportModal',          // history/index.js ← history/main-render.js
         'askCosmoscopeExportFromHistory', // history/index.js ← history/main-render.js
         'sendNewHistoryName',             // history/index.js ← history/modal-rename-render.js
 

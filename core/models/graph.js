@@ -81,13 +81,9 @@ module.exports = class Graph {
         if (this.config.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
 
-        return {
-            report: this.report,
-            files: this.files,
-            data: {
-                nodes: this.getNodes(),
-                links: this.getLinks()
-            }
+        this.data = {
+            nodes: this.getNodes(),
+            links: this.getLinks()
         }
     }
 

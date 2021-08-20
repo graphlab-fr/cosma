@@ -21,6 +21,10 @@ body {
     margin: 0 auto;
 }
 
+button {
+    margin: 2px;
+}
+
 form {
     display: flex;
     flex-direction: column;
