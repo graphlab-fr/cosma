@@ -45,13 +45,13 @@ module.exports = class Template {
         });
     }
 
-    constructor (files, data) {
+    constructor (graph) {
         this.config = new Config().serializeForTemplate();
 
         this.types = {};
         this.tags = {};
 
-        files = files.map((file) => {
+        graph.files = graph.files.map((file) => {
             file.content = Template.convertLinks(file);
 
             this.registerType(file.metas.type, file.metas.id);
@@ -64,7 +64,9 @@ module.exports = class Template {
 
         const html = nunjucks.render('template.njk', {
 
-            records: files.map(function (file) {
+            publishMode: (graph.parms.includes('publish') === true),
+
+            records: graph.files.map(function (file) {
 
                 return {
                     id: file.metas.id,
@@ -81,7 +83,7 @@ module.exports = class Template {
 
             graph: {
                 config: this.config.graph,
-                data: JSON.stringify(data)
+                data: JSON.stringify(graph.data)
             },
 
             colors: this.colors(),
@@ -98,13 +100,15 @@ module.exports = class Template {
                 return { name: tag, nodes: this.types[tag] };
             }, this).sort(function (a, b) { return a.name.localeCompare(b.name); }),
 
-            metadata: this.config.metadata,
+            usedQuoteRef: graph.getUsedCitationReferences(),
+
+            metadata: this.config.metas,
 
             linkSymbol: this.config.link_symbol,
 
             focusIsActive: !(this.config.focus_max <= 0),
 
-            nblinks: data.links.length,
+            nblinks: graph.data.links.length,
 
             date: moment().format('YYYY-MM-DD')
         });

@@ -44,7 +44,7 @@ module.exports = function () {
     
         case false:
             const graph = new Graph(['publish', 'citeproc', 'wrongOne'])
-                , template = new Template(graph.files, graph.data)
+                , template = new Template(graph)
                 , history = new History();
 
             windowPath = path.join(history.pathToStore, 'cosmoscope.html');

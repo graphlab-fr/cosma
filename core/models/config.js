@@ -93,6 +93,7 @@ module.exports = class Config {
 
     serializeForTemplate () {
         const template = {
+            metas: {},
             graph: {
                 attraction: {}
             }
@@ -100,6 +101,14 @@ module.exports = class Config {
 
         for (const opt in this.opts) {
             let optionLabels = opt.split('_');
+
+            if (optionLabels[0] === 'metas') {
+                optionLabels = optionLabels.slice(1);
+
+                const fullLabel = optionLabels.join('_');
+                template.metas[fullLabel] = this.opts[opt];
+                continue;
+            }
 
             if (optionLabels[0] === 'graph') {
                 optionLabels = optionLabels.slice(1);

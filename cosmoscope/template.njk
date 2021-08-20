@@ -196,7 +196,7 @@
         </details>
 
         <footer class="menu-footer">
-            {% if usedCitationReferences %}
+            {% if usedQuoteRef %}
             <span onclick="openRecord('citation-references', false)"
                 class="bibliography-open" title="Données bibliographiques">
                 Données
@@ -424,7 +424,7 @@
             </main>
         </article>
 
-        {% if usedCitationReferences %}
+        {% if usedQuoteRef %}
         <article id="citation-references" class="record">
             <main>
                 <h1>Données bibliographiques</h1>
@@ -435,7 +435,7 @@
     
                 <button>Télécharger</button>
     
-                <code>{{ usedCitationReferences | dump | escape }}</code>
+                <code>{{ usedQuoteRef | dump | escape }}</code>
             </main>
         </article>
         {% endif %}
@@ -508,7 +508,7 @@
         {% include "scripts/keyboard.js" %}
         {% include "scripts/counter.js" %}
 
-        {% if usedCitationReferences %}
+        {% if usedQuoteRef %}
             {% include "scripts/bibliography.js" %}
         {% endif %}
     </script>
