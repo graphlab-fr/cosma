@@ -91,7 +91,7 @@ module.exports = class Config {
      * @return {object} - Ordered object.
      */
 
-    serialize () {
+    serializeForTemplate () {
         const template = {
             graph: {
                 attraction: {}
@@ -118,8 +118,22 @@ module.exports = class Config {
             }
 
             const fullLabel = optionLabels.join('_');
+
             template[fullLabel] = this.opts[opt];
         }
+
+        return template;
+    }
+
+    serializeForGraph () {
+        let template = {};
+
+        [
+            'files_origin', 'focus_max', 'record_types', 'link_types',
+            'bibliography', 'csl'
+        ].forEach(key => {
+            template[key] = this.opts[key];
+        });
 
         return template;
     }

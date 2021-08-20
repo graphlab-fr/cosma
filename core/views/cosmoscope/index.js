@@ -20,7 +20,9 @@ const state = require('../../models/state')
 
 let cosmoscope, windowPath, modalView;
 
-const History = require('../../models/history');
+const History = require('../../models/history')
+    , Graph = require('../../models/graph')
+    , Template = require('../../models/template');
 
 module.exports = function () {
     
@@ -41,13 +43,13 @@ module.exports = function () {
             break;
     
         case false:
-            const graph = require('../../models/graph')()
-            cosmoscope = require('../../models/template')(graph.files, graph.entities);
+            const graph = new Graph(['publish', 'citeproc', 'wrongOne'])
+                , template = new Template(graph.files, graph.data)
+                , history = new History();
 
-            const history = new History();
             windowPath = path.join(history.pathToStore, 'cosmoscope.html');
 
-            history.store('cosmoscope.html', cosmoscope);
+            history.store('cosmoscope.html', template.html);
             break;
     }
 

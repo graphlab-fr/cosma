@@ -1,234 +1,348 @@
 /**
  * @file Cosmoscope generator
- * @author Guillaume Brioudes
+ * @author Guillaume Brioudes <https://myllaume.fr/>
  * @copyright MIT License ANR HyperOtlet
  */
 
 const fs = require('fs')
     , path = require('path')
-    , ymlFM = require('yaml-front-matter')
-    , moment = require('moment');
+    , ymlFM = require('yaml-front-matter');
 
-const Config = require('../models/config')
-    , linksTools = require('./links');
+const Config = require('./config');
 
-module.exports = function () {
+module.exports = class Graph {
 
-    let fileIds = []
-        , logs = { warn: [], err: [] }
-        , entities = { nodes: [], links: [] }
-        , id = 0
-        , config = new Config();
+    static validParms = ['publish', 'citeproc'];
 
-    config = config.serialize();
+    static normalizeLinks (link) {
+        link = link.split(':', 2);
 
-    config.record_types_list = Object.keys(config.record_types)
-        , config.link_types_list = Object.keys(config.link_types);
+        if (link.length === 2) {
+            return { type: link[0], target: {id: (Number(link[1]) || link[1]) } }; }
 
-    let files = fs.readdirSync(config.files_origin, 'utf8') // files name list
-        .filter(fileName => path.extname(fileName) === '.md') // throw no .md file
-        .map(function(file) { // file analysis
-            const filePath = path.join(config.files_origin, file);
-            const mTime = fs.statSync(filePath).mtime; // last modif date
-            const fileName = file;
+        return { type: 'undefined', target: {id: (Number(link[0]) || link[0]) } };
+    }
 
-            file = fs.readFileSync(filePath, 'utf8')
-            // YAML Front Matter extract = file metas + file content
-            file = ymlFM.loadFront(file);
-            // file content extract
-            let content = file.__content;
-            delete file.__content;
-            // file metas extract
-            let metas = file;
+    static getNodeRank (linksNb, backlinksNb) {
+        let rank = 1 // original rank
+            , sizeDivisor = 2; // to subside rank
 
-            metas.mtime = moment(mTime).format('YYYY-MM-DD');
-            metas.fileName = fileName;
+        rank += Math.floor(linksNb / sizeDivisor);
+        rank += Math.floor(backlinksNb / sizeDivisor);
 
-            return {
-                content: content,
-                metas: metas
-            }
-        })
-        .filter(function(file) { // throw files with bad metas
-            if (!file.metas.id || isNaN(file.metas.id) === true) {
-                logs.err.push(`File ${file.metas.fileName} throw out : no valid id`);
-                return false; }
-    
-            if (!file.metas.title) {
-                logs.err.push(`File ${file.metas.fileName} throw out : no valid title`);
-                return false; }
-    
-            if (fileIds.includes(file.metas.id)) {
-                logs.err.push(`File ${file.metas.fileName} throw out : uses an identifier common to another file`); }
-    
-            fileIds.push(file.metas.id);
-    
-            return true;
-        })
-        .map(function(file) { // normalize metas
-            // null or no registered types changed to "undefined"
-            if (file.metas.type === null || config.record_types_list.indexOf(file.metas.type) === -1) {
-                file.metas.type = 'undefined';
-                logs.warn.push(`Type of file ${file.metas.fileName} changed to undefined : no registered type`);
-            }
-    
-            file.metas.tags = file.metas.tags || [];
-    
-            // if (quoteTools.citeprocModeIsActive()) {
-            //     // extract quoting key from file content as '[@perretFonctionDocumentairePreuve2020, 22]'
-            //     const quoteExtraction = quoteTools.catchQuoteKeys(file.content);
-            //     file.quoteKeys = quoteExtraction.quoteKeys; // quoting keys and their content
-            //     quoteExtraction.undefinedLibraryIds.forEach(id => { // errors processing
-            //         logs.warn.push(`Quote key "${id}" written on file ${file.metas.fileName} is undefined from the CSL library`);
-            //     });
-            // }
-    
-            // analysis file content by regex : get links target id
-            file.links = linksTools.catchLinksFromContent(file.content)
-                .filter(function(link) {
-                    // throw links that are not numbers or from/to an unknown file id
-                    if (fileIds.includes(link.target.id) === false || isNaN(link.target.id) !== false) {
-                        logs.warn.push(`The link "${link.target.id}" from file ${file.metas.fileName} has been ignored : no valid target`);
-                        return false;
-                    }
-                    // change link type if is not registred into configuration. Exception for 'undefined' type
-                    if (config.link_types_list.includes(link.type) === false && link.type !== 'undefined') {
-                        logs.warn.push(`The link "${link.target.id}" type "${link.type}" from file ${file.metas.fileName} has been ignored : no registered type`);
-                    }
-    
-                    return true;
-                }).map(function(link) {
-                    link.source = { id: file.metas.id };
-                    return link
-                });
-    
-            registerLinks(file);
-    
-            return file;
+        return rank;
+    }
+
+    constructor (parms) {
+
+        this.config = new Config().serializeForGraph();
+        this.parms = parms.filter(parm => Graph.validParms.includes(parm));
+
+        this.report = {
+            ignoredFiles: [],
+            typeRecordChange: [],
+            typeLinkChange: [],
+            linkInvalid: [],
+            linkNoTarget: [],
+            duplicates: []
+        };
+
+        this.files = this.serializeFiles()
+            .filter(this.verifFile, this);
+
+
+        this.filesIdnName = this.files.map((file) => {
+            return { id: file.metas.id, name: file.name };
         });
 
-        files = files.map(function(file) {
+        if (this.thereAreDuplicates()) {
+            
+        }
 
-            file.links = file.links.map(function(link) {
-                const targetMetas = findFileMeta(link.target.id);
-                return {
-                    type: link.type,
-                    context: link.context,
-                    target: {
-                        id: link.target.id,
-                        title: targetMetas.title,
-                        type: targetMetas.type
-                    },
-                    source: {
-                        id: link.source.id,
-                        title: file.metas.title,
-                        type: file.metas.type
-                    }
-                };
-            });
-        
-            file.backlinks = entities.links.filter(link => link.target === file.metas.id)
-                .map(function(link) {
-                    const targetMetas = findFileMeta(link.source);
-                    return {
-                        type: link.type,
-                        context: link.context,
-                        target: {
-                            id: link.source,
-                            title: targetMetas.title,
-                            type: targetMetas.type
-                        },
-                        source: {
-                            id: link.target,
-                            title: file.metas.title,
-                            type: file.metas.type
-                        }
-                    };
-                });
-        
-            file.focusLevels = ((config.focus_max <= 0) ? undefined : getConnectionLevels(file.metas.id, config.focus_max));
-        
-            registerNodes(file);
-        
-            return file;
-        });
-        
-    entities.links = entities.links.map(function(link) {
-        delete link.context; return link;
-    });
+        delete this.filesIdnName;
 
-    /**
-     * Feed entities.edges object with link object
-     * @param {object} file - File after links parsing
-     */
-    
-        function registerLinks(file) {
-        if (file.links.length === 0) { return; }
-    
-        for (const link of file.links) {
-            const style = getLinkStyle(link.type);
-    
-            entities.links.push({
-                id: Number(id++),
-                type: link.type,
-                shape: style.shape,
-                color: style.color,
-                source: Number(link.source.id),
-                target: Number(link.target.id),
-                context: link.context
-            });
+        this.files = this.files.map(this.scanLinksnContexts, this);
+
+        this.validTypes = {
+            records: Object.keys(this.config.record_types),
+            links: Object.keys(this.config.link_types)
+        }
+
+        this.filesId = this.files.map(file => file.metas.id);
+
+        this.files = this.files.map(this.checkRecordType, this);
+        this.files = this.files.map(this.checkLinkTargetnSource, this);
+
+        delete this.validTypes;
+        delete this.filesId;
+
+        this.files = this.files.map(this.findBacklinks, this);
+
+        if (this.config.focus_max > 0) {
+            this.files = this.files.map(this.evalConnectionLevels, this); }
+
+        return {
+            report: this.report,
+            files: this.files,
+            data: {
+                nodes: this.getNodes(),
+                links: this.getLinks()
+            }
         }
     }
+
+    getFilesNames () {
+        return fs.readdirSync(this.config.files_origin, 'utf8')
+            .filter(fileName => path.extname(fileName) === '.md');
+    }
+
+    serializeFiles() {
+        const config = this.config;
+
+        return this.getFilesNames()
+            .map(function (fileName) {
+                let file = {};
+
+                file.name = fileName;
+                file.filePath = path.join(config.files_origin, fileName);
+                file.lastEditDate = fs.statSync(file.filePath).mtime;
+                
+                file.contain = fs.readFileSync(file.filePath, 'utf8');
+                file.metas = ymlFM.loadFront(file.contain);
+                file.content = file.metas.__content
+                delete file.metas.__content;
+                delete file.contain;
+
+                file.metas.tags = file.metas.tags || [];
+
+                return file;
+            });
+    }
+
+    verifFile (file) {
+        if (!file.metas.id || isNaN(file.metas.id) === true) {
+            this.report.ignoredFiles.push({ fileName: file.name, invalidMeta: 'id' });
+            return false;
+        }
     
-    /**
-     * Feed entities.nodes object with node object
-     * @param {object} file - File after links & backlinks crop
-     */
-    
-    function registerNodes(file) {
-        const size = getRank(file.links.length, file.backlinks.length);
-    
-        entities.nodes.push({
-            id: Number(file.metas.id),
-            label: file.metas.title,
-            type: String(file.metas.type),
-            size: Number(size),
-            outLink: Number(file.links.length),
-            inLink: Number(file.backlinks.length),
-            focus: file.focusLevels
+        if (!file.metas.title) {
+            this.report.ignoredFiles.push({ fileName: file.name, invalidMeta: 'title' });
+            return false;
+        }
+
+        return true;
+    }
+
+    thereAreDuplicates () {
+        let duplicatedFilesNameById = [];
+
+        for (let i = 0; i < this.filesIdnName.length; i++) {
+            const fileIdTitle = this.filesIdnName[i];
+
+            if (Object.keys(duplicatedFilesNameById).includes(String(fileIdTitle.id))) {
+                // if the id had already duplicates identifed
+                continue;
+            }
+
+            const duplicates = this.filesIdnName.filter(file => file.id === fileIdTitle.id);
+
+            if (duplicates.length === 1 && duplicates[0].name === fileIdTitle.name) {
+                // if the only element found is in fact the verification element
+                continue;
+            }
+
+            // store the id of the duplicated files, associated with their name
+            // ex : 20201012091721: { file1.md, file2.md }
+            duplicatedFilesNameById[fileIdTitle.id] = duplicates.map(duplic => duplic.name);
+        }
+
+        if (Object.keys(duplicatedFilesNameById).length === 0) {
+            return false; // if there is no other file with this id
+        }
+
+        for (const eltId in duplicatedFilesNameById) {
+            const filesWithSameId = duplicatedFilesNameById[eltId];
+            this.report.duplicates.push({ id: eltId, files: filesWithSameId })
+        }
+
+        return true;
+    }
+
+    scanLinksnContexts (file) {
+        file.contexts = [];
+        file.links = [];
+
+        const paraphs = file.content.match(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/g);
+
+        if (paraphs === null) { return file; }
+
+        for (const paraph of paraphs) {
+            let links = paraph.match(/(?<=\[\[\s*).*?(?=\s*\]\])/gs);
+
+            if (links === null) { continue; }
+
+            links = deleteDupicates(links);
+            links = links.map(Graph.normalizeLinks);
+
+            file.contexts.push({
+                paraph: paraph,
+                ids: links
+            });
+
+            file.links = file.links.concat(links);
+        }
+
+        file.links = deleteDupicates(file.links);
+        
+        return file;
+    }
+
+    checkRecordType (file) {
+        if (this.validTypes.records.includes(file.metas.type) === false) {
+            this.report.typeRecordChange.push({ fileName: file.name, type: file.metas.type });
+
+            file.metas.type = 'undefined';
+
+            return file;
+        }
+
+        return file;
+    }
+
+    checkLinkTargetnSource (file) {
+        file.links = file.links.filter((link) => {
+            if (isNaN(Number(link.target.id)) === true) {
+                this.report.linkInvalid.push({ targetId: link.target.id, fileName: file.name })
+                return false;
+            }
+
+            if (this.filesId.includes(link.target.id) === false) {
+                this.report.linkNoTarget.push({ targetId: link.target.id, fileName: file.name })
+                return false;
+            }
+
+            return true;
         });
+
+        file.links = file.links.map((link) => {
+            if (this.validTypes.links.includes(link.type) === false) {
+                this.report.typeLinkChange.push(`Unknow link type "${link.type}" from file ${file.name} change to "undefined".`);
+
+                link.type = 'undefined';
+            }
+
+            link.context = file.contexts
+                .filter((context) => {
+                    if (context.ids.find(id => id.target.id === link.target.id) !== undefined) {
+                        return true; }
+                })
+                .map(context => context.paraph)
+
+            link.source = {
+                id: file.metas.id,
+                title: file.metas.title,
+                type: file.metas.type
+            };
+
+            link.target = {
+                id: link.target.id,
+                title: this.files.find(file => file.metas.id == link.target.id).metas.title,
+                type: this.files.find(file => file.metas.id == link.target.id).metas.type
+            };
+
+            return link;
+        });
+
+        return file;
     }
-    
-    /**
-     * Find file metas by its id
-     * @param {int} fileId - File after links & backlinks parsing
-     * @returns {array} - List of metas
-     */
-    
-    function findFileMeta(fileId) {
-        return title = files.find(function(file) {
-            return file.metas.id === fileId;
-        }).metas;
+
+    findBacklinks (file) {
+        file.backlinks = this.files
+            .filter((otherFile) => {
+                const targets = otherFile.links.map(link => link.target.id);
+
+                if (targets.includes(file.metas.id)) {
+                    return true; }
+
+                return false;
+            })
+            .map((otherFile) => otherFile.links);
+
+        file.backlinks = file.backlinks[0] || [];
+
+        return file;
     }
-    
-    /**
-     * Get link stroke and color according to the type config
-     * @param {string} linkType - Link type extract from his registration
-     * @returns {object} - Shape and color paramters
-     */
-    
-    function getLinkStyle(linkType) {
-        const linkTypeConfig = config.link_types[linkType];
+
+    evalConnectionLevels (file) {
+        file.focusLevels = [];
+
+        const nodeId = file.metas.id
+            , maxLevel = this.config.focus_max;
+
+        let index = [[nodeId]] // add the node as first level
+            , idsList = []; // contains all handled node ids
+
+        for (let i = 0 ; i < maxLevel ; i++) {
+
+            let level = [];
+
+            // searching connections for each nodes from the last registred level
+            for (const target of index[index.length - 1]) {
+                let result = getConnectedIds.apply(this, [target]);
+                if (result === false) { continue; } // node have not connections, analyse next one
+
+                // throw ids already registered into an other level toavoid infinit loop
+                result = result.filter(target => idsList.includes(target) === false);
+
+                level = level.concat(result);
+            }
+
+            // stop : current level contain any connection. There is no more level
+            if (level.length === 0) { break; }
+
+            // ignore duplicated ids
+            level = level.filter((item, index) => {
+                return level.indexOf(item) === index
+            });
+
+            index.push(level);
+            idsList = index.flat();
+        }
+
+        file.focusLevels = index.slice(1);
+
+        function getConnectedIds(nodeId) {
+            let sources = this.files
+                .find(file => file.metas.id === nodeId).links
+                .map(link => link.target.id);
+
+            let targets = this.files
+                .find(file => file.metas.id === nodeId).backlinks
+                .map(backlink => backlink.source.id);
+
+            targets = targets.concat(sources);
+
+            if (targets.length === 0) {
+                return false; }
+
+            return targets;
+        }
+
+        return file;
+    }
+
+    getLinkStyle (linkType) {
+        const linkTypeConfig = this.config.link_types[linkType];
         let stroke, color;
-    
+
         if (linkTypeConfig) {
-            stroke = config.link_types[linkType].stroke;
-            color = config.link_types[linkType].color;
+            stroke = linkTypeConfig.stroke;
+            color = linkTypeConfig.color;
         } else {
             stroke = 'simple';
             color = null;
         }
-    
+
         switch (stroke) {
             case 'simple':
                 return { shape: { stroke: stroke, dashInterval: null }, color: color };
@@ -245,88 +359,63 @@ module.exports = function () {
     
         return { shape: { stroke: 'simple', dashInterval: null }, color: color };
     }
-    
-    /**
-     * Find nodes connected around a single one on several levels
-     * Get data 'focus mode'
-     * @param {number} nodeId - File id
-     * @returns {array} - Array of arrays : contain one array per connection level
-     */
-    
-    function getConnectionLevels(nodeId, maxLevel) {
-    
-        let index = [[nodeId]]; // add the node as first level
-        let idsList = []; // contains all handled node ids
-    
-        for (let i = 0 ; i < maxLevel ; i++) {
-    
-            let level = [];
-            
-            // searching connections for each nodes from the last registred level
-            for (const target of index[index.length - 1]) {
-                let result = getConnectedIds(target);
-                if (result === false) { continue; } // node have not connections, analyse next one
-    
-                // throw ids already registered into an other level toavoid infinit loop
-                result = result.filter(target => idsList.includes(target) === false);
-    
-                level = level.concat(result);
+
+    getNodes () {
+        return this.files.map((file) => {
+            return {
+                id: file.metas.id,
+                label: file.metas.title,
+                type: file.metas.type,
+                size: Graph.getNodeRank(file.links.length, file.backlinks.length),
+                focus: file.focusLevels
             }
-    
-            // stop : current level contain any connection. There is no more level
-            if (level.length === 0) { break; }
-    
-            // ignore duplicated ids
-            level = level.filter((item, index) => {
-                return level.indexOf(item) === index
-            });
-    
-            index.push(level);
-            idsList = index.flat();
-        }
-    
-        return index.slice(1);
-    }
-    
-    /**
-     * Get connected links & backlinks from a node
-     * @param {int} nodeId - File id
-     * @returns {array} - Links and backlinks ids list
-     */
-    
-    function getConnectedIds(nodeId) {
-        const links = entities.links;
-    
-        let sources = links.filter(edge => edge.source === nodeId).map(edge => edge.target);
-        let targets = links.filter(edge => edge.target === nodeId).map(edge => edge.source);
-    
-        targets = targets.concat(sources);
-    
-        if (targets.length === 0) {
-            return false; }
-    
-        return targets;
-    }
-    
-    /**
-     * Get node rank from number of links & backlinks
-     * @param {number} backLinkNb - Number of backlinks
-     * @param {number} linkNb - Number of links
-     * @returns {number} - Rank
-     */
-    
-    function getRank(backLinkNb, linkNb) {
-        let rank = 1 // original rank
-            , sizeDivisor = 2; // to subside rank
-    
-        rank += Math.floor(linkNb / sizeDivisor);
-        rank += Math.floor(backLinkNb / sizeDivisor);
-        return rank;
+        })
     }
 
-    return {
-        files: files,
-        entities: entities
-    };
+    getLinks () {
+        const links = this.files.map(file => file.links).flat();
 
+        return links.map((link, id) => {
+            const style = this.getLinkStyle(link.type);
+
+            return {
+                id: id,
+                type: link.type,
+                shape: style.shape,
+                color: style.color,
+                source: link.source.id,
+                target: link.target.id,
+                context: link.context
+            }
+        });
+    }
+
+    reportToSentences () {
+        this.report.ignoredFiles = this.report.ignoredFiles.map((data) => {
+            return `Ignored file ${data.fileName} has no valid ${data.invalidMeta}`;
+        });
+        this.report.duplicates = this.report.duplicates.map((data) => {
+            return `Id ${data.id} is duplicated for files ${data.files.join(', ')}`;
+        });
+        this.report.typeRecordChange = this.report.typeRecordChange.map((data) => {
+            return `Unknow type "${data.type}" of file ${data.fileName}, changed to "undefined".`;
+        });
+        this.report.linkInvalid = this.report.linkInvalid.map((data) => {
+            return `Ignored link "${data.targetId}" from file ${data.fileName} is not a string of numbers.`;
+        });
+        this.report.linkNoTarget = this.report.linkNoTarget.map((data) => {
+            return `Ignored link "${data.targetId}" from file ${data.fileName} has no target.`;
+        });
+
+        return this.report;
+    }
+
+}
+
+function deleteDupicates (array) {
+    if (array.length < 2) { return array; }
+
+    return array.filter((item, index) => {
+        return array.indexOf(item) === index
+    });
 }
