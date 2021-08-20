@@ -346,3 +346,20 @@ btnDialog.addEventListener('click', () => {
 });
 
 })();
+
+(function () {
+
+const btnDialog = document.getElementById('dialog-path-locales')
+    , input = form.querySelector('[name="bibliography_locales"]');
+
+btnDialog.addEventListener('click', () => {
+    window.api.send("askLocalesPath", null);
+
+    window.api.receive("getLocalesPath", (response) => {
+        if (response.isOk === true) {
+            input.value = response.data[0];
+        }
+    });
+});
+
+})();

@@ -475,3 +475,21 @@ ipcMain.on("askCslPath", (event, data) => {
     });
 
 });
+
+ipcMain.on("askLocalesPath", (event, data) => {
+
+    dialog.showOpenDialog(window, {
+        title: 'Sélectionner fichier de format bibliographique',
+        defaultPath: app.getPath('documents'),
+        filters: [
+            { name: 'Type de fichier personnalisé', extensions: ['xml'] }
+        ],
+        properties: ['openFile']
+    }).then((response) => {
+        window.webContents.send("getLocalesPath", {
+            isOk: !response.canceled,
+            data: response.filePaths
+        });
+    });
+
+});

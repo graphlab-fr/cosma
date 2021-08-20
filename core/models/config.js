@@ -130,7 +130,7 @@ module.exports = class Config {
 
         [
             'files_origin', 'focus_max', 'record_types', 'link_types',
-            'bibliography', 'csl'
+            'bibliography', 'csl', 'bibliography_locales'
         ].forEach(key => {
             template[key] = this.opts[key];
         });
@@ -192,13 +192,13 @@ module.exports = class Config {
                 errs.push('Tous les types de lien doivent renseigner une couleur et un type de trait.'); }
         }
 
-        if (this.opts.graph_highlight_on_hover !== true && this.opts.graph_highlight_on_hover !== false) {
+        if (typeof this.opts.graph_highlight_on_hover !== 'boolean') {
             errs.push('L\'option de surbrillance est une valeur binaire.'); }
 
         if (Config.confirmNumberValue(this.opts.graph_text_size, Config.minValues.graph_text_size)) {
             errs.push(`La taille de étiquettes du graphe doit être un nombre supérieur ou égal à ${Config.minValues.graph_text_size}.`); }
 
-        if (this.opts.graph_arrows !== true && this.opts.graph_arrows !== false) {
+        if (typeof this.opts.graph_arrows !== 'boolean') {
             errs.push('L\'option des liens flèchés est une valeur binaire.'); }
 
         if (Config.confirmNumberValue(this.opts.graph_attraction_force, Config.minValues.graph_attraction_force)) {
@@ -212,6 +212,29 @@ module.exports = class Config {
 
         if (Config.confirmNumberValue(this.opts.graph_attraction_horizontale, Config.minValues.graph_attraction_horizontale)) {
             errs.push(`La force de répulsion horizontale du graphe doit être un nombre supérieur ou égal à ${Config.minValues.graph_attraction_horizontale}.`); }
+
+        if (typeof this.opts.custom_css !== 'boolean') {
+            errs.push('L\'option CSS personnalisé est une valeur binaire.'); }
+
+        if (typeof this.opts.devtools !== 'boolean') {
+            errs.push('L\'option des outils de développement est une valeur binaire.'); }
+
+        if (typeof this.opts.minify !== 'boolean') {
+            errs.push('L\'option des minification est une valeur binaire.'); }
+
+        // optionnals
+
+        if (this.opts['bibliography'] && !fs.existsSync(this.opts['bibliography'])) {
+            errs.push('Vous devez indiquer un chemin valide vers le fichier de références bibliographiques.'); }
+
+        if (this.opts['csl'] && !fs.existsSync(this.opts['csl'])) {
+            errs.push('Vous devez indiquer un chemin valide vers le fichier de styles bibliographiques.'); }
+
+        if (this.opts['bibliography_locales'] && !fs.existsSync(this.opts['bibliography_locales'])) {
+            errs.push('Vous devez indiquer un chemin valide vers le fichier de formatage des références bibliographiques.'); }
+
+        if (this.opts['custom_css_path'] && !fs.existsSync(this.opts['custom_css_path'])) {
+            errs.push('Vous devez indiquer un chemin valide vers le fichier CSS personnalisé.'); }
 
         return errs;
     }

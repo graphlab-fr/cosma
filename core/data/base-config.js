@@ -17,5 +17,8 @@ module.exports = {
     graph_attraction_force: 50,
     graph_attraction_distance_max: 250,
     graph_attraction_verticale: 0,
-    graph_attraction_horizontale: 0
+    graph_attraction_horizontale: 0,
+    custom_css: false,
+    devtools: false,
+    minify: true,
 }
