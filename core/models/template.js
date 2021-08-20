@@ -74,7 +74,8 @@ module.exports = class Template {
                     lastEditDate: file.metas.lastEditDate,
                     content: mdIt.render(file.content), // Markdown to HTML
                     links: file.links,
-                    backlinks: file.backlinks
+                    backlinks: file.backlinks,
+                    bibliography: file.bibliography
                 }
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
 

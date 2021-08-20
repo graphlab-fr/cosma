@@ -6,7 +6,9 @@
 
 const fs = require('fs')
     , path = require('path')
-    , ymlFM = require('yaml-front-matter');
+    , ymlFM = require('yaml-front-matter')
+    , CSL = require('citeproc')
+    , Citr = require('@zettlr/citr');
 
 const Config = require('./config');
 
@@ -44,7 +46,8 @@ module.exports = class Graph {
             typeLinkChange: [],
             linkInvalid: [],
             linkNoTarget: [],
-            duplicates: []
+            duplicates: [],
+            quotesWithoutReference: []
         };
 
         this.files = this.serializeFiles()
@@ -80,6 +83,28 @@ module.exports = class Graph {
 
         if (this.config.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
+
+        if (this.parms.includes('citeproc')
+            && this.config['bibliography'] && this.config['csl'] && this.config['bibliography_locales'])
+        {
+
+            this.library = {};
+
+            let libraryFileContent = fs.readFileSync(this.config['bibliography'], 'utf-8');
+            libraryFileContent = JSON.parse(libraryFileContent);
+
+            for (const item of libraryFileContent) {
+                this.library[item.id] = item; }
+
+            this.citeproc = this.getCSL();
+
+            this.files = this.files.map(this.catchQuoteKeys, this);
+            this.files = this.files.map(this.convertQuoteKeys, this);
+            this.files = this.files.map(this.getBibliography, this);
+
+            // console.log(this.files);
+
+        }
 
         this.data = {
             nodes: this.getNodes(),
@@ -402,8 +427,119 @@ module.exports = class Graph {
         this.report.linkNoTarget = this.report.linkNoTarget.map((data) => {
             return `Ignored link "${data.targetId}" from file ${data.fileName} has no target.`;
         });
+        this.report.quotesWithoutReference = this.report.linkNoTarget.map((data) => {
+            return `Quote key "${data.fileName}" from file ${data.quoteId} is not defined from the CSL library.`;
+        });
 
         return this.report;
+    }
+
+    getCSL () {
+        const xmlLocal = fs.readFileSync(this.config['bibliography_locales'], 'utf-8')
+            , cslStyle = fs.readFileSync(this.config['csl'], 'utf-8');
+
+        return new CSL.Engine({
+            retrieveLocale: () => {
+                return xmlLocal;
+            },
+            retrieveItem: (id) => {
+                // find the quote item : CSL-JSON object
+                return this.library[id];
+            }
+        }, cslStyle);
+    }
+
+    catchQuoteKeys (file) {
+        file.quotes = {};
+
+        let extractions = Citr.util.extractCitations(file.content);
+
+        quoteExtraction:
+        for (let i = 0; i < extractions.length; i++) {
+            const extraction = extractions[i];
+
+            const quotes = Citr.parseSingle(extraction);
+            // there could be several quotes from one key
+            for (const q of quotes) {
+
+                if (!this.library[q.id]) {
+                    // if the quote id is not defined from library
+                    this.report.quotesWithoutReference.push({ fileName: file.name, quoteId: q.id })
+                    continue quoteExtraction;
+                }
+
+                this.library[q.id].used = true;
+            }
+
+            file.quotes[extraction] = quotes;
+        }
+
+        return file;
+    }
+
+    convertQuoteKeys (file) {
+        const quoteIds = Object.values(file.quotes)
+            .map(function(key) {
+                let ids = [];
+
+                for (const cit of key) {
+                    ids.push(cit.id);
+                }
+
+                return ids;
+            })
+            .flat();
+        this.citeproc.updateItems(quoteIds);
+    
+        const citations = Object.values(file.quotes).map(function(key, i) {
+            return [{
+                citationItems: key,
+                properties: { noteIndex: i + 1 }
+            }];
+        });
+    
+        for (let i = 0; i < citations.length; i++) {
+            const cit = citations[i];
+            const key = Object.keys(file.quotes)[i]
+    
+            const citMark = this.citeproc.processCitationCluster(cit[0], [], [])[1][0][1];
+    
+            file.content = file.content.replaceAll(key, citMark);
+        }
+    
+        return file;
+    }
+
+    getBibliography (file) {
+        const quoteIds = Object.values(file.quotes)
+            .map(function(key) {
+                let ids = [];
+
+                for (const cit of key) {
+                    ids.push(cit.id);
+                }
+
+                return ids;
+            })
+            .flat();
+        // console.log();
+
+        // console.log(file.quotes);
+        this.citeproc.updateItems(quoteIds);
+
+        file.bibliography = this.citeproc.makeBibliography()[1].join('\n');
+        console.log(file.bibliography);
+        // console.log(this.citeproc.makeBibliography());
+
+        return file;
+    }
+
+    getUsedCitationReferences () {
+        const refs = Object.values(this.library).filter(item => item.used === true);
+
+        if (refs.length === 0) { return null; }
+
+        return refs;
     }
 
 }
