@@ -35,6 +35,20 @@ module.exports = class Graph {
         return rank;
     }
 
+    static getQuoteKeysFromQuoteObject (quoteObject) {
+        return Object.values(quoteObject)
+            .map(function(key) {
+                let ids = [];
+    
+                for (const cit of key) {
+                    ids.push(cit.id);
+                }
+    
+                return ids;
+            })
+            .flat();
+    }
+
     constructor (parms) {
 
         this.config = new Config().serializeForGraph();
@@ -101,9 +115,6 @@ module.exports = class Graph {
             this.files = this.files.map(this.catchQuoteKeys, this);
             this.files = this.files.map(this.convertQuoteKeys, this);
             this.files = this.files.map(this.getBibliography, this);
-
-            // console.log(this.files);
-
         }
 
         this.data = {
@@ -478,18 +489,7 @@ module.exports = class Graph {
     }
 
     convertQuoteKeys (file) {
-        const quoteIds = Object.values(file.quotes)
-            .map(function(key) {
-                let ids = [];
-
-                for (const cit of key) {
-                    ids.push(cit.id);
-                }
-
-                return ids;
-            })
-            .flat();
-        this.citeproc.updateItems(quoteIds);
+        this.citeproc.updateItems(Graph.getQuoteKeysFromQuoteObject(file.quotes));
     
         const citations = Object.values(file.quotes).map(function(key, i) {
             return [{
@@ -511,25 +511,9 @@ module.exports = class Graph {
     }
 
     getBibliography (file) {
-        const quoteIds = Object.values(file.quotes)
-            .map(function(key) {
-                let ids = [];
-
-                for (const cit of key) {
-                    ids.push(cit.id);
-                }
-
-                return ids;
-            })
-            .flat();
-        // console.log();
-
-        // console.log(file.quotes);
-        this.citeproc.updateItems(quoteIds);
+        this.citeproc.updateItems(Graph.getQuoteKeysFromQuoteObject(file.quotes));
 
         file.bibliography = this.citeproc.makeBibliography()[1].join('\n');
-        console.log(file.bibliography);
-        // console.log(this.citeproc.makeBibliography());
 
         return file;
     }
