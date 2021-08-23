@@ -10,10 +10,19 @@ const { app } = require('electron')
     , yml = require('js-yaml')
     , moment = require('moment');
 
-const Config = require('./config')
-    , config = new Config();
+const Config = require('./config');
 
-module.exports = class {
+module.exports = class Record {
+
+    /**
+     * Get a number (14 caracters) from the time stats :
+     * year + month + day + hour + minute + second
+     * @return {number} - unique 14 caracters number from the second
+     */
+
+    static generateId () {
+        return Number(moment().format('YYYYMMDDHHmmss'));
+    }
 
     /**
      * Generate a record.
@@ -24,7 +33,7 @@ module.exports = class {
 
     constructor (title, type, tags) {
         this.title = title;
-        this.id = generateId();
+        this.id = Record.generateId();
         this.type = type;
 
         if (tags !== '') {
@@ -34,7 +43,10 @@ module.exports = class {
         this.content = yml.safeDump(this);
         this.content = '---\n' + this.content + '---\n\n';
 
-        this.path = path.join(config.opts.files_origin, `${title}.md`);
+        this.config = new Config();
+
+        this.path = path.join(this.config.opts.files_origin, `${title}.md`);
+
     }
 
     /**
@@ -70,20 +82,10 @@ module.exports = class {
         if (this.title === '') {
             errs.push('Le titre n\'est pas défini.'); }
 
-        if (config.opts.record_types[this.type] === undefined) {
+        if (this.config.opts.record_types[this.type] === undefined) {
             errs.push('Ce type n\'est pas enregistré.'); }
 
         return errs;
     }
 
 };
-
-/**
- * Get a number (14 caracters) from the time stats :
- * year + month + day + hour + minute + second
- * @return {number} - unique 14 caracters number from the second
- */
-
-function generateId () {
-    return Number(moment().format('YYYYMMDDHHmmss'));
-}
