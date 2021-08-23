@@ -97,7 +97,7 @@ module.exports = class Template {
             }, this),
 
             tags: Object.keys(this.tags).map(function(tag) {
-                return { name: tag, nodes: this.types[tag] };
+                return { name: tag, nodes: this.tags[tag] };
             }, this).sort(function (a, b) { return a.name.localeCompare(b.name); }),
 
             usedQuoteRef: graph.getUsedCitationReferences(),
