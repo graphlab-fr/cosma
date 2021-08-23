@@ -22,6 +22,10 @@ module.exports = function (window) {
      * manage displaying
      */
 
+    if (modal !== undefined) {
+        return;
+    }
+
     modal = new BrowserWindow (
         Object.assign(windowsModel.modal, {
             parent: window,
@@ -35,6 +39,9 @@ module.exports = function (window) {
         modal.show();
     });
 
+    window.once('closed', () => {
+        modal = undefined;
+    });
     
 }
 

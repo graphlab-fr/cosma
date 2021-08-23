@@ -6,11 +6,6 @@
 
 module.exports = {
 
-    openedWindows: {
-        config: false,
-        record: false
-    },
-
     /**
      * Reveal if the application need a (re)configuration
      * in the case of a first lauch or nuclear error

@@ -20,6 +20,11 @@ form.addEventListener('submit', (e) => {
     window.api.receive("confirmConfigRegistration", (response) => {
         output.textContent = response.consolMsg;
         output.dataset.valid = response.isOk;
+
+        setTimeout(() => {
+            output.textContent = '';
+            output.dataset.valid = null;
+        }, 2000);
     });
 })
 
@@ -73,31 +78,29 @@ function booleanCheckbox (option) {
 
 window.api.send("askConfig", null);
 
-window.api.receive("getConfig", (response) => {
-    if (response.isOk === true) {
-        for (const option in response.data) {
+window.api.receive("getConfig", (data) => {
+    for (const option in data) {
 
-            if (option === 'record_types') {
-                setRecordTypeTable(response.data[option]);
-                continue;
-            }
-
-            if (option === 'link_types') {
-                setLinkTypeTable(response.data[option]);
-                continue;
-            }
-
-            const input = form.querySelector(`[name="${option}"]`);
-
-            if (!input) { continue; }
-
-            if (typeof response.data[option] === 'boolean') {
-                input.checked = response.data[option];
-                continue;
-            }
-            
-            input.value = response.data[option];
+        if (option === 'record_types') {
+            setRecordTypeTable(data[option]);
+            continue;
         }
+
+        if (option === 'link_types') {
+            setLinkTypeTable(data[option]);
+            continue;
+        }
+
+        const input = form.querySelector(`[name="${option}"]`);
+
+        if (!input) { continue; }
+
+        if (typeof data[option] === 'boolean') {
+            input.checked = data[option];
+            continue;
+        }
+        
+        input.value = data[option];
     }
 });
 

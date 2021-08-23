@@ -7,20 +7,22 @@ const {
     , path = require('path');
 
 const Config = require('../../models/config')
-    , state = require('../../models/state')
     , windowsModel = require('../../models/windows');
 
 let window, modalRecordNew, modalRecordUpdate, modalLinkNew, modalLinkUpdate;
 
 module.exports = function () {
 
-    if (state.openedWindows.config === true) { return; }
-
     /**
      * Window
      * ---
      * manage displaying
      */
+
+    if (window !== undefined) {
+        window.focus();
+        return;
+    }
 
     window = new BrowserWindow (
         Object.assign(windowsModel.forms, {
@@ -32,13 +34,12 @@ module.exports = function () {
 
     window.once('ready-to-show', () => {
         window.show();
-        state.openedWindows.config = true;
     });
 
     window.once('closed', () => {
-        state.openedWindows.config = false;
+        window = undefined;
     });
-    
+
 }
 
 /**
@@ -56,7 +57,7 @@ ipcMain.on("sendConfigOptions", (event, data) => {
     if (result === true) {
         response = {
             isOk: true,
-            consolMsg: "La configuration a bien été enregistrée. Veuillez relancer l'application.",
+            consolMsg: "La configuration a bien été enregistrée.",
             data: {}
         };
     } else if (result === false) {
@@ -77,25 +78,9 @@ ipcMain.on("sendConfigOptions", (event, data) => {
 });
 
 ipcMain.on("askConfig", (event, data) => {
-    const config = new Config(data);
+    const config = new Config();
 
-    let result = config.get();
-
-    if (result === true) {
-        response = {
-            isOk: true,
-            consolMsg: "La configuration a bien été transmise.",
-            data: config.opts
-        };
-    } else {
-        response = {
-            isOk: false,
-            consolMsg: "La configuration n'a pu être transmise.",
-            data: {}
-        };
-    }
-
-    window.webContents.send("getConfig", response);
+    window.webContents.send("getConfig", config.opts);
 });
 
 ipcMain.on("askOptionMinimumFromConfig", (event, data) => {

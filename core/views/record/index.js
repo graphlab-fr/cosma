@@ -5,20 +5,22 @@ const {
 } = require('electron')
 , path = require('path');
 
-const state = require('../../models/state')
-    , windowsModel = require('../../models/windows');
+const windowsModel = require('../../models/windows');
 
 let window;
 
 module.exports = function () {
-
-    if (state.openedWindows.record === true) { return; }
 
     /**
      * Window
      * ---
      * manage displaying
      */
+
+    if (window !== undefined) {
+        window.focus();
+        return;
+    }
 
     window = new BrowserWindow (
         Object.assign(windowsModel.forms, {
@@ -30,11 +32,10 @@ module.exports = function () {
 
     window.once('ready-to-show', () => {
         window.show();
-        state.openedWindows.record = true;
     });
 
     window.once('closed', () => {
-        state.openedWindows.record = false;
+        window = undefined;
     });
 
 }

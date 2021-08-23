@@ -67,8 +67,8 @@ module.exports = class Graph {
             quotesWithoutReference: []
         };
 
-        this.files = this.serializeFiles()
-            .filter(this.verifFile, this);
+        this.files = this.getFilesNames();
+        this.files = this.files.map(this.serializeFiles, this);
 
 
         this.filesIdnName = this.files.map((file) => {
@@ -128,31 +128,28 @@ module.exports = class Graph {
     }
 
     getFilesNames () {
+        if (!this.config.files_origin) { return []; }
+
         return fs.readdirSync(this.config.files_origin, 'utf8')
             .filter(fileName => path.extname(fileName) === '.md');
     }
 
-    serializeFiles() {
-        const config = this.config;
+    serializeFiles(fileName) {
+        const file = {};
 
-        return this.getFilesNames()
-            .map(function (fileName) {
-                let file = {};
+        file.name = fileName;
+        file.filePath = path.join(this.config.files_origin, fileName);
+        file.lastEditDate = fs.statSync(file.filePath).mtime;
+        
+        file.contain = fs.readFileSync(file.filePath, 'utf8');
+        file.metas = ymlFM.loadFront(file.contain);
+        file.content = file.metas.__content
+        delete file.metas.__content;
+        delete file.contain;
 
-                file.name = fileName;
-                file.filePath = path.join(config.files_origin, fileName);
-                file.lastEditDate = fs.statSync(file.filePath).mtime;
-                
-                file.contain = fs.readFileSync(file.filePath, 'utf8');
-                file.metas = ymlFM.loadFront(file.contain);
-                file.content = file.metas.__content
-                delete file.metas.__content;
-                delete file.contain;
+        file.metas.tags = file.metas.tags || [];
 
-                file.metas.tags = file.metas.tags || [];
-
-                return file;
-            });
+        return file;
     }
 
     verifFile (file) {

@@ -153,7 +153,7 @@ module.exports = class Config {
      */
 
     isSet () {
-        if (fs.existsSync(this.path)) {
+        if (fs.existsSync(this.path) === true) {
             return true;
         }
         return false;

@@ -24,6 +24,11 @@ module.exports = function () {
      * manage displaying
      */
 
+    if (window !== undefined) {
+        window.focus();
+        return;
+    }
+
     window = new BrowserWindow (
         Object.assign(windowsModel.forms, {
             title: 'Historique'
@@ -34,6 +39,10 @@ module.exports = function () {
 
     window.once('ready-to-show', () => {
         window.show();
+    });
+
+    window.once('closed', () => {
+        window = undefined;
     });
 
     /**

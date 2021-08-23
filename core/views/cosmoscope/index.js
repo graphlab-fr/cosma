@@ -13,12 +13,11 @@ const {
     , path = require('path')
     , fs = require('fs');
 
-const state = require('../../models/state')
-    , Config = require('../../models/config')
+const Config = require('../../models/config')
     , windowsModel = require('../../models/windows')
     , window = require('../../../main').mainWindow;
 
-let cosmoscope, windowPath, modalView;
+let windowPath, modalView;
 
 const History = require('../../models/history')
     , Graph = require('../../models/graph')
@@ -26,39 +25,24 @@ const History = require('../../models/history')
 
 module.exports = function () {
     
-    switch (state.needConfiguration()) {
+    const graph = new Graph()
+        , template = new Template(graph)
+        , history = new History();
 
-        /**
-         * If the config is not complete or contain errors
-         * the app show the exemple graph while waiting for a valid config
-         */
-    
-        case true:
-            const exempleGraph = require('../../data/exemple-graph');
-            cosmoscope = require('../../models/template')(exempleGraph.files, exempleGraph.entities);
+    windowPath = path.join(history.pathToStore, 'cosmoscope.html');
 
-            windowPath = path.join(app.getPath('temp'), 'cosmoscope-exemple.html');
-
-            fs.writeFileSync(windowPath, cosmoscope);
-            break;
-    
-        case false:
-            const graph = new Graph()
-                , template = new Template(graph)
-                , history = new History();
-
-            windowPath = path.join(history.pathToStore, 'cosmoscope.html');
-
-            history.store('cosmoscope.html', template.html);
-            history.store('report.json', JSON.stringify(graph.reportToSentences()));
-            break;
-    }
+    history.store('cosmoscope.html', template.html);
+    history.store('report.json', JSON.stringify(graph.reportToSentences()));
 
     window.loadFile(windowPath);
     
     window.once('ready-to-show', () => {
         window.show();
     })
+
+    window.once('closed', () => {
+        app.quit();
+    });
 
 }
 
