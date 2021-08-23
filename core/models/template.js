@@ -62,7 +62,7 @@ module.exports = class Template {
 
         nunjucks.configure(path.join(__dirname, '../../cosmoscope'), { autoescape: true });
 
-        const html = nunjucks.render('template.njk', {
+        this.html = nunjucks.render('template.njk', {
 
             publishMode: (graph.parms.includes('publish') === true),
 
@@ -113,7 +113,10 @@ module.exports = class Template {
             date: moment().format('YYYY-MM-DD')
         });
 
-        return { html: html };
+        if (this.config.minify === true) {
+            const minifier = require("@minify-html/js");
+            this.html = minifier.minify(this.html, minifier.createConfiguration({ minifyJs: true, minifyCss: true }));
+        }
 
     }
     
