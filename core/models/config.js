@@ -224,6 +224,9 @@ module.exports = class Config {
 
         if (typeof this.opts.custom_css !== 'boolean') {
             errs.push('L\'option CSS personnalisé est une valeur binaire.'); }
+        else if (this.opts.custom_css === true && (!this.opts['custom_css_path'] || !fs.existsSync(this.opts['custom_css_path']))) {
+            errs.push('Vous devez indiquer un chemin valide vers le fichier CSS personnalisé.');
+        }
 
         if (typeof this.opts.devtools !== 'boolean') {
             errs.push('L\'option des outils de développement est une valeur binaire.'); }
@@ -241,9 +244,6 @@ module.exports = class Config {
 
         if (this.opts['bibliography_locales'] && !fs.existsSync(this.opts['bibliography_locales'])) {
             errs.push('Vous devez indiquer un chemin valide vers le fichier de formatage des références bibliographiques.'); }
-
-        if (this.opts['custom_css_path'] && !fs.existsSync(this.opts['custom_css_path'])) {
-            errs.push('Vous devez indiquer un chemin valide vers le fichier CSS personnalisé.'); }
 
         return errs;
     }

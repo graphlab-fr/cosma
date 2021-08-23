@@ -493,3 +493,21 @@ ipcMain.on("askLocalesPath", (event, data) => {
     });
 
 });
+
+ipcMain.on("askCustomCssPath", (event, data) => {
+
+    dialog.showOpenDialog(window, {
+        title: 'Sélectionner fichier CSS personnalisé',
+        defaultPath: app.getPath('documents'),
+        filters: [
+            { name: 'Type de fichier personnalisé', extensions: ['css'] }
+        ],
+        properties: ['openFile']
+    }).then((response) => {
+        window.webContents.send("getCustomCssPath", {
+            isOk: !response.canceled,
+            data: response.filePaths
+        });
+    });
+
+});

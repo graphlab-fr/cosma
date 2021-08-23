@@ -4,7 +4,8 @@
  * @copyright MIT License ANR HyperOtlet
  */
 
-const path = require('path')
+const fs = require('fs')
+    , path = require('path')
     , ymlFM = require('yaml-front-matter')
     , nunjucks = require('nunjucks')
     , mdIt = require('markdown-it')()
@@ -60,6 +61,12 @@ module.exports = class Template {
             return file;
         });
 
+        console.log(this.config.custom_css);
+
+        if (this.config.custom_css === true) {
+            this.config.custom_css = fs.readFileSync(this.config['custom_css_path'], 'utf-8');
+        }
+
         nunjucks.configure(path.join(__dirname, '../../cosmoscope'), { autoescape: true });
 
         this.html = nunjucks.render('template.njk', {
@@ -88,6 +95,8 @@ module.exports = class Template {
 
             colors: this.colors(),
 
+            customCss: this.config.custom_css,
+
             // from config
 
             views: this.config.views || [],
@@ -107,6 +116,8 @@ module.exports = class Template {
             linkSymbol: this.config.link_symbol,
 
             focusIsActive: !(this.config.focus_max <= 0),
+
+            // stats
 
             nblinks: graph.data.links.length,
 

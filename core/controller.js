@@ -32,6 +32,7 @@ const channels = {
         'getBibliographyPath',               // config/index.js → config/main-render.js
         'getCslPath',                        // config/index.js → config/main-render.js
         'getLocalesPath',                    // config/index.js → config/main-render.js
+        'getCustomCssPath',                  // config/index.js → config/main-render.js
         'getOptionMinimumFromConfig',        // config/index.js → config/main-render.js
         'getLinkStokes',                     // config/index.js → config/modal-addlinktype-render.js
 
@@ -85,6 +86,7 @@ const channels = {
         'askBibliographyPath',          // config/index.js ← config/main-render.js
         'askCslPath',                   // config/index.js ← config/main-render.js
         'askLocalesPath',               // config/index.js ← config/main-render.js
+        'askCustomCssPath',             // config/index.js ← config/main-render.js
         'askOptionMinimumFromConfig',   // config/index.js ← config/main-render.js
         'askFilesOriginPath',           // config/index.js ← config/main-render.js
         'askNewRecordTypeModal',        // config/index.js ← config/main-render.js

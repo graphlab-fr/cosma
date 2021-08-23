@@ -363,3 +363,20 @@ btnDialog.addEventListener('click', () => {
 });
 
 })();
+
+(function () {
+
+const btnDialog = document.getElementById('dialog-path-css')
+    , input = form.querySelector('[name="custom_css_path"]');
+
+btnDialog.addEventListener('click', () => {
+    window.api.send("askCustomCssPath", null);
+
+    window.api.receive("getCustomCssPath", (response) => {
+        if (response.isOk === true) {
+            input.value = response.data[0];
+        }
+    });
+});
+
+})();

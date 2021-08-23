@@ -16,7 +16,7 @@
         {% include "print.css" %}
 
         {% if customCss %}
-        {% include "custom.css" ignore missing %}
+        {{ customCss | safe }}
         {% endif %}
     </style>
 
