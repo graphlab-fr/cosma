@@ -272,12 +272,7 @@ module.exports = class Graph {
                     if (context.ids.find(id => id.target.id === link.target.id) !== undefined) {
                         return true; }
                 })
-                .map((context) => {
-                    context.paraph = context.paraph
-                        .replaceAll('[[' + link.target.id + ']]', '<mark>[[' + link.target.id + ']]</mark>');
-
-                    return context.paraph;
-                });
+                .map(context => context.paraph);
 
             link.source = {
                 id: file.metas.id,

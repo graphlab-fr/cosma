@@ -46,6 +46,16 @@ module.exports = class Template {
         });
     }
 
+    static markLinkContext(fileLinks) {
+        return fileLinks.map((link) => {
+            link.context = link.context.map((context) => {
+                return context.replaceAll('[[' + link.target.id + ']]', '<mark>[[' + link.target.id + ']]</mark>');
+            });
+
+            return link;
+        });
+    }
+
     constructor (graph) {
         this.config = new Config().serializeForTemplate();
 
@@ -54,6 +64,10 @@ module.exports = class Template {
 
         graph.files = graph.files.map((file) => {
             file.content = Template.convertLinks(file);
+
+            file.links = Template.markLinkContext(file.links);
+
+            file.backlinks = Template.markLinkContext(file.backlinks);
 
             this.registerType(file.metas.type, file.metas.id);
             this.registerTags(file.metas.tags, file.metas.id);
