@@ -297,9 +297,9 @@
 
                     <ul class="record-backlinks-list">
                         {% for backlink in record.backlinks %}
-                        <li onclick="openRecord({{ backlink.target.id }})">
-                            <span class="record-type-point n_{{ backlink.target.type }}">⬤</span>
-                            <span>{{ backlink.target.title }}</span>
+                        <li onclick="openRecord({{ backlink.source.id }})">
+                            <span class="record-type-point n_{{ backlink.source.type }}">⬤</span>
+                            <span>{{ backlink.source.title }}</span>
                             <div class="record-links-context">
                                 {% if linkSymbol %}
                                     {{ backlink.context | replace(r/(\[\[\s*).*?(\]\])/g, linkSymbol) | safe }}

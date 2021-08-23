@@ -94,7 +94,8 @@ module.exports = class Graph {
         this.files = this.files.map(this.checkLinkTargetnSource, this);
 
         delete this.validTypes;
-        delete this.filesId;
+
+        this.filesLinks = this.files.map(file => file.links).flat();
 
         this.files = this.files.map(this.findBacklinks, this);
 
@@ -261,7 +262,7 @@ module.exports = class Graph {
 
         file.links = file.links.map((link) => {
             if (this.validTypes.links.includes(link.type) === false) {
-                this.report.typeLinkChange.push(`Unknow link type "${link.type}" from file ${file.name} change to "undefined".`);
+                this.report.typeLinkChange.push({ fileName:file.name, type: link.type });
 
                 link.type = 'undefined';
             }
@@ -297,18 +298,8 @@ module.exports = class Graph {
     }
 
     findBacklinks (file) {
-        file.backlinks = this.files
-            .filter((otherFile) => {
-                const targets = otherFile.links.map(link => link.target.id);
-
-                if (targets.includes(file.metas.id)) {
-                    return true; }
-
-                return false;
-            })
-            .map((otherFile) => otherFile.links);
-
-        file.backlinks = file.backlinks[0] || [];
+        file.backlinks = this.filesLinks
+            .filter(link => link.target.id === file.metas.id);
 
         return file;
     }
@@ -413,9 +404,7 @@ module.exports = class Graph {
     }
 
     getLinks () {
-        const links = this.files.map(file => file.links).flat();
-
-        return links.map((link, id) => {
+        return this.filesLinks.map((link, id) => {
             const style = this.getLinkStyle(link.type);
 
             return {
@@ -439,6 +428,9 @@ module.exports = class Graph {
         });
         this.report.typeRecordChange = this.report.typeRecordChange.map((data) => {
             return `Unknow type "${data.type}" of file ${data.fileName}, changed to "undefined".`;
+        });
+        this.report.typeLinkChange = this.report.typeLinkChange.map((data) => {
+            return `Unknow link type "${data.type}" from file ${data.fileName}, changed to "undefined".`;
         });
         this.report.linkInvalid = this.report.linkInvalid.map((data) => {
             return `Ignored link "${data.targetId}" from file ${data.fileName} is not a string of numbers.`;
