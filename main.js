@@ -1,7 +1,7 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        Menu // top bar menu manager
+        dialog
     } = require('electron')
     , path = require('path');
 
@@ -30,6 +30,14 @@ app.whenReady().then(() => {
     const mainWindow = new BrowserWindow(windowsModel.main);
     exports.mainWindow = mainWindow;
 
+    process.on("uncaughtException", (err) => {
+        dialog.showMessageBoxSync(mainWindow, {
+            type: "error",
+            title: "Erreur dans le processus",
+            message: err
+        })
+    });
+
     require('./core/views/cosmoscope/index')();
 
     /**
@@ -50,8 +58,4 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
-});
-
-process.on("uncaughtException", (err) => {
-    console.log(err);
 });
