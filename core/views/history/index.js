@@ -85,7 +85,8 @@ ipcMain.on("sendCosmoscopeFromHistoryList", (event, recordId) => {
 });
 
 ipcMain.on("sendHistoryToDelete", (event, date) => {
-    const result = History.delete(date);
+    const history = new History(date);
+    const result = history.delete();
     let response;
 
     if (result === true) {

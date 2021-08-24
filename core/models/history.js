@@ -18,7 +18,6 @@ const Config = require('./config');
 module.exports = class History {
 
     static path = path.join(app.getPath('temp'), 'cosma-history');
-    static noHistoryPath = app.getPath('temp');
 
     /**
      * Get list of the sub-directories name from the history directory
@@ -34,29 +33,12 @@ module.exports = class History {
             })
     }
 
-    /**
-     * Dalate an history directory
-     * @param {string} id - Name of the directory
-     * @return {boolean} - If the directory is delete
-     */
-
-    static delete (id) {
-        try {
-            fs.rmdirSync(path.join(History.path, id), { recursive: true })
-
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
-
     static deleteAll () {
         const records = History.getList();
 
         try {
             for (const record of records) {
-                fs.rmdirSync(record.pathToStore, { recursive: true })
+                record.delete();
             }
 
             return true;
@@ -78,11 +60,13 @@ module.exports = class History {
      * @param {string} id - Name of the directory to use as a history entry
      */
 
-    constructor (id = '') {
+    constructor (id = null) {
 
         if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
 
-        if (id === '') {
+        this.config = new Config().opts;
+
+        if (id === null) {
             this.id = moment().format('YYYY-MM-DD-h-mm-ss');
         } else {
             const pathToStoreTest = path.join(History.path, id)
@@ -94,22 +78,25 @@ module.exports = class History {
             this.id = id;
         }
 
-        const config = new Config();
-
-        if (config.opts.history === false && id === '') {
-            this.pathToStore = History.noHistoryPath;
-            return;
-        }
-
         this.pathToStore = path.join(History.path, this.id);
         this.pathToMetas = path.join(this.pathToStore, 'metas.json');
         this.pathToReport = path.join(this.pathToStore, 'report.json');
 
-        if (id === '') {
+        this.metas = {
+            name: moment().format('LLLL')
+        };
+
+        if (id === null && this.config.history === false) {
+            // the user does not want to automatically save more versions
+            // we replace the last one
+            const lastRecord = History.getLast();
+
+            if (lastRecord !== undefined) {
+                lastRecord.delete(); }
+        }
+
+        if (id === null) {
             fs.mkdirSync(this.pathToStore);
-            this.metas = {
-                name: this.id
-            };
             this.saveMetas();
         } else {
             this.metas = this.getMetas();
@@ -130,6 +117,17 @@ module.exports = class History {
 
             return true;
         } catch (error) {
+            return false;
+        }
+    }
+
+    delete () {
+        try {
+            fs.rmdirSync(path.join(History.path, this.id), { recursive: true })
+
+            return true;
+        } catch (error) {
+            console.log(error);
             return false;
         }
     }
