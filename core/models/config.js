@@ -1,6 +1,6 @@
 /**
- * @file Manage the user config
- * @author Guillaume Brioudes
+ * @file Cosmoscope generator
+ * @author Guillaume Brioudes <https://myllaume.fr/>
  * @copyright MIT License ANR HyperOtlet
  */
 
@@ -10,9 +10,17 @@ const { app } = require('electron')
 
 const baseConfig = require('../data/base-config');
 
-/** Class to manage the user config */
+/**
+ * Class to manage the user config
+ */
 
 module.exports = class Config {
+
+    /**
+     * Min value for each number options
+     * Apply to config form and to verif values from this class
+     * @static
+     */
 
     static minValues = {
         focus_max: 0,
@@ -23,11 +31,18 @@ module.exports = class Config {
         graph_attraction_horizontale: 0
     };
 
+    /**
+     * List of valid values for the links stroke
+     * Apply to config form
+     * @static
+     */
+
     static linkStrokes = ['simple', 'double', 'dotted', 'dash'];
 
     /**
      * Create a user config.
-     * @param {object} opts - Options to change from the default config.
+     * @param {object} opts - Options to change from the last
+     * (or default config if config file does not exist).
      */
 
     constructor (opts) {
@@ -64,7 +79,8 @@ module.exports = class Config {
     }
 
     /**
-     * Get the config options from the (file) path
+     * Get the last config options from the (config file) path
+     * or default config if config file does not exist
      * @return {boolean} - True if the config file is gotten.
      */
 
@@ -88,6 +104,7 @@ module.exports = class Config {
 
     /**
      * Get config options in an ordered object with categories (ex: graph)
+     * for Template object
      * @return {object} - Ordered object.
      */
 
@@ -134,6 +151,12 @@ module.exports = class Config {
         return template;
     }
 
+     /**
+     * Get config options in an ordered object with categories (ex: graph)
+     * for Graph object
+     * @return {object} - Ordered object.
+     */
+
     serializeForGraph () {
         let template = {};
 
@@ -160,8 +183,8 @@ module.exports = class Config {
     }
 
     /**
-     * Verif if the config inform the system about essentials options
-     * @return {boolean} - True if the config contains essentials options.
+     * Verif if the config contains values for each options from default config
+     * @return {boolean} - True if the config contains default config options.
      */
 
     isCompleted () {
@@ -250,7 +273,7 @@ module.exports = class Config {
 
     /**
      * Verif if the value is a number and upper than its min value
-     * @return {boolean} - True of it is correct.
+     * @return {boolean} - True if it is correct.
      */
 
     static confirmNumberValue (value, valueMin) {

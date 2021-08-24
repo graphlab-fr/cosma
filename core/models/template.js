@@ -6,7 +6,6 @@
 
 const fs = require('fs')
     , path = require('path')
-    , ymlFM = require('yaml-front-matter')
     , nunjucks = require('nunjucks')
     , mdIt = require('markdown-it')()
     , mdItAttr = require('markdown-it-attrs')
@@ -21,6 +20,10 @@ mdIt.use(mdItAttr, {
 
 const Config = require('./config'), 
     Graph = require('./graph');
+
+/**
+ * Class to get the Cosmoscope source code
+ */
 
 module.exports = class Template {
 
@@ -49,7 +52,10 @@ module.exports = class Template {
     static markLinkContext(fileLinks) {
         return fileLinks.map((link) => {
             link.context = link.context.map((context) => {
-                return context.replaceAll('[[' + link.target.id + ']]', '<mark>[[' + link.target.id + ']]</mark>');
+                context = context.replaceAll('[[' + link.target.id + ']]', '<mark>[[' + link.target.id + ']]</mark>');
+                // context = mdIt.render(context);
+
+                return context;
             });
 
             return link;
@@ -83,7 +89,7 @@ module.exports = class Template {
 
         this.html = nunjucks.render('template.njk', {
 
-            publishMode: (graph.parms.includes('publish') === true),
+            publishMode: (graph.params.includes('publish') === true),
 
             records: graph.files.map(function (file) {
 

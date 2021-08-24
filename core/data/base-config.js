@@ -1,6 +1,6 @@
 /**
- * @file Default parameters and values for the minimal Cosma's config
- * @author Guillaume Brioudes
+ * @file Cosmoscope generator
+ * @author Guillaume Brioudes <https://myllaume.fr/>
  * @copyright MIT License ANR HyperOtlet
  */
 
