@@ -146,7 +146,7 @@ ipcMain.on("askCosmoscopeExportFromHistory", (event, recordId) => {
 
     dialog.showSaveDialog(window, {
         title: 'Enregistrer depuis l\'historique',
-        defaultPath: 'cosmoscope.html',
+        defaultPath: path.join(app.getPath('documents'), 'cosmoscope.html'),
         properties: ['createDirectory', 'showOverwriteConfirmation']
     }).then((response) => {
         if (response.canceled === false) {

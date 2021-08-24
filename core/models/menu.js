@@ -6,10 +6,14 @@
 
 const {
         app,
-        Menu, // top bar menu manager 
-    } = require('electron');
+        Menu, // top bar menu manager
+        dialog
+    } = require('electron'),
+    fs = require('fs'),
+    path = require('path');
 
 const Config = require('./config')
+    , mainWindow = require('../../main').mainWindow;
 
 module.exports = function () {
     const config = new Config().opts;
@@ -80,7 +84,7 @@ module.exports = function () {
                     accelerator: 'CommandOrControl+Left',
                     role: 'back',
                     click(item, window) {
-                        if (window && window.webContents.canGoBack()) { window.webContents.goBack() };
+                        if (mainWindow.webContents.canGoBack()) { mainWindow.webContents.goBack() };
                     }
                 },
                 {
@@ -88,7 +92,37 @@ module.exports = function () {
                     accelerator: 'CommandOrControl+Right',
                     role: 'forward',
                     click(item, window) {
-                        if (window && window.webContents.canGoForward()) { window.webContents.goForward() };
+                        if (mainWindow.webContents.canGoForward()) { window.webContents.goForward() };
+                    }
+                },
+                {
+                    label: 'Imprimer',
+                    accelerator: 'CommandOrControl+P',
+                    role: 'print',
+                    click(item, window) {
+                        mainWindow.webContents.printToPDF({
+                            headerFooter: {
+                                title: mainWindow.title,
+                                url: 'https://cosma.netlify.app/'
+                            },
+                            pageSize: 'A4'
+                        })
+                        .then(pdfData => {
+                            dialog.showSaveDialog(mainWindow, {
+                                title: 'Enregistrer le PDF',
+                                defaultPath: path.join(app.getPath('documents'), `${mainWindow.title}.pdf`),
+                                properties: ['createDirectory', 'showOverwriteConfirmation']
+                            }).then((response) => {
+                                if (response.canceled === false) {
+                                    fs.writeFile(response.filePath, pdfData, (err) => {
+                                        if (err) { throw `Erreur d'enregistrement de l'impression PDF : ${err}`; }
+                                    })
+                                }
+                            });
+                        })
+                        .catch(err => {
+                            throw `Erreur d'impression du PDF : ${err}`;
+                        })
                     }
                 }
             ]

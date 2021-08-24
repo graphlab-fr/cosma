@@ -25,8 +25,6 @@ function noWindowOpen () {
 
 app.whenReady().then(() => {
 
-    require('./core/models/menu')(); // set app menu
-
     const mainWindow = new BrowserWindow(windowsModel.main);
     exports.mainWindow = mainWindow;
 
@@ -37,6 +35,8 @@ app.whenReady().then(() => {
             message: err
         })
     });
+
+    require('./core/models/menu')(); // set app menu
 
     require('./core/views/cosmoscope/index')();
 
