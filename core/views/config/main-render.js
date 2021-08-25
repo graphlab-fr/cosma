@@ -216,7 +216,7 @@ function setLinkTypeTable (linkTypes) {
     btnAdd.addEventListener('click', () => {
         window.api.send("askNewLinkTypeModal", null);
 
-        window.api.receive("confirmNewLinkTypeFromConfig", (response) => {
+        window.api.receiveOnce("confirmNewLinkTypeFromConfig", (response) => {
             tableBodyContent.appendChild(
                 getLinkTypeRow(response.data.name, response.data.color, response.data.stroke)
             );
