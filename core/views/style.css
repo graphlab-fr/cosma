@@ -25,6 +25,10 @@ button {
     margin: 2px;
 }
 
+li {
+    margin: 2px 0;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -78,4 +82,13 @@ output[data-valid="true"] { border: 2px solid green; }
     border-bottom: unset !important;
     border-left: unset !important;
     border-right: unset !important;
+}
+
+details {
+    padding: 10px 0;
+    border-top: 1px solid black;
+}
+
+details summary {
+    cursor: pointer;
 }

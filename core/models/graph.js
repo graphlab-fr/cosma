@@ -312,6 +312,7 @@ module.exports = class Graph {
 
     scanLinksnContexts (file) {
         file.contexts = [];
+        file.links = [];
 
         const paraphs = file.content.match(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/g);
 

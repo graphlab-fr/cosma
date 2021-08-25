@@ -16,11 +16,15 @@ const container = document.querySelector('main')
             const list = '<li>' + data[reportSection].join('</li><li>') + '</li>';
 
             const html =
-            `<h2>${reportSection}</h2>
+            `<details>
 
-            <ul>
-                ${list}
-            </ul>`;
+                <summary>${reportSection} (${data[reportSection].length})</summary>
+
+                <ul>
+                    ${list}
+                </ul>
+            
+            </details>`;
 
             container.insertAdjacentHTML('beforeend', html)
         }

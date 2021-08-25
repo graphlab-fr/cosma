@@ -71,6 +71,8 @@ module.exports = class Template {
         graph.files = graph.files.map((file) => {
             file.content = Template.convertLinks(file);
 
+            file.content = mdIt.render(file.content); // Markdown to HTML
+
             file.links = Template.markLinkContext(file.links);
 
             file.backlinks = Template.markLinkContext(file.backlinks);
@@ -87,6 +89,12 @@ module.exports = class Template {
 
         nunjucks.configure(path.join(__dirname, '../../cosmoscope'), { autoescape: true });
 
+        try {
+            
+        } catch (error) {
+            
+        }
+
         this.html = nunjucks.render('template.njk', {
 
             publishMode: (graph.params.includes('publish') === true),
@@ -99,7 +107,7 @@ module.exports = class Template {
                     type: file.metas.type,
                     tags: file.metas.tags.join(', '),
                     lastEditDate: file.metas.lastEditDate,
-                    content: mdIt.render(file.content), // Markdown to HTML
+                    content: file.content,
                     links: file.links,
                     backlinks: file.backlinks,
                     bibliography: file.bibliography
@@ -142,10 +150,10 @@ module.exports = class Template {
             date: moment().format('YYYY-MM-DD')
         });
 
-        if (this.config.minify === true) {
-            const minifier = require("@minify-html/js");
-            this.html = minifier.minify(this.html, minifier.createConfiguration({ minifyJs: true, minifyCss: true }));
-        }
+        // if (this.config.minify === true) {
+        //     const minifier = require("@minify-html/js");
+        //     this.html = minifier.minify(this.html, minifier.createConfiguration({ minifyJs: true, minifyCss: true }));
+        // }
 
     }
     
