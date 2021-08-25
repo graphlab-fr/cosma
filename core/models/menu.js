@@ -62,7 +62,7 @@ module.exports = function () {
             label: 'Fichier',
             submenu: [
                 {
-                    label: 'Nouveau cosmoscope…',
+                    label: 'Nouveau cosmoscope',
                     accelerator: 'CommandOrControl+N',
                     role: 'new-cosmoscope',
                     click () {
@@ -86,7 +86,7 @@ module.exports = function () {
                 },
                 { type: 'separator' },
                 {
-                    label: 'Historique…',
+                    label: 'Afficher l’historique',
                     accelerator: 'CommandOrControl+H',
                     role: 'history',
                     click () {
@@ -100,7 +100,7 @@ module.exports = function () {
             label: 'Fichier',
             submenu: [
                 {
-                    label: 'Nouveau cosmoscope…',
+                    label: 'Nouveau cosmoscope',
                     accelerator: 'CommandOrControl+N',
                     role: 'new-cosmoscope',
                     click () {
@@ -124,7 +124,7 @@ module.exports = function () {
                 },
                 { type: 'separator' },
                 {
-                    label: 'Historique…',
+                    label: 'Afficher l’historique',
                     accelerator: 'CommandOrControl+H',
                     role: 'history',
                     click () {
