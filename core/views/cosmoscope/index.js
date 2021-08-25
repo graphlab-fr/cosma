@@ -24,8 +24,13 @@ const History = require('../../models/history')
     , Template = require('../../models/template');
 
 module.exports = function () {
+
+    const config = new Config().opts;
+
+    let graphParams = [];
+    if (config.citeproc === true) { graphParams.push('citeproc') }
     
-    const graph = new Graph()
+    const graph = new Graph(graphParams)
         , template = new Template(graph)
         , history = new History();
 
