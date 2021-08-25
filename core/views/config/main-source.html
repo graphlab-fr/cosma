@@ -5,41 +5,37 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
-    <title>Cosma - configuration</title>
+    <title>Configuration</title>
     
     <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-    <header>
-        <h1 class="game-title">Configuration</h1>
-    </header>
-
     <div class="wrapper">
     
         <main>
             <form id="form-config">
                 <label>
-                    Répertoire des fiches
+                    Répertoire des fiches :
                     <input type="text" name="files_origin">
                     <button type="button" id="dialog-path-fileorigin">Sélectionner</button>
                 </label>
 
                 <label>
-                    Historique des Cosmoscopes
                     <input type="checkbox" name="history">
+                    Enregistrer automatiquement les cosmoscopes dans l’historique
                 </label>
 
                 <label>
-                    Minifier les exports
                     <input type="checkbox" name="minify" disabled>
+                    Réduire la taille des exports
                 </label>
 
                 <div id="add-type-record">
                     <h2>Types de fiches</h2>
 
-                    <button type="button" data-fx="add">Ajouter un type</button>
+                    <button type="button" data-fx="add">Ajouter un type de fiche</button>
 
                     <table>
                         <thead>
@@ -57,7 +53,7 @@
                 <div id="add-type-links">
                     <h2>Types de liens</h2>
 
-                    <button type="button" data-fx="add">Ajouter un type</button>
+                    <button type="button" data-fx="add">Ajouter un type de lien</button>
 
                     <table>
                         <thead>
@@ -75,100 +71,100 @@
                 <h2>Graphe</h2>
 
                 <label>
-                    Niveaux maximum de focus
+                    Niveau maximum de focus :
                     <input type="number" name="focus_max" step="1">
                 </label>
 
                 <label>
-                    Couleur de fond
+                    Couleur de fond :
                     <input type="color" name="graph_background_color">
                 </label>
 
                 <label>
-                    Couleur de surbrillance
+                    Couleur de surbrillance :
                     <input type="color" name="graph_highlight_color">
                 </label>
 
                 <label>
-                    Surbrillance au survol des nœuds
                     <input type="checkbox" name="graph_highlight_on_hover" checked>
+                    Surbrillance au survol des nœuds
                 </label>
 
                 <label>
-                    Flèchage de la direction des liens
                     <input type="checkbox" name="graph_arrows">
+                    Flèchage de la direction des liens
                 </label>
 
                 <label>
-                    Taille du texte des étiquettes
+                    Taille du texte des étiquettes :
                     <input type="number" name="graph_text_size" step="1">
                 </label>
 
                 <h3>Spatialisation des nœuds</h3>
 
                 <label>
-                    Force d'attraction
+                    Force d'attraction :
                     <input type="number" name="graph_attraction_force" step="1">
                 </label>
 
                 <label>
-                    Distance maximum entre les nœuds
+                    Distance maximum entre les nœuds :
                     <input type="number" name="graph_attraction_distance_max" step="1">
                 </label>
 
                 <label>
-                    Attraction verticale
+                    Attraction verticale :
                     <input type="number" name="graph_attraction_verticale" step="0.1">
                 </label>
 
                 <label>
-                    Attraction horizontale
+                    Attraction horizontale :
                     <input type="number" name="graph_attraction_horizontale" step="0.1">
                 </label>
                 
-                <h2>Signature</h2>
+                <h2>Métadonnées</h2>
 
                 <label>
-                    Titre de l'export
+                    Titre de l'export :
                     <input type="text" name="metas_title">
                 </label>
 
                 <label>
-                    Auteur
+                    Auteur :
                     <input type="text" name="metas_author">
                 </label>
 
                 <label>
-                    Mots-clés
+                    Mots-clés :
                     <input type="text" name="metas_keywords">
                 </label>
 
-                <label>
-                    Description
+                <label class="flex-column">
+                    Description :
                     <textarea name="metas_description"></textarea>
                 </label>
                 
                 <h2>Bibliographie</h2>
 
                 <label>
-                    Traiter les citations
                     <input type="checkbox" name="citeproc">
+                    Traiter les citations
                 </label>
 
                 <label>
-                    Fichier de références bibliographiques (CSL JSON)
+                    Données bibliographiques (CSL JSON) :
                     <input type="text" name="bibliography">
                     <button type="button" id="dialog-path-bibliography">Sélectionner</button>
                 </label>
 
                 <label>
-                    Fichier de style bibliographique (CSL)
+                    Style bibliographique (CSL) :
                     <input type="text" name="csl">
                     <button type="button" id="dialog-path-csl">Sélectionner</button>
                 </label>
 
                 <label>
-                    Fichier de formatage des références (XML)
+                    Localisation bibliographique (XML) :
                     <input type="text" name="bibliography_locales">
                     <button type="button" id="dialog-path-locales">Sélectionner</button>
                 </label>
@@ -176,25 +172,23 @@
                 <h2>Interface</h2>
 
                 <label>
-                    CSS personnalisé
                     <input type="checkbox" name="custom_css">
+                    Utiliser une CSS personnalisée
                 </label>
 
                 <label>
-                    Fichier CSS personnalisé
+                    CSS personnalisée :
                     <input type="text" name="custom_css_path">
                     <button type="button" id="dialog-path-css">Sélectionner</button>
                 </label>
 
                 <label>
-                    Activer les outils de développement
                     <input type="checkbox" name="devtools">
+                    Activer les outils de développement
                 </label>
 
                 <output></output>
             </form>
-
-            <button class="window-close">OK</button>
 
         </main>
 

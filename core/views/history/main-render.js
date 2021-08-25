@@ -21,7 +21,7 @@ const table = document.getElementById('table-history');
             btnOpen.textContent = 'Ouvrir';
             btnRename.textContent = 'Renommer';
             btnDelete.textContent = 'Supprimer';
-            btnReport.textContent = 'Rapport';
+            btnReport.textContent = 'Rapport d’erreurs';
             btnExport.textContent = 'Télécharger au format HTML';
 
             colTools.appendChild(btnOpen);

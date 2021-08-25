@@ -182,9 +182,9 @@ function getRecordTypeRow (typeName, typeColor) {
 
     colName.textContent = typeName;
     colColor.style.backgroundColor = typeColor;
-    btnUpdate.textContent = 'Modif.';
+    btnUpdate.textContent = 'Modifier…';
     btnUpdate.setAttribute('type', 'button');
-    btnDelete.textContent = 'Suppr.';
+    btnDelete.textContent = 'Supprimer';
     btnDelete.setAttribute('type', 'button');
     colTools.appendChild(btnUpdate);
     colTools.appendChild(btnDelete);
@@ -264,9 +264,9 @@ function getLinkTypeRow (typeName, typeColor, typeStroke) {
     lineStrokeExemple.classList.add('stroke-exemple')
     lineStrokeExemple.style.border = getBorderExemple(typeColor, typeStroke);
     colStroke.appendChild(lineStrokeExemple);
-    btnUpdate.textContent = 'Modif.';
+    btnUpdate.textContent = 'Modifier…';
     btnUpdate.setAttribute('type', 'button');
-    btnDelete.textContent = 'Suppr.';
+    btnDelete.textContent = 'Supprimer';
     btnDelete.setAttribute('type', 'button');
     colTools.appendChild(btnUpdate);
     colTools.appendChild(btnDelete);

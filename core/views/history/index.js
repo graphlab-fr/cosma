@@ -168,7 +168,7 @@ ipcMain.on("askHistoryReportModal", (event, recordId) => {
     modalReport = new BrowserWindow (
         Object.assign(windowsModel.modal, {
             parent: window,
-            title: 'Rapport'
+            title: 'Rapport d’erreur'
         })
     );
 
