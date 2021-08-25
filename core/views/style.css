@@ -21,8 +21,17 @@ body {
     margin: 0 auto;
 }
 
-button {
+button + button {
     margin: 2px;
+}
+
+button.nav {
+    min-width: 100px;
+}
+
+button.highlight {
+    background-color: var(--cosma-blue-dark);
+    color: white;
 }
 
 li {
@@ -51,6 +60,18 @@ form label {
 form textarea, form input {
     font: inherit;
     resize: vertical;
+}
+
+form label[data-state="not-saved"]:after {
+    content: '⌛';
+}
+
+form label[data-state="saved"]:after {
+    content: '✅';
+}
+
+form label[data-state="save-error"]:after {
+    content: '❌';
 }
 
 form button[type="submit"] {

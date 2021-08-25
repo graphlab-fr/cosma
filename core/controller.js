@@ -140,11 +140,6 @@ const channels = {
     ]
 }
 
-// à refaire :
-//https://www.electronjs.org/docs/tutorial/context-isolation#consid%C3%A9rations-%C3%A0-propos-de-la-s%C3%A9curit%C3%A9
-// https://www.electronjs.org/docs/api/context-bridge#contextbridge
-// https://www.electronjs.org/docs/tutorial/security#isolation-pour-les-contenus-non-approuv%C3%A9s
-
 contextBridge.exposeInMainWorld(
     "api", {
         send: (channel, data) => {
@@ -167,3 +162,14 @@ contextBridge.exposeInMainWorld(
         }
     }
 );
+
+window.addEventListener('DOMContentLoaded', () => {
+    const btnsClose = document.querySelectorAll('.window-close');
+    if (btnsClose) {
+        btnsClose.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                window.close()
+            })
+        })
+    }
+})

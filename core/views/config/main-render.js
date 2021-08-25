@@ -1,74 +1,6 @@
 const form = document.getElementById('form-config');
 
 /**
- * Form submition & feedback : send data and after display the response
- */
-
-(function () {
-
-const output = form.querySelector('output');
-
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    let data = new FormData(form);
-    data = Object.fromEntries(data);
-    data = serializeData(data);
-
-    window.api.send("sendConfigOptions", data);
-
-    window.api.receive("confirmConfigRegistration", (response) => {
-        output.textContent = response.consolMsg;
-        output.dataset.valid = response.isOk;
-
-        setTimeout(() => {
-            output.textContent = '';
-            output.dataset.valid = null;
-        }, 2000);
-    });
-})
-
-})();
-
-/**
- * Serialize data for the Config model
- * Assign form fields to config options
- * Several input must be serialize to an array for one option like types
- * @param {object} data - Data from config form
- * @return {object} - Data serialized
- */
-
-function serializeData (data) {
-    data['graph_highlight_on_hover'] = booleanCheckbox(data['graph_highlight_on_hover']);
-    data['graph_arrows'] = booleanCheckbox(data['graph_arrows']);
-    data['history'] = booleanCheckbox(data['history']);
-    data['minify'] = booleanCheckbox(data['minify']);
-    data['custom_css'] = booleanCheckbox(data['custom_css']);
-    data['devtools'] = booleanCheckbox(data['devtools']);
-
-    if (data['metas_keywords'] !== '') {
-        data['metas_keywords'] = data['metas_keywords'].split(',');
-    }
-
-    return data;
-}
-
-/**
- * Convert the value of a checkbox
- * if 'on' → true
- * if undefined → false
- * @param {string} option - Checkbox input value
- * @return {boolean} - Checkbox boolean value
- */
-
-function booleanCheckbox (option) {
-    if (option !== undefined && option === 'on') {
-        return true; }
-
-        return false;
-}
-
-/**
  * Autocomplete form from the current config
  * For each option from the config, find the input from by its name
  * and then set its value, or activate a specific function
@@ -102,6 +34,8 @@ window.api.receive("getConfig", (data) => {
         
         input.value = data[option];
     }
+
+    autosaveForm();
 });
 
 })();
@@ -118,6 +52,70 @@ window.api.receive("getOptionMinimumFromConfig", (data) => {
 });
 
 })();
+
+function autosaveForm () {
+
+    const inputs = form.querySelectorAll('input');
+
+    for (const input of inputs) {
+        const label = input.parentElement;
+
+        let originValue, interval;
+
+        if (input.getAttribute('type') === 'text' || input.getAttribute('type') === 'number' || input.getAttribute('type') === 'color') {
+            input.addEventListener('focus', (e) => {
+                originValue = input.value;
+        
+                input.addEventListener('input', () => {
+                    label.dataset.state = 'not-saved';
+                })
+        
+                interval = setInterval(save, 2000);
+            });
+        
+            input.addEventListener('blur', (e) => {
+                clearInterval(interval);
+                save();
+            });
+        }
+
+        if (input.getAttribute('type') === 'checkbox') {
+            originValue = input.checked;
+
+            input.addEventListener('click', () => {
+                label.dataset.state = 'not-saved';
+
+                save(!originValue);
+
+                input.checked = originValue;
+            })
+        }
+
+        function save (value = input.value) {
+            if (value === originValue) {
+                label.dataset.state = 'saved';
+                return;
+            }
+
+            originValue = value;
+
+            let data = {};
+            data[input.name] = value;
+
+            window.api.send("sendConfigOptions", data);
+
+            window.api.receiveOnce("confirmConfigRegistration", (response) => {
+                if (response.isOk) {
+                    label.dataset.state = 'saved';
+                } else {
+                    label.dataset.state = 'save-error';
+                    console.log(response.consolMsg);
+                }
+            });
+        }
+    }
+
+};
 
 function setRecordTypeTable (recordTypes) {
     const typeContainer = document.getElementById('add-type-record')
