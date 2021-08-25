@@ -82,6 +82,24 @@ ipcMain.on("askExportPathFromConfig", (event, data) => {
     }
 });
 
+ipcMain.on("askExportOptions", (event, data) => {
+    let config = new Config().opts;
+
+    let response = {
+        citeproc: false,
+        publish: false
+    };
+
+    if (config['bibliography'] && config['csl'] && config['bibliography_locales']) {
+        response.citeproc = true; }
+
+    if (config['metas_description'] && config['metas_keywords'] && config['metas_author'] && config['metas_title']) {
+        response.publish = true;
+    }
+
+    modal.webContents.send("getExportOptions", response);
+});
+
 ipcMain.on("sendExportOptions", (event, data) => {
     // save the export path into the configuration
     let config = new Config({ export_path: data.export_path });

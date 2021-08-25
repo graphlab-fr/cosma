@@ -28,6 +28,19 @@ function serializeData (data) {
     return data;
 }
 
+(function () {
+    window.api.send("askExportOptions", null);
+
+    window.api.receive("getExportOptions", (response) => {
+        for (const input in response) {
+            if (response[input] === false) {
+                form.querySelector('input[name="' + input + '"]')
+                    .setAttribute('disabled', true)
+            }
+        }
+    });
+})();
+
 /**
  * Convert the value of a checkbox
  * if 'on' → true

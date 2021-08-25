@@ -47,6 +47,7 @@ const channels = {
          */
 
         'getExportPath',           // export/index.js → export/main-render.js
+        'getExportOptions',        // export/index.js → export/main-render.js
         'confirmExport',           // export/index.js → export/main-render.js
         'getExportPathFromConfig', // export/index.js → export/main-render.js
 
@@ -114,6 +115,7 @@ const channels = {
          */
         
         'askExportPath',           // export/index.js ← export/main-render.js
+        'askExportOptions',        // export/index.js ← export/main-render.js
         'sendExportOptions',       // export/index.js ← export/main-render.js
         'askExportPathFromConfig', // export/index.js ← export/main-render.js
 
