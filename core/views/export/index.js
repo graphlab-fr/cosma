@@ -39,7 +39,7 @@ module.exports = function (window) {
         modal.show();
     });
 
-    modal.once('close', () => {
+    modal.once('closed', () => {
         modal = undefined;
     });
     

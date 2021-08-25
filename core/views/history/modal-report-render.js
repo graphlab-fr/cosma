@@ -1,4 +1,4 @@
-const container = document.querySelector('main')
+const container = document.getElementById('error-list')
     , counter = document.getElementById('error-counter');
 
 (function () {
