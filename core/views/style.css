@@ -25,15 +25,6 @@ button + button {
     margin: 2px;
 }
 
-button.nav {
-    min-width: 100px;
-}
-
-button.highlight {
-    background-color: var(--cosma-blue-dark);
-    color: white;
-}
-
 li {
     margin: 2px 0;
 }
@@ -72,11 +63,6 @@ form label[data-state="saved"]:after {
 
 form label[data-state="save-error"]:after {
     content: '❌';
-}
-
-form button[type="submit"] {
-    margin-top: 20px;
-    width: 100%;
 }
 
 table {

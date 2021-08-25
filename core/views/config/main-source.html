@@ -33,7 +33,7 @@
 
                 <label>
                     Minifier les exports
-                    <input type="checkbox" name="minify">
+                    <input type="checkbox" name="minify" disabled>
                 </label>
 
                 <div id="add-type-record">
@@ -151,6 +151,11 @@
                 <h2>Bibliographie</h2>
 
                 <label>
+                    Traiter les citations
+                    <input type="checkbox" name="citeproc">
+                </label>
+
+                <label>
                     Fichier de références bibliographiques (CSL JSON)
                     <input type="text" name="bibliography">
                     <button type="button" id="dialog-path-bibliography">Sélectionner</button>
@@ -189,7 +194,7 @@
                 <output></output>
             </form>
 
-            <button class="nav window-close highlight">Ok</button>
+            <button class="window-close">Ok</button>
 
         </main>
 

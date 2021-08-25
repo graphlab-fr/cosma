@@ -55,7 +55,8 @@ window.api.receive("getOptionMinimumFromConfig", (data) => {
 
 function autosaveForm () {
 
-    const inputs = form.querySelectorAll('input');
+    const inputs = form.querySelectorAll('input')
+        , output = form.querySelector('output')
 
     for (const input of inputs) {
         const label = input.parentElement;
@@ -70,12 +71,27 @@ function autosaveForm () {
                     label.dataset.state = 'not-saved';
                 })
         
-                interval = setInterval(save, 2000);
+                interval = setInterval(() => {
+                    save()
+                        .then((inputValue) => {
+                            originValue = inputValue;
+                        })
+                        .catch((inputValue) => {
+                            input.value = originValue
+                        });
+                }, 2000);
             });
         
             input.addEventListener('blur', (e) => {
                 clearInterval(interval);
-                save();
+
+                save()
+                    .then((inputValue) => {
+                        originValue = inputValue;
+                    })
+                    .catch((inputValue) => {
+                        input.value = originValue
+                    });
             });
         }
 
@@ -85,33 +101,44 @@ function autosaveForm () {
             input.addEventListener('click', () => {
                 label.dataset.state = 'not-saved';
 
-                save(!originValue);
-
-                input.checked = originValue;
+                save(!originValue)
+                    .then((inputValue) => {
+                        originValue = inputValue;
+                    })
+                    .catch((inputValue) => {
+                        originValue = !inputValue;
+                        input.checked = !inputValue;
+                    });
             })
         }
 
         function save (value = input.value) {
-            if (value === originValue) {
-                label.dataset.state = 'saved';
-                return;
-            }
-
-            originValue = value;
-
-            let data = {};
-            data[input.name] = value;
-
-            window.api.send("sendConfigOptions", data);
-
-            window.api.receiveOnce("confirmConfigRegistration", (response) => {
-                if (response.isOk) {
+            return new Promise((success, reject) => {
+                if (value === originValue) {
                     label.dataset.state = 'saved';
-                } else {
-                    label.dataset.state = 'save-error';
-                    console.log(response.consolMsg);
+                    return;
                 }
-            });
+    
+                let data = {};
+                data[input.name] = value;
+    
+                window.api.send("sendConfigOptions", data);
+    
+                window.api.receiveOnce("confirmConfigRegistration", (response) => {
+                    if (response.isOk) {
+                        label.dataset.state = 'saved';
+                        // originValue = value;
+                        success(value);
+                    } else {
+                        label.dataset.state = 'save-error';
+                        // input.value = originValue;
+                        output.textContent = response.consolMsg;
+                        output.dataset.valid = response.isOk;
+                        reject(value);
+                        return false;
+                    }
+                });
+            })
         }
     }
 
@@ -305,6 +332,8 @@ const btnDialog = document.getElementById('dialog-path-fileorigin')
 btnDialog.addEventListener('click', () => {
     window.api.send("askFilesOriginPath", null);
 
+    input.focus();
+
     window.api.receive("getFilesOriginPath", (response) => {
         if (response.isOk === true) {
             input.value = response.data[0];
@@ -321,6 +350,8 @@ const btnDialog = document.getElementById('dialog-path-bibliography')
 
 btnDialog.addEventListener('click', () => {
     window.api.send("askBibliographyPath", null);
+
+    input.focus();
 
     window.api.receive("getBibliographyPath", (response) => {
         if (response.isOk === true) {
@@ -339,6 +370,8 @@ const btnDialog = document.getElementById('dialog-path-csl')
 btnDialog.addEventListener('click', () => {
     window.api.send("askCslPath", null);
 
+    input.focus();
+
     window.api.receive("getCslPath", (response) => {
         if (response.isOk === true) {
             input.value = response.data[0];
@@ -356,6 +389,8 @@ const btnDialog = document.getElementById('dialog-path-locales')
 btnDialog.addEventListener('click', () => {
     window.api.send("askLocalesPath", null);
 
+    input.focus();
+
     window.api.receive("getLocalesPath", (response) => {
         if (response.isOk === true) {
             input.value = response.data[0];
@@ -372,6 +407,8 @@ const btnDialog = document.getElementById('dialog-path-css')
 
 btnDialog.addEventListener('click', () => {
     window.api.send("askCustomCssPath", null);
+
+    input.focus();
 
     window.api.receive("getCustomCssPath", (response) => {
         if (response.isOk === true) {
