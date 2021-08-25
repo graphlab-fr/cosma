@@ -1,6 +1,9 @@
 :root {
     --cosma-blue: #147899;
-	--cosma-blue-dark: #02385c;
+		--cosma-blue-dark: #02385c;
+		--mac-menu-background-color: #f6f6f6;
+		--mac-border-color: #e6e6e6;
+		--mac-border-bottom-color: #bababa;
 }
 
 html {
@@ -11,14 +14,23 @@ body {
     padding: 0;
     margin: 0;
     font-family: 'Roboto', 'Helevetica', 'Arial', sans-serif;
-	font-size: 1.4rem;
+	  font-size: 1.4rem;
     padding: 20px;
     overflow-x: hidden;
+    background-color: var(--mac-menu-background-color);
 }
 
 .wrapper {
-    max-width: 600px;
+    max-width: 95vw;
     margin: 0 auto;
+}
+
+button {
+    background-color: white;
+    border: 1px solid var(--mac-border-color);
+    border-bottom: 1px solid var(--mac-border-bottom-color);
+    border-radius: 5px;
+    padding: 2px 15px;
 }
 
 button + button {
@@ -27,6 +39,12 @@ button + button {
 
 li {
     margin: 2px 0;
+}
+
+.cancel-ok {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
 }
 
 form {
@@ -43,14 +61,56 @@ form fieldset {
 
 form label {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin: 2px 0;
     line-height: 150%;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+}
+
+form label.flex-column {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: stretch;
+}
+
+form label.flex-column textarea {
+    width: 99%;
+    margin-top: 7px;
+}
+
+form label input, form label button, form label select {
+    margin-left: 10px;
+}
+
+input[type=checkbox] {
+    margin-right: 7px;
+    margin-left: 0;
 }
 
 form textarea, form input {
     font: inherit;
     resize: vertical;
+}
+
+form input[type=text] {
+    flex-grow: 4;
+}
+
+form input[type=text],
+form label select,
+textarea {
+    border: 1px solid var(--mac-border-color);
+}
+
+form input[type=number] {
+    max-width: 50px;
+}
+
+form label select {
+    padding: 0 5px;
 }
 
 form label[data-state="not-saved"]:after {
@@ -69,11 +129,23 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+    background-color: white;
+    border: 1px solid var(--mac-border-color);
 }
 
-table, th, td { border: 1px solid rgb(36, 36, 36); }
+th, td { border: none; }
 
-th, td { padding: 5px; }
+th {
+    font-weight: normal;
+    font-size: 1.2rem;
+    color: #272727;
+    border-bottom: 1px solid var(--mac-border-color);
+    padding: 5px;
+}
+
+td {
+    padding: 0 5px;
+}
 
 output {
     display: block;
