@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build-win": "electron-packager ./ Cosma --out=build/win --icon=./assets/icons/64x64.ico --platform=win32 --arch=x64",
-    "build-mac": "electron-packager ./ Cosma --out=build/osx --icon=./assets/icons/64x64.ico --platform=darwin --arch=x64"
+    "build-win": "electron-packager ./ Cosma --out=build/win --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=x64",
+    "build-mac": "electron-packager ./ Cosma --out=build/osx --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=x64"
   },
   "author": "HyperOtlet",
   "license": "MIT",
