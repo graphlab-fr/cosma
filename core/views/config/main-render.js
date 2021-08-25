@@ -137,7 +137,7 @@ function setRecordTypeTable (recordTypes) {
     btnAdd.addEventListener('click', () => {
         window.api.send("askNewRecordTypeModal", null);
 
-        window.api.receive("confirmNewRecordTypeFromConfig", (response) => {
+        window.api.receiveOnce("confirmNewRecordTypeFromConfig", (response) => {
             tableBodyContent.appendChild(
                 getRecordTypeRow(response.data.name, response.data.color)
             );

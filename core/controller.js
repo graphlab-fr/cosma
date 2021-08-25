@@ -156,6 +156,12 @@ contextBridge.exposeInMainWorld(
                 return console.error('Invalid channel request (input)'); }
 
             ipcRenderer.on(channel, (event, ...args) => func(...args));
+        },
+        receiveOnce: (channel, func) => {
+            if (channels.input.includes(channel) === false) {
+                return console.error('Invalid channel request (input)'); }
+
+            ipcRenderer.once(channel, (event, ...args) => func(...args));
         }
     }
 );
