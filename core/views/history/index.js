@@ -126,31 +126,48 @@ ipcMain.on("askRenameHistoryModal", (event, recordId) => {
 
     modalRename.loadFile(path.join(__dirname, './modal-rename-source.html'));
 
+    modalRename.webContents.openDevTools({
+        mode: 'detach'
+    })
+
     const recordFromHistory = new History(recordId);
 
     modalRename.once('ready-to-show', () => {
         modalRename.show();
         modalRename.webContents.send("getMetasHistory", {
-            id: recordId,
-            name: recordFromHistory.metas.name
+            id: recordFromHistory.id,
+            description: recordFromHistory.metas.description
         });
     });
 });
 
 ipcMain.on("sendNewHistoryName", (event, data) => {
     const recordFromHistory = new History(data.id);
-    recordFromHistory.metas.name = data.name;
-    const result = recordFromHistory.saveMetas();
+    recordFromHistory.metas.description = data.description;
 
-    let response = {
-        isOk: true,
-        consolMsg: 'L\'entrée d\'historique a été renommée',
-        data: data
+    const result = recordFromHistory.saveMetas();
+    let response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "La description de l'entrée a bien été exécutée.",
+            data: recordFromHistory.metas
+        }
+
+        modalRename.close();
+        window.webContents.send("confirmRenameHistory", response);
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "La description de l'entrée n'a pu être exécutée.",
+            data: data
+        }
+
+        modalRename.webContents.send("confirmRenameHistory", response);
     }
 
-    modalRename.close();
-
-    window.webContents.send("confirmRenameHistory", response);
+    
 });
 
 ipcMain.on("askCosmoscopeExportFromHistory", (event, recordId) => {

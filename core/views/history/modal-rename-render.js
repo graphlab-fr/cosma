@@ -20,12 +20,10 @@ let isReady = false;
     
         window.api.send("sendNewHistoryName", data);
     
-        // console.log('coucou');
-        
-        // window.api.receive("confirmNewRecordTypeFromConfig", (response) => {
-        //     output.textContent = response.consolMsg;
-        //     output.dataset.valid = response.isOk;
-        // });
+        window.api.receive("confirmRenameHistory", (response) => {
+            output.textContent = response.consolMsg;
+            output.dataset.valid = response.isOk;
+        });
     })
     
 })();
@@ -37,8 +35,9 @@ let isReady = false;
 (function () {
 
     window.api.receive("getMetasHistory", (metas) => {
-        form.querySelector('input[name="name"]')
-            .value = metas.name;
+        console.log(metas);
+        form.querySelector('input[name="description"]')
+            .value = metas.description;
         form.querySelector('input[name="id"]')
             .value = metas.id;
 

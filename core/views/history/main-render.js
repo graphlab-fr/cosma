@@ -9,7 +9,8 @@ const table = document.getElementById('table-history');
     window.api.receive("getHistoryList", (data) => {
         for (const record of data) {
             const row = document.createElement('tr')
-                , colName = document.createElement('td')
+                , colDate = document.createElement('td')
+                , colDescription = document.createElement('td')
                 , colTools = document.createElement('td')
                 , btnOpen = document.createElement('button')
                 , btnRename = document.createElement('button')
@@ -17,7 +18,8 @@ const table = document.getElementById('table-history');
                 , btnReport = document.createElement('button')
                 , btnExport = document.createElement('button');
 
-            colName.textContent = record.metas.name;
+            colDate.textContent = record.metas.date;
+            colDescription.textContent = record.metas.description;
             btnOpen.textContent = 'Ouvrir';
             btnRename.textContent = 'Renommer';
             btnDelete.textContent = 'Supprimer';
@@ -30,7 +32,8 @@ const table = document.getElementById('table-history');
             colTools.appendChild(btnReport);
             colTools.appendChild(btnExport);
 
-            row.appendChild(colName);
+            row.appendChild(colDate);
+            row.appendChild(colDescription);
             row.appendChild(colTools);
             tableContent.appendChild(row);
 
@@ -45,7 +48,7 @@ const table = document.getElementById('table-history');
                     output.textContent = response.consolMsg;
                     output.dataset.valid = response.isOk;
 
-                    colName.textContent = response.data.name;
+                    colDescription.textContent = response.data.description;
                 });
             });
 

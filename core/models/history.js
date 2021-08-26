@@ -83,7 +83,10 @@ module.exports = class History {
         this.pathToReport = path.join(this.pathToStore, 'report.json');
 
         this.metas = {
-            name: moment().format('LLLL')
+            date: moment().format('LLLL'),
+            description: '',
+            // if history param is false, this history record is temporary
+            temp: !this.config.history
         };
 
         if (id === null && this.config.history === false) {
@@ -91,7 +94,8 @@ module.exports = class History {
             // we replace the last one
             const lastRecord = History.getLast();
 
-            if (lastRecord !== undefined) {
+            if (lastRecord !== undefined && lastRecord.metas.temp === true) {
+                // delete last history record if it is temporary
                 lastRecord.delete(); }
         }
 
@@ -133,7 +137,14 @@ module.exports = class History {
     }
 
     saveMetas () {
-        fs.writeFileSync(this.pathToMetas, JSON.stringify(this.metas));
+        try {
+            fs.writeFileSync(this.pathToMetas, JSON.stringify(this.metas));
+
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
 
     getMetas () {
