@@ -28,14 +28,6 @@ app.whenReady().then(() => {
     const mainWindow = new BrowserWindow(windowsModel.main);
     exports.mainWindow = mainWindow;
 
-    process.on("uncaughtException", (err) => {
-        dialog.showMessageBoxSync(mainWindow, {
-            type: "error",
-            title: "Erreur dans le processus",
-            message: err
-        })
-    });
-
     require('./core/models/menu')(); // set app menu
 
     require('./core/views/cosmoscope/index')();

@@ -19,7 +19,6 @@ module.exports = {
     graph_attraction_verticale: 0,
     graph_attraction_horizontale: 0,
     custom_css: false,
-    citeproc: false,
     devtools: false,
     minify: true,
     history: true

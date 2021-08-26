@@ -23,12 +23,7 @@ const History = require('../../models/history')
     , Graph = require('../../models/graph')
     , Template = require('../../models/template');
 
-module.exports = function () {
-
-    const config = new Config().opts;
-
-    let graphParams = [];
-    if (config.citeproc === true) { graphParams.push('citeproc') }
+module.exports = function (graphParams = []) {
     
     const graph = new Graph(graphParams)
         , template = new Template(graph)

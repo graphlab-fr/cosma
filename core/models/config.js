@@ -251,19 +251,6 @@ module.exports = class Config {
             errs.push('Vous devez indiquer un chemin valide vers le fichier CSS personnalisé.');
         }
 
-        if (typeof this.opts.citeproc !== 'boolean') {
-            errs.push('L\'option de traitement des citations est une valeur binaire.'); }
-        else if (this.opts.citeproc === true
-                && (
-                    (!this.opts['bibliography'] || !fs.existsSync(this.opts['bibliography']))
-                    || (!this.opts['csl'] || !fs.existsSync(this.opts['csl']))
-                    || (!this.opts['bibliography_locales'] || !fs.existsSync(this.opts['bibliography_locales']))
-                    )
-                )
-        {
-            errs.push('Vous devez indiquer un chemin valide vers les fichiers de configuration de bibliographie.');
-        }
-
         if (typeof this.opts.devtools !== 'boolean') {
             errs.push('L\'option des outils de développement est une valeur binaire.'); }
 

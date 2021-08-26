@@ -4,13 +4,15 @@
  * @copyright MIT License ANR HyperOtlet
  */
 
-const fs = require('fs')
+const dialog = require('electron').dialog
+    , fs = require('fs')
     , path = require('path')
     , ymlFM = require('yaml-front-matter')
     , CSL = require('citeproc')
     , Citr = require('@zettlr/citr');
 
-const Config = require('./config');
+const Config = require('./config')
+    , mainWindow = require('../../main').mainWindow;
 
 /**
  * Class to get the Cosmoscope data
@@ -174,23 +176,32 @@ module.exports = class Graph {
         if (this.config.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
 
-        if (this.params.includes('citeproc')
-            && this.config['bibliography'] && this.config['csl'] && this.config['bibliography_locales'])
-        {
+        if (this.params.includes('citeproc')) {
 
-            this.library = {};
+            if (this.config['bibliography'] && this.config['csl'] && this.config['bibliography_locales']) {
+                this.library = {};
+    
+                let libraryFileContent = fs.readFileSync(this.config['bibliography'], 'utf-8');
+                libraryFileContent = JSON.parse(libraryFileContent);
+    
+                for (const item of libraryFileContent) {
+                    this.library[item.id] = item; }
+    
+                this.citeproc = this.getCSL();
+    
+                this.files = this.files.map(this.catchQuoteKeys, this);
+                this.files = this.files.map(this.convertQuoteKeys, this);
+                this.files = this.files.map(this.getBibliography, this);
+            } else {
+                dialog.showMessageBox(mainWindow, {
+                    message: "Vous ne pouvez traiter les citations : des paramètres sont manquants. Veuillez compléter vos préférences.",
+                    type: 'info',
+                    title: "Impossible de traiter les citations"
+                });
+                // remove 'citeproc' from params
+                this.params = this.params.filter(param => param !== 'citeproc');
+            }
 
-            let libraryFileContent = fs.readFileSync(this.config['bibliography'], 'utf-8');
-            libraryFileContent = JSON.parse(libraryFileContent);
-
-            for (const item of libraryFileContent) {
-                this.library[item.id] = item; }
-
-            this.citeproc = this.getCSL();
-
-            this.files = this.files.map(this.catchQuoteKeys, this);
-            this.files = this.files.map(this.convertQuoteKeys, this);
-            this.files = this.files.map(this.getBibliography, this);
         }
 
         this.data = { // serialize for D3

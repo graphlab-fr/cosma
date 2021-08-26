@@ -15,6 +15,50 @@ const {
 const Config = require('./config')
     , mainWindow = require('../../main').mainWindow;
 
+const fileMenu = [
+    {
+        label: 'Nouveau cosmoscope',
+        accelerator: 'CommandOrControl+R',
+        role: 'new-cosmoscope',
+        click () {
+            require('../views/cosmoscope')();
+        }
+    },
+    {
+        label: 'Nouveau cosmoscope avec citations',
+        accelerator: 'CommandOrControl+Shift+R',
+        role: 'new-cosmoscope',
+        click () {
+            require('../views/cosmoscope')(['citeproc']);
+        }
+    },
+    {
+        label: 'Nouvelle fiche…',
+        role: 'new-record',
+        accelerator: 'CommandOrControl+N',
+        click () {
+            require('../views/record/index')();
+        }
+    },
+    {
+        label: 'Exporter cosmoscope…',
+        accelerator: 'CommandOrControl+E',
+        role: 'export-cosmoscope',
+        click (item, window) {
+            require('../views/export/index')(window);
+        }
+    },
+    { type: 'separator' },
+    {
+        label: 'Afficher l’historique',
+        accelerator: 'CommandOrControl+H',
+        role: 'history',
+        click () {
+            require('../views/history/index')();
+        }
+    }
+]
+
 module.exports = function () {
     const config = new Config().opts;
 
@@ -60,77 +104,15 @@ module.exports = function () {
         },
         {
             label: 'Fichier',
-            submenu: [
-                {
-                    label: 'Nouveau cosmoscope',
-                    accelerator: 'CommandOrControl+N',
-                    role: 'new-cosmoscope',
-                    click () {
-                        require('../views/cosmoscope')();
-                    }
-                },
-                {
-                    label: 'Nouvelle fiche…',
-                    role: 'new-record',
-                    click () {
-                        require('../views/record/index')();
-                    }
-                },
-                {
-                    label: 'Exporter cosmoscope…',
-                    accelerator: 'CommandOrControl+E',
-                    role: 'export-cosmoscope',
-                    click (item, window) {
-                        require('../views/export/index')(window);
-                    }
-                },
-                { type: 'separator' },
-                {
-                    label: 'Afficher l’historique',
-                    accelerator: 'CommandOrControl+H',
-                    role: 'history',
-                    click () {
-                        require('../views/history/index')();
-                    }
-                }
-            ]
+            submenu: [ ...fileMenu ]
         });
     } else {
         template.push({
             label: 'Fichier',
             submenu: [
-                {
-                    label: 'Nouveau cosmoscope',
-                    accelerator: 'CommandOrControl+N',
-                    role: 'new-cosmoscope',
-                    click () {
-                        require('../views/cosmoscope')();
-                    }
-                },
-                {
-                    label: 'Nouvelle fiche…',
-                    role: 'new-record',
-                    click () {
-                        require('../views/record/index')();
-                    }
-                },
-                {
-                    label: 'Exporter cosmoscope…',
-                    accelerator: 'CommandOrControl+E',
-                    role: 'export-cosmoscope',
-                    click (item, window) {
-                        require('../views/export/index')(window);
-                    }
-                },
-                { type: 'separator' },
-                {
-                    label: 'Afficher l’historique',
-                    accelerator: 'CommandOrControl+H',
-                    role: 'history',
-                    click () {
-                        require('../views/history/index')();
-                    }
-                },
+
+                ...fileMenu,
+
                 { type: 'separator' },
                 {
                     label: 'Préférences…',
