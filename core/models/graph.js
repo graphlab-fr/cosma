@@ -126,6 +126,7 @@ module.exports = class Graph {
 
         this.files = this.getFilesNames();
         this.files = this.files.map(this.serializeFiles, this);
+        this.files = this.files.filter(this.verifFile, this);
 
         /**
          * Contains an object for each file from this.files with its id & file name
@@ -251,7 +252,7 @@ module.exports = class Graph {
             this.report.ignoredFiles.push({ fileName: file.name, invalidMeta: 'id' });
             return false;
         }
-    
+
         if (!file.metas.title) {
             this.report.ignoredFiles.push({ fileName: file.name, invalidMeta: 'title' });
             return false;
