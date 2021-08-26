@@ -30,7 +30,7 @@ const historique = {
         }
 
         // change page title
-        document.title = 'Cosma - ' + recordTitle;
+        document.title = 'Cosma — ' + recordTitle;
     },
     /**
      * Add first entry into history

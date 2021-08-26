@@ -19,10 +19,10 @@ const table = document.getElementById('table-history')
 
             colDate.textContent = record.metas.date;
             colDescription.textContent = record.metas.description;
-            btnOpen.textContent = 'Ouvrir';
-            btnRename.textContent = 'Renommer';
+            btnOpen.textContent = 'Ouvrir dans Cosma';
+            btnRename.textContent = 'Modifier la description';
             btnReport.textContent = 'Rapport d’erreurs';
-            btnReveal.textContent = 'Révéler';
+            btnReveal.textContent = 'Révéler dans l’explorateur de fichiers';
 
             colTools.appendChild(btnOpen);
             colTools.appendChild(btnRename);
@@ -32,7 +32,7 @@ const table = document.getElementById('table-history')
             switch (record.metas.isTemp) {
                 case true:
                     const btnKeep = document.createElement('button')
-                    btnKeep.textContent = 'Conserver';
+                    btnKeep.textContent = 'Enregistrer dans l’historique';
                     colTools.appendChild(btnKeep);
 
                     btnKeep.addEventListener('click', () => {
