@@ -34,7 +34,7 @@ button {
 }
 
 button + button {
-    margin: 2px;
+    margin-left: 2px;
 }
 
 li {
