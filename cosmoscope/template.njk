@@ -39,12 +39,12 @@
         <header role="banner">
             {% if publishMode === false %}
             <div id="menu-electron" hidden>
-                <button id="electron-page-reload">Recharger la page</button>
-                <button id="electron-back">Fiche précédante</button>
-                <button id="electron-forward">Fiche suivante</button>
-                <button id="electron-share">Partager</button>
-                <button id="electron-record-new">Nouvelle fiche</button>
-                <button id="electron-cosmoscope-new">Re-générer cosmoscope</button>
+                <button id="electron-record-new" title="Nouvelle fiche">{% include "doc.plaintext.svg" %}</button>
+                <button id="electron-back" title="Précédent" class="icon-chevron">{% include "chevron.left.svg" %}</button>
+                <button id="electron-forward" title="Suivant" class="icon-chevron">{% include "chevron.right.svg" %}</button>
+                <button id="electron-page-reload" title="Recharger la page">{% include "arrow.clockwise.svg" %}</button>
+                <button id="electron-share" title="Partager">{% include "square.and.arrow.up.svg" %}</button>
+                <button id="electron-cosmoscope-new" title="Nouveau cosmoscope">{% include "staroflife.fill.svg" %}</button>
             </div>
             {% endif %}
 
