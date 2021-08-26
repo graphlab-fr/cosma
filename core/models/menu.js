@@ -225,8 +225,7 @@ module.exports = function () {
                         if (window) { window.webContents.toggleDevTools() };
                     },
                 },
-            ],
-            visible: false
+            ]
         })
     }
 
