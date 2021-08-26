@@ -5,7 +5,8 @@ const {
 } = require('electron')
 , path = require('path');
 
-const windowsModel = require('../../models/windows');
+const windowsModel = require('../../models/windows')
+    , mainWindow = require('../../../main').mainWindow;
 
 let window;
 
@@ -23,8 +24,9 @@ module.exports = function () {
     }
 
     window = new BrowserWindow (
-        Object.assign(windowsModel.forms, {
-            title: 'Nouvelle fiche'
+        Object.assign(windowsModel.modal, {
+            title: 'Nouvelle fiche',
+            parent: mainWindow
         })
     );
 
@@ -59,6 +61,10 @@ ipcMain.on("sendRecordContent", (event, data) => {
             consolMsg: "La fiche a bien été enregistrée.",
             data: {}
         };
+
+        window.webContents.send("confirmRecordSaving", response);
+        window.close();
+        return;
     } else if (result === false) {
         response = {
             isOk: false,

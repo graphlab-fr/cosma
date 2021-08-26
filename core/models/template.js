@@ -89,12 +89,6 @@ module.exports = class Template {
 
         nunjucks.configure(path.join(__dirname, '../../cosmoscope'), { autoescape: true });
 
-        try {
-            
-        } catch (error) {
-            
-        }
-
         this.html = nunjucks.render('template.njk', {
 
             publishMode: (graph.params.includes('publish') === true),
