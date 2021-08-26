@@ -37,12 +37,19 @@
     <aside class="menu list-content-container">
 
         <header role="banner">
+            {% if publishMode === false %}
+            <div id="menu-electron" hidden>
+                <button id="electron-page-reload">Recharger la page</button>
+                <button id="electron-back">Fiche précédante</button>
+                <button id="electron-forward">Fiche suivante</button>
+                <button id="electron-share">Partager</button>
+                <button id="electron-record-new">Nouvelle fiche</button>
+                <button id="electron-cosmoscope-new">Re-générer cosmoscope</button>
+            </div>
+            {% endif %}
+
             {% if publishMode and metadata.title %}
             <h1 class="title">{{ metadata.title }}</h1>
-            {% else %}
-            <div class="logo" title="Logo de Cosma">
-                {% include "cosmalogo.svg" %}
-            </div>
             {% endif %}
 
             <div class="load-bar" onclick="updateForces()" title="Spatialisation (Espace)">

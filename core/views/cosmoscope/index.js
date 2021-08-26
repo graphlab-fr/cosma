@@ -105,3 +105,29 @@ ipcMain.on("sendViewName", (event, data) => {
         modalView.webContents.send("confirmNewRecordTypeFromConfig", response);
     }
 });
+
+ipcMain.on("askReload", (event, data) => { window.reload(); });
+
+ipcMain.on("askBack", (event, data) => {
+    if (window.webContents.canGoBack()) {
+        window.webContents.goBack();
+    };
+});
+
+ipcMain.on("askForward", (event, data) => {
+    if (window.webContents.canGoForward()) {
+        window.webContents.goForward();
+    };
+});
+
+ipcMain.on("askShare", (event, data) => {
+    require('../export/index')(window);
+});
+
+ipcMain.on("askRecordNew", (event, data) => {
+    require('../record/index')();
+});
+
+ipcMain.on("askCosmoscopeNew", (event, data) => {
+    require('./index')();
+});

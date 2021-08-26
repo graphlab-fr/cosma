@@ -4,6 +4,7 @@ const {
 
 window.addEventListener("DOMContentLoaded", () => {
     saveView();
+    menu();
 });
 
 function saveView () {
@@ -27,3 +28,34 @@ function saveView () {
         });
     })
 }
+
+function menu () {
+    const container = document.getElementById('menu-electron');
+    container.removeAttribute('hidden');
+
+    const btnPageReload = document.getElementById('electron-page-reload')
+        , btnBack = document.getElementById('electron-back')
+        , btnForward = document.getElementById('electron-forward')
+        , btnShare = document.getElementById('electron-share')
+        , btnRecordNew = document.getElementById('electron-record-new')
+        , btnCosmoscopeNew = document.getElementById('electron-cosmoscope-new');
+
+    btnPageReload.addEventListener('click', reload);
+    btnBack.addEventListener('click', back);
+    btnForward.addEventListener('click', forward);
+    btnShare.addEventListener('click', share);
+    btnRecordNew.addEventListener('click', recordNew);
+    btnCosmoscopeNew.addEventListener('click', cosmoscopeNew);
+}
+
+function reload () { ipcRenderer.send('askReload', null); }
+
+function back () { ipcRenderer.send('askBack', null); }
+
+function forward () { ipcRenderer.send('askForward', null); }
+
+function share () { ipcRenderer.send('askShare', null); }
+
+function recordNew () { ipcRenderer.send('askRecordNew', null); }
+
+function cosmoscopeNew () { ipcRenderer.send('askCosmoscopeNew', null); }

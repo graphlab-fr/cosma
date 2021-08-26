@@ -214,26 +214,6 @@ aside.menu {
 }
 
 /* ---
-- Logo
---- */
-
-.logo { cursor: pointer; }
-.logo svg {
-	display: block;
-	margin: 0 auto;
-	max-width: 300px;
-}
-
-@keyframes rotate-center {
-	0% { transform: rotate(0deg); }
-	50% { transform: rotate(270deg); }
-	100% { transform: rotate(360deg); }
-}
-
-#cosma-roll {transform-origin : 96px 42px;}
-#cosma-roll.anim {animation: 3s cubic-bezier(0.2, -0.20, 0.8, 1) 1 rotate-center;}
-
-/* ---
 - User title
 --- */
 
@@ -480,27 +460,12 @@ main.record-container:not(.active) {
 	right: 0;
 	height: 100vh;
 	width: calc(100vw - 30rem);
-
-	/* display: inline-block;
-	position: absolute;
-	top: 0;
-	right: 0;
-	height: 100vh;
-	width: calc(100vw - 30rem);
-	padding-bottom: 100%;
-	vertical-align: top;
-	overflow: hidden; */
 }
 
 #graph-canvas {
 	cursor: move;
 	width: 100%;
 	height: 100%;
-
-	/* display: inline-block;
-	position: absolute;
-	top: 0;
-	left: 0; */
 }
 
 /* ---
@@ -608,6 +573,26 @@ article#credits dd, article#credits li {
 article#credits h1.metas-title {
 	font-size: 2rem;
 }
+
+/* ---
+- Logo
+--- */
+
+.logo { cursor: pointer; }
+.logo svg {
+	display: block;
+	margin: 0 auto;
+	max-width: 300px;
+}
+
+@keyframes rotate-center {
+	0% { transform: rotate(0deg); }
+	50% { transform: rotate(270deg); }
+	100% { transform: rotate(360deg); }
+}
+
+#cosma-roll {transform-origin : 96px 42px;}
+#cosma-roll.anim {animation: 3s cubic-bezier(0.2, -0.20, 0.8, 1) 1 rotate-center;}
 
 /** Help
 ------------------------------------------------------------*/
