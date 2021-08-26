@@ -151,7 +151,7 @@ ipcMain.on("sendNewHistoryName", (event, data) => {
     if (result === true) {
         response = {
             isOk: true,
-            consolMsg: "La description de l'entrée a bien été exécutée.",
+            consolMsg: "La description de l'entrée a bien été modifiée.",
             data: recordFromHistory.metas
         }
 
@@ -160,13 +160,38 @@ ipcMain.on("sendNewHistoryName", (event, data) => {
     } else {
         response = {
             isOk: false,
-            consolMsg: "La description de l'entrée n'a pu être exécutée.",
+            consolMsg: "La description de l'entrée n'a pu être modifiée.",
             data: data
         }
 
         modalRename.webContents.send("confirmRenameHistory", response);
     }
 
+    
+});
+
+ipcMain.on("sendHistoryToKeep", (event, recordId) => {
+    const recordFromHistory = new History(recordId);
+    recordFromHistory.metas.isTemp = false;
+
+    const result = recordFromHistory.saveMetas();
+    let response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "L'entrée est désormais pérenne.",
+            data: recordFromHistory.metas
+        }
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "L'état de l'entrée n'a pas été actualisé.",
+            data: data
+        }
+    }
+
+    window.webContents.send("confirmHistoryKeep", response);
     
 });
 
@@ -213,19 +238,3 @@ ipcMain.on("askHistoryReportModal", (event, recordId) => {
     });
     
 });
-
-// ipcMain.on("askHistoryReport", (event, recordId) => {
-    
-//     // recordFromHistory.metas.name = data.name;
-//     // const result = recordFromHistory.saveMetas();
-
-//     // let response = {
-//     //     isOk: true,
-//     //     consolMsg: 'L\'entrée d\'historique a été renommée',
-//     //     data: data
-//     // }
-
-//     // modalRename.close();
-
-//     window.webContents.send("getHistoryReport", report);
-// });

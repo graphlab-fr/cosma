@@ -1,8 +1,8 @@
-const table = document.getElementById('table-history');
+const table = document.getElementById('table-history')
+    , output = document.querySelector('output');
 
 (function () {
-    const tableContent = document.createDocumentFragment(),
-        output = document.querySelector('output');
+    const tableContent = document.createDocumentFragment();
 
     window.api.send("askHistoryList", null);
 
@@ -14,7 +14,6 @@ const table = document.getElementById('table-history');
                 , colTools = document.createElement('td')
                 , btnOpen = document.createElement('button')
                 , btnRename = document.createElement('button')
-                , btnDelete = document.createElement('button')
                 , btnReport = document.createElement('button')
                 , btnExport = document.createElement('button');
 
@@ -22,15 +21,43 @@ const table = document.getElementById('table-history');
             colDescription.textContent = record.metas.description;
             btnOpen.textContent = 'Ouvrir';
             btnRename.textContent = 'Renommer';
-            btnDelete.textContent = 'Supprimer';
             btnReport.textContent = 'Rapport d’erreurs';
             btnExport.textContent = 'Télécharger au format HTML';
 
             colTools.appendChild(btnOpen);
             colTools.appendChild(btnRename);
-            colTools.appendChild(btnDelete);
             colTools.appendChild(btnReport);
             colTools.appendChild(btnExport);
+
+            switch (record.metas.isTemp) {
+                case true:
+                    const btnKeep = document.createElement('button')
+                    btnKeep.textContent = 'Conserver';
+                    colTools.appendChild(btnKeep);
+
+                    btnKeep.addEventListener('click', () => {
+                        window.api.send("sendHistoryToKeep", record.id);
+
+                        window.api.receive("confirmHistoryKeep", (response) => {
+                            output.textContent = response.consolMsg;
+                            output.dataset.valid = response.isOk;
+
+                            if (response.isOk === true) {
+                                btnKeep.textContent = 'Supprimer';
+                                btnKeep.addEventListener('click', deleteRow);
+                            }
+                        });
+                    })
+                    break;
+            
+                case false:
+                    const btnDelete = document.createElement('button')
+                    btnDelete.textContent = 'Supprimer';
+                    colTools.appendChild(btnDelete);
+
+                    btnDelete.addEventListener('click', deleteRow);
+                    break;
+            }
 
             row.appendChild(colDate);
             row.appendChild(colDescription);
@@ -52,8 +79,17 @@ const table = document.getElementById('table-history');
                 });
             });
 
-            btnDelete.addEventListener('click', () => {
+            btnReport.addEventListener('click', () => {
+                window.api.send("askHistoryReportModal", record.id);
+            })
+
+            btnExport.addEventListener('click', () => {
+                window.api.send("askCosmoscopeExportFromHistory", record.id);
+            });
+
+            function deleteRow () {
                 window.api.send("sendHistoryToDelete", record.id);
+
                 window.api.receive("confirmHistoryDelete", (response) => {
                     output.textContent = response.consolMsg;
                     output.dataset.valid = response.isOk;
@@ -62,15 +98,7 @@ const table = document.getElementById('table-history');
                         row.remove();
                     }
                 });
-            });
-
-            btnReport.addEventListener('click', () => {
-                window.api.send("askHistoryReportModal", record.id);
-            })
-
-            btnExport.addEventListener('click', () => {
-                window.api.send("askCosmoscopeExportFromHistory", record.id);
-            });
+            }
         }
 
         table.appendChild(tableContent);
@@ -86,6 +114,9 @@ const table = document.getElementById('table-history');
         window.api.send("askHistoryDeleteAll", null);
 
         window.api.receive("confirmHistoryDeleteAll", (response) => {
+            output.textContent = response.consolMsg;
+            output.dataset.valid = response.isOk;
+
             if (response.isOk === true) {
                 table.querySelectorAll('tr')
                     .forEach(tr => {
