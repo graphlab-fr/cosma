@@ -152,11 +152,30 @@ module.exports = function () {
         });
     }
 
-    template.push({
+    template.push(
+        {
+            label: 'Édition',
+            submenu: [
+                {
+                    label: 'Copier',
+                    role: 'copy'
+                },
+                {
+                    label: 'Coller',
+                    role: 'paste'
+                }
+            ]
+        },
+        {
         label: 'Affichage',
         submenu: [
             {
-                label: 'En arrière',
+                label: 'Réduire',
+                role: 'minimize'
+            },
+            { type: 'separator' },
+            {
+                label: 'Fiche précédante',
                 accelerator: 'CommandOrControl+Left',
                 role: 'back',
                 click(item, window) {
@@ -164,7 +183,7 @@ module.exports = function () {
                 }
             },
             {
-                label: 'En avant',
+                label: 'Fiche suivante',
                 accelerator: 'CommandOrControl+Right',
                 role: 'forward',
                 click(item, window) {

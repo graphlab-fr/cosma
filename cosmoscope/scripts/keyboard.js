@@ -14,21 +14,28 @@ let keyboardShortcutsAreWorking = true;
 
 const pressedKeys = {
     Control: false,
-    Alt: false
+    Alt: false,
+    Shift: false
 };
 
 document.onkeydown = (e) => {
+
+    console.log(e.key);
  
     if (keyboardShortcutsAreWorking) {
  
         switch (e.key) {
             case 's':
+                if (pressedKeys['Control'] === true) { return; }
                 e.preventDefault();
+
                 searchInput.focus();
                 return;
 
             case 'r':
+                if (pressedKeys['Control'] === true) { return; }
                 e.preventDefault();
+
                 zoomReset();
 
                 if (pressedKeys.Alt) {
@@ -37,13 +44,25 @@ document.onkeydown = (e) => {
 
                 return;
 
-            case 'c':
+            case '®': // [Alt + R] on Mac OS
+                if (pressedKeys['Control'] === true) { return; }
                 e.preventDefault();
+
+                resetView();
+
+                return;
+
+            case 'c':
+                console.log(pressedKeys['Control']);
+                if (pressedKeys['Control'] === true) { return; }
+                e.preventDefault();
+
                 if (view.openedRecordId !== undefined && Number(view.openedRecordId) !== NaN) {
                     zoomToNode(Number(view.openedRecordId)); }
                 return;
 
             case 'f':
+                if (pressedKeys['Control'] === true) { return; }
                 e.preventDefault();
 
                 if (focus.isActive) {
@@ -54,7 +73,9 @@ document.onkeydown = (e) => {
                 return;
 
             case ' ':
+                if (pressedKeys['Control'] === true) { return; }
                 e.preventDefault();
+
                 document.querySelector('.load-bar').click();
                 return;
         }
@@ -67,6 +88,10 @@ document.onkeydown = (e) => {
 
         case 'Control':
             pressedKeys[e.key] = true;
+            return;
+
+        case 'Meta':
+            pressedKeys['Control'] = true;
             return;
 
         case 'Alt':
@@ -83,6 +108,10 @@ window.onkeyup = function(e) {
     switch (e.key) {
         case 'Control':
             pressedKeys[e.key] = false;
+            return;
+
+        case 'Meta':
+            pressedKeys['Control'] = false;
             return;
 
         case 'Alt':
