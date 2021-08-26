@@ -62,8 +62,8 @@ module.exports = {
      */
 
     modal: {
-        width: 350,
-        height: 500,
+        width: 500,
+        height: 200,
         resizable: false,
         minimizable: false,
         maximizable: false,
