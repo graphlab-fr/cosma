@@ -5,16 +5,12 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
-    <title>Cosma - Nouvelle vue</title>
+    <title>Sauvegarder la vue actuelle</title>
     
     <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
-
-    <header>
-        <h1>Nouvelle vue</h1>
-    </header>
 
     <div class="wrapper">
     
@@ -22,7 +18,7 @@
 
             <form id="form-cosmoscope-view">
                 <label>
-                    Titre
+                    Titre :
                     <input type="text" name="name">
                 </label>
 
@@ -30,7 +26,11 @@
 
                 <output></output>
     
-                <button type="submit">Enregistrer</button>
+                <div class="cancel-ok">
+                    <button class="window-close" type="button">Annuler</button>
+                    <button type="submit">OK</button>
+                </div>
+
             </form>
 
         </main>
