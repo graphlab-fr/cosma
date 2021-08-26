@@ -51,27 +51,41 @@ module.exports = function () {
      * manage data
      */
 
-    ipcMain.once("askHistoryDeleteAll", (event, data) => {
-
-        const result = History.deleteAll();
-    
-        let response;
-    
-        if (result) {
-            response = {
-                isOk: true,
-                consolMsg: "L'historique bien a été vidé."
-            }
-        } else {
-            response = {
-                isOk: false,
-                consolMsg: "L'historique n'a pu être vidé."
-            }
-        }
-    
-        window.webContents.send("confirmHistoryDeleteAll", response);
-    });
 }
+
+ipcMain.on("askHistoryDeleteAll", (event, data) => {
+
+    dialog.showMessageBox(window, {
+        title: 'Confirmation suppression historique',
+        message: "Voulez-vous vraiment supprimer toutes les entrées de l'historique ?",
+        type: 'question',
+        buttons: ['Annuler', 'Oui'],
+        defaultId: 0
+    })
+    .then((response) => {
+        console.log(response);
+
+        if (response.response === 1) {
+            const result = History.deleteAll();
+
+            let response;
+        
+            if (result) {
+                response = {
+                    isOk: true,
+                    consolMsg: "L'historique bien a été vidé."
+                }
+            } else {
+                response = {
+                    isOk: false,
+                    consolMsg: "L'historique n'a pu être vidé."
+                }
+            }
+
+            window.webContents.send("confirmHistoryDeleteAll", response);
+        }
+    });
+});
 
 ipcMain.on("askHistoryList", (event, data) => {
     const historyRecords = History.getList();
