@@ -63,8 +63,6 @@ ipcMain.on("askHistoryDeleteAll", (event, data) => {
         defaultId: 0
     })
     .then((response) => {
-        console.log(response);
-
         if (response.response === 1) {
             const result = History.deleteAll();
 

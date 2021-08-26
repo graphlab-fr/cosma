@@ -133,6 +133,13 @@
 
             <button id="view-save" onclick="saveView()" hidden>Sauvegarder la vue actuelle</button>
 
+            <span class="tooltip">?
+                <span class="tooltiptext">Enregistre l'état actuel de l'interface
+                    (types actifs, mots-clés actifs, mode focus) et crée un raccourci vers cet état dans le menu Vues.</span>
+            </span>
+
+            <button onclick="resetView()">Réinitialiser (Alt + R)</button>
+
             <div class="menu-view-container" id="views-container">
             {% if views.length !== 0 %}
                 {% for viewName, viewString in views %}
@@ -180,8 +187,10 @@
             <article class="menu-controls-container">
                 <p class="menu-controls-title">
                     Attraction
-                    <span data-help="Contrôlez la répartition des nœuds dans l’espace, la force de répulsion,
-                        la distance maximum sur laquelle ils se déploient et la pression sur les axes verticaux et horizontaux."></span>
+                    <span class="tooltip">?
+                        <span class="tooltiptext">Contrôlez la répartition des nœuds dans l’espace, la force de répulsion,
+                                la distance maximum sur laquelle ils se déploient et la pression sur les axes verticaux et horizontaux.</span>
+                    </span>
                 </p>
                 {{ inputRange('force', 'attraction.force', 'updateForces()', graph.config.attraction.force, 50, 600, 0.1) }}
                 {{ inputRange('distance max', 'attraction.distance_max', 'updateForces()', graph.config.attraction.distance_max, 0, 800, 0.1) }}
@@ -464,10 +473,6 @@
                 <button onclick="zoomLess()">-</button>
                 <button onclick="zoomReset()">Recentrer (R)</button>
                 <button onclick="zoomMore()">+</button>
-            </div>
-
-            <div class="graph-controls-viewreset">
-                <button onclick="resetView()">Réinitialiser (Alt + R)</button>
             </div>
 
             {% if focusIsActive %}

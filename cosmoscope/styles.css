@@ -166,48 +166,37 @@ code { font-family: var(--mono); }
 	color: black;
 }
 
-[data-help] {
+.tooltip {
 	cursor: pointer;
-	position: relative;
+    position: relative;
+    display: inline-block;
+    background-color: var(--cosma-blue);
+    border-radius: 50%;
+    color: white;
+    width: 16px;
+    text-align: center;
+    height: 16px;
 	font-weight: normal;
-	color: white;
-	margin: 0 1rem;
-	width: 15px;
-	height: 15px;
-	display: inline-block;
 }
 
-p [data-help] {
-	margin: unset;
-}
-
-[data-help]::after {
-	content: '?';
-	position: absolute;
-	background-color: var(--cosma-blue);
-	border-radius: 50%;
-	width: 18px;
-	text-align: center;
-}
-
-[data-help]:hover::before {
-	background-color: black;
-	content: attr(data-help);
-	position: absolute;
-	display: block;
-	bottom: 22px;
-	left: -90px;
-	width: 200px;
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	line-height: 130%;
 	background-color: var(--cosma-blue-dark);
-	border-radius: 2px;
-	padding: 0.8rem;
 	box-shadow: var(--shadow);
+	text-align: center;
+	padding: 5px;
+	border-radius: 2px;
+	position: absolute;
+	z-index: 1;
+	width: 160px;
+	bottom: 130%;
+	left: 50%;
+	margin-left: -80px;
 }
 
-[data-help].help-bottom:hover::before {
-	bottom: unset;
-	top: 22px;
-}
+.tooltip:hover .tooltiptext { visibility: visible; }
 
 /** Menu (left side board)
 ------------------------------------------------------------*/
