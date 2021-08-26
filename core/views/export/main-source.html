@@ -5,36 +5,27 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
-    <title>Cosma - Exporter un cosmoscope</title>
+    <title>Partager</title>
     
     <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-    <header>
-        <h1>Exporter un cosmoscope</h1>
-    </header>
-
     <div class="wrapper">
     
         <main>
 
             <form id="form-cosmoscope-export">
-                <label>
-                    Chemin d'export
-                    <input type="text" name="export_path">
-                    <button type="button" id="dialog-path-export">Sélectionner</button>
-                </label>
 
                 <label>
-                    Traitement des citations
                     <input type="checkbox" name="citeproc">
+                    Traitement des citations
                 </label>
 
                 <label>
-                    Mode publication
                     <input type="checkbox" name="publish">
+                    Réduire la taille des exports
                 </label>
 
                 <output></output>
