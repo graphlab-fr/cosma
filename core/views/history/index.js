@@ -2,7 +2,8 @@ const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
         ipcMain, // interface of data exchange
-        dialog
+        dialog,
+        shell
     } = require('electron')
     , path = require('path')
     , fs = require('fs')
@@ -86,7 +87,8 @@ ipcMain.on("askHistoryDeleteAll", (event, data) => {
 });
 
 ipcMain.on("askHistoryList", (event, data) => {
-    const historyRecords = History.getList();
+    let historyRecords = History.getList();
+    historyRecords = historyRecords.reverse();
     
     window.webContents.send("getHistoryList", historyRecords);
 });
@@ -195,29 +197,6 @@ ipcMain.on("sendHistoryToKeep", (event, recordId) => {
     
 });
 
-ipcMain.on("askCosmoscopeExportFromHistory", (event, recordId) => {
-    const recordFromHistory = new History(recordId);
-
-    dialog.showSaveDialog(window, {
-        title: 'Enregistrer depuis l\'historique',
-        defaultPath: path.join(app.getPath('documents'), 'cosmoscope.html'),
-        properties: ['createDirectory', 'showOverwriteConfirmation']
-    }).then((response) => {
-        if (response.canceled === false) {
-            let dialogPath = response.filePath;
-
-            if (['.html', '.htm'].includes(path.extname(response.filePath)) === false) {
-                dialogPath = `${dialogPath}.html`
-            }
-
-            fs.copyFile(path.join(recordFromHistory.pathToStore, 'cosmoscope.html'), dialogPath, (err) => {
-                if (err) { throw err; }
-            });
-        }
-    });
-
-});
-
 ipcMain.on("askHistoryReportModal", (event, recordId) => {
     modalReport = new BrowserWindow (
         Object.assign(windowsModel.forms, {
@@ -237,4 +216,10 @@ ipcMain.on("askHistoryReportModal", (event, recordId) => {
         modalReport.webContents.send("getHistoryReport", report);
     });
     
+});
+
+ipcMain.on("askRevealCosmoscopeFromHistoryFolder", (event, recordId) => {
+    const recordFromHistory = new History(recordId);
+
+    shell.showItemInFolder(path.join(recordFromHistory.pathToStore, 'cosmoscope.html'));
 });

@@ -15,19 +15,19 @@ const table = document.getElementById('table-history')
                 , btnOpen = document.createElement('button')
                 , btnRename = document.createElement('button')
                 , btnReport = document.createElement('button')
-                , btnExport = document.createElement('button');
+                , btnReveal = document.createElement('button');
 
             colDate.textContent = record.metas.date;
             colDescription.textContent = record.metas.description;
             btnOpen.textContent = 'Ouvrir';
             btnRename.textContent = 'Renommer';
             btnReport.textContent = 'Rapport d’erreurs';
-            btnExport.textContent = 'Télécharger au format HTML';
+            btnReveal.textContent = 'Révéler';
 
             colTools.appendChild(btnOpen);
             colTools.appendChild(btnRename);
             colTools.appendChild(btnReport);
-            colTools.appendChild(btnExport);
+            colTools.appendChild(btnReveal);
 
             switch (record.metas.isTemp) {
                 case true:
@@ -83,8 +83,9 @@ const table = document.getElementById('table-history')
                 window.api.send("askHistoryReportModal", record.id);
             })
 
-            btnExport.addEventListener('click', () => {
-                window.api.send("askCosmoscopeExportFromHistory", record.id);
+            btnReveal.addEventListener('click', () => {
+                window.api.send("askRevealCosmoscopeFromHistoryFolder", record.id);
+                
             });
 
             function deleteRow () {
