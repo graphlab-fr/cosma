@@ -220,7 +220,7 @@ ipcMain.on("askCosmoscopeExportFromHistory", (event, recordId) => {
 
 ipcMain.on("askHistoryReportModal", (event, recordId) => {
     modalReport = new BrowserWindow (
-        Object.assign(windowsModel.modal, {
+        Object.assign(windowsModel.forms, {
             parent: window,
             title: 'Rapport d’erreur'
         })

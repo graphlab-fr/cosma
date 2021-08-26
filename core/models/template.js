@@ -144,9 +144,13 @@ module.exports = class Template {
             date: moment().format('YYYY-MM-DD')
         });
 
-        // if (this.config.minify === true) {
-        //     const minifier = require("@minify-html/js");
-        //     this.html = minifier.minify(this.html, minifier.createConfiguration({ minifyJs: true, minifyCss: true }));
+        // try {
+        //     if (graph.params.includes('minify')) {
+        //         const minify = require('html-minifier').minify;
+        //         this.html = minify(this.html, { minifyCSS: true, minifyJS: true });
+        //     }
+        // } catch (error) {
+        //     console.log(error);
         // }
 
     }

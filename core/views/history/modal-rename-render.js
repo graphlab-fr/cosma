@@ -7,10 +7,13 @@ let isReady = false;
 
 (function () {
 
-    const output = form.querySelector('output');
+    const output = form.querySelector('output')
+        , submitBtn = form.querySelector('button[type="submit"]');
     
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+
+        submitBtn.disabled = true;
 
         if (isReady === false) { return; }
     
@@ -23,6 +26,10 @@ let isReady = false;
         window.api.receive("confirmRenameHistory", (response) => {
             output.textContent = response.consolMsg;
             output.dataset.valid = response.isOk;
+
+            if (response.isOk === false) {
+                submitBtn.disabled = false;
+            }
         });
     })
     

@@ -26,7 +26,7 @@ module.exports = class Graph {
      * @static
      */
 
-    static validParams = ['publish', 'citeproc'];
+    static validParams = ['publish', 'citeproc', 'minify'];
 
     /**
      * Catch links from Markdown file content

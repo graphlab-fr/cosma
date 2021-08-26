@@ -17,6 +17,11 @@
         <main>
 
             <form id="form-cosmoscope-export">
+                <label>
+                    Chemin d'export
+                    <input type="text" name="export_path">
+                    <button type="button" id="dialog-path-export">Sélectionner</button>
+                </label>
 
                 <label>
                     <input type="checkbox" name="citeproc">
@@ -24,8 +29,8 @@
                 </label>
 
                 <label>
-                    <input type="checkbox" name="publish">
-                    Réduire la taille des exports
+                    <input type="checkbox" name="minify" disabled>
+                    Réduire la taille de l'export
                 </label>
 
                 <output></output>

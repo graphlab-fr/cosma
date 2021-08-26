@@ -2,10 +2,13 @@ const form = document.getElementById('form-cosmoscope-export');
 
 (function () {
 
-    const output = form.querySelector('output');
+    const output = form.querySelector('output')
+        , submitBtn = form.querySelector('button[type="submit"]');
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+
+        submitBtn.disabled = true;
     
         let data = new FormData(form);
         data = Object.fromEntries(data);
@@ -16,6 +19,10 @@ const form = document.getElementById('form-cosmoscope-export');
         window.api.receive("confirmExport", (response) => {
             output.textContent = response.consolMsg;
             output.dataset.valid = response.isOk;
+
+            if (response.isOk === false) {
+                submitBtn.disabled = false;
+            }
         });
     })
     
@@ -23,7 +30,7 @@ const form = document.getElementById('form-cosmoscope-export');
 
 function serializeData (data) {
     data['citeproc'] = booleanCheckbox(data['citeproc']);
-    data['publish'] = booleanCheckbox(data['publish']);
+    data['minify'] = booleanCheckbox(data['minify']);
 
     return data;
 }

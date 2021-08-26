@@ -24,6 +24,8 @@ const History = require('../../models/history')
     , Template = require('../../models/template');
 
 module.exports = function (graphParams = []) {
+
+    graphParams.push('minify');
     
     const graph = new Graph(graphParams)
         , template = new Template(graph)

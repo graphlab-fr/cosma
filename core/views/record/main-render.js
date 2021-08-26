@@ -9,10 +9,13 @@ firstInput.focus();
 
 (function () {
 
-    const output = form.querySelector('output');
+    const output = form.querySelector('output')
+        , submitBtn = form.querySelector('button[type="submit"]');
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+
+        submitBtn.disabled = true;
     
         let data = new FormData(form);
         data = Object.fromEntries(data);
@@ -22,6 +25,10 @@ firstInput.focus();
         window.api.receive("confirmRecordSaving", (response) => {
             output.textContent = response.consolMsg;
             output.dataset.valid = response.isOk;
+
+            if (response.isOk === false) {
+                submitBtn.disabled = false;
+            }
         });
     })
     

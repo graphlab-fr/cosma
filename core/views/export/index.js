@@ -29,7 +29,7 @@ module.exports = function (window) {
     modal = new BrowserWindow (
         Object.assign(windowsModel.modal, {
             parent: window,
-            title: 'Exporter un cosmoscope'
+            title: 'Partager le cosmoscope'
         })
     );
 
@@ -86,16 +86,11 @@ ipcMain.on("askExportOptions", (event, data) => {
     let config = new Config().opts;
 
     let response = {
-        citeproc: false,
-        publish: false
+        citeproc: false
     };
 
     if (config['bibliography'] && config['csl'] && config['bibliography_locales']) {
         response.citeproc = true; }
-
-    if (config['metas_description'] && config['metas_keywords'] && config['metas_author'] && config['metas_title']) {
-        response.publish = true;
-    }
 
     modal.webContents.send("getExportOptions", response);
 });
@@ -109,7 +104,7 @@ ipcMain.on("sendExportOptions", (event, data) => {
 
     delete data.export_path;
 
-    let activatedModes = [];
+    let activatedModes = ['publish'];
     for (const mode in data) {
         if (data[mode] === true) {
             activatedModes.push(mode); }

@@ -41,7 +41,7 @@ const fileMenu = [
         }
     },
     {
-        label: 'Exporter cosmoscope…',
+        label: 'Partager…',
         accelerator: 'CommandOrControl+E',
         role: 'export-cosmoscope',
         click (item, window) {

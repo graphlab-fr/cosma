@@ -15,9 +15,9 @@
     "electron-packager": "^15.3.0"
   },
   "dependencies": {
-    "@minify-html/js": "^0.4.3",
     "@zettlr/citr": "^1.2.2",
     "citeproc": "^2.4.59",
+    "html-minifier": "^4.0.0",
     "js-yaml": "^3.14.0",
     "markdown-it": "^12.0.2",
     "markdown-it-attrs": "^4.0.0",
