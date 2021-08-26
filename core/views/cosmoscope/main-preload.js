@@ -8,7 +8,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function saveView () {
     const viewInterface = document.querySelector('.menu-view')
-        , btn = viewInterface.querySelector('button')
+        , btn = document.getElementById('view-save')
         , counter = viewInterface.querySelector('.badge')
         , container = viewInterface.querySelector('div');
 

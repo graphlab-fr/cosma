@@ -131,14 +131,14 @@
                 Vues <span class="badge">{{ views | length }}</span>
             </summary>
 
+            <button onclick="resetView()">Réinitialiser la vue actuelle (Alt + R)</button>
+
             <button id="view-save" onclick="saveView()" hidden>Sauvegarder la vue actuelle</button>
 
             <span class="tooltip">?
                 <span class="tooltiptext">Enregistre l'état actuel de l'interface
                     (types actifs, mots-clés actifs, mode focus) et crée un raccourci vers cet état dans le menu Vues.</span>
             </span>
-
-            <button onclick="resetView()">Réinitialiser la vue actuelle (Alt + R)</button>
 
             <div class="menu-view-container" id="views-container">
             {% if views.length !== 0 %}
