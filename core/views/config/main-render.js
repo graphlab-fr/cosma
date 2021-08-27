@@ -55,45 +55,13 @@ window.api.receive("getOptionMinimumFromConfig", (data) => {
 
 function autosaveForm () {
 
-    const inputs = form.querySelectorAll('input')
+    const inputs = form.querySelectorAll('input, textarea')
         , output = form.querySelector('output')
 
     for (const input of inputs) {
         const label = input.parentElement;
 
         let originValue, interval;
-
-        if (input.getAttribute('type') === 'text' || input.getAttribute('type') === 'number' || input.getAttribute('type') === 'color') {
-            input.addEventListener('focus', (e) => {
-                originValue = input.value;
-        
-                input.addEventListener('input', () => {
-                    label.dataset.state = 'not-saved';
-                })
-        
-                interval = setInterval(() => {
-                    save()
-                        .then((inputValue) => {
-                            originValue = inputValue;
-                        })
-                        .catch((inputValue) => {
-                            input.value = originValue
-                        });
-                }, 2000);
-            });
-        
-            input.addEventListener('blur', (e) => {
-                clearInterval(interval);
-
-                save()
-                    .then((inputValue) => {
-                        originValue = inputValue;
-                    })
-                    .catch((inputValue) => {
-                        input.value = originValue
-                    });
-            });
-        }
 
         if (input.getAttribute('type') === 'checkbox') {
             originValue = input.checked;
@@ -110,7 +78,42 @@ function autosaveForm () {
                         input.checked = !inputValue;
                     });
             })
+
+            continue;
         }
+
+        console.log(input);
+
+        input.addEventListener('focus', (e) => {
+            originValue = input.value;
+            console.log(input.value);
+    
+            input.addEventListener('input', () => {
+                label.dataset.state = 'not-saved';
+            })
+    
+            interval = setInterval(() => {
+                save()
+                    .then((inputValue) => {
+                        originValue = inputValue;
+                    })
+                    .catch((inputValue) => {
+                        input.value = originValue
+                    });
+            }, 2000);
+        });
+    
+        input.addEventListener('blur', (e) => {
+            clearInterval(interval);
+
+            save()
+                .then((inputValue) => {
+                    originValue = inputValue;
+                })
+                .catch((inputValue) => {
+                    input.value = originValue
+                });
+        });
 
         function save (value = input.value) {
             return new Promise((success, reject) => {
@@ -121,6 +124,10 @@ function autosaveForm () {
     
                 let data = {};
                 data[input.name] = value;
+
+                if (input.name === 'metas_keywords') {
+                    data[input.name] = value.split(',');
+                }
     
                 window.api.send("sendConfigOptions", data);
     
