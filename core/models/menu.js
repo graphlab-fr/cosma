@@ -74,7 +74,7 @@ module.exports = function () {
                 },
                 {
                     label: 'Préférences…',
-                    accelerator: 'CommandOrControl+O',
+                    accelerator: 'CommandOrControl+,',
                     role: 'options',
                     click () {
                         require('../views/config/index')();
