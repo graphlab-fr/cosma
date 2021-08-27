@@ -597,3 +597,19 @@ ipcMain.on("sendUpdateViewToConfig", (event, data) => {
         modalViewUpdate.webContents.send("confirmUpdateViewFromConfig", response);
     }
 });
+
+ipcMain.on("askDeleteAllView", (event, data) => {
+
+    config = new Config({
+        views: {}
+    });
+
+    config.save();
+
+    window.webContents.send("confirmDeleteAllViewFromConfig", {
+        isOk: true,
+        consolMsg: "Toutes les vues ont été supprimées.",
+        data: {}
+    });
+
+});

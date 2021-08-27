@@ -133,10 +133,6 @@ ipcMain.on("askRenameHistoryModal", (event, recordId) => {
 
     modalRename.loadFile(path.join(__dirname, './modal-rename-source.html'));
 
-    modalRename.webContents.openDevTools({
-        mode: 'detach'
-    })
-
     const recordFromHistory = new History(recordId);
 
     modalRename.once('ready-to-show', () => {

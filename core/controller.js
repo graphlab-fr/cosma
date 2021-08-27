@@ -39,6 +39,7 @@ const channels = {
         'getOptionMinimumFromConfig',        // config/index.js → config/main-render.js
         'getLinkStokes',                     // config/index.js → config/modal-addlinktype-render.js
         'getViewToUpdate',                   // config/index.js → config/modal-updateview-render.js
+        'confirmDeleteAllViewFromConfig',    // config/index.js → config/main-render.js
 
         /**
          * Record
@@ -110,6 +111,7 @@ const channels = {
         'askDeleteLinkType',            // config/index.js ← config/main-render.js
         'sendNewLinkTypeToConfig',      // config/index.js ← config/modal-addlinktype-render.js
         'sendUpdateViewToConfig',       // config/index.js ← config/modal-updateview-render.js
+        'askDeleteAllView',             // config/index.js ← config/main-render.js
 
         /**
          * Record

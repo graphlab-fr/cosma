@@ -464,15 +464,28 @@ function sendViews () {
 
         submitBtn = document.activeElement;
 
+        if (submitBtn.dataset.action === 'delete-all') {
+            submitBtn.disabled = true;
+
+            window.api.send("askDeleteAllView", null);
+
+            window.api.receiveOnce("confirmDeleteAllViewFromConfig", (response) => {
+                submitBtn.disabled = false;
+
+                if (response.isOk === true) { tableView.innerHTML = ''; }
+            });
+            return;
+        }
+
         const input = tableView.querySelector('input:checked');
 
         if (!input) { return; }
 
+        submitBtn.disabled = true;
+
         const label = input.parentElement
             , spanName = input.nextElementSibling
             , id = input.value;
-
-        submitBtn.disabled = true;
 
         switch (submitBtn.dataset.action) {
             case 'update':
