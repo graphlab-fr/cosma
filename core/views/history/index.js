@@ -13,7 +13,9 @@ moment.locale('fr-ca');
 
 const windowsModel = require('../../models/windows')
     , mainWindow = require('../../../main').mainWindow
-    , History = require('../../models/history');
+    , History = require('../../models/history')
+    , Config = require('../../models/config')
+    , config = new Config().opts;
 
 let window, modalRename, modalReport;
 
@@ -36,6 +38,10 @@ module.exports = function () {
         })
     );
 
+    window.webContents.openDevTools({
+        mode: 'detach'
+    })
+
     window.loadFile(path.join(__dirname, './main-source.html'));
 
     window.once('ready-to-show', () => {
@@ -54,14 +60,13 @@ module.exports = function () {
 
 }
 
-ipcMain.on("askHistoryDeleteAll", (event, data) => {
+ipcMain.once("askHistoryDeleteAll", (event, data) => {
 
     dialog.showMessageBox(window, {
         title: 'Confirmation suppression historique',
         message: "Voulez-vous vraiment supprimer toutes les entrées de l'historique ?",
         type: 'question',
-        buttons: ['Annuler', 'Oui'],
-        defaultId: 0
+        buttons: ['Annuler', 'Oui']
     })
     .then((response) => {
         if (response.response === 1) {
@@ -74,21 +79,25 @@ ipcMain.on("askHistoryDeleteAll", (event, data) => {
                     isOk: true,
                     consolMsg: "L'historique bien a été vidé."
                 }
+
+                window.webContents.send("confirmHistoryDeleteAll", response);
+                window.close();
             } else {
                 response = {
                     isOk: false,
                     consolMsg: "L'historique n'a pu être vidé."
                 }
-            }
 
-            window.webContents.send("confirmHistoryDeleteAll", response);
+                window.webContents.send("confirmHistoryDeleteAll", response);
+            }
         }
     });
 });
 
 ipcMain.on("askHistoryList", (event, data) => {
-    let historyRecords = History.getList();
-    historyRecords = historyRecords.reverse();
+    let historyRecords = History
+        .getList()
+        .filter(historyRecord => historyRecord.metas.isTemp !== true);
     
     window.webContents.send("getHistoryList", historyRecords);
 });
@@ -172,29 +181,47 @@ ipcMain.on("sendNewHistoryName", (event, data) => {
     
 });
 
-ipcMain.on("sendHistoryToKeep", (event, recordId) => {
-    const recordFromHistory = new History(recordId);
-    recordFromHistory.metas.isTemp = false;
-
-    const result = recordFromHistory.saveMetas();
+ipcMain.on("askHistoryToKeep", (event, data) => {
+    const lastHistoryRecord = History.getLast();
     let response;
 
-    if (result === true) {
-        response = {
-            isOk: true,
-            consolMsg: "L'entrée est désormais pérenne.",
-            data: recordFromHistory.metas
-        }
-    } else {
+    if (!lastHistoryRecord) {
         response = {
             isOk: false,
-            consolMsg: "L'état de l'entrée n'a pas été actualisé.",
-            data: data
+            consolMsg: "L'historique est vide",
+            data: {}
         }
+
+        window.webContents.send("confirmHistoryKeep", response);
+        return;
     }
 
-    window.webContents.send("confirmHistoryKeep", response);
+    if (config.history === true || lastHistoryRecord.metas.isTemp === false) {
+        response = {
+            isOk: false,
+            consolMsg: "L'entrée d'historique courante est déjà ajouté à l'historique",
+            data: lastHistoryRecord
+        }
+    } else {
+        lastHistoryRecord.metas.isTemp = false;
+        const result = lastHistoryRecord.saveMetas();
+
+        if (result === true) {
+            response = {
+                isOk: true,
+                consolMsg: "L'entrée d'historique courante n'est désormais plus temporaire",
+                data: lastHistoryRecord
+            }
+        } else {
+            response = {
+                isOk: false,
+                consolMsg: "L'entrée d'historique courante n'a pu être éditée",
+                data: lastHistoryRecord
+            }
+        }
+    }
     
+    window.webContents.send("confirmHistoryKeep", response);
 });
 
 ipcMain.on("askHistoryReportModal", (event, recordId) => {

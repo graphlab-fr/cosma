@@ -16,19 +16,28 @@
     
         <main>
 
-            <button id="btn-delete-all">Tout supprimer…</button>
+            <form id="form-history">
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th></th>
-                    </tr>
-                </thead>
+                <div class="select-list">
 
-                <tbody id="table-history"></tbody>
-            </table>
+                    <div id="table-history"></div>
+
+                    <div>
+                        <button data-action="add-current" type="submit">Ajouter la version actuelle à l’historique</button>
+                        <button data-action="update" type="submit">Modifier</button>
+                        <button data-action="delete" type="submit">Supprimer</button>
+                        <button data-action="delete-all" id="btn-delete-all">Tout supprimer…</button>
+                        <hr/>
+                        <button data-action="open-cosmoscope">Ouvrir dans Cosma</button>
+                        <button data-action="open-report">Rapport d'erreur</button>
+                        <button data-action="open-finder">Localiser le fichier</button>
+                    </div>
+                </div>
+
+                <div class="cancel-ok">
+                    <button class="window-close" type="button" type="submit">OK</button>
+                </div>
+            </form>
 
             <output></output>
 

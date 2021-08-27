@@ -6,106 +6,149 @@ const table = document.getElementById('table-history')
 
     window.api.send("askHistoryList", null);
 
-    window.api.receive("getHistoryList", (data) => {
-        for (const record of data) {
-            const row = document.createElement('tr')
-                , colDate = document.createElement('td')
-                , colDescription = document.createElement('td')
-                , colTools = document.createElement('td')
-                , btnOpen = document.createElement('button')
-                , btnRename = document.createElement('button')
-                , btnReport = document.createElement('button')
-                , btnReveal = document.createElement('button');
+    window.api.receive("getHistoryList", (historyRecords) => {
 
-            colDate.textContent = record.metas.date;
-            colDescription.textContent = record.metas.description;
-            btnOpen.textContent = 'Ouvrir dans Cosma';
-            btnRename.textContent = 'Modifier la description';
-            btnReport.textContent = 'Rapport d’erreurs';
-            btnReveal.textContent = 'Localiser le fichier';
-
-            colTools.appendChild(btnOpen);
-            colTools.appendChild(btnRename);
-            colTools.appendChild(btnReport);
-            colTools.appendChild(btnReveal);
-
-            switch (record.metas.isTemp) {
-                case true:
-                    const btnKeep = document.createElement('button')
-                    btnKeep.textContent = 'Ajouter à l’historique';
-                    colTools.appendChild(btnKeep);
-
-                    btnKeep.addEventListener('click', () => {
-                        window.api.send("sendHistoryToKeep", record.id);
-
-                        window.api.receive("confirmHistoryKeep", (response) => {
-                            output.textContent = response.consolMsg;
-                            output.dataset.valid = response.isOk;
-
-                            if (response.isOk === true) {
-                                btnKeep.textContent = 'Supprimer';
-                                btnKeep.addEventListener('click', deleteRow);
-                            }
-                        });
-                    })
-                    break;
-            
-                case false:
-                    const btnDelete = document.createElement('button')
-                    btnDelete.textContent = 'Supprimer';
-                    colTools.appendChild(btnDelete);
-
-                    btnDelete.addEventListener('click', deleteRow);
-                    break;
-            }
-
-            row.appendChild(colDate);
-            row.appendChild(colDescription);
-            row.appendChild(colTools);
-            tableContent.appendChild(row);
-
-            btnOpen.addEventListener('click', () => {
-                window.api.send("sendCosmoscopeFromHistoryList", record.id);
-            });
-
-            btnRename.addEventListener('click', () => {
-                window.api.send("askRenameHistoryModal", record.id);
-
-                window.api.receive("confirmRenameHistory", (response) => {
-                    output.textContent = response.consolMsg;
-                    output.dataset.valid = response.isOk;
-
-                    colDescription.textContent = response.data.description;
-                });
-            });
-
-            btnReport.addEventListener('click', () => {
-                window.api.send("askHistoryReportModal", record.id);
-            })
-
-            btnReveal.addEventListener('click', () => {
-                window.api.send("askRevealCosmoscopeFromHistoryFolder", record.id);
-                
-            });
-
-            function deleteRow () {
-                window.api.send("sendHistoryToDelete", record.id);
-
-                window.api.receive("confirmHistoryDelete", (response) => {
-                    output.textContent = response.consolMsg;
-                    output.dataset.valid = response.isOk;
-
-                    if (response.isOk === true) {
-                        row.remove();
-                    }
-                });
-            }
+        if (historyRecords.length > 0) {
+            historyRecords.forEach(generateInput);
         }
 
-        table.appendChild(tableContent);
+        send();
+
     });
     
 })();
+
+function generateInput (record) {
+    const label = document.createElement('label')
+        , input = document.createElement('input')
+        , spanDate = document.createElement('span')
+        , spanDescription = document.createElement('span');
+
+    spanDate.textContent = record.metas.date;
+    spanDescription.textContent = record.metas.description;
+    input.setAttribute('type', 'radio');
+    input.setAttribute('name', 'hist-record');
+    input.setAttribute('value', record.id);
+
+    label.appendChild(input);
+    label.appendChild(spanDate);
+    label.appendChild(spanDescription);
+
+    if (table.firstChild) {
+        table.insertBefore(label, table.firstChild);
+    } else {
+        table.appendChild(label);
+    }
+    
+
+    return label;
+}
+
+function send () {
+    const form = document.getElementById('form-history');
+
+    let submitBtn;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let id = null;
+
+        submitBtn = document.activeElement;
+
+        const input = table.querySelector('input:checked')
+
+        if (input) {
+            const label = input.parentElement
+            , spanDate = input.nextElementSibling
+            , spanDescription = spanDate.nextElementSibling;
+            
+            id = input.value;
+        }
+
+        switch (submitBtn.dataset.action) {
+            case 'delete-all':
+                window.api.send("askHistoryDeleteAll", null);
+
+                window.api.receive("confirmHistoryDeleteAll", (response) => {
+                    promptResponse(response);
+
+                    if (response.isOk === true) {
+                        table.innerHTML = '';
+                    }
+                });
+                return;
+
+            case 'add-current':
+                submitBtn.disabled = true;
+
+                window.api.send("askHistoryToKeep", null);
+
+                window.api.receive("confirmHistoryKeep", (response) => {
+                    promptResponse(response);
+
+                    if (response.isOk === true) {
+                        generateInput(response.data);
+                    }
+                });
+                return;
+        }
+
+        if (id === null) {
+            output.textContent = "Veuillez sélectionner une entrée."
+            output.dataset.valid = null;
+            return;
+        }
+
+        switch (submitBtn.dataset.action) {
+            case 'update':
+                submitBtn.disabled = true;
+
+                window.api.send("askRenameHistoryModal", id);
+
+                window.api.receive("confirmRenameHistory", (response) => {
+                    promptResponse(response);
+
+                    if (response.isOk === true) {
+                        spanDescription.textContent = response.data.description;
+                    }
+                });
+                return;
+
+            case 'delete':
+                submitBtn.disabled = true;
+
+                window.api.send("sendHistoryToDelete", id);
+
+                window.api.receive("confirmHistoryDelete", (response) => {
+                    promptResponse(response);
+
+                    if (response.isOk === true) {
+                        label.remove();
+                    }
+                });
+                return;
+
+            case 'open-cosmoscope':
+                window.api.send("sendCosmoscopeFromHistoryList", id);
+                return;
+
+            case 'open-report':
+                window.api.send("askHistoryReportModal", id);
+                return;
+
+            case 'open-finder':
+                window.api.send("askRevealCosmoscopeFromHistoryFolder", id);
+                return;
+        }
+    })
+
+    function promptResponse (response) {
+        output.textContent = response.consolMsg;
+        output.dataset.valid = response.isOk;
+        submitBtn.disabled = false;
+    }
+}
 
 (function () {
 

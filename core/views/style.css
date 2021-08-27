@@ -1,9 +1,9 @@
 :root {
     --cosma-blue: #147899;
-		--cosma-blue-dark: #02385c;
-		--mac-menu-background-color: #f6f6f6;
-		--mac-border-color: #e6e6e6;
-		--mac-border-bottom-color: #bababa;
+    --cosma-blue-dark: #02385c;
+    --mac-menu-background-color: #f6f6f6;
+    --mac-border-color: #e6e6e6;
+    --mac-border-bottom-color: #bababa;
 }
 
 html {
@@ -111,6 +111,47 @@ form input[type=number] {
 
 form label select {
     padding: 0 5px;
+}
+
+form div.select-list {
+    display: flex;
+}
+
+form div.select-list div {
+    position: relative;
+    flex: 3;
+}
+
+form div.select-list div + div {
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+    max-width: 120px;
+    flex: 1;
+}
+
+form div.select-list label {
+    display: flex;
+    justify-content: space-between;
+    text-indent: 5px;
+}
+
+/* form div.select-list label span {
+    width: calc(100% / attr(data-cols));
+} */
+
+form div.select-list input[type="radio"] {
+    position: absolute;
+    z-index: -1;
+    appearance: none;
+    width: 100%;
+    height: 25px;
+    margin: 0 2px 0 2px;
+    border-bottom: 1px var(--mac-border-bottom-color) solid;
+}
+
+form div.select-list input[type="radio"]:checked {
+    background-color: var(--mac-border-color);
 }
 
 form label[data-state="not-saved"]:after {

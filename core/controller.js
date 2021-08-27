@@ -129,7 +129,7 @@ const channels = {
         'sendHistoryToDelete',                  // history/index.js ← history/main-render.js
         'askHistoryDeleteAll',                  // history/index.js ← history/main-render.js
         'askRenameHistoryModal',                // history/index.js ← history/main-render.js
-        'sendHistoryToKeep',                    // history/index.js ← history/main-render.js
+        'askHistoryToKeep',                    // history/index.js ← history/main-render.js
         'askHistoryReportModal',                // history/index.js ← history/main-render.js
         'askCosmoscopeExportFromHistory',       // history/index.js ← history/main-render.js
         'askRevealCosmoscopeFromHistoryFolder', // history/index.js ← history/main-render.js
