@@ -25,12 +25,17 @@ module.exports = class History {
      */
 
     static getList () {
-        return fs.readdirSync(History.path, 'utf8')
+        try {
+            return fs.readdirSync(History.path, 'utf8')
+            .filter(dirName => dirName !== '.DS_Store')
             .map(function (dirName) {
                 const hist = new History(dirName);
-
                 return hist;
             })
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 
     static deleteAll () {
