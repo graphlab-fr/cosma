@@ -22,7 +22,7 @@ const table = document.getElementById('table-history')
             btnOpen.textContent = 'Ouvrir dans Cosma';
             btnRename.textContent = 'Modifier la description';
             btnReport.textContent = 'Rapport d’erreurs';
-            btnReveal.textContent = 'Révéler dans l’explorateur de fichiers';
+            btnReveal.textContent = 'Localiser le fichier';
 
             colTools.appendChild(btnOpen);
             colTools.appendChild(btnRename);
@@ -32,7 +32,7 @@ const table = document.getElementById('table-history')
             switch (record.metas.isTemp) {
                 case true:
                     const btnKeep = document.createElement('button')
-                    btnKeep.textContent = 'Enregistrer dans l’historique';
+                    btnKeep.textContent = 'Ajouter à l’historique';
                     colTools.appendChild(btnKeep);
 
                     btnKeep.addEventListener('click', () => {
