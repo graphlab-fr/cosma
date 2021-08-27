@@ -28,13 +28,17 @@ const channels = {
         'getLinkTypeToUpdate',               // config/index.js → config/modal-updatelinktype-render.js
         'confirmUpdateLinkTypeFromConfig',   // config/index.js → config/main-render.js
                                              //                 ↘ config/modal-updatelinktype-render.js
+        'confirmUpdateViewFromConfig',       // config/index.js → config/main-render.js
+                                             //                 ↘ config/modal-updateview-render.js
         'confirmDeleteLinkTypeFromConfig',   // config/index.js → config/main-render.js
+        'confirmDeleteViewFromConfig',       // config/index.js → config/main-render.js
         'getBibliographyPath',               // config/index.js → config/main-render.js
         'getCslPath',                        // config/index.js → config/main-render.js
         'getLocalesPath',                    // config/index.js → config/main-render.js
         'getCustomCssPath',                  // config/index.js → config/main-render.js
         'getOptionMinimumFromConfig',        // config/index.js → config/main-render.js
         'getLinkStokes',                     // config/index.js → config/modal-addlinktype-render.js
+        'getViewToUpdate',                   // config/index.js → config/modal-updateview-render.js
 
         /**
          * Record
@@ -95,6 +99,8 @@ const channels = {
         'askNewLinkTypeModal',          // config/index.js ← config/main-render.js
         'askDeleteRecordType',          // config/index.js ← config/main-render.js
         'askUpdateRecordTypeModal',     // config/index.js ← config/main-render.js
+        'askUpdateViewModal',           // config/index.js ← config/main-render.js
+        'askDeleteViewFromConfig',      // config/index.js ← config/main-render.js
         'sendNewRecordTypeToConfig',    // config/index.js ← config/modal-addrecordtype-render.js
         'sendUpdateRecordTypeToConfig', // config/index.js ← config/modal-updaterecordtype-render.js
         'askLinkStokes',                // config/index.js ← config/modal-addlinktype-render.js
@@ -103,6 +109,7 @@ const channels = {
         'sendUpdateLinkTypeToConfig',   // config/index.js ← config/modal-updatelinktype-render.js
         'askDeleteLinkType',            // config/index.js ← config/main-render.js
         'sendNewLinkTypeToConfig',      // config/index.js ← config/modal-addlinktype-render.js
+        'sendUpdateViewToConfig',       // config/index.js ← config/modal-updateview-render.js
 
         /**
          * Record

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+
+    <title>Modifier le nom</title>
+    
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+    
+        <main>
+
+            <form id="form-rename-view">
+                <label>
+                    Nom :
+                    <input type="text" name="name">
+                </label>
+
+                <input type="hidden" name="originalName">
+
+                <output></output>
+    
+                <div class="cancel-ok">
+                    <button class="window-close" type="button">Annuler</button>
+                    <button type="submit">OK</button>
+                </div>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="modal-updateview-render.js"></script>
+</body>
+
+</html>

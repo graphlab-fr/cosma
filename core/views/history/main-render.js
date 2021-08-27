@@ -39,7 +39,6 @@ function generateInput (record) {
     } else {
         table.appendChild(label);
     }
-    
 
     return label;
 }

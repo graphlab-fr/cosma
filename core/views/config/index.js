@@ -9,7 +9,8 @@ const {
 const Config = require('../../models/config')
     , windowsModel = require('../../models/windows');
 
-let window, modalRecordNew, modalRecordUpdate, modalLinkNew, modalLinkUpdate;
+let window, modalRecordNew, modalRecordUpdate,
+    modalLinkNew, modalLinkUpdate, modalViewUpdate;
 
 module.exports = function () {
 
@@ -497,4 +498,102 @@ ipcMain.on("askCustomCssPath", (event, data) => {
         });
     });
 
+});
+
+ipcMain.on("askDeleteViewFromConfig", (event, viewName) => {
+
+    let config = new Config();
+    let views = config.opts.views;
+
+    delete views[viewName];
+
+    config = new Config({
+        views: views
+    });
+
+    let result = config.save()
+        , response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "La vue a bien été supprimée de la configuration.",
+            data: views
+        };
+    } else if (result === false) {
+        response = {
+            isOk: false,
+            consolMsg: "La vue n'a pas pu être supprimé de la configuration.",
+            data: {}
+        };
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            data: {}
+        };
+    }
+    
+    window.webContents.send("confirmDeleteViewFromConfig", response);
+
+});
+
+ipcMain.on("askUpdateViewModal", (event, viewName) => {
+    modalViewUpdate = new BrowserWindow (
+        Object.assign(windowsModel.modal, {
+            parent: window,
+            title: 'Éditer une vue'
+        })
+    );
+
+    modalViewUpdate.loadFile(path.join(__dirname, './modal-updateview-source.html'));
+
+    modalViewUpdate.once('ready-to-show', () => {
+        modalViewUpdate.show();
+        modalViewUpdate.webContents.send("getViewToUpdate", viewName);
+    });
+
+});
+
+ipcMain.on("sendUpdateViewToConfig", (event, data) => {
+    let config = new Config();
+    let views = config.opts.views;
+
+    views[data.name] = views[data.originalName];
+
+    delete views[data.originalName];
+
+    config = new Config({
+        views: views
+    });
+
+    let result = config.save()
+        , response;
+
+    if (result === true) {
+        response = {
+            isOk: true,
+            consolMsg: "La vue a bien été renommée dans la configuration.",
+            data: data.name
+        };
+
+        window.webContents.send("confirmUpdateViewFromConfig", response);
+        modalViewUpdate.close();
+    } else if (result === false) {
+        response = {
+            isOk: false,
+            consolMsg: "La vue n'a pas pu être renommée dans la configuration.",
+            data: {}
+        };
+
+        modalViewUpdate.webContents.send("confirmUpdateViewFromConfig", response);
+    } else {
+        response = {
+            isOk: false,
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            data: {}
+        };
+
+        modalViewUpdate.webContents.send("confirmUpdateViewFromConfig", response);
+    }
 });

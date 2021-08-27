@@ -23,6 +23,17 @@ window.api.receive("getConfig", (data) => {
             continue;
         }
 
+        if (option === 'views') {
+            views = Object.keys(data[option]);
+
+            for (let i = 0; i < views.length; i++) {
+                generateInputView(i, views[i])
+            }
+
+            sendViews();
+            continue;
+        }
+
         const input = form.querySelector(`[name="${option}"]`);
 
         if (!input) { continue; }
@@ -82,11 +93,8 @@ function autosaveForm () {
             continue;
         }
 
-        console.log(input);
-
         input.addEventListener('focus', (e) => {
             originValue = input.value;
-            console.log(input.value);
     
             input.addEventListener('input', () => {
                 label.dataset.state = 'not-saved';
@@ -425,3 +433,73 @@ btnDialog.addEventListener('click', () => {
 });
 
 })();
+
+const tableView = document.getElementById('table-history');
+
+function generateInputView (viewId, viewName) {
+    const label = document.createElement('label')
+        , input = document.createElement('input')
+        , spanName = document.createElement('span');
+
+    spanName.textContent = viewName;
+    input.setAttribute('type', 'radio');
+    input.setAttribute('name', 'hist-record');
+    input.setAttribute('value', viewId);
+
+    label.appendChild(input);
+    label.appendChild(spanName);
+
+    tableView.appendChild(label);
+
+    return label;
+}
+
+function sendViews () {
+    const form = document.getElementById('form-views');
+
+    let submitBtn;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        submitBtn = document.activeElement;
+
+        const input = tableView.querySelector('input:checked');
+
+        if (!input) { return; }
+
+        const label = input.parentElement
+            , spanName = input.nextElementSibling
+            , id = input.value;
+
+        submitBtn.disabled = true;
+
+        switch (submitBtn.dataset.action) {
+            case 'update':
+                window.api.send("askUpdateViewModal", spanName.textContent);
+
+                window.api.receiveOnce("confirmUpdateViewFromConfig", (response) => {
+                    submitBtn.disabled = false;
+
+                    if (response.isOk === true) {
+                        spanName.textContent = response.data;
+                    }
+                });
+                break;
+
+            case 'delete':
+                window.api.send("askDeleteViewFromConfig", spanName.textContent);
+
+                window.api.receiveOnce("confirmDeleteViewFromConfig", (response) => {
+                    submitBtn.disabled = false;
+
+                    if (response.isOk === true) {
+                        label.remove();
+                    }
+                });
+                break;
+        }
+
+        console.log(submitBtn);
+    })
+}
