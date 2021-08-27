@@ -81,7 +81,10 @@ form label.flex-column textarea {
     margin-top: 7px;
 }
 
-form label input, form label button, form label select {
+form label input,
+form label button,
+form label select,
+form label textarea {
     margin-left: 10px;
 }
 
@@ -99,6 +102,24 @@ form input[type=text] {
     flex-grow: 4;
 }
 
+form label.flex-end {
+		justify-content: flex-end;
+		text-align: right;
+		align-items: flex-start;
+}
+
+form label.flex-end input,
+form label.flex-end textarea {
+		text-align: left;
+		flex-grow: 0;
+		width: 80%;
+		margin-left: 10px;
+}
+
+form label.space-between {
+		justify-content: space-between;
+}
+
 form input[type=text],
 form label select,
 textarea {
@@ -106,7 +127,7 @@ textarea {
 }
 
 form input[type=number] {
-    max-width: 50px;
+    max-width: 42px;
 }
 
 form label select {
@@ -122,11 +143,11 @@ form div.select-list div {
     flex: 3;
 }
 
-form div.select-list div + div {
+form div.select-list > div + div {
     display: flex;
     flex-direction: column;
     padding-left: 30px;
-    max-width: 120px;
+    max-width: 200px;
     flex: 1;
 }
 
@@ -134,32 +155,57 @@ form div.select-list label {
     display: flex;
     justify-content: space-between;
     text-indent: 5px;
+    align-items: flex-start;
 }
 
-/* form div.select-list label span {
-    width: calc(100% / attr(data-cols));
-} */
+.select-list-wrapper {
+		background-color: white;
+}
+
+.select-list-header {
+		display: flex;
+		border-bottom: 1px solid var(--mac-border-color);
+    font-weight: normal;
+    font-size: 1.2rem;
+    color: #272727;
+    border-bottom: 1px solid var(--mac-border-color);
+    padding: 5px;
+    text-align: center;
+}
+
+.select-list-header span:first-child,
+#table-history span:first-child {
+		width: 35%;
+}
+
+.select-list-header span:last-child,
+#table-history span:last-child {
+		width: 65%;
+}
 
 form div.select-list input[type="radio"] {
     position: absolute;
-    z-index: -1;
+    z-index: 2;
     appearance: none;
     width: 100%;
     height: 25px;
-    margin: 0 2px 0 2px;
-    border-bottom: 1px var(--mac-border-bottom-color) solid;
+    margin: 0 2px;
 }
 
 form div.select-list input[type="radio"]:checked {
-    background-color: var(--mac-border-color);
+    background-color: rgba(0,0,0,0.1);
+}
+
+.select-list-buttons button + button {
+		margin-top: 7px;
 }
 
 form label[data-state="not-saved"]:after {
-    content: '⌛';
+/*     content: '⌛'; */
 }
 
 form label[data-state="saved"]:after {
-    content: '✅';
+/*     content: '✅'; */
 }
 
 form label[data-state="save-error"]:after {
@@ -211,4 +257,17 @@ details {
 
 details summary {
     cursor: pointer;
+}
+
+.side-by-side {
+		display: flex;
+}
+
+.side-by-side div {
+		width: 40%;
+		margin-right: auto;
+}
+
+.side-by-side div h3 {
+		margin-top: 0;
 }

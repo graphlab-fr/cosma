@@ -64,77 +64,91 @@
                 </div>
 
                 <h2>Graphe</h2>
+                
+                <div class="side-by-side">
+                
+                		<div>
 
-                <label>
-                    Niveau maximum de focus :
-                    <input type="number" name="focus_max" step="1">
-                </label>
+												<label>
+														<input type="checkbox" name="graph_arrows">
+														Afficher des flèches sur les liens
+												</label>
 
-                <label>
-                    Couleur de fond :
-                    <input type="color" name="graph_background_color">
-                </label>
+												<label class="space-between">
+														Niveau maximum de focus :
+														<input type="number" name="focus_max" step="1">
+												</label>
 
-                <label>
-                    Couleur de surbrillance :
-                    <input type="color" name="graph_highlight_color">
-                </label>
+												<label class="space-between">
+														Taille du texte des étiquettes :
+														<input type="number" name="graph_text_size" step="1">
+												</label>
 
-                <label>
-                    <input type="checkbox" name="graph_highlight_on_hover" checked>
-                    Surbrillance au survol des nœuds
-                </label>
+												<label class="space-between">
+														Couleur de fond :
+														<input type="color" name="graph_background_color">
+												</label>
 
-                <label>
-                    <input type="checkbox" name="graph_arrows">
-                    Flèchage de la direction des liens
-                </label>
+												<label class="space-between">
+														Couleur de surbrillance :
+														<input type="color" name="graph_highlight_color">
+												</label>
+												
+<!-- 
+												<label>
+														<input type="checkbox" name="graph_highlight_on_hover" checked>
+														Mettre les nœuds survolés en surbrillance
+												</label>
+ -->
 
-                <label>
-                    Taille du texte des étiquettes :
-                    <input type="number" name="graph_text_size" step="1">
-                </label>
+										</div>
 
-                <h3>Spatialisation des nœuds</h3>
+                		<div>
 
-                <label>
-                    Force d'attraction :
-                    <input type="number" name="graph_attraction_force" step="1">
-                </label>
+												<h3>Spatialisation</h3>
+												
+												<label class="space-between">
+														Force d'attraction :
+														<input type="number" name="graph_attraction_force" step="1">
+												</label>
 
-                <label>
-                    Distance maximum entre les nœuds :
-                    <input type="number" name="graph_attraction_distance_max" step="1">
-                </label>
+												<label class="space-between">
+														Distance maximum entre les nœuds :
+														<input type="number" name="graph_attraction_distance_max" step="1">
+												</label>
 
-                <label>
-                    Attraction verticale :
-                    <input type="number" name="graph_attraction_verticale" step="0.1">
-                </label>
+												<label class="space-between">
+														Attraction verticale :
+														<input type="number" name="graph_attraction_verticale" step="0.1">
+												</label>
 
-                <label>
-                    Attraction horizontale :
-                    <input type="number" name="graph_attraction_horizontale" step="0.1">
-                </label>
+												<label class="space-between">
+														Attraction horizontale :
+														<input type="number" name="graph_attraction_horizontale" step="0.1">
+												</label>
+												
+										</div>
+                
+                </div>
                 
                 <h2>Métadonnées</h2>
 
-                <label>
+                <label class="flex-end">
                     Titre de l'export :
                     <input type="text" name="metas_title">
                 </label>
 
-                <label>
+                <label class="flex-end">
                     Auteur :
                     <input type="text" name="metas_author">
                 </label>
 
-                <label>
+                <label class="flex-end">
                     Mots-clés :
                     <input type="text" name="metas_keywords">
                 </label>
 
-                <label class="flex-column">
+                <label class="flex-end">
                     Description :
                     <textarea name="metas_description"></textarea>
                 </label>
@@ -162,6 +176,11 @@
                 <h2>Interface</h2>
 
                 <label>
+                    <input type="checkbox" name="devtools">
+                    Activer les outils de développement
+                </label>
+
+                <label>
                     <input type="checkbox" name="custom_css">
                     Utiliser une CSS personnalisée
                 </label>
@@ -170,11 +189,6 @@
                     CSS personnalisée :
                     <input type="text" name="custom_css_path">
                     <button type="button" id="dialog-path-css">Sélectionner</button>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="devtools">
-                    Activer les outils de développement
                 </label>
 
                 <output></output>
@@ -186,18 +200,23 @@
 
                 <div class="select-list">
 
-                    <div id="table-history"></div>
+										<div class="select-list-wrapper">
+
+												<div class="select-list-header">
+														<span>Nom</span>
+												</div>
+
+												<div id="table-history"></div>
+												
+										</div>
 
                     <div>
-                        <button data-action="update" type="submit">Modifier</button>
+                        <button data-action="update" type="submit">Renommer</button>
                         <button data-action="delete" type="submit">Supprimer</button>
-                        <button data-action="delete-all" type="submit">Tout supprimer</button>
+                        <button data-action="delete-all" type="submit">Tout supprimer…</button>
                     </div>
                 </div>
 
-                <div class="cancel-ok">
-                    <button class="window-close" type="button" type="submit">OK</button>
-                </div>
             </form>
 
         </main>
