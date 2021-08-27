@@ -38,10 +38,6 @@ module.exports = function () {
         })
     );
 
-    window.webContents.openDevTools({
-        mode: 'detach'
-    })
-
     window.loadFile(path.join(__dirname, './main-source.html'));
 
     window.once('ready-to-show', () => {

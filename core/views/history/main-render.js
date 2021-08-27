@@ -52,19 +52,9 @@ function send () {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        let id = null;
+        let id = null, label, spanDate, spanDescription;
 
         submitBtn = document.activeElement;
-
-        const input = table.querySelector('input:checked')
-
-        if (input) {
-            const label = input.parentElement
-            , spanDate = input.nextElementSibling
-            , spanDescription = spanDate.nextElementSibling;
-            
-            id = input.value;
-        }
 
         switch (submitBtn.dataset.action) {
             case 'delete-all':
@@ -92,6 +82,15 @@ function send () {
                     }
                 });
                 return;
+        }
+
+        const input = table.querySelector('input:checked')
+
+        if (input) {
+            label = input.parentElement
+            spanDate = input.nextElementSibling
+            spanDescription = spanDate.nextElementSibling;
+            id = input.value;
         }
 
         if (id === null) {

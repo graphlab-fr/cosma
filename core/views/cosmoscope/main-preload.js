@@ -40,6 +40,12 @@ function menu () {
         , btnRecordNew = document.getElementById('electron-record-new')
         , btnCosmoscopeNew = document.getElementById('electron-cosmoscope-new');
 
+    btnCosmoscopeNew.disabled = true;
+
+    setTimeout(() => {
+        btnCosmoscopeNew.disabled = false;
+    }, 800);
+
     btnPageReload.addEventListener('click', reload);
     btnBack.addEventListener('click', back);
     btnForward.addEventListener('click', forward);
