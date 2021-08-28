@@ -3,3 +3,4 @@ package-lock.json
 doc
 cosmoscope/custom.css
 .DS_Store
+/build
