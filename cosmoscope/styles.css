@@ -14,12 +14,16 @@
 	/* typography */
 	--sans: sans-serif;
 	--serif: "Georgia", serif;
-	--mono: monospace;
-	--condensed: 'Arial Condensed', sans-serif;
+	--mono: "IBM Plex Mono", "Consolas", "Monaco", monospace;
+	--condensed: "Avenir Next Condensed", 'Arial Condensed', sans-serif;
 	/* global size */
 	font-size: 62.5%;
 	/* others */
 	--shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --offblack: rgb(51, 51, 51);
+  --offwhite: rgb(253, 252, 251);
+  --gray: #d6d6d6;
+  --background-gray: rgb(246, 246, 246);
 }
 
 * { box-sizing: border-box; }
@@ -59,7 +63,7 @@ button {
 }
 
 .btn {
-	background-color: transparent;
+	background-color: white;
 	border: 1px solid var(--border-color);
 	border-radius: 2px;
 }
@@ -71,10 +75,8 @@ button {
 - Lists
 --- */
 
-details { padding: 0.6rem 0; }
-
-details:not(:first-of-type) {
-	border-top: 1px solid var(--border-color);
+details {
+	padding: 0.5rem 0 1rem 0;
 }
 
 details[data-sort] .sort-box:not(.active) {
@@ -83,8 +85,9 @@ details[data-sort] .sort-box:not(.active) {
 
 details>summary {
 	cursor: pointer;
-	font-family: var(--sans);
-	margin: 1rem 0;
+	text-transform: uppercase;
+	font-size: 1.3rem;
+	margin: 1rem 0 0.5rem 0;
 	font-weight: bold;
 	outline: none;
 }
@@ -103,6 +106,10 @@ summary + button { margin: 1rem 0; }
 	padding: 0.3rem 0 0.3rem 1rem;
 }
 
+.list-content-container .menu-controls-list {
+	margin-top: 1.3rem;
+}
+
 .list-content-container ul li span:last-of-type:not(.badge) {
 	line-height: 1.5;
 }
@@ -110,6 +117,10 @@ summary + button { margin: 1rem 0; }
 .record-type-point { /* colored dot before links */
 	font-size: 0.8em;
 	padding-right: 0.8em;
+}
+
+.menu-controls-container p:first-child {
+	font-weight: bold;
 }
 
 /* ---
@@ -122,7 +133,6 @@ summary + button { margin: 1rem 0; }
 
 label {
 	cursor: pointer;
-	font-family: var(--sans);
 }
 
 input { font-size: 1.3rem; }
@@ -155,6 +165,7 @@ code { font-family: var(--mono); }
 .badge {
 	display: inline-block;
 	background-color: var(--indicator-background-color);
+	border: 1px solid var(--gray);
 	border-radius: 1px;
 	padding: 0 0.3rem;
 	font-size: 1rem;
@@ -209,8 +220,9 @@ aside.menu {
 	width: 30rem;
 	margin: 0;
 	padding: 0 20px 50px 20px;
-	background-color: var(--lateral-background-color);
-	box-shadow: var(--shadow)
+	background-color: var(--background-gray);
+	color: var(--offblack);
+	box-shadow: var(--shadow);
 }
 
 /* ---
@@ -218,7 +230,8 @@ aside.menu {
 --- */
 
 .title {
-	font-size: 2rem;
+	text-transform: uppercase;
+	font-size: 1.8rem;
 	color: var(--cosma-blue-dark);
 	text-align: center;
 }
@@ -300,11 +313,13 @@ aside.menu footer {
 	bottom: 0px;
 	left: 0px;
 	width: inherit;
+	margin-top: 1.8rem;
+	background-color: inherit;
 	padding: 0.8rem 0 0.8rem 0.8rem;
-	background-color: var(--lateral-background-color);
-	font-family: var(--mono);
-	text-align: center;
+	text-transform: uppercase;
 	border-top: solid 1px var(--border-color);
+	font-size: 1.1rem;
+	text-align: center;
 }
 
 aside.menu footer span:not(:first-of-type)::before {
@@ -323,7 +338,8 @@ main.record-container {
 	width: 50rem;
 	height: 100vh;
 	overflow: auto;
-	background-color: var(--lateral-background-color);
+	background-color: var(--offwhite);
+	color: var(--offblack);
 	box-shadow: var(--shadow);
 	transition: transform .6s;
 	transition-timing-function: cubic-bezier(.02,1.18,0,.98);
@@ -341,10 +357,9 @@ main.record-container:not(.active) {
 --- */
 
 .record header {
-	font-family: var(--sans);
 	padding-bottom: 1.5rem;
 	margin-bottom: 3rem;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid var(--gray);
 }
 
 .record header div + div,
@@ -354,8 +369,9 @@ main.record-container:not(.active) {
 
 .record header div span:first-of-type, 
 .record-focus-container > span {
-	font-size: 1.6rem;
-	font-family: var(--mono);
+	font-size: 1.3rem;
+	font-weight: bold;
+	text-transform: uppercase;
 	margin-right: 0.8rem;
 }
 
@@ -379,11 +395,11 @@ main.record-container:not(.active) {
 
 .record main h1,h2,h3,h4,h5,h6 {
 	font-family: var(--sans);
-	margin:2.5rem 0 0.5rem;
+	margin: 3rem 0 0 0;
 }
-.record main h1 { font-size: 2.8rem; }
-.record main h2 { font-size: 2.2rem; }
-.record main h3 { font-size: 1.8rem; }
+.record main h1 { font-size: 1.8rem; }
+.record main h2 { font-size: 1.6rem; }
+.record main h3 { font-size: 1.4rem; }
 
 .record main a { word-wrap: break-word; }
 .record main a.record-link { color: #337ab7; }
@@ -435,13 +451,25 @@ main.record-container:not(.active) {
 	margin-top: 1rem;
 }
 
+.record div.csl-entry {
+	width: inherit;
+	text-indent: -2rem;
+	padding-left: 2rem;
+	margin: 0.75rem 0 0 0;
+	line-height: 1.3;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	-ms-word-break: break-all;
+	word-break: break-word;
+}
+
 /* ---
 - Record footer
 --- */
 
 .record footer {
 	margin-top: 3rem;
-	border-top: 1px solid black;
+	border-top: 1px solid var(--gray);
 }
 
 .record footer li {
@@ -459,6 +487,7 @@ main.record-container:not(.active) {
 	position: absolute;
 	bottom: calc(100% + 10px);
 	box-shadow: var(--shadow);
+	text-indent: 0;
 }
 
 .record footer li .record-links-context li {
@@ -545,7 +574,7 @@ marker {
 	left: 30px;
 	bottom: 15px;
 	flex-wrap: wrap;
-	width: 16rem;
+	width: 20rem;
 }
 
 .graph-controls::before {
@@ -567,9 +596,15 @@ marker {
 	position: relative;
 }
 
+.graph-controls-focus {
+	display: flex;
+	justify-content: flex-start;
+	flex-flow: row wrap;
+}
+
 .graph-controls-focus label {
 	display: inline-block;
-	margin: 0.8rem;
+	margin: .8rem 0 0.8rem 0.4rem;
 }
 
 .graph-controls-focus input[type="range"]:not(.active) {
@@ -654,5 +689,10 @@ article#credits h1.metas-title {
 	display: block;
 	word-wrap: break-word;
 	font-size: 1.2rem;
+	max-height: 75vh;
+	overflow: scroll;
+	border-top: 1px solid var(--border-color);
+	border-bottom: 1px solid var(--border-color);
 }
+
 
