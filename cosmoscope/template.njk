@@ -219,13 +219,13 @@
             </span>
             {% endif %}
 
-            <span onclick="openRecord('help', false)">
+            <button onclick="openRecord('help', false)">
                 Aide
-            </span>
+            </button>
 
-            <div class="about" onclick="openRecord('credits', false)">
+            <button class="about" onclick="openRecord('credits', false)">
                 {{ "Fabriqué avec Cosma – À propos" if publishMode else "À propos" }}
-            </div>
+            </button>
         </footer>
     </aside>
 
