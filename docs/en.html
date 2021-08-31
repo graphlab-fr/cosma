@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB" >
+
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta name="author" content="Guillaume Brioudes https://myllaume.fr/" />
+<meta name="author" content="Arthur Perret https://www.arthurperret.fr/" />
+<meta name="dcterms.date" content="2021-08-31" />
+<title>Cosma Docs</title>
+
+<link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+
+
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#installing"><span class="toc-section-number">2</span> Installing</a>
+<ul>
+<li><a href="#pre-requisites"><span class="toc-section-number">2.1</span> Pre-requisites</a></li>
+<li><a href="#downloading-cosma"><span class="toc-section-number">2.2</span> Downloading Cosma</a></li>
+<li><a href="#installing-the-dependencies"><span class="toc-section-number">2.3</span> Installing the dependencies</a></li>
+</ul></li>
+<li><a href="#settings"><span class="toc-section-number">3</span> Settings</a>
+<ul>
+<li><a href="#obligatory-parameters"><span class="toc-section-number">3.1</span> Obligatory parameters</a></li>
+<li><a href="#graph-settings"><span class="toc-section-number">3.2</span> Graph settings</a></li>
+<li><a href="#optional-parameters"><span class="toc-section-number">3.3</span> Optional parameters</a></li>
+<li><a href="#change-the-configuration-from-the-command-line"><span class="toc-section-number">3.4</span> Change the configuration from the command line</a></li>
+</ul></li>
+<li><a href="#using-the-cosmographer"><span class="toc-section-number">4</span> Using the cosmographer</a>
+<ul>
+<li><a href="#data-format"><span class="toc-section-number">4.1</span> Data format</a></li>
+<li><a href="#creating-records-with-the-cosmographer"><span class="toc-section-number">4.2</span> Creating records with the cosmographer</a></li>
+<li><a href="#creating-links-between-records"><span class="toc-section-number">4.3</span> Creating links between records</a></li>
+<li><a href="#bibliography"><span class="toc-section-number">4.4</span> Bibliography</a></li>
+<li><a href="#exporting"><span class="toc-section-number">4.5</span> Exporting</a></li>
+<li><a href="#alerts-and-errors"><span class="toc-section-number">4.6</span> Alerts and errors</a></li>
+</ul></li>
+<li><a href="#using-the-cosmoscope"><span class="toc-section-number">5</span> Using the cosmoscope</a>
+<ul>
+<li><a href="#interface-overview"><span class="toc-section-number">5.1</span> Interface overview</a></li>
+<li><a href="#graph"><span class="toc-section-number">5.2</span> Graph</a></li>
+<li><a href="#records"><span class="toc-section-number">5.3</span> Records</a></li>
+<li><a href="#focus-mode"><span class="toc-section-number">5.4</span> Focus mode</a></li>
+<li><a href="#searching"><span class="toc-section-number">5.5</span> Searching</a></li>
+<li><a href="#filtering-by-record-type"><span class="toc-section-number">5.6</span> Filtering by record type</a></li>
+<li><a href="#tags"><span class="toc-section-number">5.7</span> Tags</a></li>
+<li><a href="#index"><span class="toc-section-number">5.8</span> Index</a></li>
+<li><a href="#views"><span class="toc-section-number">5.9</span> Views</a></li>
+<li><a href="#customizing-the-interface"><span class="toc-section-number">5.10</span> Customizing the interface</a></li>
+</ul></li>
+<li><a href="#development"><span class="toc-section-number">6</span> Development</a>
+<ul>
+<li><a href="#terminology"><span class="toc-section-number">6.1</span> Terminology</a></li>
+<li><a href="#code-architecture-overview"><span class="toc-section-number">6.2</span> Code architecture overview</a></li>
+<li><a href="#file-tree"><span class="toc-section-number">6.3</span> File tree</a></li>
+<li><a href="#api-index"><span class="toc-section-number">6.4</span> API index</a></li>
+<li><a href="#how-the-cosmograph-works"><span class="toc-section-number">6.5</span> How the cosmograph works</a></li>
+<li><a href="#reading-files"><span class="toc-section-number">6.6</span> Reading files</a></li>
+<li><a href="#generating-the-cosmoscope"><span class="toc-section-number">6.7</span> Generating the cosmoscope</a></li>
+<li><a href="#displaying-the-graph"><span class="toc-section-number">6.8</span> Displaying the graph</a></li>
+<li><a href="#displaying-the-graph-with-other-libraries"><span class="toc-section-number">6.9</span> Displaying the graph with other libraries</a></li>
+<li><a href="#graph-parameters"><span class="toc-section-number">6.10</span> Graph parameters</a></li>
+<li><a href="#keyboard-shortcuts"><span class="toc-section-number">6.11</span> Keyboard shortcuts</a></li>
+</ul></li>
+<li><a href="#credits"><span class="toc-section-number">7</span> Credits</a>
+<ul>
+<li><a href="#team"><span class="toc-section-number">7.1</span> Team</a></li>
+<li><a href="#dependencies"><span class="toc-section-number">7.2</span> Dependencies</a></li>
+<li><a href="#project-history"><span class="toc-section-number">7.3</span> Project history</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<main>
+<article>
+<h1 class="title">Cosma Docs</h1>
+<p>Cosma is a document graph visualisation software. It allows you to represent interrelated notes as an interactive network in a web interface. Cosma is designed to work with Markdown text files and is suitable for both small collections (about a hundred documents) and sprawling knowledge bases (up to several thousand documents).</p>
+<p>Cosma was created through the <a href="https://hyperotlet.hypotheses.org/">HyperOtlet</a> research programme, funded by the National Agency of Research (ANR, France).</p>
+<div class="sommaire">
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#installing">Installing</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#using-the-cosmographer">Using the cosmographer</a></li>
+<li><a href="#using-the-cosmoscope">Using the cosmoscope</a></li>
+<li><a href="#development">Development</a></li>
+<li><a href="#credits">Credits</a></li>
+</ol>
+</div>
+<h1 data-number="1" id="introduction"><span class="header-section-number">1</span> Introduction</h1>
+<p>Cosma is a document graph visualisation software. It allows you to represent interrelated notes as an interactive network in a web interface. Cosma is not a note-taking application: it was designed to work in conjunction with note-taking software, only requiring that notes be structured according to a specific format.</p>
+<p>Most visualisation tools present themselves through a graphical user interface (GUI), from which it is possible to export structured data or static images. Cosma reverses this logic: the application part, which we call the <strong>cosmographer</strong>, is just a form; the export, an HTML file we call the <strong>cosmoscope</strong>, is the actual visualisation interface. This stand-alone file contains an interactive graph, internal navigation tools (index, search engine, filters) and the full text of the records; it also includes the source data as JSON and can be used offline.</p>
+<p>Cosma is designed to give a high degree of control to its users.</p>
+<p>Firstly, Cosma works with any directory of text-based files and only reads the data: using or uninstalling the software will not alter your files and therefore does not interfere with your storage, versioning and editing practices.</p>
+<p>Second, almost all of Cosma’s interface elements are customisable: the network drawing algorithm, the colours, the stroke of links… You can even add permanent shortcuts to specific visual configurations (“views”) you may come across during navigation and want to access again later.</p>
+<p>Thirdly, documentary and semantic enrichments are possible through the addition of metadata on both nodes (documents) and links (relationships between documents). This is done through generic mechanisms, allowing you to use the typologies and ontologies of your choice.</p>
+<p>And fourthly, Cosma is modular, interoperable and portable, but above all free software. The code is public, documented, and it is accessible and reusable free of charge under the MIT license. Our work can thus be evaluated, archived and continued by others.</p>
+<h1 data-number="2" id="installing"><span class="header-section-number">2</span> Installing</h1>
+<h2 data-number="2.1" id="pre-requisites"><span class="header-section-number">2.1</span> Pre-requisites</h2>
+<p>Install <a href="https://nodejs.org/fr/download/">Node.js</a> version 15 or higher.</p>
+<p>Using the cosmoscope requires a web browser. You can use the following browsers, in the version mentioned or higher:</p>
+<ul>
+<li>Chrome (v.69)</li>
+<li>Edge (v.79)</li>
+<li>Firefox (v.62)</li>
+<li>Opera (v.56)</li>
+<li>Safari (v.12)</li>
+</ul>
+<p>The cosmoscope is not compatible with Internet Explorer.</p>
+<h2 data-number="2.2" id="downloading-cosma"><span class="header-section-number">2.2</span> Downloading Cosma</h2>
+<p>Download the Cosma git repository by typing the command below in a terminal, or by clicking on the following link: <a href="https://github.com/graphlab-fr/cosma/archive/master.zip" class="uri">https://github.com/graphlab-fr/cosma/archive/master.zip</a></p>
+<pre><code>git clone https://github.com/graphlab-fr/cosma.git</code></pre>
+<h2 data-number="2.3" id="installing-the-dependencies"><span class="header-section-number">2.3</span> Installing the dependencies</h2>
+<p>Cosma relies on other programs called dependencies. Cosma uses the NPM dependency manager which is installed at the same time as Node.js. Install the dependencies necessary for the application to function properly with the command below:</p>
+<pre><code>npm install --only=production</code></pre>
+<h1 data-number="3" id="settings"><span class="header-section-number">3</span> Settings</h1>
+<p>Cosma uses a <a href="http://yaml.org">YAML</a> configuration file. It is a hierarchical list of parameters whose values modify the behaviour of the software.</p>
+<div class="astuce">
+<p>For an introduction to YAML, <a href="https://sweetohm.net/article/introduction-yaml.en.html">click here</a>. For Cosma, it is particularly important to know that in YAML the hierarchy of parameters is implemented by indentation, i.e. the presence of spaces at the beginning of a line, and that the use of tabs to indent lines is forbidden in YAML. It is recommended to choose an indentation unit corresponding to a multiple of 2 spaces (2 or 4) and to stick to it for the whole file.</p>
+</div>
+<p>Run the following command to create the configuration file (<code>config.yml</code>) if it does not already exist. You can also delete the file and use this command to reset it. The file generated by this command is a template with all the parameters that must be filled in for the configuration to be considered valid.</p>
+<pre><code>node app config
+node app c</code></pre>
+<h2 data-number="3.1" id="obligatory-parameters"><span class="header-section-number">3.1</span> Obligatory parameters</h2>
+<p>The configuration must contain the following parameters:</p>
+<dl>
+<dt><code>files_origin</code></dt>
+<dd>Path to the directory containing the Markdown files to be read.
+</dd>
+<dd>Example: <code>/Users/user/Fiches/'</code>, <code>D:\repertoire\</code>
+</dd>
+<dt><code>export_target</code></dt>
+<dd>Path to the directory where to export the cosmoscope.
+</dd>
+<dd>Example: <code>./'</code>, <code>D:\repertoire\</code>
+</dd>
+</dl>
+<div class="important">
+<p>The <code>files_origin</code> and <code>export_target</code> paths must end in a slash.</p>
+</div>
+<dl>
+<dt><code>record_types</code></dt>
+<dd>List of record types. Each type is defined by a <code>name: value</code> pair where <code>name</code> is the name of the type and <code>value</code> is a colour of your choice. The colours are declared <a href="https://www.w3schools.com/html/html_colors.asp">as in HTML</a> with their predefined name or an RGB, HEX, HSL, RGBA or HSLA value in quotes.
+</dd>
+</dl>
+<p>Example:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">record_types</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">undefined</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;#546de5&#39;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">very important</span><span class="kw">:</span><span class="at"> red</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">reading note</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;rgba(157, 62, 12, 0.7)&#39;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">concept</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;hsl(14, 100%, 80%)&#39;</span></span></code></pre></div>
+<dl>
+<dt><code>link_types</code></dt>
+<dd>List of relationship types. Each type is defined by a <code>name</code> parameter whose value is a list of two parameters, which affect the representation of the links in the graph: <code>stroke</code> corresponds to the shape of the line and <code>color</code> to its colour. The value of <code>stroke</code> can be <code>single</code> (single solid line), <code>double</code> (double solid line), <code>dash</code> or <code>dotted</code>. Colours are declared as in HTML, in the same way as for the record types.
+</dd>
+</dl>
+<p>Example:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">link_types</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">undefined</span><span class="kw">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stroke</span><span class="kw">:</span><span class="at"> simple</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">color</span><span class="kw">:</span><span class="at"> grey</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">special</span><span class="kw">:</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stroke</span><span class="kw">:</span><span class="at"> dash</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">color</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;rgba(157, 62, 12, 0.7)&#39;</span></span></code></pre></div>
+<div class="important">
+<p>The default type <code>undefined</code> must be set for both record types and link types.</p>
+</div>
+<p>The links settings affects their readability in the graph. In the following example, the user has defined three types of qualified links in the manner of a thesaurus (specific <code>s</code>, generic <code>g</code> and associated <code>a</code>). The parameters are set to enhance the visibility of the qualified links: the default (<code>undefined</code>) links are discrete dotted grey lines, while qualified links are more legible, with solid lines and a brighter colour.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">link_types</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">undefined</span><span class="kw">:</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stroke</span><span class="kw">:</span><span class="at"> dotted</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">color</span><span class="kw">:</span><span class="at"> grey</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">s</span><span class="kw">:</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stroke</span><span class="kw">:</span><span class="at"> simple</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">color</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;rgba(157, 62, 12, 0.7)&#39;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">g</span><span class="kw">:</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stroke</span><span class="kw">:</span><span class="at"> simple</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">color</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;rgba(157, 62, 12, 0.7)&#39;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">a</span><span class="kw">:</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stroke</span><span class="kw">:</span><span class="at"> dash</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">color</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;rgba(157, 62, 12, 0.7)&#39;</span></span></code></pre></div>
+<h2 data-number="3.2" id="graph-settings"><span class="header-section-number">3.2</span> Graph settings</h2>
+<p>The following parameters define the default value of the graph parameters. Most of these parameters can be changed live in the cosmoscope interface, where you can test different values before setting them in the <code>config.yml</code> file: the values set there are restored each time the cosmoscope is reloaded.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">graph</span><span class="kw">:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">background_color</span><span class="kw">:</span><span class="at"> white</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">highlight_color</span><span class="kw">:</span><span class="at"> red</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">highlight_on_hover</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">text_size</span><span class="kw">:</span><span class="at"> </span><span class="dv">9</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">attraction</span><span class="kw">:</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">force</span><span class="kw">:</span><span class="at"> </span><span class="dv">-50</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">distance_max</span><span class="kw">:</span><span class="at"> </span><span class="dv">800</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">verticale</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">horizontale</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">arrows</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code></pre></div>
+<dl>
+<dt><code>background_color</code></dt>
+<dd>Background color of the graph.
+</dd>
+<dd>Example: <code>whitesmoke</code> ,<code>#ccc</code>, <code>rgb(57, 57, 57)</code>
+</dd>
+<dt><code>highlight_color</code></dt>
+<dd>Highlight color for selected items.
+</dd>
+<dd>Example: <code>red</code> ,<code>#0642ff</code>, <code>rgb(207, 52, 118)</code>
+</dd>
+<dt><code>text_size</code></dt>
+<dd>Size of node labels. The implicit unit is pixels. The minimum value is <code>5</code>; the maximum value is <code>15</code>.
+</dd>
+<dt><code>attraction</code></dt>
+<dd>Parameters of the simulation of forces between nodes.
+</dd>
+<dd><code>force</code>: overall power. The lower it is, the looser the links between nodes are. Values below 50 tend to cause incessant collisions.
+</dd>
+<dd><code>distance_max</code>: maximum distance between nodes. Above <code>1000</code>, this parameter has no measurable effect. The value of <code>distance_max</code> also indicates the maximum effective value of <code>force</code>. For example, if <code>distance_max: 500</code>, then increasing <code>force</code> beyond 500 will have no effect.
+</dd>
+<dd><code>verticale</code>: The force of attraction towards the vertical axis. A value of <code>0</code> means that this parameter is disabled.
+</dd>
+<dd><code>horizontale</code>: force of attraction towards the horizontal axis. A value of <code>0</code> means that this parameter is disabled.
+</dd>
+<dt><code>arrows</code></dt>
+<dd>Display arrows on links, depending on whether you want a directed or undirected graph. Boolean value: <code>true</code> or <code>false</code>.
+</dd>
+</dl>
+<h2 data-number="3.3" id="optional-parameters"><span class="header-section-number">3.3</span> Optional parameters</h2>
+<p>You can add the following parameters to the configuration file:</p>
+<dl>
+<dt><code>bibliography</code></dt>
+<dd>Path to the file (JSON CSL) <code>.json</code> containing the list of bibliographic references. Enables the <a href="#bibliography">bibliography of records</a>.
+</dd>
+<dt><code>csl</code></dt>
+<dd>Path to the style file (CSL) <code>.csl</code> containing the citation styles. Enables the <a href="#bibliography">bibliography of records</a>.
+</dd>
+<dt><code>minify</code></dt>
+<dd>Reduces the size of the <code>cosmoscope.html</code> file, at the expense of the readability of the source code. Value: <code>true</code> or <code>false</code>. Disabled by default.
+</dd>
+<dt><code>custom_css</code></dt>
+<dd>Applies any styles declared by the user in the <code>/template/custom.css</code> file. Value: <code>true</code> or <code>false</code>. Disabled by default.
+</dd>
+<dt><code>history</code></dt>
+<dd>Exports a copy of the cosmoscope and its data to a time-stamped sub-folder of the <code>history</code> folder. Value: <code>true</code> or <code>false</code>. Enabled by default.
+</dd>
+<dt><code>metadata</code></dt>
+<dd>List of metadata to be used as <code>meta</code> tags in the header of the<code>cosmoscope.html</code> file. You may use any metadata. When using the <code>--publish</code> / <code>-p</code> flag on the <code>modelize</code> command, some metadata will also be displayed in the interface if they exist: the title replaces the logo at the top of the menu pane; title, author, date and description are displayed in the About pane.
+</dd>
+</dl>
+<p>Example:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">author</span><span class="kw">:</span><span class="at"> Firstname Lastname</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">keywords</span><span class="kw">:</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> Zettelkasten</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> document graph</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;This is my personal knowledge base.&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">url</span><span class="kw">:</span><span class="at"> https://domaine.fr/cosmoscope.html</span></span></code></pre></div>
+<dl>
+<dt><code>focus_max</code></dt>
+<dd>Maximum focus distance. The value must be an integer greater than or equal to <code>0</code>.
+</dd>
+<dt><code>views</code></dt>
+<dd>List of views appearing in the cosmoscope Views section. Each view is defined by a <code>name: value</code> pair, where <code>name</code> is the name of the view and <code>value</code> is a string generated via the Save current view button.
+</dd>
+<dt><code>link_symbol</code></dt>
+<dd>Define one or more characters to replace the hyperlink text (target file identifier) in the records.
+</dd>
+</dl>
+<p>Example:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">views</span><span class="kw">:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">A nice view</span><span class="kw">:</span><span class="at"> eyJmaWx0ZXJzIjpbImNvbmNlcHQiXX0%3D</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">Another view (with focus)</span><span class="kw">:</span><span class="at"> eyJyZWNvcmRJZCI6MjAyMTAyMjExNDQ0NTF9</span></span></code></pre></div>
+<h2 data-number="3.4" id="change-the-configuration-from-the-command-line"><span class="header-section-number">3.4</span> Change the configuration from the command line</h2>
+<p>The following commands allow you to quickly change the configuration.</p>
+<p>Generate a template configuration file:</p>
+<pre><code>node app config
+node app c</code></pre>
+<p>Modify the path to the source files:</p>
+<pre><code>node app import &lt;chemin&gt;</code></pre>
+<p>Modify the cosmoscope export path:</p>
+<pre><code>node app export &lt;chemin&gt;</code></pre>
+<p>Add a record type:</p>
+<pre><code>node app atype &lt;nom&gt; &lt;couleur&gt;</code></pre>
+<p>Create a <code>custom.css</code> file in the <code>/template</code> directory:</p>
+<pre><code>node app css</code></pre>
+<p>Add a view:</p>
+<pre><code>node app aview &lt;nom&gt; &lt;code&gt;</code></pre>
+<h1 data-number="4" id="using-the-cosmographer"><span class="header-section-number">4</span> Using the cosmographer</h1>
+<h2 data-number="4.1" id="data-format"><span class="header-section-number">4.1</span> Data format</h2>
+<p>Cosma does not prescribe writing software, but requires a specific data format which combines several writing standards aiming to increase interoperability and data durability:</p>
+<ul>
+<li>YAML for software configuration and file metadata;</li>
+<li>Markdown for file content;</li>
+<li>wiki-like syntax (double brackets <code>[[ ]]</code>) to create internal links;</li>
+<li>unique identifiers that serve as targets for internal links.</li>
+</ul>
+<p>This combination of writing standards lies at the intersection of several textual cultures: documentation; wikis; note-taking with the Zettelkasten method; academic writing with Pandoc. Therefore, Cosma works particularly well when used in tandem with writing environments that share this approach, such as <a href="https://zettlr.com">Zettlr</a> or the <a href="https://foambubble.github.io/foam/">Foam</a> extension for Visual Studio Code and VSCodium.</p>
+<p>To be correctly interpreted by Cosma, Markdown files must therefore respect a certain structure, and in particular the presence of a YAML header at the beginning of the file.</p>
+<p>Example:</p>
+<pre><code>---
+title: A clever title
+id: 20201209111625
+type: undefined
+tags:
+- some relevant keywords
+- some more keywords
+---</code></pre>
+<p>The YAML header is delimited by two sets of three single dashes on a line (<code>---</code>). Cosma recognises and uses the following four fields:</p>
+<dl>
+<dt><code>title</code></dt>
+<dd>Mandatory.
+</dd>
+<dt><code>id</code></dt>
+<dd>A unique identifier. Mandatory. By default, Cosma uses a timestamp (year, month, day, hours, minutes and seconds) to generate a 14-digit identifier, as some popular Zettelkasten note-taking software do – including <a href="https://zettelkasten.de/the-archive/">The Archive</a> and <a href="https://www.zettlr.com">Zettlr</a>.
+</dd>
+<dt><code>type</code></dt>
+<dd>A record type. Optional. Only one type can be assigned to one record. If the <code>type</code> field is not included or its value does not match one of the types stored in the configuration under the <code>record_types</code> parameter, Cosma will interpret the type of the record as <code>undefined</code>.
+</dd>
+<dt><code>tags</code></dt>
+<dd>Any keyword(s) attached to the record. Optional. The value must be a list. A record can have as many keywords as you wish.
+</dd>
+</dl>
+<p>According to the YAML specification, the list of keywords can be entered in <em>block</em> mode:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> some relevant keywords</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> some more keywords</span></span></code></pre></div>
+<p>Or in <em>flow</em> mode:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">some relevant keywords</span><span class="kw">,</span><span class="at"> some more keywords</span><span class="kw">]</span></span></code></pre></div>
+<p>You can add additional fields arbitrarily, for example a <code>description</code> field.</p>
+<p>After the header, you can freely enter your content.</p>
+<div class="important">
+<p>The rendering of Markdown files as HTML in the cosmoscope is limited to textual elements. Images, for example, are not included and will be replaced by their alternative text when it has been set.</p>
+</div>
+<h2 data-number="4.2" id="creating-records-with-the-cosmographer"><span class="header-section-number">4.2</span> Creating records with the cosmographer</h2>
+<p>You can create a Cosma-compliant Markdown file by hand or by using the cosmographer through the command line. There are two options. The first one requires several inputs in succession:</p>
+<pre><code>node app record
+node app r</code></pre>
+<p>The second option is a one-liner, allowing you to create a record in one command:</p>
+<pre><code>node app autorecord &lt;titre&gt; &lt;type&gt; &lt;mots-clés&gt;
+node app a &lt;titre&gt; &lt;type&gt; &lt;mots-clés&gt;</code></pre>
+<ul>
+<li>The <code>&lt;title&gt;</code> is the title of the record, which is also the name of the generated file;</li>
+<li><code>&lt;type&gt;</code> is one of the types defined in the configuration;</li>
+<li><code>&lt;keywords&gt;</code> is a comma-separated list of keywords (<strong>without spaces</strong>).</li>
+</ul>
+<p>Only the title is mandatory.</p>
+<h2 data-number="4.3" id="creating-links-between-records"><span class="header-section-number">4.3</span> Creating links between records</h2>
+<p>Within a record, you can create a link to another record with the identifier of the target record in double brackets. The cosmographer recognises these links and uses them to model the structure of the graph.</p>
+<p>Example:</p>
+<pre><code>A link to [[20201209111625]] another record.</code></pre>
+<p>You can also qualify the link according to the typology you have specified under <code>link_types</code> in the configuration. The link type is then added as a prefix to the identifier, with a colon as a separator.</p>
+<p>Example:</p>
+<pre><code>Concept B derives from [[generic:20201209111625]] concept A.</code></pre>
+<h2 data-number="4.4" id="bibliography"><span class="header-section-number">4.4</span> Bibliography</h2>
+<p>You can integrate citation keys into your records. They can be recorded with the bibliographic reference software <a href="https://www.zotero.org/">Zotero</a> and then exported with a unique identifier into a JSON CSL file thanks to its extension <a href="https://retorque.re/zotero-better-bibtex/">Better BibTeX</a>. This identifier can then be wrote in your records (in the style of Pandoc software), between square brackets as below.</p>
+<pre><code>According to [@ledeuffTempsHumanitesDigitales2014, 22; @perretFonctionDocumentairePreuve2020].</code></pre>
+<p>You must target from the configuration the JSON CSL file exported with Zotero and the citation system.</p>
+<pre><code>bibliography: &#39;D:\documents\my_library.json&#39;
+csl: &#39;D:\documents\y_style.csl&#39;</code></pre>
+<p>The following commands are used to generate a cosmoscope using Cosma’s built-in Citeproc converter</p>
+<pre><code>node app modelize --citeproc
+node app modelize -c</code></pre>
+<p>Each citation key is then replaced by a short reference and an entry in the bibliography (placed at the bottom of the cards).</p>
+<pre><code>According to (Le Deuff 2014, p. 22; Perret 2020).
+
+Bibliographie
+-------------
+
+LE DEUFF, Olivier, 2014. Le temps de humanités digitales. FYP. ISBN 978-2-36405-155-5.
+
+PERRET, Arthur, 2020. Fonction documentaire de preuve et données numériques. Arthurperret.fr [en ligne]. 9 septembre 2020. [Consulté le 14 septembre 2020]. Disponible à l’adresse : https://www.arthurperret.fr/fonction-documentaire-preuve-donnees-numeriques.html</code></pre>
+<p>You can change the citation style (default: ISO690-author-date-fr) by replacing the <code>/template/citeproc/styles.csl</code> file. Download a new style from the <a href="https://www.zotero.org/styles">Zotero database</a>.</p>
+<p>You can change the translation of the keywords of the bibliographic record (default: French) by replacing the file <code>/template/citeproc/locales.xml</code>. Download a new translation from the <a href="https://github.com/citation-style-language/locales/tree/6b0cb4689127a69852f48608b6d1a879900f418b">CSL database</a>.</p>
+<p>All data for all cited references is stored in the cosmoscope as JSON data, into the <code>&lt;article id="citation-references"&gt;</code> record. You can find and download this data by clicking on the ‘Data’ link at the bottom of the left side menu.</p>
+<h2 data-number="4.5" id="exporting"><span class="header-section-number">4.5</span> Exporting</h2>
+<p>To create the <code>cosmoscope.html</code> file, use one of these commands:</p>
+<pre><code>node app modelize
+node app m</code></pre>
+<p>You can also obtain a published version of the cosmoscope with the following command. It allows you to name, introduce and sign your export from the “About” menu (accessible from the button at the bottom of the left-hand menu). It integrates the <code>title</code>, <code>author</code> and <code>description</code> metadata entered in the <a href="#optional-parameters">configuration (option <code>metas</code>)</a>. If it is filled in, the <code>title</code> metadata also replaces the logo at the top of the left-hand menu.</p>
+<pre><code>node app modelize --publish
+node app m -p</code></pre>
+<p>You can combine the different export options as follows:</p>
+<pre><code>node app modelize --publish --citeproc
+node app m -p -c</code></pre>
+<p>The <code>cosmoscope.html</code> file is exported to the directory defined by <code>export_target</code> in the configuration. If the file already exists in the same location, it is overwritten.</p>
+<p>If the <code>history</code> parameter is set to <code>true</code>, a time-stamped subdirectory (according to the export date, to the second) is also created in the <code>/history</code> directory with the following contents:</p>
+<ul>
+<li>a copy of the <code>cosmoscope.html</code> file ;</li>
+<li>a <code>data</code> directory containing the <code>links.json</code> and <code>nodes.json</code> files, respectively the list of links and nodes, with their respective metadata.</li>
+</ul>
+<p>This export facilitates data sharing and reuse in other visualisation software.</p>
+<h2 data-number="4.6" id="alerts-and-errors"><span class="header-section-number">4.6</span> Alerts and errors</h2>
+<p>During the process of parsing your Markdown files, system conflicts may occur (without interrupting the export process). There are two types of notifications:</p>
+<ul>
+<li>some data must be replaced (unrecognised type, link without target…), you will receive a **warning*;</li>
+<li>some information prevents the processing of a file (lack of a title, non-unique identifier…), then you receive an **error*.</li>
+</ul>
+<p>Alerts can be ignored. You must correct all errors to make the cosmoscope complete with your library.</p>
+<p>Alerts (in yellow) and errors (in red) are displayed in the console. If there are more than 5 notifications per type, only their number is announced. You can read them in an <code>error.log</code> file. If there are any notifications, they are saved in a subdirectory with a time stamp (according to the export date, to the second) in the <code>history</code> directory.</p>
+<h1 data-number="5" id="using-the-cosmoscope"><span class="header-section-number">5</span> Using the cosmoscope</h1>
+<p>The <code>cosmoscope.html</code> file can be opened with a web browser. It can also be shared online, e.g. by uploading on a server via FTP. You can link to a specific record within an online cosmoscope by adding its ID preceded by a <code>#</code> at the end of the URL. Example:</p>
+<p><code>https://site.tld/cosmoscope.html#20210427185546</code></p>
+<h2 data-number="5.1" id="interface-overview"><span class="header-section-number">5.1</span> Interface overview</h2>
+<p>The interface is organised in three columns:</p>
+<dl>
+<dt>Left side panel (Menu)</dt>
+<dd>Displays the main navigational features, including search, keywords, index and views, as well as controls for the force-based layout algorithm and other graphical parameters.
+</dd>
+<dt>Central area (Graph)</dt>
+<dd>Displays the graph and associated controls (zoom, focus).
+</dd>
+<dt>Right side panel (Record)</dt>
+<dd>Displays the records’ metadata and contents, as well as a list of outgoing and incoming links (the latter called backlinks).
+</dd>
+</dl>
+<p><a href="https://hyperotlet.huma-num.fr/cosma/img/cosma-interface-schema-en.png"><img src="https://hyperotlet.huma-num.fr/cosma/img/cosma-interface-schema-en.png" alt="Interface of Cosma (click on the image to extend it)" /></a></p>
+<h2 data-number="5.2" id="graph"><span class="header-section-number">5.2</span> Graph</h2>
+<p>The central area of the interface displays the graph. Each node corresponds to a record; the label corresponds to the title of the record. The links correspond to the links established between the records via their identifiers in double brackets.</p>
+<p>If <code>highlight_on_hover</code> is set to <code>true</code>, hovering over a node temporarily highlights it and its connections. Clicking on a node highlights it and its connections and opens the corresponding record.</p>
+<p>You can zoom into the graph with a mouse or touchpad, by double-clicking on the graph background or with the dedicated buttons at the bottom left. The Refocus button (shortcut: <code>R</code> key) resets the zoom.</p>
+<div class="tip">
+<p>The keyboard shortcut (on the key) <code>C</code> allows you to zoom in on the selected node.</p>
+</div>
+<p>The nodes’ positions are set by a force-based layout algorithm. A coloured bar under the Cosma logo indicates the status of the simulation. Click on it (shortcut: <code>Space</code> key) to restart the simulation.</p>
+<div class="tip">
+<p>Press the <code>Space</code> key repeatedly to progressively “unfold” a tangled graph.</p>
+</div>
+<p>The nodes can be moved around slightly by clicking and dragging, but stay subjected to the simulation, so they will snap back to their position.</p>
+<p>The controls at the bottom of the left side panel allow you to change the way the graph is displayed:</p>
+<ul>
+<li>show or hide links ;</li>
+<li>show or hide labels ;</li>
+<li>enable or disable highlight on hover;</li>
+<li>modify the forces simulated by the layout algorithm;</li>
+<li>modify the position of the graph in space;</li>
+<li>modify the size of labels.</li>
+</ul>
+<p>These changes will be overwritten each time the page is reloaded. To make them permanent, change the default values set under <code>graph_config</code> in the <code>config.yml</code> file.</p>
+<div class="tip">
+<p>Modify <code>force</code> and <code>distance_max</code> to adapt the display to your screen resolution and size. Modify <code>verticale</code> and <code>horizontale</code> to apply a centripetal force towards the corresponding axis, which in particular helps to bring isolated islands and nodes closer to the centre.</p>
+</div>
+<p>The cosmoscope can be displayed on all types of screens but is not optimised for mobile terminals: hovering does not work with touch-based interaction, and small screens limit the usefulness of the graph.</p>
+<h2 data-number="5.3" id="records"><span class="header-section-number">5.3</span> Records</h2>
+<p>Records can be opened by clicking on a node, an index entry, a search engine suggestion, or a link in the body of another record. Opening a record displays its contents in the right-hand side panel. This also updates the URL of the page with the record ID: this allows you to navigate between the records you have visited via the browser’s Previous / Next functions, but also you browser’s history, and to link directly to a record.</p>
+<p>Clicking on the “Close” button closes the pane and deselects the corresponding node in the graph.</p>
+<p>The links in the body of the records are clickable. You can open these links in a new tab by right-clicking them. The title of the link (displayed in a tooltip after 1-2 seconds of hovering) is that of the corresponding record.</p>
+<div class="tip">
+<p>You can replace the text in links with one or more characters from the configuration. The <code>link_symbol</code> option allows you to replace all identifiers in the links with a symbol or text such as <code>☞</code>.</p>
+</div>
+<p>At the bottom of the record is a list of the records to which it refers (outgoing links), as well as the records that points to it (incoming links or backlinks). Links and backlinks are contextualised: when hovering over them, a tooltip is displayed showing the paragraph in which the link is located in the corresponding record.</p>
+<h2 data-number="5.4" id="focus-mode"><span class="header-section-number">5.4</span> Focus mode</h2>
+<p>The Focus button (shortcut: <code>F</code> key) at the bottom left of the graph allows you to restrict the display to the selected record and its direct connections. Focus mode only works if you have selected a record.</p>
+<p>At the focus mode activation, you automatically zoom in on the selected node.</p>
+<p>The slider under the Focus button allows you to increase and decrease the focus’ range, i.e. the distance up to which connections are displayed. The maximum range is defined by the value of the <code>focus_max</code> parameter in the configuration.</p>
+<div class="tip">
+<p>The focus range slider can be controlled with the arrow keys. You can chain shortcuts: <code>F</code> to activate the focus, then the arrows to vary the focus range.</p>
+</div>
+<h2 data-number="5.5" id="searching"><span class="header-section-number">5.5</span> Searching</h2>
+<p>The text field at the top of the left side panel is a search engine. It suggests a list of records whose title is close to your input, using fuzzy search. Clicking on a suggestion selects the corresponding node in the graph and opens the corresponding record in the right side panel.</p>
+<div class="important">
+<p>The available suggestions are constrained by the record type filters and the focus mode: a record hidden by any of these features will not be accessible via the search engine.</p>
+</div>
+<h2 data-number="5.6" id="filtering-by-record-type"><span class="header-section-number">5.6</span> Filtering by record type</h2>
+<p>The list of record types at the top of the left-hand side panel allows you to filter the display. Clicking on a type will hide all corresponding records from the graph, index and search engine suggestions. Clicking on a type while holding down the <code>Alt</code> key hides all records of the other types.</p>
+<p>For a record type to appear, it must be declared under <code>record_types</code> in the configuration and be assigned to at least one record.</p>
+<h2 data-number="5.7" id="tags"><span class="header-section-number">5.7</span> Tags</h2>
+<p>The list of tags in the left-hand side panel allows you to highlight the records that use each tag. Selecting a tag highlights the label of the corresponding nodes in the graph and restricts the index to the corresponding records. You can activate several keywords simultaneously. To deactivate a keyword, click the corresponding button again.</p>
+<p>For a tag to appear, it must have been added in at least one record via the <code>tags</code> field.</p>
+<h2 data-number="5.8" id="index"><span class="header-section-number">5.8</span> Index</h2>
+<p>The alphabetical index of records in the left side panel allows you to access records without going through the graph. Clicking on a title selects the corresponding node in the graph and opens the corresponding record. The index can be sorted in ascending or descending alphabetical order. Filters, keywords and focus mode modify the display of the index.</p>
+<h2 data-number="5.9" id="views"><span class="header-section-number">5.9</span> Views</h2>
+<p>At any time, the current state of the graph (selected record, active filters, focus mode) can be saved for quick access. Think of browser bookmarks, but for visual configurations. Clicking on the Save View button copies a code to your clipboard. This code must then be added with a name under the <code>views</code> parameter in the configuration:</p>
+<pre><code>views:
+  An interesting view: eyJwb3MiOnsieCI6MCwieSI6MCwiem9vbSI6MX19</code></pre>
+<p>This adds an button with that name to the Views section in the left side panel. Clicking the button applies all settings that were active when the view was saved. Clicking the button again restores the normal view.</p>
+<h2 data-number="5.10" id="customizing-the-interface"><span class="header-section-number">5.10</span> Customizing the interface</h2>
+<p>The interface is built from a Nunjucks (<code>.njk</code>) template file and CSS stylesheets stored in the <code>/template</code> subdirectory.</p>
+<p>The interface can be customised by adding a <code>custom.css</code> file in the <code>/template</code> folder. You can create the file manually or run the following command:</p>
+<pre><code>node app css</code></pre>
+<p>The <code>custom_css</code> parameter in the configuration allows you to enable or disable the use of this file without having to delete it.</p>
+<p>The CSS declarations in <code>custom.css</code> replace those in <code>/template/styles.css</code> and <code>/template/print.css</code> (for print styles) and apply to the <code>/template/template.njk</code> file. Check these files directly or with your web browser’s inspector to find out which selectors to use for which declarations. For example, the cosmoscope stylesheets use CSS variables to define the colours and fonts used. You can redefine only these variables to quickly change all the interface elements to which they apply.</p>
+<p>In the example below, the custom.css file contains statements that modify the fonts used in the cosmoscope:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="in">:root</span> {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">--sans</span>: <span class="st">&quot;IBM Plex Serif&quot;</span><span class="op">,</span> <span class="dv">sans-serif</span><span class="op">;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">--serif</span>: <span class="st">&quot;IBM Plex Serif&quot;</span><span class="op">,</span> <span class="dv">serif</span><span class="op">;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">--mono</span>: <span class="st">&quot;IBM Plex Mono&quot;</span><span class="op">,</span> <span class="dv">monospace</span><span class="op">;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">--condensed</span>: <span class="st">&#39;IBM Plex Sans Condensed&#39;</span><span class="op">,</span> <span class="dv">sans-serif</span><span class="op">;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h1 data-number="6" id="development"><span class="header-section-number">6</span> Development</h1>
+<p>This part of the documentation is aimed at experienced JavaScript developers. It presents the tree structure and the concepts on which the two parts forming Cosma, the <strong>cosmographer</strong> and the <strong>cosmoscope</strong>, are based.</p>
+<p>We strongly recommend that you read the rest of the documentation in order to fully understand the uses of the source code presented below.</p>
+<h2 data-number="6.1" id="terminology"><span class="header-section-number">6.1</span> Terminology</h2>
+<p>The Markdown files interpreted by Cosma are referred to here as “cards” or “records” rather than “notes”, in reference to the tradition of the index card in scholarly practice and documentation. In French, we use the word “fiche”, which has no direct translation into English (although “index card” is often used). However, it is conceptually very close to the word “record” from <a href="https://en.wikipedia.org/wiki/Records_management">records management</a>. Cosma’s source code therefore uses the word record to designate a card.</p>
+<h2 data-number="6.2" id="code-architecture-overview"><span class="header-section-number">6.2</span> Code architecture overview</h2>
+<p>Cosma is mainly implemented in JavaScript. The software is based on two distinct systems, the cosmographer and the cosmoscope.</p>
+<p>The <strong>cosmographer</strong> is based on the Node.js environment. A series of scripts are used to :</p>
+<ul>
+<li>check and update the configuration file ;</li>
+<li>generate Markdown files and their headers;</li>
+<li>read a directory to extract Markdown files and analyse their content (Markdown, YAML metadata and wiki-style links) to generate :
+<ul>
+<li>JSON files ;</li>
+<li>the cosmoscope (its data and CSS variables).</li>
+</ul></li>
+</ul>
+<p>The <strong>cosmoscope</strong> is an HTML file run on web browsers, created from a <a href="https://mozilla.github.io/nunjucks/">Nunjucks</a> template (<code>template.njk</code>). It incorporates :</p>
+<ul>
+<li>web metadata and styles from the configuration ;</li>
+<li>JavaScript scripts and libraries;</li>
+<li>indexes (keywords, record title, views);</li>
+<li>records.</li>
+</ul>
+<h2 data-number="6.3" id="file-tree"><span class="header-section-number">6.3</span> File tree</h2>
+<p>Below you will find a complete description of the software’s tree structure, allowing you to distinguish between cosmographer-related files and cosmoscope-related files.</p>
+<pre><code>.
+├── docs/                   | documentation directory
+│   ├── api/                | API index directory
+│   │   └── [x].md          | introduction to API index of [x]
+│   └── api-config-[x].json | config. of the API index of [x]
+├── functions/              | cosmographer functions
+│   ├── autorecord.js       | command-line one-liner for creating Markdown files
+│   ├── history.js          | creation of export history directories
+│   ├── links.js            | analysis of wiki-style links and their attributes
+│   ├── log.js              | display alerts and create logs
+│   ├── modelize.js         | Markdown file analysis and data model creation
+│   ├── record.js           | command-line form for creating Markdown files
+│   ├── template.js         | integration of data, style and body of cosmoscope
+│   └── verifconfig.js      | configuration validation and modification
+├── template/               | 
+│   ├── libs/               | JavaScript libraries
+│   ├── scripts/            | cosmoscope functions
+│   │   ├── bibliography.js | download bibliographic data
+│   │   ├── counter.js      | activate entity counters
+│   │   ├── filter.js       | apply filters
+│   │   ├── focus.js        | apply focus
+│   │   ├── graph.js        | graph displaying and interactions
+│   │   ├── history.js      | history of navigation between sheets
+│   │   ├── index.js        | control of the left menu panes and buttons
+│   │   ├── keyboard.js     | assignment of keyboard shortcuts
+│   │   ├── main.js         | global variables and logo animation
+│   │   ├── record.js       | opening/closing the right side panel
+│   │   ├── search.js       | search engine settings
+│   │   ├── tag.js          | apply tags
+│   │   ├── view.js         | save and apply a view
+│   │   └── zoom.js         | set the movement (lateral, zoom) within the graph
+│   ├── cosmalogo.svg       | software logo
+│   ├── template.njk        | cosmoscope structure
+│   ├── print.css           | cosmoscope printing styles
+│   └── styles.css          | cosmoscope styles
+├── app.js                  | addressing of the terminal commands
+└── package.json            | list of Node.js dependencies</code></pre>
+<h2 data-number="6.4" id="api-index"><span class="header-section-number">6.4</span> API index</h2>
+<p>Click on the links below to view the list of functions used by the cosmograph and cosmoscope:</p>
+<ul>
+<li><a href="./api/cosmographe/index.html">Consulter l’API du cosmographe</a></li>
+<li><a href="./api/cosmoscope/index.html">Consulter l’API du cosmoscope</a></li>
+</ul>
+<h2 data-number="6.5" id="how-the-cosmograph-works"><span class="header-section-number">6.5</span> How the cosmograph works</h2>
+<p>There are three possible uses of the cosmographer via the command line. These different requests are received by <code>app.js</code> which returns them:</p>
+<ul>
+<li>read and modelize (<code>modelize.js</code>), then integrate (<code>template.js</code>) the data into a cosmoscope ;</li>
+<li>generate formatted Markdown files (<code>record.js</code> and <code>autorecord.js</code>);</li>
+<li>modify the configuration (<code>verifconfig.js</code>).</li>
+</ul>
+<p>The configuration (the contents of the <code>config.yml</code> file turned into a JavaScript object) is exported globally (from <code>verifconfig.js</code>). It can be called as demonstrated below:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> config <span class="op">=</span> <span class="pp">require</span>(<span class="st">&#39;./verifconfig&#39;</span>)<span class="op">.</span><span class="at">config</span><span class="op">;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> folderToExport <span class="op">=</span> config<span class="op">.</span><span class="at">export_target</span><span class="op">;</span></span></code></pre></div>
+<h2 data-number="6.6" id="reading-files"><span class="header-section-number">6.6</span> Reading files</h2>
+<p>From the <code>modelize.js</code> file, we extract from each Markdown file the metadata (the YAML header) and the content (following the YAML header) (<code>modelize.js</code> file).</p>
+<dl>
+<dt><a href="./api/cosmograph/global.html#catchLinksFromContent"><code>catchLinksFromContent()</code></a></dt>
+<dd>The content is first read by a series of regular expressions to extract the paragraphs, and for each paragraph the <em>wikilinks</em> contained. The paragraph becomes the context of its links and is translated into HTML.
+</dd>
+<dt><a href="./api/cosmograph/global.html#convertLinks"><code>convertLinks()</code></a></dt>
+<dd>The contents of the file are then transformed to turn the <em>wikilinks</em> into Markdown links
+</dd>
+<dt><a href="./api/cosmograph/global.html#cosmoscope"><code>cosmoscope()</code></a></dt>
+<dd>The content of the file is fully translated from Markdown to HTML.
+</dd>
+</dl>
+<p>The first and third functions use the markdown-it library. It can be replaced.</p>
+<h2 data-number="6.7" id="generating-the-cosmoscope"><span class="header-section-number">6.7</span> Generating the cosmoscope</h2>
+<p>The cosmoscope is generated using the function <a href="./api/cosmograph/global.html#cosmoscope"><code>cosmoscope()</code></a>.</p>
+<p>This instantiates the Nunjucks template <code>/template/template.njk</code> and injects the configuration data, records, graph entities and styles (serialized by the <a href="./api/cosmograph/global.html#colors"><code>colors()</code></a> function).</p>
+<p>Nunjucks also imports CSS stylesheets and JavaScript libraries in the <code>head</code>, as well as JavaScript functions in <code>script</code> tags at the end of the document. The record and configuration data are integrated via loops and other Nunjucks control structures.</p>
+<p>The whole thing is saved in a <code>cosmoscope.html</code> file and then <a href="#exporting">exported</a>.</p>
+<h2 data-number="6.8" id="displaying-the-graph"><span class="header-section-number">6.8</span> Displaying the graph</h2>
+<p>Generating and animating the graph relies on the [D3.js] library (https://d3js.org/). It receives its data from the global object <code>graph</code>. This object is composed of two arrays.</p>
+<dl>
+<dt><code>graph.nodes</code></dt>
+<dd>This array contains all the data relating to the nodes, including a series of booleans to indicate their display status (see the serialization by the <a href="./api/cosmograph/global.html#registerNodes"><code>registerNodes()</code></a> function). This indicated state is updated each time the display changes.
+</dd>
+<dt><code>graph.links</code></dt>
+<dd>This array contains all data relating to links (see serialization by the <a href="./api/cosmograph/global.html#registerLinks"><code>registerLinks()</code></a> function).
+</dd>
+</dl>
+<h2 data-number="6.9" id="displaying-the-graph-with-other-libraries"><span class="header-section-number">6.9</span> Displaying the graph with other libraries</h2>
+<p>The arrays presented in the previous section can be injected into other graph generation JavaScript libraries.</p>
+<p><strong>Example 1:</strong> Vis.js Network (<a href="https://github.com/visjs/vis-network">repository</a>, <a href="https://github.com/visjs/vis-network#example">code sample</a>).</p>
+<p>In <code>/functions/modelize.js</code>:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">registerLinks</span>(file) {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ...</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> link <span class="kw">of</span> file<span class="op">.</span><span class="at">links</span>) {</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    entities<span class="op">.</span><span class="at">links</span><span class="op">.</span><span class="fu">push</span>({</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>      <span class="co">// ...</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">from</span><span class="op">:</span> <span class="bu">Number</span>(link<span class="op">.</span><span class="at">source</span><span class="op">.</span><span class="at">id</span>)<span class="op">,</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">to</span><span class="op">:</span> <span class="bu">Number</span>(link<span class="op">.</span><span class="at">target</span><span class="op">.</span><span class="at">id</span>)<span class="op">,</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>      <span class="co">// ...</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>In <code>/template/scripts/graph.js</code>:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> network <span class="op">=</span> <span class="kw">new</span> vis<span class="op">.</span><span class="fu">Network</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">&#39;network&#39;</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">,</span> data <span class="op">=</span> {</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">nodes</span><span class="op">:</span> <span class="kw">new</span> vis<span class="op">.</span><span class="fu">DataSet</span>(graph<span class="op">.</span><span class="at">nodes</span>)<span class="op">,</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">edges</span><span class="op">:</span> <span class="kw">new</span> vis<span class="op">.</span><span class="fu">DataSet</span>(graph<span class="op">.</span><span class="at">links</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">,</span> {  } <span class="co">// options</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div>
+<p><strong>Example 2:</strong> Sigma.js (<a href="https://github.com/jacomyal/sigma.js/">repository</a>, <a href="https://github.com/jacomyal/sigma.js/blob/master/examples/basic.html#L70">code sample</a>).</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> network <span class="op">=</span> <span class="kw">new</span> <span class="fu">sigma</span>({</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">graph</span><span class="op">:</span> {</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">nodes</span><span class="op">:</span> graph<span class="op">.</span><span class="at">nodes</span><span class="op">,</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">edges</span><span class="op">:</span> graph<span class="op">.</span><span class="at">links</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">container</span><span class="op">:</span> <span class="st">&#39;network&#39;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h2 data-number="6.10" id="graph-parameters"><span class="header-section-number">6.10</span> Graph parameters</h2>
+<p>The graph parameters are extracted from the <code>graph_config</code> part of the <code>config.yml</code> configuration file. It is injected into the Nunjucks <code>/template/template.njk</code> template via the <a href="./api/cosmograph/global.html#cosmoscope"><code>cosmoscope()</code></a> function. In the template, it is both used as the default value for forms in the “Graph settings” menu and implemented as a global JavaScript object <code>graphProperties</code>.</p>
+<p>This same global object is updated by the various forms in the “Graph settings” menu. The forms then call the <a href="./api/cosmograph/global.html#updateForces"><code>updateForces()</code></a> function to restart the evaluation of these parameters by D3.js.</p>
+<h2 data-number="6.11" id="keyboard-shortcuts"><span class="header-section-number">6.11</span> Keyboard shortcuts</h2>
+<p>Keyboard shortcuts for the cosmoscope are implemented in the <code>/template/scripts/keyboard.js</code> file. The global <code>pressedKeys</code> object contains the list of keys that are monitored for behavioural changes. Other keys (letters) are listed to call certain functions and are not added to the global <code>pressedKeys</code> object.</p>
+<p>The global boolean <code>keyboardShortcutsAreWorking</code> defines whether shortcuts can be used or not. When entering text in a field, the letters must not be used for anything other than writing.</p>
+<h1 data-number="7" id="credits"><span class="header-section-number">7</span> Credits</h1>
+<h2 data-number="7.1" id="team"><span class="header-section-number">7.1</span> Team</h2>
+<ul>
+<li><a href="https://www.arthurperret.fr/">Arthur Perret</a> (principal investigator)</li>
+<li><a href="https://myllaume.fr/">Guillaume Brioudes</a> (developer)</li>
+<li><a href="https://mica.u-bordeaux-montaigne.fr/borel-clement/">Clément Borel</a> (researcher)</li>
+<li><a href="http://www.guidedesegares.info/">Olivier Le Deuff</a> (researcher)</li>
+</ul>
+<h2 data-number="7.2" id="dependencies"><span class="header-section-number">7.2</span> Dependencies</h2>
+<p>To improve the maintainability and readability of the source code, the development team used the following libraries:</p>
+<ul>
+<li><a href="https://d3js.org/">D3.js</a> v4.13.0 (BSD 3-Clause) : graph visualization.</li>
+<li><a href="https://mozilla.github.io/nunjucks/">Nunjucks</a> v3.2.3 (BSD 2-Clause) : templating.</li>
+<li><a href="https://github.com/nodeca/js-yaml">Js-yaml</a> v3.14.0 (MIT License) : parsing the configuration file.</li>
+<li><a href="https://github.com/dworthen/js-yaml-front-matter">Js-yaml-front-matter</a> v4.1.0 (MIT License) : parsing record metadata.</li>
+<li><a href="https://github.com/markdown-it/markdown-it">Markdown-it</a> v12.0.2 (MIT License) : Markdown to HTML conversion.</li>
+<li><a href="https://www.npmjs.com/package/markdown-it-attrs">Markdown-it-attrs</a> v4.0.0 (MIT License) : processing hyperlinks within records.</li>
+<li><a href="https://github.com/Juris-M/citeproc-js">Citeproc-js</a> v2.4.59 (CPAL et AGPL) : Conversion of citation keys</li>
+<li><a href="https://github.com/wilsonzlin/minify-html">Minify-html</a> v0.4.3 (MIT License) : reducing the weight of the cosmoscope file.</li>
+<li><a href="https://fusejs.io/">Fuse.js</a> v6.4.6 (Apache License 2.0) : search engine.</li>
+<li><a href="https://momentjs.com/">Moment</a> v2.29.1 (MIT License) : time stamping.</li>
+</ul>
+<h2 data-number="7.3" id="project-history"><span class="header-section-number">7.3</span> Project history</h2>
+<dl>
+<dt>August 2020</dt>
+<dd>The “Lexicographer”, a prototype based on the <a href="https://github.com/hyperotlet/otletosphere">Otletosphere</a>.
+</dd>
+<dt>Décembre 2020</dt>
+<dd>Cosma has a name, a logo and specifications for development.
+</dd>
+<dt>Avril 2021</dt>
+<dd>Cosma v1.0 is released <a href="https://github.com/graphlab-fr/cosma/releases/tag/v1.0.0">on GitHub</a> and archived <a href="https://zenodo.org/record/4744309">on Zenodo</a>.
+</dd>
+</dl>
+</article>
+</main>
+
+
+
+</body>
+
+</html>

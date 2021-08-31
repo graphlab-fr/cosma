@@ -1,0 +1,219 @@
+/* VARIABLES */
+
+:root {
+  --sans: "Helvetica Neue", Helvetica, sans-serif;
+  --serif: Georgia, serif;
+  --mono: Menlo, Monaco, Consolas, "Courier New", monospace;
+  --code-background-color: #f5f5f5;
+  --code-border-color: #ccc;
+  font-size: 100%;
+}
+
+/* LAYOUT */
+
+* {  box-sizing: border-box; }
+html, body {
+  height: 100%;
+  max-height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow: hidden;
+  display: flex;
+  flex-flow: row nowrap;
+}
+nav, main { overflow: auto; }
+nav {
+  width: 25%;
+  overflow: auto;
+  margin: 2rem 3rem 0 2rem;
+}
+nav ul {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav ul ul { padding-left: 1rem; }
+nav > ul > li > a { font-weight: bold; }
+nav a {
+  display: block;
+  padding: 0 0 0.2rem 0rem;
+  margin: 0;
+}
+.sommaire { display: none; }
+main {
+  position: relative;
+  padding: 1rem 1rem 0 1rem;
+  width: 100%;
+}
+article { max-width: 700px; }
+.header-section-number::after,
+.toc-section-number::after { content: '.'; }
+@media (max-width: 900px) {
+  nav { display: none; }
+  .sommaire { display: block }
+  main {
+    margin: 0 auto;
+    width: 99vw;
+  }
+  article { margin: 0 auto; }
+}
+
+/* HEADINGS */
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--sans);
+  line-height: 1.2;
+}
+h1 {
+  font-size: 1.3em;
+  margin: 3.5rem 0 0.5rem 0;
+}
+h2 {
+  font-size: 1.2em;
+  margin: 3rem 0 0.3rem 0;
+}
+h3 {
+  font-size: 1em;
+  margin: 2.5rem 0 0 0;
+}
+h1.title {
+  font-size: 2em;
+  text-align: center;
+  margin: 1rem 0 2rem 0;
+}
+
+/* PARAGRAPHS */
+
+p {
+	margin: 1.5 rem 0;
+}
+
+/* TABLES */
+
+table {
+	border-collapse: collapse;
+	margin: 2rem 0;
+	text-align: left;
+	width: 100%;
+}
+tr { border-bottom: 1px solid gray; }
+th, td { padding: 0.5rem; }
+
+/* LISTS */
+
+ul, ol { padding-left: 1.1rem; }
+dt {
+  font-family: var(--sans);
+  font-weight: bold;
+  float: left;
+  padding: 0 0.5rem 0 0;
+}
+dd {
+  padding: 0;
+  margin: 1rem 0 1rem 2rem;
+  line-height: 1.7;
+}
+
+/* LINKS */
+
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+a:focus,
+a:hover {
+  color: #23527c;
+  text-decoration: underline;
+}
+:target { animation: highlight 3s ease; }
+@keyframes highlight {
+  0% { background-color: #ffa; }
+  100% { background-color: #ffffff; }
+}
+
+/* MEDIA */
+
+img { max-width: 100%; }
+figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: var(--accent-color) 1px solid;
+  padding: 15px 10px;
+}
+figcaption {
+  font-size: 0.8rem;
+  font-family: var(--mono);
+  padding: 1rem 0 0 0;
+}
+
+/* MISC */
+
+.astuce, .tip, .important {
+  position: relative;
+  background: rgb(225, 225, 225);
+  padding: 30px 10px 3px 10px;
+  border-radius: 5px;
+  margin: 1.5rem 0;
+}
+.astuce p, .tip p {
+	font-size: 0.9rem;
+}
+.astuce::before,
+.tip::before,
+.important::before {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 12px;
+  font-family: var(--mono);
+}
+.astuce, .tip { background: rgb(225, 225, 225); }
+.important { background: rgb(221,153,153); }
+.astuce::before { content: 'astuce'; }
+.tip::before { content: 'tip'; }
+.important::before { content: 'important'; }
+
+/* CODE */
+
+code, pre { font-family: var(--mono); }
+code {
+  display: inline-block;
+  font-size: 90%;
+}
+p code,
+ul code,
+ol code,
+dl code,
+table code {
+  background-color: var(--code-background-color);
+  border: 1px solid var(--code-border-color);
+  border-radius: 4px;
+  padding: 0 0.2em;
+}
+pre {
+  background-color: var(--code-background-color);
+  border: 1px solid var(--code-border-color);
+  border-radius: 4px;
+  padding-left: 0.5em;
+  margin: 1em 0;
+  overflow-x: auto;
+}
+/* Pandoc highlight.css */
+pre>code.sourceCode{white-space:pre;position:relative;}pre>code.sourceCode>span{display:inline-block;line-height:1.25;}pre>code.sourceCode>span:empty{height:1.2em;}code.sourceCode>span{color:inherit;text-decoration:inherit;}div.sourceCode{margin:1em0;}@mediascreen{div.sourceCode{overflow:auto;}}@mediaprint{pre>code.sourceCode{white-space:pre-wrap;}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em;}}pre.numberSourcecode{counter-reset:source-line0;}pre.numberSourcecode>span{position:relative;left:-4em;counter-increment:source-line;}pre.numberSourcecode>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:04px;width:4em;color:#aaaaaa;}pre.numberSource{margin-left:3em;border-left:1pxsolid#aaaaaa;padding-left:4px;}div.sourceCode{}@mediascreen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline;}}codespan.al{color:#ff0000;font-weight:bold;}/*Alert*/codespan.an{color:#60a0b0;font-weight:bold;font-style:italic;}/*Annotation*/codespan.at{color:#7d9029;}/*Attribute*/codespan.bn{color:#40a070;}/*BaseN*/codespan.bu{}/*BuiltIn*/codespan.cf{color:#007020;font-weight:bold;}/*ControlFlow*/codespan.ch{color:#4070a0;}/*Char*/codespan.cn{color:#880000;}/*Constant*/codespan.co{color:#60a0b0;font-style:italic;}/*Comment*/codespan.cv{color:#60a0b0;font-weight:bold;font-style:italic;}/*CommentVar*/codespan.do{color:#ba2121;font-style:italic;}/*Documentation*/codespan.dt{color:#902000;}/*DataType*/codespan.dv{color:#40a070;}/*DecVal*/codespan.er{color:#ff0000;font-weight:bold;}/*Error*/codespan.ex{}/*Extension*/codespan.fl{color:#40a070;}/*Float*/codespan.fu{color:#06287e;}/*Function*/codespan.im{}/*Import*/codespan.in{color:#60a0b0;font-weight:bold;font-style:italic;}/*Information*/codespan.kw{color:#007020;font-weight:bold;}/*Keyword*/codespan.op{color:#666666;}/*Operator*/codespan.ot{color:#007020;}/*Other*/codespan.pp{color:#bc7a00;}/*Preprocessor*/codespan.sc{color:#4070a0;}/*SpecialChar*/codespan.ss{color:#bb6688;}/*SpecialString*/codespan.st{color:#4070a0;}/*String*/codespan.va{color:#19177c;}/*Variable*/codespan.vs{color:#4070a0;}/*VerbatimString*/codespan.wa{color:#60a0b0;font-weight:bold;font-style:italic;}/*Warning*/
+
+@media print {
+
+  body {
+    overflow: auto;
+    display: unset;
+    flex-flow: unset;
+  }
+}
