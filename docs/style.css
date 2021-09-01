@@ -150,24 +150,25 @@ figure {
 }
 figcaption {
   font-size: 0.8rem;
-  font-family: var(--mono);
+  font-style: italic;
   padding: 1rem 0 0 0;
 }
 
 /* MISC */
 
-.astuce, .tip, .important {
+.astuce, .tip, .note, .important {
   position: relative;
   background: rgb(225, 225, 225);
   padding: 30px 10px 3px 10px;
   border-radius: 5px;
   margin: 1.5rem 0;
 }
-.astuce p, .tip p {
+.astuce p, .tip p, .note p {
 	font-size: 0.9rem;
 }
 .astuce::before,
 .tip::before,
+.note::before,
 .important::before {
   position: absolute;
   top: 5px;
@@ -175,10 +176,11 @@ figcaption {
   font-size: 12px;
   font-family: var(--mono);
 }
-.astuce, .tip { background: rgb(225, 225, 225); }
+.astuce, .tip, .note { background: rgb(225, 225, 225); }
 .important { background: rgb(221,153,153); }
 .astuce::before { content: 'astuce'; }
 .tip::before { content: 'tip'; }
+.note::before { content: 'note'; }
 .important::before { content: 'important'; }
 
 /* CODE */
