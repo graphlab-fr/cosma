@@ -7,6 +7,9 @@ date: 2021-08-31
 lang: en-GB
 ---
 
+🚧 Under construction 🚧
+
+<!-- 
 Cosma is a document graph visualisation software. It allows you to represent interrelated notes as an interactive network in a web interface. Cosma is designed to work with Markdown text files and is suitable for both small collections (about a hundred documents) and sprawling knowledge bases (up to several thousand documents).
 
 Cosma was created through the [HyperOtlet](https://hyperotlet.hypotheses.org/) research programme, funded by the National Agency of Research (ANR, France).
@@ -840,3 +843,4 @@ Décembre 2020
 
 Avril 2021
 : Cosma v1.0 is released [on GitHub](https://github.com/graphlab-fr/cosma/releases/tag/v1.0.0) and archived [on Zenodo](https://zenodo.org/record/4744309).
+ -->
