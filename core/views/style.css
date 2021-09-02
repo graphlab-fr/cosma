@@ -200,14 +200,6 @@ form div.select-list input[type="radio"]:checked {
 		margin-top: 7px;
 }
 
-form label[data-state="not-saved"]:after {
-/*     content: '⌛'; */
-}
-
-form label[data-state="saved"]:after {
-/*     content: '✅'; */
-}
-
 form label[data-state="save-error"]:after {
     content: '❌';
 }
