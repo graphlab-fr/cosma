@@ -100,11 +100,9 @@ function send () {
 
         switch (submitBtn.dataset.action) {
             case 'update':
-                submitBtn.disabled = true;
-
                 window.api.send("askRenameHistoryModal", id);
 
-                window.api.receive("confirmRenameHistory", (response) => {
+                window.api.receiveOnce("confirmRenameHistory", (response) => {
                     promptResponse(response);
 
                     if (response.isOk === true) {

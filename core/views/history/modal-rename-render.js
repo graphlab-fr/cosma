@@ -1,6 +1,13 @@
 const form = document.getElementById('form-rename-history');
 let isReady = false;
 
+(function () {
+
+    const firstInput = form.querySelector('input');
+    firstInput.focus();
+
+})();
+
 /**
  * Form submition & feedback : send data and after display the response
  */
