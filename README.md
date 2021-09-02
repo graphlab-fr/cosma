@@ -6,7 +6,13 @@ Cosma est un logiciel de visualisation de graphe documentaire. Il permet de repr
 
 ## Installation
 
-Cosma est disponible pour macOS et Windows. Visitez la page Releases pour obtenir la dernière version du logiciel. Celui-ci se présente sous la forme d'un simple exécutable (`.app` pour macOS, `.exe` pour Windows). Téléchargez la version correspondant à votre plateforme et placez-la dans le répertoire approprié (`~/Applications` sur macOS, `C:\Program Files` sur Windows).
+Cosma est disponible pour macOS et Windows. [Visitez la page Releases pour obtenir la dernière version du logiciel.](https://github.com/graphlab-fr/cosma/releases/latest)
+
+**macOS :** téléchargez puis décompressez le fichier `Cosma.app.zip` et placez le le fichier `Cosma.app` dans `~/Applications`.
+
+**Windows :** téléchargez puis décompressez le fichier `Cosma-win32-x64`, renommez le dossier « Cosma » et placez-le dans `C:\Programmes` ou `C:\Programmes (86)`.
+
+**Pour toutes les plateformes :** vous pouvez également télécharger et décompresser le fichier `cosma-fiches-aide.zip` pour obtenir un répertoire `cosma-fiches-aide` contenant une documentation utilisateur sous forme de fiches. Ceci vous permet de tester le logiciel : dans Cosma, indiquez le chemin de ce répertoire dans Préférences › Répertoire de fiches.
 
 ## Développement
 
