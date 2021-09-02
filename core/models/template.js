@@ -68,9 +68,7 @@ module.exports = class Template {
 
             if (link.context === null) { return link; }
 
-            link.context = Template.convertLinks(file, link.context, linkSymbol)
-            // context = context.replaceAll('[[' + link.target.id + ']]', `<mark>${linkSymbol}</mark>`);
-            link.context = mdIt.render(link.context);
+            link.context = link.context.replaceAll('[[' + link.target.id + ']]', `<mark>${linkSymbol}</mark>`);
 
             return link;
         });
