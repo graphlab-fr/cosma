@@ -23,7 +23,24 @@ const History = require('../../models/history')
     , Graph = require('../../models/graph')
     , Template = require('../../models/template');
 
-module.exports = function (graphParams = []) {
+module.exports = function (graphParams = [], runLast = false) {
+
+    window.once('ready-to-show', () => {
+        window.show();
+    })
+
+    window.once('closed', () => {
+        app.quit();
+    });
+
+    const lastHistoryEntry = History.getLast();
+
+    if (runLast && lastHistoryEntry) {
+        console.log(lastHistoryEntry.pathToStore);
+        windowPath = path.join(lastHistoryEntry.pathToStore, 'cosmoscope.html');
+        window.loadFile(windowPath);
+        return;
+    }
 
     graphParams.push('minify');
     
@@ -37,14 +54,6 @@ module.exports = function (graphParams = []) {
     history.store('report.json', JSON.stringify(graph.reportToSentences()));
 
     window.loadFile(windowPath);
-    
-    window.once('ready-to-show', () => {
-        window.show();
-    })
-
-    window.once('closed', () => {
-        app.quit();
-    });
 
 }
 
