@@ -40,6 +40,31 @@ module.exports = class Config {
     static linkStrokes = ['simple', 'double', 'dotted', 'dash'];
 
     /**
+     * List of path options from config
+     * Apply to config form
+     * @static
+     */
+
+    static pathOptions = ['files_origin', 'bibliography', 'csl', 'bibliography_locales', 'custom_css_path'];
+
+    /**
+     * Remove wrong paths from a config options object
+     * @param {object} opts - Config options object.
+     * @return {boolean} - Config options object without wrong paths.
+     * @static
+     */
+
+    static validPathOptions (opts) {
+        for (const option of Config.pathOptions) {
+            if (opts[option] !== undefined && fs.existsSync(opts[option]) === false) {
+                delete opts[option];
+            }
+        }
+
+        return opts;
+    }
+
+    /**
      * Create a user config.
      * @param {object} opts - Options to change from the last
      * (or default config if config file does not exist).
@@ -91,8 +116,11 @@ module.exports = class Config {
         }
 
         try {
-            const configFileContent = fs.readFileSync(this.path, 'utf8');
-            this.opts = JSON.parse(configFileContent);
+            let configFileContent = fs.readFileSync(this.path, 'utf8');
+            configFileContent = JSON.parse(configFileContent);
+            configFileContent = Config.validPathOptions(configFileContent);
+
+            this.opts = configFileContent;
 
             return true;
         } catch (error) {

@@ -83,7 +83,7 @@ module.exports = class Template {
             return file;
         });
 
-        if (this.config.custom_css === true) {
+        if (this.config.custom_css === true && this.config['custom_css_path'] !== undefined) {
             this.config.custom_css = fs.readFileSync(this.config['custom_css_path'], 'utf-8');
         }
 
