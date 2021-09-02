@@ -265,11 +265,7 @@
             </header>
 
             <main class="record-content">
-                {% if linkSymbol %}
-                    {{ record.content | replace(r/(\[\[\s*).*?(\]\])/g, linkSymbol) | safe }}
-                {% else %}
-                    {{ record.content | safe }}
-                {% endif %}
+                {{ record.content | safe }}
 
                 {% if record.bibliography %}
                 <section class="bibliography">
@@ -293,11 +289,7 @@
                             <span class="record-type-point n_{{ link.target.type }}">⬤</span>
                             <span>{{ link.target.title }}</span>
                             <div class="record-links-context">
-                                {% if linkSymbol %}
-                                    {{ link.context | replace(r/(\[\[\s*).*?(\]\])/g, linkSymbol) | safe }}
-                                {% else %}
-                                    {{ link.context | safe }}
-                                {% endif %}
+                                {{ link.context | safe }}
                             </div>
                         </li>
                         {% endfor %}
@@ -317,11 +309,7 @@
                             <span class="record-type-point n_{{ backlink.source.type }}">⬤</span>
                             <span>{{ backlink.source.title }}</span>
                             <div class="record-links-context">
-                                {% if linkSymbol %}
-                                    {{ backlink.context | replace(r/(\[\[\s*).*?(\]\])/g, linkSymbol) | safe }}
-                                {% else %}
-                                    {{ backlink.context | safe }}
-                                {% endif %}
+                                {{ backlink.context | safe }}
                             </div>
                         </li>
                         {% endfor %}

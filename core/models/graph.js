@@ -410,11 +410,7 @@ module.exports = class Graph {
             }
 
             link.context = file.contexts
-                .filter((context) => {
-                    if (context.ids.find(id => id === link.target.id) !== undefined) {
-                        return true; }
-                })
-                .map(context => context.paraph);
+                .find(context => context.ids.includes(link.target.id))?.paraph || null;
 
             link.source = {
                 id: file.metas.id,

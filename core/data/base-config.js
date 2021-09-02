@@ -7,6 +7,7 @@
 module.exports = {
     files_origin: '',
     focus_max: 2,
+    link_symbol: '',
     record_types: { undefined: '#858585' },
     link_types: { undefined: { stroke: 'simple', color: '#cccccc' } },
     graph_background_color: '#ffffff',

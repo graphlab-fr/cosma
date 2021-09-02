@@ -27,8 +27,19 @@ const Config = require('./config'),
 
 module.exports = class Template {
 
-    static convertLinks(file) {
-        return file.content.replace(/(\[\[\s*).*?(\]\])/g, function(extract) { // get '[[***]]' strings
+    /**
+     * Convert valid wikilinks text to Markdown hyperlinks
+     * The content of the Markdown hyperlink is the link id or the linkSymbol if it is defined
+     * The link is valid if it can be found from one file
+     * For each link we get the type and the name from the targeted file
+     * @param {object} file - File object from Graph class.
+     * @param {string} linkSymbol - String from config option 'link_symbol'.
+     * @return {object} - File with an updated content
+     * @static
+     */
+
+    static convertLinks(file, content, linkSymbol) {
+        return content.replace(/(\[\[\s*).*?(\]\])/g, function(extract) { // get '[[***]]' strings
             // extract link id, without '[[' & ']]' caracters
             let link = extract.slice(0, -2).slice(2);
     
@@ -43,20 +54,23 @@ module.exports = class Template {
             if (associatedMetas === undefined) { return extract; }
     
             link = associatedMetas;
+
+            if (linkSymbol) { extract = linkSymbol; }
     
             // return '[[***]]' string into a Markdown link with openRecord function & class
             return `[${extract}](#${link.target.id}){title="${link.target.title}" onclick=openRecord(${link.target.id}) .record-link}`;
         });
     }
 
-    static markLinkContext(fileLinks) {
+    static markLinkContext(file, fileLinks, linkSymbol) {
         return fileLinks.map((link) => {
-            link.context = link.context.map((context) => {
-                context = context.replaceAll('[[' + link.target.id + ']]', '<mark>[[' + link.target.id + ']]</mark>');
-                // context = mdIt.render(context);
+            linkSymbol = linkSymbol || `[[${link.target.id}]]`;
 
-                return context;
-            });
+            if (link.context === null) { return link; }
+
+            link.context = Template.convertLinks(file, link.context, linkSymbol)
+            // context = context.replaceAll('[[' + link.target.id + ']]', `<mark>${linkSymbol}</mark>`);
+            link.context = mdIt.render(link.context);
 
             return link;
         });
@@ -69,13 +83,15 @@ module.exports = class Template {
         this.tags = {};
 
         graph.files = graph.files.map((file) => {
-            file.content = Template.convertLinks(file);
+            const linkSymbol = (this.config.link_symbol || null);
+
+            file.content = Template.convertLinks(file, file.content, linkSymbol);
 
             file.content = mdIt.render(file.content); // Markdown to HTML
 
-            file.links = Template.markLinkContext(file.links);
+            file.links = Template.markLinkContext(file, file.links, linkSymbol);
 
-            file.backlinks = Template.markLinkContext(file.backlinks);
+            file.backlinks = Template.markLinkContext(file, file.backlinks, linkSymbol);
 
             this.registerType(file.metas.type, file.metas.id);
             this.registerTags(file.metas.tags, file.metas.id);
@@ -132,8 +148,6 @@ module.exports = class Template {
             usedQuoteRef: graph.getUsedCitationReferences(),
 
             metadata: this.config.metas,
-
-            linkSymbol: this.config.link_symbol,
 
             focusIsActive: !(this.config.focus_max <= 0),
 
