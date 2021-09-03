@@ -10,11 +10,13 @@ lang: fr-FR
 ::: sommaire
 #. [Présentation](#presentation)
 #. [Installation](#installation)
-#. [Configuration](#configuration)
-#. [Utilisation du cosmographe](#utilisation-du-cosmographe)
+#. [Créer du contenu](#creer-du-contenu)
+#. [Créer un cosmoscope](#creer-un-cosmoscope)
+#. [Historique](#historique)
 #. [Utilisation du cosmoscope](#utilisation-du-cosmoscope)
+#. [Partager un cosmoscope](#partager-un-cosmoscope)
+#. [Configuration](#configuration)
 #. [Développement](#developpement)
-#. [Crédits](#credits)
 :::
 
 # Présentation
