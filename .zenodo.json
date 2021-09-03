@@ -3,7 +3,7 @@
     "license": "MIT", 
     "title": "Cosma", 
     "notes": "Ce logiciel a b\u00e9n\u00e9fici\u00e9 d'un soutien dans le cadre du programme de recherche ANR HyperOtlet (ANR-17-CE38-0011).", 
-    "version": "1.0-beta", 
+    "version": "1.0", 
     "upload_type": "software", 
     "keywords": [
         "fiche", 
@@ -12,7 +12,7 @@
         "hypertexte", 
         "heuristique"
     ], 
-    "publication_date": "2021-09-01", 
+    "publication_date": "2021-09-03", 
     "creators": [
         {
             "orcid": "0000-0002-4130-6669", 
