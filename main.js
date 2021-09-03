@@ -30,7 +30,7 @@ app.whenReady().then(() => {
 
     require('./core/models/menu')(); // set app menu
 
-    require('./core/views/cosmoscope/index')();
+    require('./core/views/cosmoscope/index')([], runLast = true);
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -38,7 +38,7 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { require('./core/views/cosmoscope/index')(); }
+        if (noWindowOpen()) { require('./core/views/cosmoscope/index')([], runLast = true); }
     });
 });
 
