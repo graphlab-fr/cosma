@@ -66,9 +66,21 @@ La première version de Cosma, rétroactivement libellée alpha, est archivée s
 
 # Installation
 
-[Cliquez ici](https://github.com/graphlab-fr/cosma/releases/latest) pour accéder à la version la plus récente de Cosma. Vous pouvez y lire les notes de version et télécharger le logiciel dans la version qui correspond à votre système d'exploitation (fichier `.app` pour macOS, `.exe` pour Windows).
+Cosma est disponible pour macOS et Windows. [Visitez la page Releases pour obtenir la dernière version du logiciel.](https://github.com/graphlab-fr/cosma/releases/latest) L'application n'est pas signée avec un certificat de sécurité, vous devez disposer des privilèges administrateurs sur votre session pour pouvoir l'exécuter.
 
-Lors du premier démarrage, Cosma affiche une documentation utilisateur sous forme de graphe. Cliquez sur Cosma › Préférences › Répertoire des fiches pour sélectionner un autre répertoire.
+Sur macOS
+: Téléchargez puis décompressez le fichier `Cosma.app.zip` et placez le le fichier `Cosma.app` dans `~/Applications`. Au premier lancement, faites clic droit › Ouvrir sur l'application pour l'exécuter.
+
+Sur Windows
+: Téléchargez puis décompressez le fichier `Cosma-win32-x64`, renommez le dossier « Cosma » et placez-le dans `C:\Programmes` ou `C:\Programmes (86)`.
+
+::: important
+Pour créer du contenu dans Cosma, il faut d'abord indiquer un répertoire dans Préférences › Répertoire de fiches. Le répertoire peut être vide ou contenir des fiches.
+:::
+
+::: astuce
+Sur la page Releases du dépôt GitHub, téléchargez et décompressez le fichier `cosma-fiches-aide.zip` pour obtenir un répertoire `cosma-fiches-aide` contenant une documentation utilisateur sous forme de fiches. Ceci vous permet de tester le logiciel : au premier lancement de Cosma, indiquez le chemin du répertoire `cosma-fiches-aides` dans Préférences › Répertoire de fiches.
+:::
 
 # Créer du contenu
 
