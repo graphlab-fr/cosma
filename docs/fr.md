@@ -57,7 +57,9 @@ L'idée de Cosma est née dans le cadre d'une recherche doctorale conduite par A
 
 Néanmoins, des efforts importants ont été entrepris dès le prototype pour concevoir soigneusement les différents aspects de l'outil, qu'il s'agisse de la visualisation de données ou de l'interaction humain-machine, notamment grâce à la participation de chercheurs spécialistes de ces domaines. Et Cosma est au cœur d'une dynamique de recherche que nous espérons inscrire dans la durée.
 
-La version actuelle de Cosma est encore en bêta. Elle sera citable via DOI prochainement.
+La version actuelle de Cosma peut être citée dans une bibliographie de la manière suivante :
+
+> Arthur Perret, Guillaume Brioudes, Clément Borel, & Olivier Le Deuff. (2021). Cosma (1.0). Zenodo. <https://doi.org/10.5281/zenodo.5412315>
 
 La première version de Cosma, rétroactivement libellée alpha, est archivée sur Zenodo. Elle peut être citée dans une bibliographie de la manière suivante :
 
