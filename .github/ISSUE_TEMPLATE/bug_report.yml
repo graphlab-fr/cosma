@@ -1,0 +1,86 @@
+name: Rapport de bug
+description: Signalez les dysfonctionnements de Cosma
+title: "[Bug] "
+labels: [bug]
+
+body:
+
+  - type: markdown
+    attributes:
+      value: >
+        Merci d'avance pour votre **précision** dans vos descriptions.
+        Les dysfonctionnements se cachent dans les détails.
+        Si vous avez rencontré plusieurs dysfonctionnements, merci de créer autant de notices.
+
+  - type: textarea
+    id: action-before-bug
+    attributes:
+      label: Action précédant le bug
+      description: >
+        Veuillez décrire vos actions avant que le dysfonctionnement ne survienne.
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug
+    attributes:
+      label: Manifestation du bug
+      description: >
+        Quel comportement attendu du logiciel n'a pas eu lieu,
+        ou quel comportement innatendu avez-vous rencontré ?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: os
+    attributes:
+      label: Quel est votre système d'exploitation ?
+      description: >
+        Merci de préciser sur quel(s) système(s) d'exploitation
+        vous avez rencontrer ce dysfonctionnement.
+      options:
+        - label: Windows
+        - label: Mac OS
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: os
+    attributes:
+      label: Quel est votre système d'exploitation ?
+      description: >
+        Merci de préciser sur quel(s) système(s) d'exploitation
+        vous avez rencontrer ce dysfonctionnement.
+      options:
+        - label: Windows
+        - label: Mac OS
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: Quelle version du système d'exploitation ?
+      description: >
+        Merci de préciser la version de(s) votre système(s) d'exploitation
+        avec le(s)quel vous avez rencontré ce dysfonctionnement.
+      placeholder: "ex : Big Sur 11.4, Windows 10"
+    validations:
+      required: true
+
+  - type: textarea
+    id: more
+    attributes:
+      label: Informations supplémentaires
+      description: >
+        Vous pouvez nous donner tous les détails supplémentaires
+        qui vous semblent coïncider avec ce dysfonctionnement.
+    validations:
+      required: false
+
+  - type: markdown
+    id: out
+    attributes:
+      value: |
+        Le bug peut être corrigé dans un temps variable. 
+        Merci de participer à l'amélioration de Cosma !
