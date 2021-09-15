@@ -44,19 +44,6 @@ body:
     validations:
       required: true
 
-  - type: checkboxes
-    id: os
-    attributes:
-      label: Quel est votre système d'exploitation ?
-      description: >
-        Merci de préciser sur quel(s) système(s) d'exploitation
-        vous avez rencontrer ce dysfonctionnement.
-      options:
-        - label: Windows
-        - label: Mac OS
-    validations:
-      required: true
-
   - type: input
     id: os-version
     attributes:
