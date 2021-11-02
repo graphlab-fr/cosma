@@ -10,14 +10,14 @@ body:
       value: >
         Merci d'avance pour votre **précision** dans vos descriptions.
         Les dysfonctionnements se cachent dans les détails.
-        Si vous avez rencontré plusieurs dysfonctionnements, merci de créer autant de notices.
+        Si vous avez rencontré plusieurs dysfonctionnements, merci de créer autant de tickets.
 
   - type: textarea
     id: action-before-bug
     attributes:
       label: Action précédant le bug
       description: >
-        Veuillez décrire vos actions avant que le dysfonctionnement ne survienne.
+        Veuillez décrire vos actions avant que le dysfonctionnement survienne.
     validations:
       required: true
 
@@ -27,7 +27,7 @@ body:
       label: Manifestation du bug
       description: >
         Quel comportement attendu du logiciel n'a pas eu lieu,
-        ou quel comportement innatendu avez-vous rencontré ?
+        ou quel comportement inattendu avez-vous rencontré ?
     validations:
       required: true
 
