@@ -79,7 +79,7 @@ Sur Windows
 : Téléchargez puis décompressez le fichier `Cosma-win32-x64`, renommez le dossier « Cosma » et placez-le dans `C:\Programmes` ou `C:\Programmes (86)`.
 
 ::: important
-Pour créer du contenu dans Cosma, il faut d'abord indiquer un répertoire dans Préférences › Répertoire de fiches. Le répertoire peut être vide ou contenir des fiches.
+Pour créer du contenu dans Cosma, il faut d'abord indiquer un répertoire dans Préférences › Répertoire de fiches. Le répertoire peut être vide ou contenir des fiches. Cosma ignore les sous-répertoires éventuels : seules les fiches présentes immédiatement au niveau du répertoire sont prises en compte.
 :::
 
 ::: astuce
