@@ -1,7 +1,8 @@
 const {
     app, // app event lifecycle, events
     BrowserWindow, // app windows generator
-    ipcMain // interface of data exchange
+    ipcMain, // interface of data exchange
+    dialog
 } = require('electron')
 , path = require('path');
 
@@ -71,6 +72,24 @@ ipcMain.on("sendRecordContent", (event, data) => {
             consolMsg: "Erreur d'enregistrement de la fiche.",
             data: {}
         };
+    } else if (result === 'overwriting') {
+        response = {
+            isOk: false,
+            consolMsg: "Vous vous apprêtez à écraser un autre fichier",
+            data: {}
+        };
+
+        dialog.showMessageBox(window, {
+            title: 'Confirmation d\'écrasement',
+            message: `Voulez-vous vraiment écraser le fichier ${record.title}.md ?`,
+            type: 'question',
+            buttons: ['Annuler', 'Oui']
+        })
+        .then((response) => {
+            if (response.response === 1) {
+                record.save(true);
+            }
+        });
     } else {
         response = {
             isOk: false,

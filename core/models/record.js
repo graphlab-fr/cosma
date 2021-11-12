@@ -51,16 +51,21 @@ module.exports = class Record {
 
     /**
      * Save the record to the config 'files_origin' path option
+     * @param {boolean} - If can overwrite
      * @return {mixed} - True if the record is saved, false if fatal error
      * or the errors array
      */
 
-    save () {
+    save (force = false) {
         try {
             const errs = this.getErrors();
 
             if (errs.length !== 0) {
                 return errs;
+            }
+
+            if (this.willOverwrite() === true && force === false) {
+                return 'overwriting';
             }
 
             fs.writeFileSync(this.path, this.content);
@@ -86,6 +91,19 @@ module.exports = class Record {
             errs.push('Ce type n\'est pas enregistré.'); }
 
         return errs;
+    }
+
+    /**
+     * Verif if a file already exist with this name
+     * @return {boolean}
+     */
+
+    willOverwrite () {
+        if (fs.existsSync(this.path)) {
+            return true;
+        }
+
+        return false;
     }
 
 };
