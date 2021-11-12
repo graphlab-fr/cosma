@@ -94,6 +94,7 @@ ipcMain.on("sendRecordContent", (event, data) => {
         }).then((response) => {
             if (response.response === 1) {
                 record.save(true);
+                window.close();
             }
         });
     } else {
