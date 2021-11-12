@@ -69,40 +69,42 @@ ipcMain.on("sendRecordContent", (event, data) => {
         , response;
 
     if (result === true) {
-        response = {
-            isOk: true,
-            consolMsg: "La fiche a bien été enregistrée.",
-            data: {}
-        };
+        response = { isOk: true };
 
         window.webContents.send("confirmRecordSaving", response);
         window.close();
         return;
     } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Erreur d'enregistrement de la fiche.",
-            data: {}
-        };
+        response = { isOk: false };
+
+        dialog.showMessageBox(window, {
+            title: 'Erreur d\'enregistrement',
+            message: `Erreur d'enregistrement de la fiche.`,
+            type: 'error',
+            buttons: ['Ok']
+        });
     } else if (result === 'overwriting') {
-        response = {
-            isOk: false,
-            consolMsg: "Vous vous apprêtez à écraser un autre fichier",
-            data: {}
-        };
+        response = { isOk: false };
 
         dialog.showMessageBox(window, {
             title: 'Confirmation d\'écrasement',
             message: `Voulez-vous vraiment écraser le fichier ${record.title}.md ?`,
             type: 'question',
             buttons: ['Annuler', 'Oui']
-        })
+        }).then((response) => {
+            if (response.response === 1) {
+                record.save(true);
+            }
+        });
     } else {
-        response = {
-            isOk: false,
-            consolMsg: "Les métadonnées de la fiche sont incorrectes. Veuillez apporter les corrections suivantes : " + result.join(' '),
-            data: {}
-        };
+        response = { isOk: false };
+
+        dialog.showMessageBox(window, {
+            title: 'Erreur d\'enregistrement',
+            message: "Les métadonnées de la fiche sont incorrectes. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            type: 'error',
+            buttons: ['Ok']
+        });
     }
 
     window.webContents.send("confirmRecordSaving", response);
