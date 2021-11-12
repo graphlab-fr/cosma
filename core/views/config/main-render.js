@@ -108,7 +108,7 @@ function autosaveForm () {
                     .catch((inputValue) => {
                         input.value = originValue
                     });
-            }, 2000);
+            }, 100);
         });
     
         input.addEventListener('blur', (e) => {

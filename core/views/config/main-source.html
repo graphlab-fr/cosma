@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 
-    <title>Configuration</title>
+    <title>Préférences</title>
     
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -18,7 +18,7 @@
             <form id="form-config">
                 <label>
                     Répertoire des fiches :
-                    <input type="text" name="files_origin">
+                    <input type="text" name="files_origin" disabled>
                     <button type="button" id="dialog-path-fileorigin">Sélectionner</button>
                 </label>
 
@@ -155,19 +155,19 @@
 
                 <label>
                     Données bibliographiques (CSL JSON) :
-                    <input type="text" name="bibliography">
+                    <input type="text" name="bibliography" disabled>
                     <button type="button" id="dialog-path-bibliography">Sélectionner</button>
                 </label>
 
                 <label>
                     Style bibliographique (CSL) :
-                    <input type="text" name="csl">
+                    <input type="text" name="csl" disabled>
                     <button type="button" id="dialog-path-csl">Sélectionner</button>
                 </label>
 
                 <label>
                     Localisation bibliographique (XML) :
-                    <input type="text" name="bibliography_locales">
+                    <input type="text" name="bibliography_locales" disabled>
                     <button type="button" id="dialog-path-locales">Sélectionner</button>
                 </label>
 
@@ -185,7 +185,7 @@
 
                 <label>
                     CSS personnalisée :
-                    <input type="text" name="custom_css_path">
+                    <input type="text" name="custom_css_path" disabled>
                     <button type="button" id="dialog-path-css">Sélectionner</button>
                 </label>
 
