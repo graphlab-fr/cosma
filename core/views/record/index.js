@@ -7,7 +7,8 @@ const {
 , path = require('path');
 
 const windowsModel = require('../../models/windows')
-    , mainWindow = require('../../../main').mainWindow;
+    , mainWindow = require('../../../main').mainWindow
+    , state = require('../../models/state');
 
 let window;
 
@@ -18,6 +19,17 @@ module.exports = function () {
      * ---
      * manage displaying
      */
+
+    if (state.needConfiguration() === true) {
+        dialog.showMessageBox({
+            title: 'Application non configurée',
+            message: 'Veuillez configurer l\'application avant de créer des fiches',
+            type: 'info',
+            buttons: ['Ok']
+        });
+
+        return;
+    }
 
     if (window !== undefined) {
         window.focus();
@@ -85,11 +97,6 @@ ipcMain.on("sendRecordContent", (event, data) => {
             type: 'question',
             buttons: ['Annuler', 'Oui']
         })
-        .then((response) => {
-            if (response.response === 1) {
-                record.save(true);
-            }
-        });
     } else {
         response = {
             isOk: false,
