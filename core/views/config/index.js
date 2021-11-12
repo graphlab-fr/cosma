@@ -76,8 +76,10 @@ ipcMain.on("sendConfigOptions", (event, data) => {
     }
 
     require('../../models/menu')(); // set app menu
+    
+    if (window) {
+        window.webContents.send("confirmConfigRegistration", response); }
 
-    window.webContents.send("confirmConfigRegistration", response);
 });
 
 ipcMain.on("askConfig", (event, data) => {
