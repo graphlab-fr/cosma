@@ -9,8 +9,8 @@ const {
 
 const windowsModel = require('../../models/windows')
     , Config = require('../../models/config')
-    , Graph = require('../../models/graph')
-    , Template = require('../../models/template');
+    , Graph = require('../../../cosma-core/models/graph')
+    , Template = require('../../../cosma-core/models/template');
 
 let modal;
 
@@ -110,8 +110,8 @@ ipcMain.on("sendExportOptions", (event, data) => {
             activatedModes.push(mode); }
     }
 
-    const graph = new Graph(activatedModes)
-        , template = new Template(graph);
+    const graph = new Graph(activatedModes, config.serializeForGraph())
+        , template = new Template(graph, config.serializeForTemplate());
 
     fs.writeFile(exportPath, template.html, (err) => {
         if (err) {

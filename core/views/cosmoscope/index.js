@@ -20,8 +20,8 @@ const Config = require('../../models/config')
 let windowPath, modalView;
 
 const History = require('../../models/history')
-    , Graph = require('../../models/graph')
-    , Template = require('../../models/template');
+    , Graph = require('../../../cosma-core/models/graph')
+    , Template = require('../../../cosma-core/models/template');
 
 module.exports = function (graphParams = [], runLast = false) {
 
@@ -43,8 +43,9 @@ module.exports = function (graphParams = [], runLast = false) {
 
     graphParams.push('minify');
     
-    const graph = new Graph(graphParams)
-        , template = new Template(graph)
+    const config = new Config()
+        , graph = new Graph(graphParams, config.serializeForGraph())
+        , template = new Template(graph, config.serializeForTemplate())
         , history = new History();
 
     windowPath = path.join(history.pathToStore, 'cosmoscope.html');

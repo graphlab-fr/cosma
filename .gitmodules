@@ -1,0 +1,3 @@
+[submodule "cosma-core"]
+	path = cosma-core
+	url = https://github.com/graphlab-fr/cosma-core.git
