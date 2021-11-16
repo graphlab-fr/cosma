@@ -3,9 +3,11 @@ const {
         BrowserWindow, // app windows generator
         dialog
     } = require('electron')
-    , path = require('path');
+    , path = require('path')
+    , fs = require('fs');
 
-const windowsModel = require('./core/models/windows');
+const windowsModel = require('./core/models/windows')
+    , History = require('./core/models/history');
 
 /**
  * Test if a window is stored into 'BrowserWindow' object.
@@ -24,6 +26,8 @@ function noWindowOpen () {
  */
 
 app.whenReady().then(() => {
+
+    if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
 
     const mainWindow = new BrowserWindow(windowsModel.main);
     exports.mainWindow = mainWindow;

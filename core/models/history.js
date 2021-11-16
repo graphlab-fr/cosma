@@ -27,11 +27,11 @@ module.exports = class History {
     static getList () {
         try {
             return fs.readdirSync(History.path, 'utf8')
-            .filter(dirName => dirName !== '.DS_Store')
-            .map(function (dirName) {
-                const hist = new History(dirName);
-                return hist;
-            })
+                .filter(dirName => dirName !== '.DS_Store')
+                .map(function (dirName) {
+                    const hist = new History(dirName);
+                    return hist;
+                })
         } catch (error) {
             console.log(error);
             return [];
@@ -66,9 +66,6 @@ module.exports = class History {
      */
 
     constructor (id = null) {
-
-        if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
-
         this.config = new Config().opts;
 
         if (id === null) {
