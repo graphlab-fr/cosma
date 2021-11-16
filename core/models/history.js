@@ -75,7 +75,13 @@ module.exports = class History {
                 , pathToMetasTest = path.join(pathToStoreTest, 'metas.json');
 
             if (!fs.existsSync(pathToStoreTest) || !fs.existsSync(pathToMetasTest)) {
-                throw 'Record history no exist';
+
+                if (!fs.existsSync(pathToMetasTest)) {
+                    // if the dir doesn't contain the metas.json file
+                    fs.rmdirSync(pathToStoreTest, { recursive: true });
+                }
+
+                return 'Record history no exist';
             }
             this.id = id;
         }

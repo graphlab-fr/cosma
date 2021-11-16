@@ -72,7 +72,6 @@ function changeView(viewBtn) {
         setFilters(key.filters); }
     
     if (key.focus) {
-        // console.log(key.focus);
         openRecord(key.focus.fromRecordId, false);
         focus.init(key.focus.fromRecordId);
         focus.set(key.focus.level);

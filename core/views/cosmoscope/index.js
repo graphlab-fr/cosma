@@ -36,7 +36,6 @@ module.exports = function (graphParams = [], runLast = false) {
     const lastHistoryEntry = History.getLast();
 
     if (runLast && lastHistoryEntry) {
-        console.log(lastHistoryEntry.pathToStore);
         windowPath = path.join(lastHistoryEntry.pathToStore, 'cosmoscope.html');
         window.loadFile(windowPath);
         return;

@@ -19,8 +19,6 @@ const pressedKeys = {
 };
 
 document.onkeydown = (e) => {
-
-    console.log(e.key);
  
     if (keyboardShortcutsAreWorking) {
  
