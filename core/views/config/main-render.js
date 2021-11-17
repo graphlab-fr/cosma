@@ -64,9 +64,23 @@ window.api.receive("getOptionMinimumFromConfig", (data) => {
 
 })();
 
+(function () {
+
+window.api.send("askOptionLangageFromConfig", null);
+
+window.api.receive("getOptionLangageFromConfig", (data) => {
+    const select = form.querySelector('select[name="lang"]');
+
+    for (const lang in data) {
+        select.insertAdjacentHTML('beforeend', `<option value="${lang}">${data[lang]}</option>`);
+    }
+});
+
+})();
+
 function autosaveForm () {
 
-    const inputs = form.querySelectorAll('input, textarea')
+    const inputs = form.querySelectorAll('input, textarea, select')
         , output = form.querySelector('output')
 
     for (const input of inputs) {

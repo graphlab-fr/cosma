@@ -92,6 +92,10 @@ ipcMain.on("askOptionMinimumFromConfig", (event, data) => {
     window.webContents.send("getOptionMinimumFromConfig", Config.minValues);
 });
 
+ipcMain.on("askOptionLangageFromConfig", (event, data) => {
+    window.webContents.send("getOptionLangageFromConfig", Config.validLangages);
+});
+
 ipcMain.on("askLinkStokes", (event, data) => {
     event.reply("getLinkStokes", Config.linkStrokes);
 });

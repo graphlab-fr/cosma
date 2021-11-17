@@ -32,6 +32,15 @@ module.exports = class Config {
     };
 
     /**
+     * Valid langages flags
+     * @static
+     */
+
+    static validLangages = {
+        fr: "Français",
+        en: "English",
+    };
+    /**
      * List of valid values for the links stroke
      * Apply to config form
      * @static

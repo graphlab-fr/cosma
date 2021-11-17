@@ -21,5 +21,5 @@ module.exports = {
     custom_css: false,
     devtools: false,
     minify: true,
-    history: true
+    lang: 'fr'
 }

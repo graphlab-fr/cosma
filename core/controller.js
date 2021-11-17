@@ -37,6 +37,7 @@ const channels = {
         'getLocalesPath',                    // config/index.js → config/main-render.js
         'getCustomCssPath',                  // config/index.js → config/main-render.js
         'getOptionMinimumFromConfig',        // config/index.js → config/main-render.js
+        'getOptionLangageFromConfig',        // config/index.js → config/main-render.js
         'getLinkStokes',                     // config/index.js → config/modal-addlinktype-render.js
         'getViewToUpdate',                   // config/index.js → config/modal-updateview-render.js
         'confirmDeleteAllViewFromConfig',    // config/index.js → config/main-render.js
@@ -95,6 +96,7 @@ const channels = {
         'askLocalesPath',               // config/index.js ← config/main-render.js
         'askCustomCssPath',             // config/index.js ← config/main-render.js
         'askOptionMinimumFromConfig',   // config/index.js ← config/main-render.js
+        'askOptionLangageFromConfig',   // config/index.js ← config/main-render.js
         'askFilesOriginPath',           // config/index.js ← config/main-render.js
         'askNewRecordTypeModal',        // config/index.js ← config/main-render.js
         'askNewLinkTypeModal',          // config/index.js ← config/main-render.js
