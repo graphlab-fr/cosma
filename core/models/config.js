@@ -1,7 +1,7 @@
 /**
  * @file Cosmoscope generator
  * @author Guillaume Brioudes <https://myllaume.fr/>
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 const { app } = require('electron')

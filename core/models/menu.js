@@ -1,7 +1,7 @@
 /**
  * @file Define menus headlines, shortcuts and their functions
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 const {

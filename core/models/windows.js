@@ -1,7 +1,7 @@
 /**
  * @file Windows configuration
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 const path = require('path');
