@@ -1,5 +1,19 @@
 const form = document.getElementById('form-config');
 
+(function () {
+
+    window.api.send("askOptionLangageFromConfig", null);
+    
+    window.api.receive("getOptionLangageFromConfig", (data) => {
+        const select = form.querySelector('select[name="lang"]');
+    
+        for (const lang in data) {
+            select.insertAdjacentHTML('beforeend', `<option value="${lang}">${data[lang]}</option>`);
+        }
+    });
+    
+})();
+
 /**
  * Autocomplete form from the current config
  * For each option from the config, find the input from by its name
@@ -20,6 +34,17 @@ window.api.receive("getConfig", (data) => {
 
         if (option === 'link_types') {
             setLinkTypeTable(data[option]);
+            continue;
+        }
+
+        if (option === 'lang') {
+            const selectOptions = form.querySelectorAll('select[name="lang"] option');
+            
+            for (const selectOption of selectOptions) {
+                if (selectOption.value === data[option]) {
+                    selectOption.setAttribute('selected', '');
+                }
+            }
             continue;
         }
 
@@ -59,20 +84,6 @@ window.api.receive("getOptionMinimumFromConfig", (data) => {
     for (const option in data) {
         form.querySelector('input[name="' + option + '"]')
             .setAttribute('min', data[option]);
-    }
-});
-
-})();
-
-(function () {
-
-window.api.send("askOptionLangageFromConfig", null);
-
-window.api.receive("getOptionLangageFromConfig", (data) => {
-    const select = form.querySelector('select[name="lang"]');
-
-    for (const lang in data) {
-        select.insertAdjacentHTML('beforeend', `<option value="${lang}">${data[lang]}</option>`);
     }
 });
 
@@ -120,7 +131,7 @@ function autosaveForm () {
                         originValue = inputValue;
                     })
                     .catch((inputValue) => {
-                        input.value = originValue
+                        input.value = originValue;
                     });
             }, 100);
         });
@@ -139,8 +150,10 @@ function autosaveForm () {
 
         function save (value = input.value) {
             return new Promise((success, reject) => {
+                console.log(input, input.value);
                 if (value === originValue) {
                     label.dataset.state = 'saved';
+                    clearInterval(interval);
                     return;
                 }
     
