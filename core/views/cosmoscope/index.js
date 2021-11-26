@@ -8,6 +8,7 @@ const {
         app, // app event lifecycle, events
         ipcMain,
         clipboard,
+        dialog,
         BrowserWindow // app windows generator
     } = require('electron')
     , path = require('path')
@@ -47,6 +48,15 @@ module.exports = function (graphParams = [], runLast = false) {
         , graph = new Graph(graphParams, config.serializeForGraph())
         , template = new Template(graph, config.serializeForTemplate())
         , history = new History();
+
+    if (graph.errors.length > 0) {
+        dialog.showMessageBox(window, {
+            message: "Vous ne pouvez traiter les citations : des paramètres sont manquants. Veuillez compléter vos préférences.",
+            type: 'info',
+            title: "Impossible de traiter les citations"
+        });
+        return;
+    }
 
     windowPath = path.join(history.pathToStore, 'cosmoscope.html');
 
