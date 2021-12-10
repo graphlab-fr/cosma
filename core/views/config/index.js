@@ -2,11 +2,12 @@ const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
         ipcMain, // interface of data exchange
-        dialog
+        dialog,
+        Menu
     } = require('electron')
     , path = require('path');
 
-const Config = require('../../models/config')
+const Config = require('../../../cosma-core/models/config')
     , windowsModel = require('../../models/windows');
 
 let window, modalRecordNew, modalRecordUpdate,
@@ -52,31 +53,33 @@ module.exports = function () {
 ipcMain.on("sendConfigOptions", (event, data) => {
     const config = new Config(data);
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
+    let response;
+
+    if (config.isValid() === true) {
         response = {
             isOk: true,
             consolMsg: "La configuration a bien été enregistrée.",
             data: {}
-        };
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "La configuration n'a pas pu être enregistrée.",
-            data: {}
-        };
+        }
+
+        Menu.getApplicationMenu()
+            .getMenuItemById('citeproc')
+            .enabled = config.canCiteproc();
+
+        Menu.getApplicationMenu()
+            .getMenuItemById('devtools')
+            .visible = config.opts.devtools;
+
     } else {
         response = {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
-        };
+        }
     }
 
-    require('../../models/menu')(); // set app menu
-    
     if (window) {
         window.webContents.send("confirmConfigRegistration", response); }
 
@@ -97,7 +100,7 @@ ipcMain.on("askOptionLangageFromConfig", (event, data) => {
 });
 
 ipcMain.on("askLinkStokes", (event, data) => {
-    event.reply("getLinkStokes", Config.linkStrokes);
+    event.reply("getLinkStokes", Config.validLinkStrokes);
 });
 
 ipcMain.on("askNewRecordTypeModal", (event, data) => {
@@ -124,35 +127,23 @@ ipcMain.on("sendNewRecordTypeToConfig", (event, data) => {
     config = new Config({
         record_types: recordTypes
     });
+    
+    config.save();
 
-    let result = config.save()
-        , response;
-
-    if (result === true) {
-        response = {
+    if (config.isValid() === true) {
+        window.webContents.send("confirmNewRecordTypeFromConfig", {
             isOk: true,
             consolMsg: "Le nouveau type de fiche a bien été enregistré dans la configuration.",
             data: data
-        };
+        });
 
-        window.webContents.send("confirmNewRecordTypeFromConfig", response);
         modalRecordNew.close();
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Le nouveau type de fiche n'a pas pu être enregistrée dans la configuration.",
-            data: {}
-        };
-
-        modalRecordNew.webContents.send("confirmNewRecordTypeFromConfig", response);
     } else {
-        response = {
+        modalRecordNew.webContents.send("confirmNewRecordTypeFromConfig", {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
-        };
-
-        modalRecordNew.webContents.send("confirmNewRecordTypeFromConfig", response);
+        });
     }
 });
 
@@ -166,25 +157,20 @@ ipcMain.on("askDeleteRecordType", (event, data) => {
         record_types: recordTypes
     });
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
+    let response;
+
+    if (config.isValid() === true) {
         response = {
             isOk: true,
             consolMsg: "Le type de fiche a bien été supprimé de la configuration.",
             data: data
         };
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Le type de fiche n'a pas pu être supprimé de la configuration.",
-            data: {}
-        };
     } else {
         response = {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
         };
     }
@@ -224,34 +210,22 @@ ipcMain.on("sendUpdateRecordTypeToConfig", (event, data) => {
         record_types: recordTypes
     });
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
-        response = {
+    if (config.isValid() === true) {
+        window.webContents.send("confirmUpdateRecordTypeFromConfig", {
             isOk: true,
             consolMsg: "Le type de fiche a bien été mis à jour dans la configuration.",
             data: data
-        };
+        });
 
-        window.webContents.send("confirmUpdateRecordTypeFromConfig", response);
         modalRecordUpdate.close();
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Le type de fiche n'a pas pu être mis à jour dans la configuration.",
-            data: {}
-        };
-
-        modalRecordUpdate.webContents.send("confirmUpdateRecordTypeFromConfig", response);
     } else {
-        response = {
+        modalRecordUpdate.webContents.send("confirmUpdateRecordTypeFromConfig", {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
-        };
-
-        modalRecordUpdate.webContents.send("confirmUpdateRecordTypeFromConfig", response);
+        });
     }
 });
 
@@ -283,34 +257,22 @@ ipcMain.on("sendNewLinkTypeToConfig", (event, data) => {
         link_types: linkTypes
     });
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
-        response = {
+    if (config.isValid() === true) {
+        window.webContents.send("confirmNewLinkTypeFromConfig", {
             isOk: true,
             consolMsg: "Le nouveau type de lien a bien été enregistré dans la configuration.",
             data: data
-        };
+        });
 
-        window.webContents.send("confirmNewLinkTypeFromConfig", response);
         modalLinkNew.close();
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Le nouveau type de fiche n'a pas pu être enregistrée dans la configuration.",
-            data: {}
-        };
-
-        modalLinkNew.webContents.send("confirmNewLinkTypeFromConfig", response);
     } else {
-        response = {
+        modalLinkNew.webContents.send("confirmNewLinkTypeFromConfig", {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
-        };
-
-        modalLinkNew.webContents.send("confirmNewLinkTypeFromConfig", response);
+        });
     }
 });
 
@@ -352,34 +314,22 @@ ipcMain.on("sendUpdateLinkTypeToConfig", (event, data) => {
         link_types: linkTypes
     });
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
-        response = {
+    if (config.isValid() === true) {
+        window.webContents.send("confirmUpdateLinkTypeFromConfig", {
             isOk: true,
             consolMsg: "Le type de lien a bien été mis à jour dans la configuration.",
             data: data
-        };
+        });
 
-        window.webContents.send("confirmUpdateLinkTypeFromConfig", response);
         modalLinkUpdate.close();
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Le type de lien n'a pas pu être mis à jour dans la configuration.",
-            data: {}
-        };
-
-        modalLinkUpdate.webContents.send("confirmUpdateLinkTypeFromConfig", response);
     } else {
-        response = {
+        modalLinkUpdate.webContents.send("confirmUpdateLinkTypeFromConfig", {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
-        };
-
-        modalLinkUpdate.webContents.send("confirmUpdateLinkTypeFromConfig", response);
+        });
     }
 });
 
@@ -393,25 +343,20 @@ ipcMain.on("askDeleteRecordType", (event, data) => {
         link_types: linkTypes
     });
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
+    let response;
+
+    if (config.isValid() === true) {
         response = {
             isOk: true,
             consolMsg: "Le type de lien a bien été supprimé de la configuration.",
             data: data
         };
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "Le type de lien n'a pas pu être supprimé de la configuration.",
-            data: {}
-        };
     } else {
         response = {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
         };
     }
@@ -517,31 +462,25 @@ ipcMain.on("askDeleteViewFromConfig", (event, viewName) => {
         views: views
     });
 
-    let result = config.save()
-        , response;
+    config.save();
+    
+    let response;
 
-    if (result === true) {
+    if (config.isValid() === true) {
         response = {
             isOk: true,
             consolMsg: "La vue a bien été supprimée de la configuration.",
             data: views
         };
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "La vue n'a pas pu être supprimé de la configuration.",
-            data: {}
-        };
     } else {
         response = {
             isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
+            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + config.writeReport(),
             data: {}
         };
     }
     
     window.webContents.send("confirmDeleteViewFromConfig", response);
-
 });
 
 ipcMain.on("askUpdateViewModal", (event, viewName) => {
@@ -573,34 +512,22 @@ ipcMain.on("sendUpdateViewToConfig", (event, data) => {
         views: views
     });
 
-    let result = config.save()
-        , response;
+    config.save();
 
-    if (result === true) {
-        response = {
+    if (config.isValid() === true) {
+        window.webContents.send("confirmUpdateViewFromConfig", {
             isOk: true,
             consolMsg: "La vue a bien été renommée dans la configuration.",
             data: data.name
-        };
+        });
 
-        window.webContents.send("confirmUpdateViewFromConfig", response);
         modalViewUpdate.close();
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "La vue n'a pas pu être renommée dans la configuration.",
-            data: {}
-        };
-
-        modalViewUpdate.webContents.send("confirmUpdateViewFromConfig", response);
     } else {
-        response = {
+        modalViewUpdate.webContents.send("confirmUpdateViewFromConfig", {
             isOk: false,
             consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
             data: {}
-        };
-
-        modalViewUpdate.webContents.send("confirmUpdateViewFromConfig", response);
+        });
     }
 });
 

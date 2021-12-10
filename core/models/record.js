@@ -10,7 +10,7 @@ const { app } = require('electron')
     , yml = require('js-yaml')
     , moment = require('moment');
 
-const Config = require('./config');
+const Config = require('../../cosma-core/models/config');
 
 module.exports = class Record {
 
@@ -43,9 +43,9 @@ module.exports = class Record {
         this.content = yml.safeDump(this);
         this.content = '---\n' + this.content + '---\n\n';
 
-        this.config = new Config();
+        this.config = new Config().opts;
 
-        this.path = path.join(this.config.opts.files_origin, `${title}.md`);
+        this.path = path.join(this.config.files_origin, `${title}.md`);
 
     }
 
@@ -87,7 +87,7 @@ module.exports = class Record {
         if (this.title === '') {
             errs.push('Le titre n\'est pas défini.'); }
 
-        if (this.config.opts.record_types[this.type] === undefined) {
+        if (this.config.record_types[this.type] === undefined) {
             errs.push('Ce type n\'est pas enregistré.'); }
 
         return errs;

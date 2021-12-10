@@ -8,7 +8,9 @@ const {
 
 const windowsModel = require('../../models/windows')
     , mainWindow = require('../../../main').mainWindow
-    , state = require('../../models/state');
+
+const Config = require('../../../cosma-core/models/config')
+    , config = new Config().opts;
 
 let window;
 
@@ -20,9 +22,9 @@ module.exports = function () {
      * manage displaying
      */
 
-    if (state.needConfiguration() === true) {
+    if (config['files_origin'] === '') {
         dialog.showMessageBox({
-            title: 'Application non configurée',
+            title: 'Répertoire des fiches inconnu',
             message: 'Veuillez configurer l\'application avant de créer des fiches',
             type: 'info',
             buttons: ['Ok']
@@ -112,25 +114,8 @@ ipcMain.on("sendRecordContent", (event, data) => {
 });
 
 ipcMain.on("askRecordTypes", (event, data) => {
-    const Config = require('../../models/config')
-        , config = new Config();
+    const Config = require('../../../cosma-core/models/config')
+        , config = new Config().opts;
 
-    let result = config.get()
-        , response;
-
-    if (result === true) {
-        response = {
-            isOk: true,
-            consolMsg: "Les types de fiche ont bien été transmis depuis la configuration.",
-            data: config.opts.record_types
-        };
-    } else {
-        response = {
-            isOk: false,
-            consolMsg: "Les types de fiche n'ont pu être transmis depuis la configuration.",
-            data: {}
-        };
-    }
-
-    window.webContents.send("getRecordTypes", response);
+    window.webContents.send("getRecordTypes", Object.keys(config.record_types));
 });

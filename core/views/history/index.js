@@ -14,7 +14,7 @@ moment.locale('fr-ca');
 const windowsModel = require('../../models/windows')
     , mainWindow = require('../../../main').mainWindow
     , History = require('../../models/history')
-    , Config = require('../../models/config')
+    , Config = require('../../../cosma-core/models/config')
     , config = new Config().opts;
 
 let window, modalRename, modalReport;

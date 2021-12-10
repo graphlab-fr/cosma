@@ -12,7 +12,7 @@ const {
     fs = require('fs'),
     path = require('path');
 
-const Config = require('./config')
+const Config = require('../../cosma-core/models/config')
     , mainWindow = require('../../main').mainWindow;
 
 const fileMenu = [
@@ -28,6 +28,7 @@ const fileMenu = [
         label: 'Nouveau cosmoscope avec citations',
         accelerator: 'CommandOrControl+Shift+R',
         role: 'new-cosmoscope',
+        id: 'citeproc',
         click () {
             require('../views/cosmoscope')(['citeproc']);
         }
@@ -201,6 +202,14 @@ module.exports = function () {
                         throw `Erreur d'impression du PDF : ${err}`;
                     })
                 }
+            },
+            {
+                id: 'devtools',
+                label: 'Afficher l’inspecteur web',
+                role: 'devtools',
+                click(item, window) {
+                    if (window) { window.webContents.toggleDevTools() };
+                },
             }
         ]
     },
@@ -213,22 +222,6 @@ module.exports = function () {
             }
         ]
     });
-
-    if (config.devtools === true) {
-        template.push({
-            label: 'Développement',
-            submenu: [
-                {
-                    id: 'devtools',
-                    label: 'Afficher l’inspecteur web',
-                    role: 'devtools',
-                    click(item, window) {
-                        if (window) { window.webContents.toggleDevTools() };
-                    },
-                },
-            ]
-        })
-    }
 
     const appMenu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(appMenu);

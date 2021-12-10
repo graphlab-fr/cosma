@@ -13,7 +13,7 @@ const {
 
 moment.locale('fr-ca');
 
-const Config = require('./config');
+const Config = require('../../cosma-core/models/config');
 
 module.exports = class History {
 

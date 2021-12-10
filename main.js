@@ -1,13 +1,14 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        dialog
+        Menu
     } = require('electron')
     , path = require('path')
     , fs = require('fs');
 
 const windowsModel = require('./core/models/windows')
-    , History = require('./core/models/history');
+    , History = require('./core/models/history')
+    , Config = require('./cosma-core/models/config');
 
 /**
  * Test if a window is stored into 'BrowserWindow' object.
@@ -32,9 +33,21 @@ app.whenReady().then(() => {
     const mainWindow = new BrowserWindow(windowsModel.main);
     exports.mainWindow = mainWindow;
 
+    const openCosmoscope = require('./core/views/cosmoscope/index');
+
+    let config = new Config();
+
     require('./core/models/menu')(); // set app menu
 
-    require('./core/views/cosmoscope/index')([], runLast = true);
+    Menu.getApplicationMenu()
+        .getMenuItemById('citeproc')
+        .enabled = config.canCiteproc();
+
+    Menu.getApplicationMenu()
+        .getMenuItemById('devtools')
+        .visible = config.opts.devtools;
+
+    openCosmoscope([], runLast = true);
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -42,7 +55,8 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { require('./core/views/cosmoscope/index')([], runLast = true); }
+        if (noWindowOpen()) {
+            openCosmoscope([], runLast = true); }
     });
 });
 

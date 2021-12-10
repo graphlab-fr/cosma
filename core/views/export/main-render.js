@@ -65,13 +65,13 @@ function booleanCheckbox (option) {
 
 (function () {
 
-    const input = form.querySelector('[name="export_path"]');
+    const input = form.querySelector('[name="export_target"]');
     
     window.api.send("askExportPathFromConfig", null);
 
     window.api.receive("getExportPathFromConfig", (response) => {
-        if (response.isOk === true) {
-            input.value = response.data;
+        if (response !== '') {
+            input.value = response;
         }
     });
     
@@ -80,7 +80,7 @@ function booleanCheckbox (option) {
 (function () {
 
     const btnDialog = document.getElementById('dialog-path-export')
-        , input = form.querySelector('[name="export_path"]');
+        , input = form.querySelector('[name="export_target"]');
     
     btnDialog.addEventListener('click', () => {
         window.api.send("askExportPath", null);

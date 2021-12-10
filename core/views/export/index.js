@@ -8,7 +8,7 @@ const {
     , fs = require('fs');
 
 const windowsModel = require('../../models/windows')
-    , Config = require('../../models/config')
+    , Config = require('../../../cosma-core/models/config')
     , Graph = require('../../../cosma-core/models/graph')
     , Template = require('../../../cosma-core/models/template');
 
@@ -67,19 +67,9 @@ ipcMain.on("askExportPath", (event, data) => {
 });
 
 ipcMain.on("askExportPathFromConfig", (event, data) => {
-    let config = new Config();
+    let config = new Config().opts;
 
-    if (config.opts.export_path !== undefined) {
-        modal.webContents.send("getExportPathFromConfig", {
-            isOk: true,
-            data: config.opts.export_path
-        });
-    } else {
-        modal.webContents.send("getExportPathFromConfig", {
-            isOk: false,
-            data: {}
-        });
-    }
+    modal.webContents.send("getExportPathFromConfig", config.export_target);
 });
 
 ipcMain.on("askExportOptions", (event, data) => {
@@ -89,7 +79,7 @@ ipcMain.on("askExportOptions", (event, data) => {
         citeproc: false
     };
 
-    if (config['bibliography'] && config['csl'] && config['bibliography_locales']) {
+    if (config['bibliography_path'] && config['csl_path'] && config['bibliography_locales_path']) {
         response.citeproc = true; }
 
     modal.webContents.send("getExportOptions", response);
@@ -97,12 +87,12 @@ ipcMain.on("askExportOptions", (event, data) => {
 
 ipcMain.on("sendExportOptions", (event, data) => {
     // save the export path into the configuration
-    let config = new Config({ export_path: data.export_path });
+    let config = new Config({ export_target: data.export_target });
     config.save();
 
-    const exportPath = path.join(data.export_path, 'cosmoscope.html');
+    const exportPath = path.join(data.export_target, 'cosmoscope.html');
 
-    delete data.export_path;
+    delete data.export_target;
 
     let activatedModes = ['publish'];
     for (const mode in data) {
@@ -110,8 +100,8 @@ ipcMain.on("sendExportOptions", (event, data) => {
             activatedModes.push(mode); }
     }
 
-    const graph = new Graph(activatedModes, config.serializeForGraph())
-        , template = new Template(graph, config.serializeForTemplate());
+    const graph = new Graph(activatedModes)
+        , template = new Template(graph);
 
     fs.writeFile(exportPath, template.html, (err) => {
         if (err) {

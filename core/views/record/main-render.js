@@ -37,8 +37,8 @@ const recordTypeSelect = form.querySelector('select[name="type"]')
 
 window.api.send("askRecordTypes", null);
 
-window.api.receive("getRecordTypes", (response) => {
-    for (const recordType in response.data) {
+window.api.receive("getRecordTypes", (data) => {
+    for (const recordType of data) {
         const option = document.createElement('option');
         option.value = recordType;
         option.textContent = recordType;

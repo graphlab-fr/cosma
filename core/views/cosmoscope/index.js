@@ -14,7 +14,7 @@ const {
     , path = require('path')
     , fs = require('fs');
 
-const Config = require('../../models/config')
+const Config = require('../../../cosma-core/models/config')
     , windowsModel = require('../../models/windows')
     , window = require('../../../main').mainWindow;
 
@@ -36,7 +36,7 @@ module.exports = function (graphParams = [], runLast = false) {
 
     const lastHistoryEntry = History.getLast();
 
-    if (runLast && lastHistoryEntry) {
+    if (runLast === true && lastHistoryEntry) {
         windowPath = path.join(lastHistoryEntry.pathToStore, 'cosmoscope.html');
         window.loadFile(windowPath);
         return;
@@ -44,9 +44,9 @@ module.exports = function (graphParams = [], runLast = false) {
 
     graphParams.push('minify');
     
-    const config = new Config()
-        , graph = new Graph(graphParams, config.serializeForGraph())
-        , template = new Template(graph, config.serializeForTemplate())
+    const config = new Config().opts
+        , graph = new Graph(graphParams)
+        , template = new Template(graph)
         , history = new History();
 
     if (graph.errors.length > 0) {
@@ -96,6 +96,8 @@ ipcMain.on("sendViewName", (event, data) => {
 
     let result = config.save()
         , response;
+
+        console.log(result);
 
     if (result === true) {
         response = {
