@@ -26,6 +26,8 @@ const History = require('../../models/history')
 
 module.exports = function (graphParams = [], runLast = false) {
 
+    const config = new Config();
+
     window.once('ready-to-show', () => {
         window.show();
     })
@@ -43,9 +45,11 @@ module.exports = function (graphParams = [], runLast = false) {
     }
 
     graphParams.push('minify');
-    
-    const config = new Config().opts
-        , graph = new Graph(graphParams)
+
+    if (config.canCssCustom() === true) {
+        graphParams.push('css_custom'); }
+
+    const graph = new Graph(graphParams)
         , template = new Template(graph)
         , history = new History();
 

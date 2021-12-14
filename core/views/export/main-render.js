@@ -30,6 +30,7 @@ const form = document.getElementById('form-cosmoscope-export');
 
 function serializeData (data) {
     data['citeproc'] = booleanCheckbox(data['citeproc']);
+    data['css_custom'] = booleanCheckbox(data['css_custom']);
     data['minify'] = booleanCheckbox(data['minify']);
 
     return data;

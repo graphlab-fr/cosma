@@ -29,7 +29,8 @@ module.exports = function (window) {
     modal = new BrowserWindow (
         Object.assign(windowsModel.modal, {
             parent: window,
-            title: 'Partager le cosmoscope'
+            title: 'Partager le cosmoscope',
+            height: 230
         })
     );
 
@@ -73,14 +74,12 @@ ipcMain.on("askExportPathFromConfig", (event, data) => {
 });
 
 ipcMain.on("askExportOptions", (event, data) => {
-    let config = new Config().opts;
+    let config = new Config();
 
     let response = {
-        citeproc: false
+        citeproc: config.canCiteproc(),
+        css_custom: config.canCssCustom()
     };
-
-    if (config['bibliography_path'] && config['csl_path'] && config['bibliography_locales_path']) {
-        response.citeproc = true; }
 
     modal.webContents.send("getExportOptions", response);
 });
