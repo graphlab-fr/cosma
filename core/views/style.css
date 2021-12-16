@@ -1,3 +1,8 @@
+@charset "UTF-8";
+
+/** Global
+------------------------------------------------------------*/
+
 :root {
     --cosma-blue: #147899;
     --cosma-blue-dark: #02385c;
@@ -10,12 +15,20 @@ html {
     font-size: 62.5%;
 }
 
+@font-face {
+    font-family: 'Material Icons';
+    src: url('../../assets/fonts/MaterialIcons-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 body {
-    padding: 0;
-    margin: 0;
-    font-family: 'Roboto', 'Helevetica', 'Arial', sans-serif;
-	  font-size: 1.4rem;
     padding: 20px;
+    margin: 0;
+    font-family: -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica',
+        'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-size: 1.4rem;
     overflow-x: hidden;
     background-color: var(--mac-menu-background-color);
 }
@@ -24,6 +37,44 @@ body {
     max-width: 95vw;
     margin: 0 auto;
 }
+
+/** Components
+------------------------------------------------------------*/
+
+/* ---
+- Material Icons
+--- */
+
+.ico {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    color: var(--gray-component);
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/* ---
+- Buttons
+--- */
 
 button {
     background-color: white;
@@ -37,8 +88,9 @@ button + button {
     margin-left: 2px;
 }
 
-li {
-    margin: 2px 0;
+button.ico {
+    background-color: transparent;
+    border: unset;
 }
 
 .cancel-ok {
@@ -46,6 +98,21 @@ li {
 	flex-direction: row;
 	justify-content: flex-end;
 }
+
+/* ---
+- Lists
+--- */
+
+li {
+    margin: 2px 0;
+}
+
+/** Forms
+------------------------------------------------------------*/
+
+/* ---
+- General
+--- */
 
 form {
     display: flex;
@@ -61,13 +128,32 @@ form fieldset {
 
 form label {
     display: flex;
-    flex-direction: row;
     margin: 2px 0;
     line-height: 150%;
     justify-content: flex-start;
     align-items: center;
     align-content: center;
 }
+
+form.form-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+form.form-list table {
+    margin: unset;
+    width: 70%;
+}
+
+form.form-list div.buttons-box {
+    width: 25%;
+}
+
+
+
+
+
 
 form label.flex-column {
     flex-direction: column;
@@ -103,21 +189,21 @@ form input[type=text] {
 }
 
 form label.flex-end {
-		justify-content: flex-end;
-		text-align: right;
-		align-items: flex-start;
+    justify-content: flex-end;
+    text-align: right;
+    align-items: flex-start;
 }
 
 form label.flex-end input,
 form label.flex-end textarea {
-		text-align: left;
-		flex-grow: 0;
-		width: 80%;
-		margin-left: 10px;
+    text-align: left;
+    flex-grow: 0;
+    width: 80%;
+    margin-left: 10px;
 }
 
 form label.space-between {
-		justify-content: space-between;
+    justify-content: space-between;
 }
 
 form input[type=text],
@@ -158,13 +244,30 @@ form div.select-list label {
     align-items: flex-start;
 }
 
+form label[data-state="save-error"]:after {
+    content: '❌';
+}
+
+output {
+    display: block;
+    padding: 5px;
+    border-radius: 2px;
+    margin-top: 20px;
+}
+output[data-valid="false"] { border: 2px solid red; }
+output[data-valid="true"] { border: 2px solid green; }
+
+/* ---
+- Selectors
+--- */
+
 .select-list-wrapper {
-		background-color: white;
+    background-color: white;
 }
 
 .select-list-header {
-		display: flex;
-		border-bottom: 1px solid var(--mac-border-color);
+    display: flex;
+    border-bottom: 1px solid var(--mac-border-color);
     font-weight: normal;
     font-size: 1.2rem;
     color: #272727;
@@ -175,12 +278,12 @@ form div.select-list label {
 
 .select-list-header span:first-child,
 #table-history span:first-child {
-		width: 35%;
+    width: 35%;
 }
 
 .select-list-header span:last-child,
 #table-history span:last-child {
-		width: 55%;
+    width: 55%;
 }
 
 form div.select-list input[type="radio"] {
@@ -197,12 +300,11 @@ form div.select-list input[type="radio"]:checked {
 }
 
 .select-list-buttons button + button {
-		margin-top: 7px;
+    margin-top: 7px;
 }
 
-form label[data-state="save-error"]:after {
-    content: '❌';
-}
+/** Tables
+------------------------------------------------------------*/
 
 table {
     width: 100%;
@@ -226,14 +328,52 @@ td {
     padding: 0 5px;
 }
 
-output {
-    display: block;
-    padding: 5px;
-    border-radius: 2px;
-    margin-top: 20px;
+/** Page Configuration
+------------------------------------------------------------*/
+
+nav.menu-vertical {
+    position: absolute;
+    background-color: white;
+    top: 0px;
+    left: 0px;
+    width: 20%;
+    height: 100%; 
 }
-output[data-valid="false"] { border: 2px solid red; }
-output[data-valid="true"] { border: 2px solid green; }
+
+nav.menu-vertical ul {
+    list-style: none;
+    padding: unset;
+    margin: unset;
+}
+
+nav.menu-vertical ul li {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 1rem 0 1rem 1rem;
+}
+
+nav.menu-vertical ul li.active {
+    background-color: var(--cosma-blue);
+}
+
+nav.menu-vertical ul li .ico {
+    margin-right: 0.5rem;
+}
+
+nav.menu-vertical + main {
+    margin-left: 20%;
+}
+
+section.menu-section:not(.visible) {
+    display: none;
+}
+
+
+
+
+
+
 
 .stroke-exemple {
     display: block;
@@ -252,14 +392,15 @@ details summary {
 }
 
 .side-by-side {
-		display: flex;
+    display: flex;
 }
 
 .side-by-side div {
-		width: 40%;
-		margin-right: auto;
+    width: 40%;
+    margin-right: auto;
 }
 
 .side-by-side div h3 {
-		margin-top: 0;
+    margin-top: 0;
 }
+

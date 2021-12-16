@@ -13,210 +13,234 @@
 <body>
 
     <div class="wrapper">
+
+        <nav class="menu-vertical">
+            <ul>
+                <li data-section="record">
+                    <span class="ico">source</span>
+                    Fiches
+                </li>
+
+                <li data-section="reading">
+                    <span class="ico">bubble_chart</span>
+                    Lecture
+                </li>
+
+                <li data-section="links">
+                    <span class="ico">polyline</span>
+                    Liens
+                </li>
+
+                <li data-section="metadata">
+                    <span class="ico">label</span>
+                    Métadonnées
+                </li>
+
+                <li data-section="bibliography">
+                    <span class="ico">collections_bookmark</span>
+                    Bibliographie
+                </li>
+
+                <li data-section="interface">
+                    <span class="ico">web</span>
+                    Interface
+                </li>
+            </ul>
+        </nav>
     
         <main>
-            <form id="form-config">
-                <label>
-                    Répertoire des fiches :
-                    <input type="text" name="files_origin">
-                    <button type="button" id="dialog-path-fileorigin">Sélectionner</button>
-                </label>
+            <section id="section-record" class="menu-section">
+                <form>
+                    <label>
+                        Répertoire des fiches :
+                        <input type="text" name="files_origin">
+                        <button type="button" id="dialog-path-fileorigin">Sélectionner</button>
+                    </label>
+                </form>
 
-                <label>
-                    <input type="checkbox" name="history">
-                    Enregistrer automatiquement les cosmoscopes dans l’historique
-                </label>
+                <h3>Type de fiches</h3>
 
-                <label>
-                    Symbole de lien :
-                    <input type="text" name="link_symbol">
-                </label>
-
-                <div id="add-type-record">
-                    <h2>Types de fiches</h2>
-
-                    <button type="button" data-fx="add">Ajouter un type de fiche</button>
-
+                <form id="form-type-record" class="form-list">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Couleur</th>
-                                <th></th>
-                            </tr>
+                            <th width="10px"></th>
+                            <th>Nom</th>
+                            <th>Couleur</th>
                         </thead>
-
                         <tbody></tbody>
                     </table>
-                </div>
 
-                <div id="add-type-links">
-                    <h2>Types de liens</h2>
-
-                    <button type="button" data-fx="add">Ajouter un type de lien</button>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Trait</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <h2>Graphe</h2>
-                
-                <div class="side-by-side">
-                
-                    <div>
-
-                        <label>
-                            <input type="checkbox" name="graph_arrows">
-                            Afficher des flèches sur les liens
-                        </label>
-
-                        <label class="space-between">
-                            Niveau maximum de focus :
-                            <input type="number" name="focus_max" step="1">
-                        </label>
-
-                        <label class="space-between">
-                            Taille du texte des étiquettes :
-                            <input type="number" name="graph_text_size" step="1">
-                        </label>
-
-                        <label class="space-between">
-                            Couleur de fond :
-                            <input type="color" name="graph_background_color">
-                        </label>
-
-                        <label class="space-between">
-                            Couleur de surbrillance :
-                            <input type="color" name="graph_highlight_color">
-                        </label>
-
-                    </div>
-
-                    <div>
-
-                        <h3>Spatialisation</h3>
-                        
-                        <label class="space-between">
-                            Force d'attraction :
-                            <input type="number" name="attraction_force" step="1">
-                        </label>
-
-                        <label class="space-between">
-                            Distance maximum entre les nœuds :
-                            <input type="number" name="attraction_distance_max" step="1">
-                        </label>
-
-                        <label class="space-between">
-                            Attraction verticale :
-                            <input type="number" name="attraction_vertical" step="0.1">
-                        </label>
-
-                        <label class="space-between">
-                            Attraction horizontale :
-                            <input type="number" name="attraction_horizontal" step="0.1">
-                        </label>
-                            
-                    </div>
-                
-                </div>
-                
-                <h2>Métadonnées</h2>
-
-                <label class="flex-end">
-                    Titre de l'export :
-                    <input type="text" name="title">
-                </label>
-
-                <label class="flex-end">
-                    Auteur :
-                    <input type="text" name="author">
-                </label>
-
-                <label class="flex-end">
-                    Mots-clés :
-                    <input type="text" name="keywords">
-                </label>
-
-                <label class="flex-end">
-                    Description :
-                    <textarea name="description"></textarea>
-                </label>
-                
-                <h2>Bibliographie</h2>
-
-                <label>
-                    Données bibliographiques (CSL JSON) :
-                    <input type="text" name="bibliography">
-                    <button type="button" id="dialog-path-bibliography">Sélectionner</button>
-                </label>
-
-                <label>
-                    Style bibliographique (CSL) :
-                    <input type="text" name="csl">
-                    <button type="button" id="dialog-path-csl">Sélectionner</button>
-                </label>
-
-                <label>
-                    Localisation bibliographique (XML) :
-                    <input type="text" name="csl_locale">
-                    <button type="button" id="dialog-path-locales">Sélectionner</button>
-                </label>
-
-                <h2>Interface</h2>
-
-                <label>
-                    Sélectionner une langue d'affichage
-                    <select name="lang"></select>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="devtools">
-                    Activer les outils de développement
-                </label>
-
-                <label>
-                    CSS personnalisée :
-                    <input type="text" name="css_custom">
-                    <button type="button" id="dialog-path-css">Sélectionner</button>
-                </label>
-
-                <output></output>
-            </form>
-
-            <h2>Vues</h2>
-
-            <form id="form-views">
-
-                <div class="select-list">
-
-                    <div class="select-list-wrapper">
-
-                        <div class="select-list-header">
-                            <span>Nom</span>
-                        </div>
-
-                        <div id="table-history"></div>
-                            
-                    </div>
-
-                    <div>
+                    <div class="buttons-box">
                         <button data-action="update" type="submit">Renommer</button>
                         <button data-action="delete" type="submit">Supprimer</button>
                         <button data-action="delete-all" type="submit">Tout supprimer…</button>
                     </div>
-                </div>
+                </form>
+            </section>
 
-            </form>
+            <section id="section-reading" class="menu-section">
+                <form>
+                    <label>
+                        <input type="checkbox" name="history">
+                        Enregistrer automatiquement les cosmoscopes dans l’historique
+                    </label>
+                </form>
 
+                <h3>Panneau de lecture</h3>
+
+                <form>
+                    <label>
+                        Symbole de lien :
+                        <input type="text" name="link_symbol">
+                    </label>
+                </form>
+
+                <h3>Spatialisation</h3>
+
+                <form>
+                    <label class="space-between">
+                        Force d'attraction :
+                        <input type="number" name="attraction_force" step="1">
+                    </label>
+
+                    <label class="space-between">
+                        Distance maximum entre les nœuds :
+                        <input type="number" name="attraction_distance_max" step="1">
+                    </label>
+
+                    <label class="space-between">
+                        Attraction verticale :
+                        <input type="number" name="attraction_vertical" step="0.1">
+                    </label>
+
+                    <label class="space-between">
+                        Attraction horizontale :
+                        <input type="number" name="attraction_horizontal" step="0.1">
+                    </label>
+                </form>
+
+                <h3>Vues</h3>
+
+                <form id="form-views" class="form-list">
+                    <table>
+                        <thead>
+                            <th width="10px"></th>
+                            <th>Étiquette</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="radio" name="view" value="1"></td>
+                                <td>Thèse</td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" name="view" value="2"></td>
+                                <td>Mémoire</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="buttons-box">
+                        <button data-action="update" type="submit">Renommer</button>
+                        <button data-action="delete" type="submit">Supprimer</button>
+                        <button data-action="delete-all" type="submit">Tout supprimer…</button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="section-links" class="menu-section">
+                <form>
+                    <label>
+                        <input type="checkbox" name="graph_arrows">
+                        Afficher des flèches sur les liens
+                    </label>
+
+                    <label class="space-between">
+                        Niveau maximum de focus :
+                        <input type="number" name="focus_max" step="1">
+                    </label>
+
+                    <label class="space-between">
+                        Taille du texte des étiquettes :
+                        <input type="number" name="graph_text_size" step="1">
+                    </label>
+
+                    <label class="space-between">
+                        Couleur de fond :
+                        <input type="color" name="graph_background_color">
+                    </label>
+
+                    <label class="space-between">
+                        Couleur de surbrillance :
+                        <input type="color" name="graph_highlight_color">
+                    </label>
+                </form>
+            </section>
+
+            <section id="section-metadata" class="menu-section">
+                <form>
+                    <label class="flex-end">
+                        Titre de l'export :
+                        <input type="text" name="title">
+                    </label>
+    
+                    <label class="flex-end">
+                        Auteur :
+                        <input type="text" name="author">
+                    </label>
+    
+                    <label class="flex-end">
+                        Mots-clés :
+                        <input type="text" name="keywords">
+                    </label>
+    
+                    <label class="flex-end">
+                        Description :
+                        <textarea name="description"></textarea>
+                    </label>
+                </form>
+            </section>
+
+            <section id="section-bibliography" class="menu-section">
+                <form>
+                    <label>
+                        Données bibliographiques (CSL JSON) :
+                        <input type="text" name="bibliography">
+                        <button type="button" id="dialog-path-bibliography">Sélectionner</button>
+                    </label>
+    
+                    <label>
+                        Style bibliographique (CSL) :
+                        <input type="text" name="csl">
+                        <button type="button" id="dialog-path-csl">Sélectionner</button>
+                    </label>
+    
+                    <label>
+                        Localisation bibliographique (XML) :
+                        <input type="text" name="csl_locale">
+                        <button type="button" id="dialog-path-locales">Sélectionner</button>
+                    </label>
+                </form>
+            </section>
+
+            <section id="section-interface" class="menu-section">
+                <form>
+                    <label>
+                        Sélectionner une langue d'affichage
+                        <select name="lang"></select>
+                    </label>
+    
+                    <label>
+                        <input type="checkbox" name="devtools">
+                        Activer les outils de développement
+                    </label>
+    
+                    <label>
+                        CSS personnalisée :
+                        <input type="text" name="css_custom">
+                        <button type="button" id="dialog-path-css">Sélectionner</button>
+                    </label>
+                </form>
+            </section>
         </main>
 
     </div>

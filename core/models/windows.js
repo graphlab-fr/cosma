@@ -45,15 +45,7 @@ module.exports = {
         minHeight: 300,
         show: false,
         icon: iconPath,
-        autoHideMenuBar: true,
-        webPreferences: {
-            allowRunningInsecureContent: false,
-            contextIsolation: true,
-            enableRemoteModule: false,
-            nodeIntegration: false,
-            sandbox: true,
-            preload: path.join(__dirname, '../controller.js')
-        },
+        autoHideMenuBar: true
     },
 
     /**
