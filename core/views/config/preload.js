@@ -37,10 +37,13 @@ window.addEventListener("DOMContentLoaded", () => {
     for (const recordType in config.record_types) {
         tableTypesRecord.insertAdjacentHTML('beforeend',
         `<tr>
-            <td><input type="radio" name="view" value="1"></td>
+            <td><input type="radio" name="record-type" value="${recordType}"></td>
             <td>${recordType}</td>
             <td>${config.record_types[recordType]}</td>
         </tr>`);
     }
-
 });
+
+contextBridge.exposeInMainWorld('api',
+    { saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value) }
+);

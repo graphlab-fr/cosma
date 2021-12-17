@@ -77,3 +77,48 @@ function sectionVisibility (sectionIdoNumber, action) {
 }
 
 sectionVisibility(0, 'display');
+
+const forms = document.querySelectorAll('form');
+
+for (const form of forms) {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const action = e.submitter.dataset.action;
+
+        let data = new FormData(form);
+        data = Object.fromEntries(data);
+
+        switch (form.id) {
+            case 'form-type-record':
+                manageTypeRecord(data, action);
+                break;
+
+            case 'form-views':
+                
+                break;
+        }
+    })
+
+    if (['form-type-record', 'form-views'].includes(form.id)) {
+        continue; }
+
+    form.addEventListener('input', (e) => {
+        const input = e.target;
+
+        saveInput(input);
+    })
+}
+
+function saveInput (input) {
+    const result = window.api.saveConfigOption(input.name, input.value);
+
+    if (result === true) { input.setCustomValidity(''); }
+    else { input.setCustomValidity(result); }
+
+    input.reportValidity();
+}
+
+function manageTypeRecord (recordType, action) {
+    console.log(recordType, action);
+}

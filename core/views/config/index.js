@@ -59,6 +59,62 @@ ipcMain.on("get-config-options", (event) => {
     event.returnValue = new Config().opts;
 });
 
+ipcMain.on("save-config-option", (event, name, value) => {
+    const newConfig = {};
+    newConfig[name] = value;
+
+    const config = new Config(newConfig);
+
+    if (config.report.includes(name)) {
+        event.returnValue = config.writeReport();
+    } else {
+        config.save();
+        event.returnValue = true;
+    }
+});
+
+ipcMain.on("save-config-option-type-record", (event, recordType, action) => {
+    let config = new Config().opts;
+
+    const recordTypeName = Object.keys(recordType);
+    const recordTypeColor = Object.values(recordType);
+
+    switch (action) {
+        case 'add':
+            config.record_types[recordTypeName] = recordTypeColor;
+
+            config = new Config ({
+                record_types: config.record_types
+            });
+            break;
+
+        case 'update':
+            
+            break;
+
+        case 'delete':
+            delete config.record_types[recordTypeName];
+
+            config = new Config ({
+                record_types: config.record_types
+            });
+            break;
+
+        case 'delete-all':
+            config = new Config ({
+                record_types: Config.base.record_types
+            })
+            break;
+    }
+
+    if (config.report.includes('record_types')) {
+        event.returnValue = config.writeReport();
+    } else {
+        config.save();
+        event.returnValue = true;
+    }
+});
+
 // ipcMain.on("set-config-options", (event, data) => {
 //     const config = new Config(data);
 

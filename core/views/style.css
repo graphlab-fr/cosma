@@ -135,6 +135,10 @@ form label {
     align-content: center;
 }
 
+input:invalid {
+    border: 1px solid red !important;
+}
+
 form.form-list {
     display: flex;
     flex-direction: row;
