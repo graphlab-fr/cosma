@@ -43,9 +43,7 @@ module.exports = function (graphParams = [], runLast = false) {
     });
 
     window.on('maximize', () => {
-        // Display.windows['main'] = Display.storeSpecs(window);
-        // console.log('maximize');
-        console.log(Display.storeSpecs('main', window));
+        Display.storeSpecs('main', window);
     });
 
     window.on('unmaximize', () => {
@@ -56,7 +54,6 @@ module.exports = function (graphParams = [], runLast = false) {
     });
 
     window.once('closed', () => {
-        Display.emptyWindow('main');
         app.quit();
     });
 

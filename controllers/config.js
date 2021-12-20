@@ -1,6 +1,7 @@
 const { ipcMain } = require('electron');
 
-const Config = require('../cosma-core/models/config');
+const Config = require('../cosma-core/models/config')
+    , Display = require('../core/models/display');
 
 ipcMain.on("get-config-options", (event) => {
     event.returnValue = Config.get();
@@ -17,12 +18,10 @@ ipcMain.on("save-config-option", (event, name, value) => {
     } else {
         config.save();
         event.returnValue = true;
-
-        // modalView.webContents.send("confirmNewRecordTypeFromConfig", response);
     }
 });
 
-ipcMain.on("save-config-option-typerecord", (event, name, color, action) => {
+ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, color, action) => {
     let config = Config.get();
 
     switch (action) {
@@ -35,7 +34,7 @@ ipcMain.on("save-config-option-typerecord", (event, name, color, action) => {
             break;
 
         case 'update':
-            delete config.record_types[name];
+            delete config.record_types[nameInitial];
 
             config.record_types[name] = color;
 
@@ -64,5 +63,7 @@ ipcMain.on("save-config-option-typerecord", (event, name, color, action) => {
     } else {
         config.save();
         event.returnValue = true;
+
+        Display.getWindow('config').webContents.send("reset-config");
     }
 });

@@ -166,8 +166,10 @@ module.exports = class Display {
      */
 
     static saveDisplaying () {
+        const toSave = Object.assign({}, Display.getDisplaying(), Display.windows);
+
         try {
-            fs.writeFileSync(Display.filePath, JSON.stringify(Display.windows));
+            fs.writeFileSync(Display.filePath, JSON.stringify(toSave));
             return true;
         } catch (error) {
             console.error(error);

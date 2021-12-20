@@ -20,12 +20,13 @@ window.addEventListener("DOMContentLoaded", () => {
        return; }
 
     document.querySelector('input[name="name"]').value = recordType;
+    document.querySelector('input[name="initial_name"]').value = recordType;
     document.querySelector('input[name="color"]').value = config.record_types[recordType];
 });
 
 contextBridge.exposeInMainWorld('api',
     {
-        saveConfigOptionTypeRecord: (name, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, color, action),
+        saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action),
         closeWindow: () => ipcRenderer.sendSync('close')
     }
 );

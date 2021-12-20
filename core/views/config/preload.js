@@ -9,11 +9,33 @@ const {
     ipcRenderer
 } = require('electron');
 
-const config = ipcRenderer.sendSync('get-config-options');
+let config = ipcRenderer.sendSync('get-config-options');
+
+let inputs, tableTypesRecord;
 
 window.addEventListener("DOMContentLoaded", () => {
-    const inputs = document.querySelectorAll('input');
+    inputs = document.querySelectorAll('input');
+    tableTypesRecord = document
+        .getElementById('form-type-record')
+        .querySelector('tbody')
 
+    setConfigView();
+});
+
+ipcRenderer.on('reset-config', () => {
+    config = ipcRenderer.sendSync('get-config-options');
+    setConfigView();
+});
+
+contextBridge.exposeInMainWorld('api',
+    {
+        saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
+        saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action),
+        openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action)
+    }
+);
+
+function setConfigView () {
     for (const input of inputs) {
         switch (input.type) {
             case 'text':
@@ -30,9 +52,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const tableTypesRecord = document
-        .getElementById('form-type-record')
-        .querySelector('tbody')
+    tableTypesRecord.innerHTML = '';
 
     for (const recordType in config.record_types) {
         tableTypesRecord.insertAdjacentHTML('beforeend',
@@ -42,12 +62,4 @@ window.addEventListener("DOMContentLoaded", () => {
             <td>${config.record_types[recordType]}</td>
         </tr>`);
     }
-});
-
-contextBridge.exposeInMainWorld('api',
-    {
-        saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
-        saveConfigOptionTypeRecord: (name, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, color, action),
-        openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action)
-    }
-);
+}

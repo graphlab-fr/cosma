@@ -7,7 +7,7 @@ const {
 
 const config = require('../../../cosma-core/models/config').get()
     , lang = require('../../../cosma-core/models/lang')
-    , windowsModel = require('../../models/windows');
+    , Display = require('../../../core/models/display');
 
 let window;
 
@@ -17,17 +17,15 @@ module.exports = function (recordType, action) {
         return;
     }
 
-    window = new BrowserWindow (
-        Object.assign(windowsModel.modal, {
+    window = new BrowserWindow(
+        Object.assign(Display.getBaseSpecs('modal'), {
             title: lang.windows[`recordtype_${action}`][config.lang],
-            parent: BrowserWindow.getFocusedWindow(),
+            parent: Display.getWindow('config'),
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
             }
         })
     );
-
-    window.webContents.openDevTools({mode: 'detach'});
     
     window.loadFile(path.join(__dirname, './source.html'));
 
@@ -48,7 +46,9 @@ module.exports = function (recordType, action) {
     });
 
     ipcMain.once("close", (event) => {
-        window.close();
+        if (window !== undefined) {
+            window.close();
+        }
     });
 
     return window;

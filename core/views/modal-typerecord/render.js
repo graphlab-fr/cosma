@@ -11,7 +11,7 @@ const form = document.querySelector('form');
         let data = new FormData(form);
         data = Object.fromEntries(data);
 
-        const result = window.api.saveConfigOptionTypeRecord(data.name, data.color, data.action);
+        const result = window.api.saveConfigOptionTypeRecord(data.name, data.initial_name, data.color, data.action);
 
         const input = form.elements[0];
 

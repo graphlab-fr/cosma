@@ -8,6 +8,7 @@ const {
     , path = require('path');
 
 const config = require('../../../cosma-core/models/config').get()
+    , Display = require('../../models/display')
     , lang = require('../../../cosma-core/models/lang')
     , windowsModel = require('../../models/windows');
 
@@ -26,16 +27,40 @@ module.exports = function () {
         return;
     }
 
-    window = new BrowserWindow (
-        Object.assign(windowsModel.forms, {
+    const windowSpecs = Display.getWindowSpecs('config');
+
+    window = new BrowserWindow(
+        Object.assign(windowSpecs, {
             title: lang.windows[`preferences`][config.lang],
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
             }
         })
     );
+    
+    if (windowSpecs.maximized === true) {
+        window.maximize(); }
 
-    window.webContents.openDevTools({mode: 'detach'});
+    Display.storeSpecs('config', window);
+
+    window.on('resized', () => {
+        Display.storeSpecs('config', window);
+    });
+
+    window.on('moved', () => {
+        Display.storeSpecs('config', window);
+    });
+
+    window.on('maximize', () => {
+        Display.storeSpecs('config', window);
+    });
+
+    window.on('unmaximize', () => {
+        const winSpecs = Display.getWindowSpecs('config');
+        window.setSize(winSpecs.width, winSpecs.height, true);
+        window.setPosition(winSpecs.x, winSpecs.y, true);
+        Display.storeSpecs('config', window);
+    });
     
     window.loadFile(path.join(__dirname, './source.html'));
 
@@ -44,6 +69,7 @@ module.exports = function () {
     });
 
     window.once('closed', () => {
+        Display.emptyWindow('config');
         window = undefined;
     });
 }
