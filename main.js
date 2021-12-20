@@ -8,7 +8,8 @@ const {
 
 const windowsModel = require('./core/models/windows')
     , History = require('./core/models/history')
-    , Config = require('./cosma-core/models/config');
+    , Config = require('./cosma-core/models/config')
+    , Display = require('./core/models/display');
 
 /**
  * Test if a window is stored into 'BrowserWindow' object.
@@ -30,8 +31,21 @@ app.whenReady().then(() => {
 
     if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
 
-    const mainWindow = new BrowserWindow(windowsModel.main);
-    exports.mainWindow = mainWindow;
+    const windowSpecs = Display.getWindowSpecs('main');
+
+    const mainWindow = new BrowserWindow(
+        Object.assign(windowSpecs, {
+            webPreferences: {
+                preload: path.join(__dirname, '../views/cosmoscope/main-preload.js')
+            },
+            title: 'Cosma'
+        })
+    );
+    
+    if (windowSpecs.maximized === true) {
+        mainWindow.maximize(); }
+
+    Display.storeSpecs('main', mainWindow);
 
     const openCosmoscope = require('./core/views/cosmoscope/index');
 

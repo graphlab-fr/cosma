@@ -15,8 +15,8 @@ const {
     , fs = require('fs');
 
 const Config = require('../../../cosma-core/models/config')
-    , windowsModel = require('../../models/windows')
-    , window = require('../../../main').mainWindow;
+    , Display = require('../../models/display')
+    , windowsModel = require('../../models/windows');
 
 let windowPath, modalView;
 
@@ -26,13 +26,37 @@ const History = require('../../models/history')
 
 module.exports = function (graphParams = [], runLast = false) {
 
+    const window = Display.getWindow('main');
+
     const config = new Config();
 
     window.once('ready-to-show', () => {
         window.show();
-    })
+    });
+
+    window.on('resized', () => {
+        Display.storeSpecs('main', window);
+    });
+
+    window.on('moved', () => {
+        Display.storeSpecs('main', window);
+    });
+
+    window.on('maximize', () => {
+        // Display.windows['main'] = Display.storeSpecs(window);
+        // console.log('maximize');
+        console.log(Display.storeSpecs('main', window));
+    });
+
+    window.on('unmaximize', () => {
+        const winSpecs = Display.getWindowSpecs('main');
+        window.setSize(winSpecs.width, winSpecs.height, true);
+        window.setPosition(winSpecs.x, winSpecs.y, true);
+        Display.storeSpecs('main', window);
+    });
 
     window.once('closed', () => {
+        Display.emptyWindow('main');
         app.quit();
     });
 
