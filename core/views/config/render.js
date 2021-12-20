@@ -91,7 +91,10 @@ for (const form of forms) {
 
         switch (form.id) {
             case 'form-type-record':
-                manageTypeRecord(data, action);
+                const input = Array.from(form.elements)
+                    .find(input => input.value === data['record_types']);
+
+                manageTypeRecord(data, action, input);
                 break;
 
             case 'form-views':
@@ -119,6 +122,31 @@ function saveInput (input) {
     input.reportValidity();
 }
 
-function manageTypeRecord (recordType, action) {
-    console.log(recordType, action);
+function manageTypeRecord (formData, action, input) {
+    let result = true;
+
+    switch (action) {
+        case 'add':
+            window.api.openModalTypeRecord(formData.record_types, action);
+            break;
+
+        case 'update':
+            window.api.openModalTypeRecord(formData.record_types, action);
+            break;
+
+        case 'delete':
+            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, action)
+            break;
+
+        case 'delete-all':
+            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, action)
+            break;
+    }
+
+    if (input === undefined) { return; }
+
+    if (result === true) { input.setCustomValidity(''); }
+    else { input.setCustomValidity(result); }
+
+    input.reportValidity();
 }

@@ -135,6 +135,10 @@ form label {
     align-content: center;
 }
 
+input:focus {
+    outline: none !important;
+}
+
 input:invalid {
     border: 1px solid red !important;
 }

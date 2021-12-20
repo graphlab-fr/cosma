@@ -7,11 +7,11 @@ const {
     } = require('electron')
     , path = require('path');
 
-const Config = require('../../../cosma-core/models/config')
+const config = require('../../../cosma-core/models/config').get()
+    , lang = require('../../../cosma-core/models/lang')
     , windowsModel = require('../../models/windows');
 
-let window, modalRecordNew, modalRecordUpdate,
-    modalLinkNew, modalLinkUpdate, modalViewUpdate;
+let window;
 
 module.exports = function () {
 
@@ -28,7 +28,7 @@ module.exports = function () {
 
     window = new BrowserWindow (
         Object.assign(windowsModel.forms, {
-            title: 'Configuration',
+            title: lang.windows[`preferences`][config.lang],
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
             }
@@ -37,7 +37,7 @@ module.exports = function () {
 
     window.webContents.openDevTools({mode: 'detach'});
     
-    window.loadFile(path.join(__dirname, './main-source.html'));
+    window.loadFile(path.join(__dirname, './source.html'));
 
     window.once('ready-to-show', () => {
         window.show();
@@ -46,74 +46,7 @@ module.exports = function () {
     window.once('closed', () => {
         window = undefined;
     });
-
 }
-
-/**
- * API
- * ---
- * manage data
- */
-
-ipcMain.on("get-config-options", (event) => {
-    event.returnValue = new Config().opts;
-});
-
-ipcMain.on("save-config-option", (event, name, value) => {
-    const newConfig = {};
-    newConfig[name] = value;
-
-    const config = new Config(newConfig);
-
-    if (config.report.includes(name)) {
-        event.returnValue = config.writeReport();
-    } else {
-        config.save();
-        event.returnValue = true;
-    }
-});
-
-ipcMain.on("save-config-option-type-record", (event, recordType, action) => {
-    let config = new Config().opts;
-
-    const recordTypeName = Object.keys(recordType);
-    const recordTypeColor = Object.values(recordType);
-
-    switch (action) {
-        case 'add':
-            config.record_types[recordTypeName] = recordTypeColor;
-
-            config = new Config ({
-                record_types: config.record_types
-            });
-            break;
-
-        case 'update':
-            
-            break;
-
-        case 'delete':
-            delete config.record_types[recordTypeName];
-
-            config = new Config ({
-                record_types: config.record_types
-            });
-            break;
-
-        case 'delete-all':
-            config = new Config ({
-                record_types: Config.base.record_types
-            })
-            break;
-    }
-
-    if (config.report.includes('record_types')) {
-        event.returnValue = config.writeReport();
-    } else {
-        config.save();
-        event.returnValue = true;
-    }
-});
 
 // ipcMain.on("set-config-options", (event, data) => {
 //     const config = new Config(data);

@@ -37,7 +37,7 @@ window.addEventListener("DOMContentLoaded", () => {
     for (const recordType in config.record_types) {
         tableTypesRecord.insertAdjacentHTML('beforeend',
         `<tr>
-            <td><input type="radio" name="record-type" value="${recordType}"></td>
+            <td><input type="radio" name="record_types" value="${recordType}"></td>
             <td>${recordType}</td>
             <td>${config.record_types[recordType]}</td>
         </tr>`);
@@ -45,5 +45,9 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 contextBridge.exposeInMainWorld('api',
-    { saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value) }
+    {
+        saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
+        saveConfigOptionTypeRecord: (name, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, color, action),
+        openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action)
+    }
 );
