@@ -10,14 +10,16 @@ const {
 } = require('electron');
 
 let config = ipcRenderer.sendSync('get-config-options');
+let langages = ipcRenderer.sendSync('get-langages');
 
-let inputs, tableTypesRecord;
+let inputs, tableTypesRecord, selectLang;
 
 window.addEventListener("DOMContentLoaded", () => {
     inputs = document.querySelectorAll('input');
     tableTypesRecord = document
         .getElementById('form-type-record')
         .querySelector('tbody')
+    selectLang = document.querySelector('select[name="lang"]')
 
     setConfigView();
 });
@@ -61,5 +63,18 @@ function setConfigView () {
             <td>${recordType}</td>
             <td>${config.record_types[recordType]}</td>
         </tr>`);
+    }
+
+    selectLang.innerHTML = '';
+
+    for (const lang in langages) {
+        if (lang === config.lang) {
+            selectLang.insertAdjacentHTML('beforeend',
+            `<option value="${lang}" selected>${langages[lang]}</option>`);
+            continue;
+        }
+
+        selectLang.insertAdjacentHTML('beforeend',
+        `<option value="${lang}">${langages[lang]}</option>`);
     }
 }

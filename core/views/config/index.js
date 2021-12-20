@@ -64,6 +64,8 @@ module.exports = function () {
     
     window.loadFile(path.join(__dirname, './source.html'));
 
+    window.webContents.openDevTools({mode: 'detach'});
+
     window.once('ready-to-show', () => {
         window.show();
     });

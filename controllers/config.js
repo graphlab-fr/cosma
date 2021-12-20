@@ -7,6 +7,10 @@ ipcMain.on("get-config-options", (event) => {
     event.returnValue = Config.get();
 });
 
+ipcMain.on("get-langages", (event) => {
+    event.returnValue = Config.validLangages;
+});
+
 ipcMain.on("save-config-option", (event, name, value) => {
     const newConfig = {};
     newConfig[name] = value;

@@ -109,12 +109,17 @@ for (const form of forms) {
     form.addEventListener('input', (e) => {
         const input = e.target;
 
+        if (input.type === 'checkbox') {
+            saveInput(input, (input.checked === true));
+            return;
+        }
+
         saveInput(input);
     })
 }
 
-function saveInput (input) {
-    const result = window.api.saveConfigOption(input.name, input.value);
+function saveInput (input, value = input.value, name = input.name) {
+    const result = window.api.saveConfigOption(name, value);
 
     if (result === true) { input.setCustomValidity(''); }
     else { input.setCustomValidity(result); }
