@@ -12,12 +12,18 @@ const {
 let config = ipcRenderer.sendSync('get-config-options');
 let langages = ipcRenderer.sendSync('get-langages');
 
-let inputs, tableTypesRecord, selectLang;
+let inputs, tableTypesLink, tableTypesRecord, tableView, selectLang;
 
 window.addEventListener("DOMContentLoaded", () => {
     inputs = document.querySelectorAll('input');
     tableTypesRecord = document
         .getElementById('form-type-record')
+        .querySelector('tbody')
+    tableTypesLink = document
+        .getElementById('form-type-link')
+        .querySelector('tbody')
+    tableView = document
+        .getElementById('form-view')
         .querySelector('tbody')
     selectLang = document.querySelector('select[name="lang"]')
 
@@ -33,7 +39,11 @@ contextBridge.exposeInMainWorld('api',
     {
         saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
         saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action),
-        openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action)
+        saveConfigOptionTypeLink: (name, nameInitial, color, stroke, action) => ipcRenderer.sendSync('save-config-option-typelink', name, nameInitial, color, stroke, action),
+        openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action),
+        openModalTypeLink: (recordType, action) => ipcRenderer.send('open-modal-typelink', recordType, action),
+        saveConfigOptionView: (name, nameInitial, key, action) => ipcRenderer.sendSync('save-config-option-view', name, nameInitial, key, action),
+        openModalView: (view, action) => ipcRenderer.send('open-modal-view', view, action),
     }
 );
 
@@ -62,6 +72,28 @@ function setConfigView () {
             <td><input type="radio" name="record_types" value="${recordType}"></td>
             <td>${recordType}</td>
             <td>${config.record_types[recordType]}</td>
+        </tr>`);
+    }
+
+    tableTypesLink.innerHTML = '';
+
+    for (const linkType in config.link_types) {
+        tableTypesLink.insertAdjacentHTML('beforeend',
+        `<tr>
+            <td><input type="radio" name="link_types" value="${linkType}"></td>
+            <td>${linkType}</td>
+            <td>${config.link_types[linkType].stroke}</td>
+            <td>${config.link_types[linkType].color}</td>
+        </tr>`);
+    }
+
+    tableView.innerHTML = '';
+
+    for (const view in config.views) {
+        tableView.insertAdjacentHTML('beforeend',
+        `<tr>
+            <td><input type="radio" name="view" value="${view}"></td>
+            <td>${view}</td>
         </tr>`);
     }
 

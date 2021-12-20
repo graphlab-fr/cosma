@@ -16,16 +16,18 @@ function saveView () {
     btn.removeAttribute('hidden');
 
     btn.addEventListener('click', () => {
-        ipcRenderer.send('askNewViewModal', null);
+        // ipcRenderer.send('askNewViewModal', null);
 
-        ipcRenderer.once('confirmViewRegistration', (event, response) => {
-            container.insertAdjacentHTML('beforeend',
-            `<button class="btn" data-view="${response.data.key}" data-active="false" onclick="changeView(this)">
-                ${response.data.name}
-            </button>`);
+        ipcRenderer.send('open-modal-view', undefined, 'add');
 
-            counter.textContent = Number(counter.textContent) + 1;
-        });
+        // ipcRenderer.once('confirmViewRegistration', (event, response) => {
+        //     container.insertAdjacentHTML('beforeend',
+        //     `<button class="btn" data-view="${response.data.key}" data-active="false" onclick="changeView(this)">
+        //         ${response.data.name}
+        //     </button>`);
+
+        //     counter.textContent = Number(counter.textContent) + 1;
+        // });
     })
 }
 

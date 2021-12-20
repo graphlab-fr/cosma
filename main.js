@@ -36,7 +36,7 @@ app.whenReady().then(() => {
     const mainWindow = new BrowserWindow(
         Object.assign(windowSpecs, {
             webPreferences: {
-                preload: path.join(__dirname, '../views/cosmoscope/main-preload.js')
+                preload: path.join(__dirname, './core/views/cosmoscope/preload.js')
             },
             title: 'Cosma'
         })

@@ -68,6 +68,122 @@ ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, color, ac
         config.save();
         event.returnValue = true;
 
-        Display.getWindow('config').webContents.send("reset-config");
+        const configWindow = Display.getWindow('config');
+        if (configWindow) {
+            configWindow.webContents.send("reset-config");
+        }
+    }
+});
+
+ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stroke, action) => {
+    let config = Config.get();
+
+    switch (action) {
+        case 'add':
+            config.link_types[name] = {
+                stroke: stroke,
+                color: color
+            };
+
+            config = new Config ({
+                link_types: config.link_types
+            });
+            break;
+
+        case 'update':
+            delete config.link_types[nameInitial];
+
+            config.link_types[name] = {
+                stroke: stroke,
+                color: color
+            };
+
+            config = new Config ({
+                link_types: config.link_types
+            });
+            break;
+
+        case 'delete':
+            delete config.link_types[name];
+
+            config = new Config ({
+                link_types: config.link_types
+            });
+            break;
+
+        case 'delete-all':
+            config = new Config ({
+                link_types: Config.base.link_types
+            })
+            break;
+    }
+
+    if (config.report.includes('link_types')) {
+        event.returnValue = config.writeReport();
+    } else {
+        config.save();
+        event.returnValue = true;
+
+        const configWindow = Display.getWindow('config');
+        if (configWindow) {
+            configWindow.webContents.send("reset-config");
+        }
+    }
+});
+
+ipcMain.on("get-link-strokes", (event) => {
+    event.returnValue = Config.validLinkStrokes;
+});
+
+ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) => {
+    let config = Config.get();
+
+    // event.returnValue = true;
+    // return console.log(name, nameInitial, key, action);
+
+    switch (action) {
+        case 'add':
+            config.views[name] = key;
+
+            config = new Config ({
+                views: config.views
+            });
+            break;
+
+        case 'update':
+            delete config.views[nameInitial];
+
+            config.views[name] = key;
+
+            config = new Config ({
+                views: config.views
+            });
+            break;
+
+        case 'delete':
+            delete config.views[name];
+
+            config = new Config ({
+                views: config.views
+            });
+            break;
+
+        case 'delete-all':
+            config = new Config ({
+                views: Config.base.views
+            })
+            break;
+    }
+
+    if (config.report.includes('views')) {
+        event.returnValue = config.writeReport();
+    } else {
+        config.save();
+        event.returnValue = true;
+
+        const configWindow = Display.getWindow('config');
+        if (configWindow) {
+            configWindow.webContents.send("reset-config");
+        }
     }
 });

@@ -111,7 +111,7 @@ module.exports = class Display {
 
     static getWindow (windowName) {
         return BrowserWindow.getAllWindows()
-            .find(window => window.id === Display.windows[windowName].id)
+            .find(window => window.id === Display.windows[windowName]?.id)
     }
 
     /**
