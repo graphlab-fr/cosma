@@ -53,6 +53,10 @@ module.exports = function (graphParams = [], runLast = false) {
         Display.storeSpecs('main', window);
     });
 
+    window.once('close', () => {
+        Display.emptyWindow('main');
+    });
+
     window.once('closed', () => {
         app.quit();
     });

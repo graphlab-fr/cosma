@@ -134,7 +134,7 @@ module.exports = class Display {
 
     static emptyWindow (windowName) {
         Display.saveDisplaying();
-        Display.windows[windowName] = undefined;
+        delete Display.windows[windowName].id;
     }
 
     /**
@@ -166,7 +166,7 @@ module.exports = class Display {
      */
 
     static saveDisplaying () {
-        const toSave = Object.assign({}, Display.getDisplaying(), Display.windows);
+        const toSave = Object.assign(Display.getDisplaying(), Display.windows);
 
         try {
             fs.writeFileSync(Display.filePath, JSON.stringify(toSave));

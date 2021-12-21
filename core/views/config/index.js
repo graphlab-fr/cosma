@@ -68,8 +68,11 @@ module.exports = function () {
         window.show();
     });
 
-    window.once('closed', () => {
+    window.once('close', () => {
         Display.emptyWindow('config');
+    });
+
+    window.once('closed', () => {
         window = undefined;
     });
 }
