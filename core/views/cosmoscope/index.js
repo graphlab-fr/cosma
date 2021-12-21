@@ -9,6 +9,7 @@ const {
         ipcMain,
         clipboard,
         dialog,
+        shell,
         BrowserWindow // app windows generator
     } = require('electron')
     , path = require('path')
@@ -18,7 +19,7 @@ const Config = require('../../../cosma-core/models/config')
     , Display = require('../../models/display')
     , windowsModel = require('../../models/windows');
 
-let windowPath, modalView;
+let windowPath, window;
 
 const History = require('../../models/history')
     , Graph = require('../../../cosma-core/models/graph')
@@ -26,7 +27,7 @@ const History = require('../../models/history')
 
 module.exports = function (graphParams = [], runLast = false) {
 
-    const window = Display.getWindow('main');
+    window = Display.getWindow('main');
 
     const config = new Config();
 
@@ -61,6 +62,11 @@ module.exports = function (graphParams = [], runLast = false) {
         app.quit();
     });
 
+    window.webContents.on('will-navigate', function(e, url) {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
+
     const lastHistoryEntry = History.getLast();
 
     if (runLast === true && lastHistoryEntry) {
@@ -74,18 +80,20 @@ module.exports = function (graphParams = [], runLast = false) {
     if (config.canCssCustom() === true) {
         graphParams.push('css_custom'); }
 
-    const graph = new Graph(graphParams)
-        , template = new Template(graph)
-        , history = new History();
+    let graph = new Graph(graphParams);
 
     if (graph.errors.length > 0) {
         dialog.showMessageBox(window, {
-            message: "Vous ne pouvez traiter les citations : des paramètres sont manquants. Veuillez compléter vos préférences.",
+            message: graph.errors.join('. '),
             type: 'info',
             title: "Impossible de traiter les citations"
         });
-        return;
+
+        graph = new Graph(['empty']);
     }
+
+    let template = new Template(graph)
+        , history = new History();
 
     windowPath = path.join(history.pathToStore, 'cosmoscope.html');
 
@@ -93,91 +101,30 @@ module.exports = function (graphParams = [], runLast = false) {
     history.store('report.json', JSON.stringify(graph.reportToSentences()));
 
     window.loadFile(windowPath);
-
 }
 
-ipcMain.on("askNewViewModal", (event, data) => {
-    modalView = new BrowserWindow (
-        Object.assign(windowsModel.modal, {
-            parent: window,
-            title: 'Nouvelle vue'
-        })
-    );
+ipcMain.on("askReload", (event) => { window.reload(); });
 
-    modalView.loadFile(path.join(__dirname, './modal-view-source.html'));
-
-    modalView.once('ready-to-show', () => {
-        modalView.show();
-        modalView.webContents.send("getNewViewKey", clipboard.readText());
-    });
-});
-
-ipcMain.on("sendViewName", (event, data) => {
-    let config = new Config();
-
-    const views = config.opts.views || {};
-
-    views[data.name] = data.key;
-
-    config = new Config({
-        views: views
-    });
-
-    let result = config.save()
-        , response;
-
-        console.log(result);
-
-    if (result === true) {
-        response = {
-            isOk: true,
-            consolMsg: "La nouvelle vue a bien été enregistré dans la configuration.",
-            data: data
-        };
-
-        window.webContents.send('confirmViewRegistration', response);
-        modalView.close();
-    } else if (result === false) {
-        response = {
-            isOk: false,
-            consolMsg: "La nouvelle vue n'a pas pu être enregistrée dans la configuration.",
-            data: {}
-        };
-
-        modalView.webContents.send("confirmNewRecordTypeFromConfig", response);
-    } else {
-        response = {
-            isOk: false,
-            consolMsg: "La configuration saisie est invalide. Veuillez apporter les corrections suivantes : " + result.join(' '),
-            data: {}
-        };
-
-        modalView.webContents.send("confirmNewRecordTypeFromConfig", response);
-    }
-});
-
-ipcMain.on("askReload", (event, data) => { window.reload(); });
-
-ipcMain.on("askBack", (event, data) => {
+ipcMain.on("askBack", (event) => {
     if (window.webContents.canGoBack()) {
         window.webContents.goBack();
     };
 });
 
-ipcMain.on("askForward", (event, data) => {
+ipcMain.on("askForward", (event) => {
     if (window.webContents.canGoForward()) {
         window.webContents.goForward();
     };
 });
 
-ipcMain.on("askShare", (event, data) => {
+ipcMain.on("askShare", (event) => {
     require('../export/index')(window);
 });
 
-ipcMain.on("askRecordNew", (event, data) => {
+ipcMain.on("askRecordNew", (event) => {
     require('../record/index')();
 });
 
-ipcMain.on("askCosmoscopeNew", (event, data) => {
+ipcMain.on("askCosmoscopeNew", (event) => {
     require('./index')();
 });

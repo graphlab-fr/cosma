@@ -52,7 +52,7 @@
                     <label>
                         Répertoire des fiches :
                         <input type="text" name="files_origin">
-                        <button type="button" id="dialog-path-fileorigin">Sélectionner</button>
+                        <button type="button" data-path="directory" id="dialog-path-fileorigin">Sélectionner</button>
                     </label>
                 </form>
 
@@ -190,7 +190,7 @@
             <section id="section-metadata" class="menu-section">
                 <form>
                     <label class="flex-end">
-                        Titre de l'export :
+                        Titre export :
                         <input type="text" name="title">
                     </label>
     
@@ -216,21 +216,27 @@
                     <label>
                         Données bibliographiques (CSL JSON) :
                         <input type="text" name="bibliography">
-                        <button type="button" id="dialog-path-bibliography">Sélectionner</button>
+                        <button type="button" data-path="json" id="dialog-path-bibliography">Sélectionner</button>
                     </label>
     
                     <label>
                         Style bibliographique (CSL) :
                         <input type="text" name="csl">
-                        <button type="button" id="dialog-path-csl">Sélectionner</button>
+                        <button type="button" data-path="csl" id="dialog-path-csl">Sélectionner</button>
                     </label>
     
                     <label>
-                        Localisation bibliographique (XML) :
+                        Traduction du format bibliographique (XML) :
                         <input type="text" name="csl_locale">
-                        <button type="button" id="dialog-path-locales">Sélectionner</button>
+                        <button type="button" data-path="xml" id="dialog-path-locales">Sélectionner</button>
                     </label>
                 </form>
+
+                <p>
+                    <a href="https://github.com/citation-style-language/locales">Télécharger des traductions de notices</a>
+                    <br/>
+                    <a href="https://www.zotero.org/styles">Télécharger des styles bibliographiques</a>
+                </p>
             </section>
 
             <section id="section-interface" class="menu-section">

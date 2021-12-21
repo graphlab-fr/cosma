@@ -6,3 +6,4 @@
 
 require('./config');
 require('./modal');
+require('./dialog');

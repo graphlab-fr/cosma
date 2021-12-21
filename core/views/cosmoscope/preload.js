@@ -17,8 +17,6 @@ function views () {
 
     resetViewMenu();
 
-    btn.removeAttribute('hidden');
-
     btn.addEventListener('click', () => {
         ipcRenderer.send('open-modal-view', undefined, 'add');
     });

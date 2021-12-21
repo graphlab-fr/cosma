@@ -220,3 +220,35 @@ function manageView (formData, action, input) {
 
     input.reportValidity();
 }
+
+(function () {
+    const btnRequestPath = document.querySelectorAll('[data-path]');
+
+    for (const btn of btnRequestPath) {
+        const input = btn.previousElementSibling;
+
+        if (btn.dataset.path === 'directory') {
+            btn.addEventListener('click', () => {
+                window.api.dialogRequestDirPath(input.name);
+            });
+            continue;
+        }
+
+        btn.addEventListener('click', () => {
+            window.api.dialogRequestFilePath(input.name, btn.dataset.path);
+        });
+    }
+
+    window.api.getDirPathFromDialog(setValueFromDialog);
+    window.api.getFilePathFromDialog(setValueFromDialog);
+
+    function setValueFromDialog (response) {
+        if (response.isOk === false) {
+            return; }
+            console.log(`input[name="${response.target}"]`);
+        const input = document.querySelector(`input[name="${response.target}"]`);
+        input.value = response.data;
+
+        saveInput(input);
+    }
+})();

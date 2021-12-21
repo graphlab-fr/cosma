@@ -19,7 +19,7 @@ module.exports = function (recordType, action) {
 
     window = new BrowserWindow(
         Object.assign(Display.getBaseSpecs('modal'), {
-            title: lang.windows[`recordtype_${action}`][config.lang],
+            title: lang.windows[`recordtype_${action}`].title[config.lang],
             parent: Display.getWindow('config'),
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
@@ -43,12 +43,6 @@ module.exports = function (recordType, action) {
 
     ipcMain.once("get-action", (event) => {
         event.returnValue = action;
-    });
-
-    ipcMain.once("close", (event) => {
-        if (window !== undefined) {
-            window.close();
-        }
     });
 
     return window;

@@ -26,8 +26,5 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 contextBridge.exposeInMainWorld('api',
-    {
-        saveConfigOptionView: (name, nameInitial, key, action) => ipcRenderer.sendSync('save-config-option-view', name, nameInitial, key, action),
-        closeWindow: () => ipcRenderer.sendSync('close')
-    }
+    { saveConfigOptionView: (name, nameInitial, key, action) => ipcRenderer.sendSync('save-config-option-view', name, nameInitial, key, action) }
 );

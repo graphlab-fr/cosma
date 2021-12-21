@@ -38,8 +38,5 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 contextBridge.exposeInMainWorld('api',
-    {
-        saveConfigOptionTypeLink: (name, nameInitial, color, stroke, action) => ipcRenderer.sendSync('save-config-option-typelink', name, nameInitial, color, stroke, action),
-        closeWindow: () => ipcRenderer.sendSync('close')
-    }
+    { saveConfigOptionTypeLink: (name, nameInitial, color, stroke, action) => ipcRenderer.sendSync('save-config-option-typelink', name, nameInitial, color, stroke, action) }
 );

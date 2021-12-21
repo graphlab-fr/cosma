@@ -17,7 +17,7 @@ const form = document.querySelector('form');
 
         if (result === true) {
             input.setCustomValidity('');
-            window.api.closeWindow();
+            window.close();
         }
         else {
             input.setCustomValidity(result);
@@ -26,4 +26,11 @@ const form = document.querySelector('form');
 
         input.reportValidity();
     })
-})()
+})();
+
+(function () {
+    document.querySelector('.window-close')
+        .addEventListener('click', () => {
+            window.close();
+        })
+})();

@@ -20,7 +20,7 @@ module.exports = function (viewName, action) {
 
     window = new BrowserWindow(
         Object.assign(Display.getBaseSpecs('modal'), {
-            title: lang.windows[`view_${action}`][config.lang],
+            title: lang.windows[`view_${action}`].title[config.lang],
             parent: Display.getWindow('main'),
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
@@ -37,8 +37,6 @@ module.exports = function (viewName, action) {
     window.once('closed', () => {
         window = undefined;
     });
-
-    window.webContents.openDevTools({mode: 'detach'});
 
     ipcMain.once("get-view-name", (event) => {
         event.returnValue = viewName;

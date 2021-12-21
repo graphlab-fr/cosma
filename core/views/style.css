@@ -5,6 +5,7 @@
 
 :root {
     --cosma-blue: #147899;
+    --select-color: #a0cddd;
     --cosma-blue-dark: #02385c;
     --mac-menu-background-color: #f6f6f6;
     --mac-border-color: #e6e6e6;
@@ -26,8 +27,7 @@ html {
 body {
     padding: 20px;
     margin: 0;
-    font-family: -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica',
-        'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
     font-size: 1.4rem;
     overflow-x: hidden;
     background-color: var(--mac-menu-background-color);
@@ -84,8 +84,12 @@ button {
     padding: 2px 15px;
 }
 
+button.primary {
+    background-color: var(--select-color);
+}
+
 button + button {
-    margin-left: 2px;
+    margin-left: 4px;
 }
 
 button.ico {
@@ -94,6 +98,10 @@ button.ico {
 }
 
 .cancel-ok {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 100%;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
@@ -158,10 +166,9 @@ form.form-list div.buttons-box {
     width: 25%;
 }
 
-
-
-
-
+form.form-list div.buttons-box button {
+    margin: unset;
+}
 
 form label.flex-column {
     flex-direction: column;
@@ -362,7 +369,7 @@ nav.menu-vertical ul li {
 }
 
 nav.menu-vertical ul li.active {
-    background-color: var(--cosma-blue);
+    background-color: var(--select-color);
 }
 
 nav.menu-vertical ul li .ico {

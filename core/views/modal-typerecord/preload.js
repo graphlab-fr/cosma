@@ -25,8 +25,5 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 contextBridge.exposeInMainWorld('api',
-    {
-        saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action),
-        closeWindow: () => ipcRenderer.sendSync('close')
-    }
+    { saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action) }
 );

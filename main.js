@@ -61,7 +61,9 @@ app.whenReady().then(() => {
         .getMenuItemById('devtools')
         .visible = config.opts.devtools;
 
-    require('./controllers')
+    require('./controllers');
+
+    require('./core/models/shortcuts');
 
     openCosmoscope([], runLast = true);
 
