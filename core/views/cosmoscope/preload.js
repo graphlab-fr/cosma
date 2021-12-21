@@ -2,33 +2,44 @@ const {
     ipcRenderer
 } = require('electron');
 
+let config = ipcRenderer.sendSync('get-config-options');
+
 window.addEventListener("DOMContentLoaded", () => {
-    saveView();
+    views();
     menu();
 });
 
-function saveView () {
-    const viewInterface = document.querySelector('.menu-view')
+function views () {
+    const viewMenu = document.querySelector('.menu-view')
         , btn = document.getElementById('view-save')
-        , counter = viewInterface.querySelector('.badge')
-        , container = viewInterface.querySelector('div');
+        , counter = viewMenu.querySelector('.badge')
+        , container = viewMenu.querySelector('div');
+
+    resetViewMenu();
 
     btn.removeAttribute('hidden');
 
     btn.addEventListener('click', () => {
-        // ipcRenderer.send('askNewViewModal', null);
-
         ipcRenderer.send('open-modal-view', undefined, 'add');
+    });
 
-        // ipcRenderer.once('confirmViewRegistration', (event, response) => {
-        //     container.insertAdjacentHTML('beforeend',
-        //     `<button class="btn" data-view="${response.data.key}" data-active="false" onclick="changeView(this)">
-        //         ${response.data.name}
-        //     </button>`);
+    ipcRenderer.on('reset-views', (event) => {
+        config = ipcRenderer.sendSync('get-config-options');
+        resetViewMenu();
+    });
 
-        //     counter.textContent = Number(counter.textContent) + 1;
-        // });
-    })
+    function resetViewMenu () {
+        container.innerHTML = '';
+
+        for (const view in config.views) {
+            container.insertAdjacentHTML('beforeend',
+                `<button class="btn" data-view="${config.views[view]}" data-active="false" onclick="changeView(this)">
+                    ${view}
+                </button>`);
+        }
+
+        counter.textContent = Object.keys(config.views).length;
+    }
 }
 
 function menu () {

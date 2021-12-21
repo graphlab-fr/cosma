@@ -138,9 +138,6 @@ ipcMain.on("get-link-strokes", (event) => {
 ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) => {
     let config = Config.get();
 
-    // event.returnValue = true;
-    // return console.log(name, nameInitial, key, action);
-
     switch (action) {
         case 'add':
             config.views[name] = key;
@@ -181,9 +178,14 @@ ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) =>
         config.save();
         event.returnValue = true;
 
-        const configWindow = Display.getWindow('config');
-        if (configWindow) {
-            configWindow.webContents.send("reset-config");
+        let window = Display.getWindow('config');
+        if (window) {
+            window.webContents.send("reset-config");
+        }
+
+        window = Display.getWindow('main');
+        if (window) {
+            window.webContents.send("reset-views");
         }
     }
 });
