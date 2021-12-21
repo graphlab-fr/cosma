@@ -6,8 +6,7 @@ const {
 
 const config = require('../../../cosma-core/models/config').get()
     , Display = require('../../models/display')
-    , lang = require('../../../cosma-core/models/lang')
-    , windowsModel = require('../../models/windows');
+    , lang = require('../../../cosma-core/models/lang');
 
 let window;
 

@@ -86,7 +86,7 @@ module.exports = function (graphParams = [], runLast = false) {
         dialog.showMessageBox(window, {
             message: graph.errors.join('. '),
             type: 'info',
-            title: "Impossible de traiter les citations"
+            title: "Erreur de génération du graphe"
         });
 
         graph = new Graph(['empty']);
