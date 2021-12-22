@@ -1,20 +1,12 @@
-const {
-        app, // app event lifecycle, events
-        BrowserWindow, // app windows generator
-        ipcMain, // interface of data exchange
-        dialog
-    } = require('electron')
+const { BrowserWindow } = require('electron')
     , path = require('path')
-    , fs = require('fs');
 
-const windowsModel = require('../../models/windows')
-    , Config = require('../../../cosma-core/models/config')
-    , Graph = require('../../../cosma-core/models/graph')
-    , Template = require('../../../cosma-core/models/template');
+const lang = require('../../../cosma-core/models/lang')
+    , Display = require('../../../core/models/display');
 
-let modal;
+let window;
 
-module.exports = function (window) {
+module.exports = function () {
 
     /**
      * Window
@@ -22,104 +14,33 @@ module.exports = function (window) {
      * manage displaying
      */
 
-    if (modal !== undefined) {
+    if (window !== undefined) {
         return;
     }
 
-    modal = new BrowserWindow (
-        Object.assign(windowsModel.modal, {
-            parent: window,
-            title: 'Partager le cosmoscope',
-            height: 230
+    window = new BrowserWindow(
+        Object.assign(Display.getBaseSpecs('modal'), {
+            title: lang.getFor(lang.i.windows['export'].title),
+            parent: Display.getWindow('main'),
+            height: 230,
+            webPreferences: {
+                preload: path.join(__dirname, './preload.js')
+            }
         })
     );
 
-    modal.loadFile(path.join(__dirname, './main-source.html'));
+    Display.storeSpecs('export', window);
 
-    modal.once('ready-to-show', () => {
-        modal.show();
+    window.webContents.openDevTools({ mode: 'detach' });
+
+    window.loadFile(path.join(__dirname, './source.html'));
+
+    window.once('ready-to-show', () => {
+        window.show();
     });
 
-    modal.once('closed', () => {
-        modal = undefined;
+    window.once('closed', () => {
+        window = undefined;
     });
     
 }
-
-/**
- * API
- * ---
- * manage data
- */
-
-ipcMain.on("askExportPath", (event, data) => {
-
-    dialog.showOpenDialog(modal, {
-        title: 'Sélectionner répertoire d\'export cosmoscope',
-        defaultPath: app.getPath('documents'),
-        properties: ['openDirectory']
-    }).then((response) => {
-        modal.webContents.send("getExportPath", {
-            isOk: !response.canceled,
-            data: response.filePaths
-        });
-    });
-
-});
-
-ipcMain.on("askExportPathFromConfig", (event, data) => {
-    let config = new Config().opts;
-
-    modal.webContents.send("getExportPathFromConfig", config.export_target);
-});
-
-ipcMain.on("askExportOptions", (event, data) => {
-    let config = new Config();
-
-    let response = {
-        citeproc: config.canCiteproc(),
-        css_custom: config.canCssCustom()
-    };
-
-    modal.webContents.send("getExportOptions", response);
-});
-
-ipcMain.on("sendExportOptions", (event, data) => {
-    // save the export path into the configuration
-    let config = new Config({ export_target: data.export_target });
-    config.save();
-
-    const exportPath = path.join(data.export_target, 'cosmoscope.html');
-
-    delete data.export_target;
-
-    let activatedModes = ['publish'];
-    for (const mode in data) {
-        if (data[mode] === true) {
-            activatedModes.push(mode); }
-    }
-
-    const graph = new Graph(activatedModes)
-        , template = new Template(graph);
-
-    fs.writeFile(exportPath, template.html, (err) => {
-        if (err) {
-            modal.webContents.send("confirmExport", {
-                isOk: false,
-                consolMsg: `Le cosmoscope n'a pas pu être exporté : ${err}.`,
-                data: {}
-            });
-
-            return;
-        }
-
-        modal.webContents.send("confirmExport", {
-            isOk: true,
-            consolMsg: 'Le cosmoscope a bien été exporté.',
-            data: {}
-        });
-
-        modal.close();
-    });
-
-});

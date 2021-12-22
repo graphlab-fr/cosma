@@ -245,7 +245,7 @@ function manageView (formData, action, input) {
     function setValueFromDialog (response) {
         if (response.isOk === false) {
             return; }
-            console.log(`input[name="${response.target}"]`);
+
         const input = document.querySelector(`input[name="${response.target}"]`);
         input.value = response.data;
 

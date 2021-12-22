@@ -9,15 +9,16 @@ const {
     ipcRenderer
 } = require('electron');
 
-const config = ipcRenderer.sendSync('get-config-options');
+let selectType;
 
 window.addEventListener("DOMContentLoaded", () => {
-    const selectType = document.querySelector('select[name="type"]');
+    selectType = document.querySelector('select[name="type"]');
 
-    for (const type of Object.keys(config.record_types)) {
-        selectType.insertAdjacentHTML('beforeend',
-        `<option value="${type}">${type}</option>`);
-    }
+    setTypeList();
+});
+
+ipcRenderer.on('config-change', () => {
+    setTypeList();
 });
 
 contextBridge.exposeInMainWorld('api',
@@ -26,3 +27,14 @@ contextBridge.exposeInMainWorld('api',
         recordBackup: (fx) => ipcRenderer.on('record-backup', (event, response) => fx(response))
     }
 );
+
+function setTypeList () {
+    const config = ipcRenderer.sendSync('get-config-options');
+
+    selectType.innerHTML = '';
+
+    for (const type of Object.keys(config.record_types)) {
+        selectType.insertAdjacentHTML('beforeend',
+        `<option value="${type}">${type}</option>`);
+    }
+}

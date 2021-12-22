@@ -85,7 +85,7 @@ module.exports = function (graphParams = [], runLast = false) {
     if (graph.errors.length > 0) {
         dialog.showMessageBox(window, {
             message: graph.errors.join('. '),
-            type: 'info',
+            type: 'error',
             title: "Erreur de génération du graphe"
         });
 

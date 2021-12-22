@@ -22,6 +22,11 @@ ipcMain.on("save-config-option", (event, name, value) => {
     } else {
         config.save();
         event.returnValue = true;
+
+        let windowForSend = Display.getWindow('export');
+        if (windowForSend) {
+            windowForSend.webContents.send("config-change");
+        }
     }
 });
 
@@ -68,9 +73,13 @@ ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, color, ac
         config.save();
         event.returnValue = true;
 
-        const configWindow = Display.getWindow('config');
-        if (configWindow) {
-            configWindow.webContents.send("reset-config");
+        let windowForSend = Display.getWindow('config');
+        if (windowForSend) {
+            windowForSend.webContents.send("reset-config");
+        }
+        windowForSend = Display.getWindow('record');
+        if (windowForSend) {
+            windowForSend.webContents.send("config-change");
         }
     }
 });

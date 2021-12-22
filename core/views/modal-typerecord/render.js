@@ -1,6 +1,11 @@
 const form = document.querySelector('form');
 
 (function () {
+    const firstInput = form.querySelector('input');
+    firstInput.focus();
+})();
+
+(function () {
     const btn = form.querySelector('button[type="submit"]');
 
     form.addEventListener('submit', (e) => {

@@ -77,6 +77,7 @@ body {
 --- */
 
 button {
+    cursor: pointer;
     background-color: white;
     border: 1px solid var(--mac-border-color);
     border-bottom: 1px solid var(--mac-border-bottom-color);
@@ -167,7 +168,7 @@ form.form-list div.buttons-box {
 }
 
 form.form-list div.buttons-box button {
-    margin: unset;
+    margin: 1px 0;
 }
 
 form label.flex-column {
@@ -258,19 +259,6 @@ form div.select-list label {
     text-indent: 5px;
     align-items: flex-start;
 }
-
-form label[data-state="save-error"]:after {
-    content: '❌';
-}
-
-output {
-    display: block;
-    padding: 5px;
-    border-radius: 2px;
-    margin-top: 20px;
-}
-output[data-valid="false"] { border: 2px solid red; }
-output[data-valid="true"] { border: 2px solid green; }
 
 /* ---
 - Selectors

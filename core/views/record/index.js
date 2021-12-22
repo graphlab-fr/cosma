@@ -46,6 +46,8 @@ module.exports = function () {
         })
     );
 
+    Display.storeSpecs('record', window);
+
     window.loadFile(path.join(__dirname, './source.html'));
 
     window.once('ready-to-show', () => {
