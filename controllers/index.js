@@ -5,5 +5,6 @@
  */
 
 require('./config');
+require('./record');
 require('./modal');
 require('./dialog');

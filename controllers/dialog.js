@@ -5,16 +5,15 @@ const {
     BrowserWindow
 } = require('electron');
 
-const config = require('../cosma-core/models/config').get()
-    , lang = require('../cosma-core/models/lang');
+const lang = require('../cosma-core/models/lang');
 
 ipcMain.on("dialog-request-dir-path", (event, name) => {
     const window = BrowserWindow.getFocusedWindow();
 
     dialog.showOpenDialog(window, {
-        title: lang.dialog[name].title[config.lang],
+        title: lang.getFor(lang.i.dialog[name].title),
         defaultPath: app.getPath('documents'),
-        buttonLabel: lang.dialog.btn.select[config.lang],
+        buttonLabel: lang.getFor(lang.i.dialog.btn.select),
         properties: ['openDirectory']
     }).then((response) => {
         window.webContents.send("get-dir-path-from-dialog", {
@@ -31,12 +30,12 @@ ipcMain.on("dialog-request-file-path", (event, name, fileExtension) => {
     const window = BrowserWindow.getFocusedWindow();
 
     dialog.showOpenDialog(window, {
-        title: lang.dialog[name].title[config.lang],
+        title: lang.getFor(lang.i.dialog[name].title),
         defaultPath: app.getPath('documents'),
         filters: [
             { name: `Fichiers ${fileExtension.toUpperCase()}`, extensions: [fileExtension] }
         ],
-        buttonLabel: lang.dialog.btn.select[config.lang],
+        buttonLabel: lang.getFor(lang.i.dialog.btn.select),
         properties: ['openFile']
     }).then((response) => {
         window.webContents.send("get-file-path-from-dialog", {

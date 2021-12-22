@@ -4,8 +4,7 @@ const {
     } = require('electron')
     , path = require('path');
 
-const config = require('../../../cosma-core/models/config').get()
-    , Display = require('../../models/display')
+const Display = require('../../models/display')
     , lang = require('../../../cosma-core/models/lang');
 
 let window;
@@ -27,7 +26,7 @@ module.exports = function () {
 
     window = new BrowserWindow(
         Object.assign(windowSpecs, {
-            title: lang.windows[`preferences`].title[config.lang],
+            title: lang.getFor(lang.i.windows['preferences'].title),
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
             }
