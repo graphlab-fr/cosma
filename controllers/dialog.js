@@ -33,7 +33,7 @@ ipcMain.on("dialog-request-file-path", (event, name, fileExtension) => {
         title: lang.getFor(lang.i.dialog[name].title),
         defaultPath: app.getPath('documents'),
         filters: [
-            { name: `Fichiers ${fileExtension.toUpperCase()}`, extensions: [fileExtension] }
+            { name: `${lang.getWith(lang.i.dialog.file_filter, [fileExtension.toUpperCase()])}`, extensions: [fileExtension] }
         ],
         buttonLabel: lang.getFor(lang.i.dialog.btn.select),
         properties: ['openFile']
