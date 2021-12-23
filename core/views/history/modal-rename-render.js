@@ -26,7 +26,6 @@ let isReady = false;
     
         let data = new FormData(form);
         data = Object.fromEntries(data);
-        console.log(data);
     
         window.api.send("sendNewHistoryName", data);
     

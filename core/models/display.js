@@ -10,7 +10,6 @@ const {
     } = require('electron')
 , path = require('path')
 , fs = require('fs');
-const { xor } = require('lodash');
 
 const iconPath = path.join(__dirname, '../../assets/icons/64x64.png');
 

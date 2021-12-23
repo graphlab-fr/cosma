@@ -11,53 +11,80 @@ const {
     , path = require('path')
     , moment = require('moment');
 
-moment.locale('fr-ca');
-
 const Config = require('../../cosma-core/models/config');
 
 module.exports = class History {
 
-    static path = path.join(app.getPath('temp'), 'cosma-history');
-
     /**
-     * Get list of the sub-directories name from the history directory
-     * @return {array} - List of sub-directories names
+     * Path to the cosmoscopes
+     * @type string
      */
 
-    static getList () {
-        try {
-            return fs.readdirSync(History.path, 'utf8')
-                .filter(dirName => dirName !== '.DS_Store')
-                .map(function (dirName) {
-                    const hist = new History(dirName);
-                    return hist;
-                })
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
+    static pathForDirs = path.join(app.getPath('temp'), 'cosma-history');
+
+    /**
+     * Path to the JSON data file of the history
+     * @type string
+     */
+
+    static pathForData = path.join(app.getPath('userData'), 'history.json');
+
+    static baseData = {
+        records: {}
     }
 
-    static deleteAll () {
-        const records = History.getList();
+    /**
+     * Get history data from the 'pathForData'
+     * @return {mixed} - History data or undefined if errors
+     */
 
+    static get () {
         try {
-            for (const record of records) {
-                record.delete();
-            }
+            let fileContent = fs.readFileSync(History.pathForData, 'utf8');
+            fileContent = JSON.parse(fileContent);
 
-            return true;
+            return fileContent;
         } catch (error) {
-            console.log(error);
-            return false;
+            return History.baseData;
         }
     }
 
     static getLast () {
-        const records = History.getList()
-            .sort((a, b) => { a.ctime - b.ctime })
+        const records = History.get().records
+            , recordsId = Object.keys(records)
+            , lastRecordId = recordsId[recordsId.length - 1];
 
-        return records[records.length - 1];
+        if (lastRecordId === undefined) {
+            return undefined;
+        }
+
+        return new History(lastRecordId);
+    }
+
+    static getTemp () {
+        const tempRecordId = History.get().temp
+
+        return new History(tempRecordId);
+    }
+
+    /**
+     * Create the 'cosma-history' directory to store files
+     */
+
+    static createHistoryDirectory () {
+        if (!fs.existsSync(History.pathForDirs)) {
+            fs.mkdirSync(History.pathForDirs);
+        }
+    }
+
+    /**
+     * Get a number (14 caracters) from the time stats :
+     * year + month + day + hour + minute + second
+     * @return {number} - unique 14 caracters number from the second
+     */
+
+    static generateId () {
+        return moment().format('YYYYMMDDHHmmss');
     }
 
     /**
@@ -65,77 +92,124 @@ module.exports = class History {
      * @param {string} id - Name of the directory to use as a history entry
      */
 
-    constructor (id = null) {
+    constructor (id = undefined) {
+        History.createHistoryDirectory();
+
+        /**
+         * Data extract from JSON data file from History.pathForData
+         * @type object
+         */
+        this.data = History.get();
+        /**
+         * From Config.opts
+         * @type object
+         */
         this.config = new Config().opts;
+        /**
+         * 14 characters
+         * @type number
+         */
+        this.id;
+        /**
+         * Path to store or find a cosmoscope by its id
+         * @type string
+         */
+        this.pathToStore
+        /**
+         * Date in international standard format
+         * @type string
+         * @example '2021-12-23T10:09:45+01:00'
+         */
+        this.date
+        /**
+         * @type string
+         */
+        this.description
+        /**
+         * Graph report for the record
+         * @type object
+         */
+        this.report
 
-        if (id === null) {
-            this.id = moment().format('YYYY-MM-DD-h-mm-ss');
-        } else {
-            const pathToStoreTest = path.join(History.path, id)
-                , pathToMetasTest = path.join(pathToStoreTest, 'metas.json');
-
-            if (!fs.existsSync(pathToStoreTest) || !fs.existsSync(pathToMetasTest)) {
-
-                if (!fs.existsSync(pathToMetasTest)) {
-                    // if the dir doesn't contain the metas.json file
-                    fs.rmdirSync(pathToStoreTest, { recursive: true });
-                }
-
-                return 'Record history no exist';
-            }
-            this.id = id;
+        if (id === undefined) {
+            this.id = History.generateId();
+            this.pathToStore = path.join(History.pathForDirs, `${this.id}.html`);
+            this.date = moment().format();
+            return;
         }
 
-        this.pathToStore = path.join(History.path, this.id);
-        this.pathToMetas = path.join(this.pathToStore, 'metas.json');
-        this.pathToReport = path.join(this.pathToStore, 'report.json');
-
-        this.metas = {
-            date: moment().format('LLLL'),
-            description: '',
-            // if history param is false, this history record is temporary
-            isTemp: !this.config.history
-        };
-
-        if (id === null && this.config.history === false) {
-            // the user does not want to automatically save more versions
-            // we replace the last one
-            const lastRecord = History.getLast();
-
-            if (lastRecord !== undefined && lastRecord.metas.isTemp === true) {
-                // delete last history record if it is temporary
-                lastRecord.delete(); }
+        if (this.data.records[id] === undefined) {
+            console.log('Introuvable depuis historique');
+            return;
         }
 
-        if (id === null) {
-            fs.mkdirSync(this.pathToStore);
-            this.saveMetas();
-        } else {
-            this.metas = this.getMetas();
-        }
+        const record = this.data.records[id];
 
-        this.ctime = fs.statSync(this.pathToStore).ctime;
-
+        this.id = id;
+        this.pathToStore = record.path;
+        this.date = record.date;
+        this.description = record.description;
+        this.report = record.report;
     }
 
     /**
      * Save a file into the current history directory
+     * @param {string} templateHtml - HTML page
+     * @param {object} graphReport - new Graph().report
      * @return {boolean} - If the file is saved
      */
 
-    store (fileName, fileContent) {
+    storeCosmoscope (templateHtml, graphReport) {
         try {
-            fs.writeFileSync(path.join(this.pathToStore, fileName), fileContent);
+            if (this.config.history === false) {
+                const lastRecord = History.getLast();
+                if (lastRecord !== undefined) {
+                    lastRecord.delete();
+                    this.data = lastRecord.data;
+                }
+            }
+
+            fs.writeFileSync(this.pathToStore, templateHtml);
+
+            this.data.records[this.id] = {
+                path: this.pathToStore,
+                date: moment().format(),
+                description: this.description,
+                report: graphReport
+            }
+
+            this.save();
 
             return true;
         } catch (error) {
             return false;
         }
     }
+
+    /**
+     * Save the history dat file to the History.pathForData
+     * @return {boolean} - True if the config file is saved, false if fatal error
+     */
+
+    save () {
+        try {
+            fs.writeFileSync(History.pathForData, JSON.stringify(this.data));
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    /**
+     * @return {boolean}
+     */
 
     delete () {
         try {
-            fs.rmdirSync(path.join(History.path, this.id), { recursive: true })
+            fs.rmSync(this.pathToStore);
+
+            delete this.data.records[this.id];
 
             return true;
         } catch (error) {
@@ -144,30 +218,10 @@ module.exports = class History {
         }
     }
 
-    saveMetas () {
-        try {
-            fs.writeFileSync(this.pathToMetas, JSON.stringify(this.metas));
+    deleteAll () {
+        fs.rmdirSync(History.pathForDirs, { recursive: true });
+        this.data = History.baseData;
 
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
+        this.save();
     }
-
-    getMetas () {
-        let content = fs.readFileSync(this.pathToMetas, 'utf-8');
-        return JSON.parse(content);
-    }
-
-    getReport () {
-        try {
-            let content = fs.readFileSync(this.pathToReport, 'utf-8');
-
-            return JSON.parse(content);
-        } catch (error) {
-            return null;
-        }
-    }
-
 }

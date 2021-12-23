@@ -1,35 +1,31 @@
-const { BrowserWindow } = require('electron')
-    , path = require('path')
+const {
+        app, // app event lifecycle, events
+        BrowserWindow, // app windows generator
+        ipcMain, // interface of data exchange
+        clipboard
+    } = require('electron')
+    , path = require('path');
 
 const lang = require('../../../cosma-core/models/lang')
     , Display = require('../../../core/models/display');
 
 let window;
 
-module.exports = function () {
-
-    /**
-     * Window
-     * ---
-     * manage displaying
-     */
-
+module.exports = function (recordId) {
     if (window !== undefined) {
+        window.focus();
         return;
     }
 
     window = new BrowserWindow(
         Object.assign(Display.getBaseSpecs('modal'), {
-            title: lang.getFor(lang.i.windows['export'].title),
-            parent: Display.getWindow('main'),
-            height: 230,
+            title: lang.getFor(lang.i.windows[`history_update`].title),
+            parent: Display.getWindow('history'),
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
             }
         })
     );
-
-    Display.storeSpecs('export', window);
 
     window.loadFile(path.join(__dirname, './source.html'));
 
@@ -40,5 +36,10 @@ module.exports = function () {
     window.once('closed', () => {
         window = undefined;
     });
-    
+
+    ipcMain.once("get-record-id", (event) => {
+        event.returnValue = recordId;
+    });
+
+    return window;
 }

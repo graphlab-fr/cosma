@@ -16,8 +16,7 @@ const {
     , fs = require('fs');
 
 const Config = require('../../../cosma-core/models/config')
-    , Display = require('../../models/display')
-    , windowsModel = require('../../models/windows');
+    , Display = require('../../models/display');
 
 let windowPath, window;
 
@@ -70,8 +69,8 @@ module.exports = function (graphParams = [], runLast = false) {
 
     const lastHistoryEntry = History.getLast();
 
-    if (runLast === true && lastHistoryEntry) {
-        windowPath = path.join(lastHistoryEntry.pathToStore, 'cosmoscope.html');
+    if (runLast === true && lastHistoryEntry !== undefined) {
+        windowPath = path.join(lastHistoryEntry.pathToStore);
         window.loadFile(windowPath);
         return;
     }
@@ -96,12 +95,14 @@ module.exports = function (graphParams = [], runLast = false) {
     let template = new Template(graph)
         , history = new History();
 
-    windowPath = path.join(history.pathToStore, 'cosmoscope.html');
+    history.storeCosmoscope(template.html, graph.report);
 
-    history.store('cosmoscope.html', template.html);
-    history.store('report.json', JSON.stringify(graph.reportToSentences()));
+    window.loadFile(history.pathToStore);
 
-    window.loadFile(windowPath);
+    windowHistory = Display.getWindow('history');
+    if (windowHistory) {
+        windowHistory.webContents.send("reset-history");
+    }
 }
 
 ipcMain.on("askReload", (event) => { window.reload(); });

@@ -7,5 +7,6 @@
 require('./config');
 require('./record');
 require('./export');
+require('./history');
 require('./modal');
 require('./dialog');

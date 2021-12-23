@@ -3,8 +3,7 @@ const {
         BrowserWindow, // app windows generator
         Menu
     } = require('electron')
-    , path = require('path')
-    , fs = require('fs');
+    , path = require('path');
 
 const windowsModel = require('./core/models/windows')
     , History = require('./core/models/history')
@@ -28,8 +27,6 @@ function noWindowOpen () {
  */
 
 app.whenReady().then(() => {
-
-    if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
 
     const windowSpecs = Display.getWindowSpecs('main');
 
