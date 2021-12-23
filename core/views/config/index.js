@@ -22,11 +22,13 @@ module.exports = function () {
         return;
     }
 
-    const windowSpecs = Display.getWindowSpecs('config');
+    const pageName = 'config';
+
+    let windowSpecs = Display.getWindowSpecs(pageName);
 
     window = new BrowserWindow(
         Object.assign(windowSpecs, {
-            title: lang.getFor(lang.i.windows['preferences'].title),
+            title: lang.getFor(lang.i.windows[pageName].title),
             webPreferences: {
                 preload: path.join(__dirname, './preload.js')
             }
@@ -36,7 +38,7 @@ module.exports = function () {
     if (windowSpecs.maximized === true) {
         window.maximize(); }
 
-    Display.storeSpecs('config', window);
+    Display.storeSpecs(pageName, window);
 
     window.webContents.on('will-navigate', function(e, url) {
         e.preventDefault();
@@ -44,22 +46,22 @@ module.exports = function () {
     });
 
     window.on('resized', () => {
-        Display.storeSpecs('config', window);
+        Display.storeSpecs(pageName, window);
     });
 
     window.on('moved', () => {
-        Display.storeSpecs('config', window);
+        Display.storeSpecs(pageName, window);
     });
 
     window.on('maximize', () => {
-        Display.storeSpecs('config', window);
+        Display.storeSpecs(pageName, window);
     });
 
     window.on('unmaximize', () => {
-        const winSpecs = Display.getWindowSpecs('config');
-        window.setSize(winSpecs.width, winSpecs.height, true);
-        window.setPosition(winSpecs.x, winSpecs.y, true);
-        Display.storeSpecs('config', window);
+        windowSpecs = Display.getWindowSpecs(pageName);
+        window.setSize(windowSpecs.width, windowSpecs.height, true);
+        window.setPosition(windowSpecs.x, windowSpecs.y, true);
+        Display.storeSpecs(pageName, window);
     });
     
     window.loadFile(path.join(__dirname, './source.html'));
@@ -69,7 +71,7 @@ module.exports = function () {
     });
 
     window.once('close', () => {
-        Display.emptyWindow('config');
+        Display.emptyWindow(pageName);
     });
 
     window.once('closed', () => {

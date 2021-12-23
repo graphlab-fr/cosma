@@ -26,8 +26,9 @@ const History = require('../../models/history')
     , Template = require('../../../cosma-core/models/template');
 
 module.exports = function (graphParams = [], runLast = false) {
+    const pageName = 'main';
 
-    window = Display.getWindow('main');
+    window = Display.getWindow(pageName);
 
     const config = new Config();
 
@@ -36,26 +37,26 @@ module.exports = function (graphParams = [], runLast = false) {
     });
 
     window.on('resized', () => {
-        Display.storeSpecs('main', window);
+        Display.storeSpecs(pageName, window);
     });
 
     window.on('moved', () => {
-        Display.storeSpecs('main', window);
+        Display.storeSpecs(pageName, window);
     });
 
     window.on('maximize', () => {
-        Display.storeSpecs('main', window);
+        Display.storeSpecs(pageName, window);
     });
 
     window.on('unmaximize', () => {
-        const winSpecs = Display.getWindowSpecs('main');
-        window.setSize(winSpecs.width, winSpecs.height, true);
-        window.setPosition(winSpecs.x, winSpecs.y, true);
-        Display.storeSpecs('main', window);
+        let windowSpecs = Display.getWindowSpecs(pageName);
+        window.setSize(windowSpecs.width, windowSpecs.height, true);
+        window.setPosition(windowSpecs.x, windowSpecs.y, true);
+        Display.storeSpecs(pageName, window);
     });
 
     window.once('close', () => {
-        Display.emptyWindow('main');
+        Display.emptyWindow(pageName);
     });
 
     window.once('closed', () => {

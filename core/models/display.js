@@ -29,6 +29,7 @@ module.exports = class Display {
     static windowsType = {
         main: 'main',
         config: 'form',
+        history: 'form',
         record: 'form'
     };
 
