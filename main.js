@@ -50,12 +50,12 @@ app.whenReady().then(() => {
 
     require('./core/models/menu')(); // set app menu
 
-    Menu.getApplicationMenu()
-        .getMenuItemById('citeproc')
+    const appMenu = Menu.getApplicationMenu();
+
+    appMenu.getMenuItemById('citeproc')
         .enabled = config.canCiteproc();
 
-    Menu.getApplicationMenu()
-        .getMenuItemById('devtools')
+    appMenu.getMenuItemById('devtools')
         .visible = config.opts.devtools;
 
     require('./controllers');

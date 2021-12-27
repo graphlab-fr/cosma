@@ -1,4 +1,7 @@
-const { ipcMain } = require('electron');
+const {
+    ipcMain,
+    Menu
+} = require('electron');
 
 const Config = require('../cosma-core/models/config')
     , Display = require('../core/models/display');
@@ -27,6 +30,14 @@ ipcMain.on("save-config-option", (event, name, value) => {
         if (windowForSend) {
             windowForSend.webContents.send("config-change");
         }
+
+        const appMenu = Menu.getApplicationMenu();
+
+        appMenu.getMenuItemById('citeproc')
+            .enabled = config.canCiteproc();
+
+        appMenu.getMenuItemById('devtools')
+            .visible = config.opts.devtools;
     }
 });
 
