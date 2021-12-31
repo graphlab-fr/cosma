@@ -51,12 +51,6 @@ function menu () {
         , btnRecordNew = document.getElementById('electron-record-new')
         , btnCosmoscopeNew = document.getElementById('electron-cosmoscope-new');
 
-    btnCosmoscopeNew.disabled = true;
-
-    setTimeout(() => {
-        btnCosmoscopeNew.disabled = false;
-    }, 800);
-
     btnPageReload.addEventListener('click', reload);
     btnBack.addEventListener('click', back);
     btnForward.addEventListener('click', forward);
@@ -76,3 +70,11 @@ function share () { ipcRenderer.send('askShare', null); }
 function recordNew () { ipcRenderer.send('askRecordNew', null); }
 
 function cosmoscopeNew () { ipcRenderer.send('askCosmoscopeNew', null); }
+
+ipcRenderer.on('open-about', (event) => {
+    document.querySelector('.btn-about').click();
+})
+
+ipcRenderer.on('open-help', (event) => {
+    document.querySelector('.btn-help').click();
+})

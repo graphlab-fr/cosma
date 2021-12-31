@@ -4,227 +4,290 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-const {
-        app,
-        Menu, // top bar menu manager
-        dialog
-    } = require('electron'),
-    fs = require('fs'),
-    path = require('path');
+const { app } = require('electron');
 
 const Config = require('../../cosma-core/models/config')
-    , mainWindow = require('../../main').mainWindow;
+    , config = new Config()
+    , lang = require('../../cosma-core/models/lang');
 
-const fileMenu = [
-    {
-        label: 'Nouveau cosmoscope',
-        accelerator: 'CommandOrControl+R',
-        role: 'new-cosmoscope',
-        click () {
-            require('../views/cosmoscope')();
-        }
-    },
-    {
-        label: 'Nouveau cosmoscope avec citations',
-        accelerator: 'CommandOrControl+Shift+R',
-        role: 'new-cosmoscope',
-        id: 'citeproc',
-        click () {
-            require('../views/cosmoscope')(['citeproc']);
-        }
-    },
-    {
-        label: 'Nouvelle fiche…',
-        role: 'new-record',
-        accelerator: 'CommandOrControl+N',
-        click () {
-            require('../views/record/index')();
-        }
-    },
-    {
-        label: 'Partager…',
-        accelerator: 'CommandOrControl+E',
-        role: 'export-cosmoscope',
-        click (item, window) {
-            require('../views/export/index')(window);
-        }
-    },
-    { type: 'separator' },
-    {
-        label: 'Afficher l’historique',
-        accelerator: 'CommandOrControl+H',
-        role: 'history',
-        click () {
-            require('../views/history/index')();
-        }
-    }
-]
+const Display = require('./display')
+    , mainWindow = Display.getWindow('main');
 
-module.exports = function () {
-    const config = new Config().opts;
+const isMac = process.platform === 'darwin';
 
-    let template = [];
-
-    if (process.platform === 'darwin') { // on MacOS
-        template.push({
-            label: app.name,
-            submenu: [
-                {
-                    label: 'À propos',
-                    role: 'about'
-                },
-                {
-                    label: 'Préférences…',
-                    accelerator: 'CommandOrControl+,',
-                    role: 'options',
-                    click () {
-                        require('../views/config/index')();
-                    }
-                },
-                { type: 'separator' },
-                { role: 'services' },
-                { type: 'separator' },
-                {
-                    label: 'Masquer Cosma',
-                    role: 'hide'
-                },
-                { 
-                    label: 'Masquer les autres',
-                    role: 'hideothers'
-                },
-                {
-                    label: 'Tout afficher',
-                    role: 'unhide' 
-                },
-                { type: 'separator' },
-                {
-                    label: 'Quitter Cosma',
-                    role: 'quit'
+module.exports = [
+    ...(isMac ? [{
+        label: app. ame,
+        submenu: [
+            {
+                label: lang.getFor(lang.i.app_menu.about),
+                role: 'about',
+                click () {
+                    mainWindow.webContents.send("open-about");
                 }
-            ]
-        },
-        {
-            label: 'Fichier',
-            submenu: [ ...fileMenu ]
-        });
-    } else {
-        template.push({
-            label: 'Fichier',
-            submenu: [
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.preferences),
+                accelerator: 'CommandOrControl+,',
+                role: 'options',
+                click () {
+                    require('../views/config/index')();
+                }
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.services),
+                role: 'services'
+            },
+            { type: 'separator' },
+            { 
+                label: lang.getFor(lang.i.app_menu.hide),
+                role: 'hide'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.hide_others),
+                role: 'hideOthers'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.unhide),
+                role: 'unhide'
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.quit),
+                role: 'quit'
+            }
+        ]
+    }]
+    :
+    []),
 
-                ...fileMenu,
+    {
+        label: lang.getFor(lang.i.app_menu.file),
+        submenu: [
+            {
+                label: lang.getFor(lang.i.app_menu.new_cosmoscope),
+                accelerator: 'CommandOrControl+R',
+                role: 'new-cosmoscope',
+                click () {
+                    require('../views/cosmoscope')();
+                }
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.new_cosmoscope_quotes),
+                accelerator: 'CommandOrControl+Shift+R',
+                role: 'new-cosmoscope-citeproc',
+                id: 'citeproc',
+                enabled: config.canCiteproc(),
+                click () {
+                    require('../views/cosmoscope')(['citeproc']);
+                }
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.new_record),
+                role: 'new-record',
+                accelerator: 'CommandOrControl+N',
+                click () {
+                    require('../views/record/index')();
+                }
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.share),
+                accelerator: 'CommandOrControl+E',
+                role: 'export-cosmoscope',
+                click (item, window) {
+                    require('../views/export/index')(window);
+                }
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.print_record),
+                accelerator: 'CommandOrControl+P',
+                role: 'print',
+                id: 'print',
+                click () {
+                    console.log('print');
+                }
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.history),
+                accelerator: 'CommandOrControl+H',
+                role: 'history',
+                click () {
+                    require('../views/history/index')();
+                }
+            },
+            { type: 'separator' },
 
-                { type: 'separator' },
+            ...(isMac === false ? [
                 {
-                    label: 'Préférences…',
+                    label: lang.getFor(lang.i.app_menu.preferences),
                     accelerator: 'CommandOrControl+O',
                     role: 'options',
                     click () {
                         require('../views/config/index')();
                     }
-                },
-                {
-                    label: 'Quitter',
-                    accelerator: 'CommandOrControl+Q',
-                    role: 'quit',
-                    click () {
-                        app.quit();
-                    }
-                },
-            ]
-        });
-    }
-
-    template.push(
-        {
-            label: 'Édition',
-            submenu: [
-                {
-                    label: 'Copier',
-                    role: 'copy'
-                },
-                {
-                    label: 'Coller',
-                    role: 'paste'
                 }
             ]
-        },
-        {
-        label: 'Affichage',
+            :
+            [])
+        ]
+    },
+
+    {
+        label: lang.getFor(lang.i.app_menu.edit),
         submenu: [
             {
-                label: 'Réduire',
-                role: 'minimize'
+                label: lang.getFor(lang.i.app_menu.undo),
+                role: 'undo'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.redo),
+                role: 'redo'
             },
             { type: 'separator' },
             {
-                label: 'Fiche précédante',
+                label: lang.getFor(lang.i.app_menu.cut),
+                role: 'cut'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.copy),
+                role: 'copy'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.paste),
+                role: 'paste'
+            },
+
+            ...(isMac ? [
+                {
+                    label: lang.getFor(lang.i.app_menu.delete),
+                    role: 'delete'
+                },
+                {
+                    label: lang.getFor(lang.i.app_menu.select_all),
+                    role: 'selectAll'
+                },
+                { type: 'separator' },
+                {
+                    label: lang.getFor(lang.i.app_menu.speech),
+                    submenu: [
+                        {
+                            label: lang.getFor(lang.i.app_menu.start_speaking),
+                            role: 'startSpeaking'
+                        },
+                        {
+                            label: lang.getFor(lang.i.app_menu.stop_speaking),
+                            role: 'stopSpeaking'
+                        }
+                    ]
+                }
+            ]
+            :
+            []),
+
+            {
+                label: lang.getFor(lang.i.app_menu.delete),
+                role: 'delete'
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.select_all),
+                role: 'selectAll'
+            }
+        ]
+    },
+
+    {
+        label: lang.getFor(lang.i.app_menu.view),
+        submenu: [
+            {
+                label: lang.getFor(lang.i.app_menu.record_back),
                 accelerator: 'CommandOrControl+Left',
                 role: 'back',
-                click(item, window) {
+                click () {
                     if (mainWindow.webContents.canGoBack()) { mainWindow.webContents.goBack() };
                 }
             },
             {
-                label: 'Fiche suivante',
+                label: lang.getFor(lang.i.app_menu.record_forward),
                 accelerator: 'CommandOrControl+Right',
-                role: 'forward',
-                click(item, window) {
-                    if (mainWindow.webContents.canGoForward()) { window.webContents.goForward() };
+                role: 'back',
+                click () {
+                    if (mainWindow.webContents.canGoForward()) { mainWindow.webContents.goForward() };
                 }
             },
+            { type: 'separator' },
             {
-                label: 'Imprimer',
-                accelerator: 'CommandOrControl+P',
-                role: 'print',
-                click(item, window) {
-                    mainWindow.webContents.printToPDF({
-                        headerFooter: {
-                            title: mainWindow.title,
-                            url: 'https://cosma.netlify.app/'
-                        },
-                        pageSize: 'A4'
-                    })
-                    .then(pdfData => {
-                        dialog.showSaveDialog(mainWindow, {
-                            title: 'Enregistrer le PDF',
-                            defaultPath: path.join(app.getPath('documents'), `${mainWindow.title}.pdf`),
-                            properties: ['createDirectory', 'showOverwriteConfirmation']
-                        }).then((response) => {
-                            if (response.canceled === false) {
-                                fs.writeFile(response.filePath, pdfData, (err) => {
-                                    if (err) { throw `Erreur d'enregistrement de l'impression PDF : ${err}`; }
-                                })
-                            }
-                        });
-                    })
-                    .catch(err => {
-                        throw `Erreur d'impression du PDF : ${err}`;
-                    })
-                }
+                label: lang.getFor(lang.i.app_menu.reload),
+                role: 'reload'
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.reset_zoom),
+                role: 'resetZoom'
             },
             {
+                label: lang.getFor(lang.i.app_menu.zoom_in),
+                role: 'zoomIn'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.zoom_out),
+                role: 'zoomOut'
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.fullscreen),
+                role: 'togglefullscreen'
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.dev_tools),
+                role: 'toggleDevTools',
                 id: 'devtools',
-                label: 'Afficher l’inspecteur web',
-                role: 'devtools',
-                click(item, window) {
-                    if (window) { window.webContents.toggleDevTools() };
-                },
+                visible: config.opts.devtools
             }
         ]
     },
+
     {
-        label: 'Aide',
+        label: lang.getFor(lang.i.app_menu.window),
         submenu: [
+            { role: 'minimize' },
+
+            ...(isMac ? [
+                { type: 'separator' },
+                { role: 'front' },
+                { type: 'separator' },
+                { role: 'window' }
+            ]
+            :
+            [
+                {
+                    label: lang.getFor(lang.i.app_menu.close),
+                    role: 'close'
+                }
+            ])
+        ]
+    },
+
+    {
+        label: lang.getFor(lang.i.app_menu.help),
+        role: 'help',
+        submenu : [
             {
-                label: 'Aide Cosma',
-                role: 'doc'
+                label: lang.getFor(lang.i.app_menu.manual),
+                click : () => {
+                    const { shell } = require('electron');
+                    shell.openExternal('https://cosma.graphlab.fr/docs/');
+                }
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.shortcuts),
+                label: 'Raccourcis clavier',
+                click : () => {
+                    mainWindow.webContents.send("open-help");
+                }
             }
         ]
-    });
-
-    const appMenu = Menu.buildFromTemplate(template)
-    Menu.setApplicationMenu(appMenu);
-
-    return template;
-}
+    }
+];

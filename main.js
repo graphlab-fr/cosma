@@ -46,17 +46,10 @@ app.whenReady().then(() => {
 
     const openCosmoscope = require('./core/views/cosmoscope/index');
 
-    let config = new Config();
+    const menuTemplate = require('./core/models/menu');
 
-    require('./core/models/menu')(); // set app menu
-
-    const appMenu = Menu.getApplicationMenu();
-
-    appMenu.getMenuItemById('citeproc')
-        .enabled = config.canCiteproc();
-
-    appMenu.getMenuItemById('devtools')
-        .visible = config.opts.devtools;
+    const appMenu = Menu.buildFromTemplate(menuTemplate)
+    Menu.setApplicationMenu(appMenu);
 
     require('./controllers');
 
