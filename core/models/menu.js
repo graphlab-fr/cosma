@@ -254,19 +254,14 @@ module.exports = [
         submenu: [
             { role: 'minimize' },
 
-            ...(isMac ? [
-                { type: 'separator' },
-                { role: 'front' },
-                { type: 'separator' },
-                { role: 'window' }
-            ]
-            :
-            [
+            ...(isMac === false ? [
                 {
                     label: lang.getFor(lang.i.app_menu.close),
                     role: 'close'
                 }
-            ])
+            ]
+            :
+            [])
         ]
     },
 
