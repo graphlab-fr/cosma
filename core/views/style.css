@@ -5,7 +5,7 @@
 
 :root {
     --cosma-blue: #147899;
-    --select-color: #a0cddd;
+    --select-color: #ccebff;
     --cosma-blue-dark: #02385c;
     --mac-menu-background-color: #f6f6f6;
     --mac-border-color: #e6e6e6;
@@ -47,6 +47,7 @@ body {
 
 .ico {
     font-family: 'Material Icons';
+    color: #717171 !important;
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
