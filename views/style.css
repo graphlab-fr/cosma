@@ -18,7 +18,7 @@ html {
 
 @font-face {
     font-family: 'Material Icons';
-    src: url('../../assets/fonts/MaterialIcons-Regular.woff2') format('woff2');
+    src: url('../assets/fonts/MaterialIcons-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;

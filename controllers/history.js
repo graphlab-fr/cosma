@@ -1,16 +1,10 @@
 const {
     ipcMain,
-    shell,
-    dialog,
-    BrowserWindow
+    shell
 } = require('electron');
 
-// const Config = require('../cosma-core/models/config')
-// , Graph = require('../cosma-core/models/graph')
-// , Template = require('../cosma-core/models/template');
-
-const History = require('../core/models/history')
-    , Display = require('../core/models/display')
+const History = require('../models/history')
+    , Display = require('../models/display')
     , Graph = require('../cosma-core/models/graph');
 
 ipcMain.on("get-history-records", (event) => {
@@ -40,7 +34,7 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
         case 'open-report':
             report = new History(recordId).report;
             report = Graph.reportToSentences(report);
-            require('../core/views/report')(report);
+            require('../views/report')(report);
             break;
 
         case 'delete':

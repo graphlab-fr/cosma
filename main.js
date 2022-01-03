@@ -30,7 +30,7 @@ app.whenReady().then(() => {
     const mainWindow = new BrowserWindow(
         Object.assign(windowSpecs, {
             webPreferences: {
-                preload: path.join(__dirname, './core/views/cosmoscope/preload.js')
+                preload: path.join(__dirname, './views/cosmoscope/preload.js')
             },
             title: 'Cosma'
         })
@@ -41,9 +41,9 @@ app.whenReady().then(() => {
 
     Display.storeSpecs('main', mainWindow);
 
-    const openCosmoscope = require('./core/views/cosmoscope/index');
+    const openCosmoscope = require('./views/cosmoscope/index');
 
-    const menuTemplate = require('./core/models/menu');
+    const menuTemplate = require('./models/menu');
 
     const appMenu = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(appMenu);

@@ -7,7 +7,7 @@ const {
 , path = require('path');
 
 const Display = require('../../models/display')
-    , lang = require('../../../cosma-core/models/lang');
+    , lang = require('../../cosma-core/models/lang');
 
 let window;
 
@@ -94,7 +94,7 @@ module.exports = function (report) {
 // });
 
 // ipcMain.on("askRecordTypes", (event, data) => {
-//     const Config = require('../../../cosma-core/models/config')
+//     const Config = require('../../cosma-core/models/config')
 //         , config = new Config().opts;
 
 //     window.webContents.send("getRecordTypes", Object.keys(config.record_types));

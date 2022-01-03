@@ -6,7 +6,7 @@ const {
 } = require('electron');
 
 const Config = require('../cosma-core/models/config')
-    , Display = require('../core/models/display')
+    , Display = require('../models/display')
     , lang = require('../cosma-core/models/lang');
 
 ipcMain.on("get-config-options", (event) => {

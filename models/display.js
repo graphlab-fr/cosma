@@ -11,7 +11,7 @@ const {
 , path = require('path')
 , fs = require('fs');
 
-const iconPath = path.join(__dirname, '../../assets/icons/64x64.png');
+const iconPath = path.join(__dirname, '../assets/icons/64x64.png');
 
 module.exports = class Display {
     /**

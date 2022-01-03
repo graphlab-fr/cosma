@@ -11,7 +11,7 @@ const {
     , path = require('path')
     , moment = require('moment');
 
-const Config = require('../../cosma-core/models/config');
+const Config = require('../cosma-core/models/config');
 
 module.exports = class History {
 

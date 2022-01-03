@@ -15,14 +15,14 @@ const {
     , path = require('path')
     , fs = require('fs');
 
-const Config = require('../../../cosma-core/models/config')
+const Config = require('../../cosma-core/models/config')
     , Display = require('../../models/display');
 
 let windowPath, window;
 
 const History = require('../../models/history')
-    , Graph = require('../../../cosma-core/models/graph')
-    , Template = require('../../../cosma-core/models/template');
+    , Graph = require('../../cosma-core/models/graph')
+    , Template = require('../../cosma-core/models/template');
 
 module.exports = function (graphParams = [], runLast = false) {
     const pageName = 'main';

@@ -6,9 +6,9 @@
 
 const { app } = require('electron');
 
-const Config = require('../../cosma-core/models/config')
+const Config = require('../cosma-core/models/config')
     , config = new Config()
-    , lang = require('../../cosma-core/models/lang');
+    , lang = require('../cosma-core/models/lang');
 
 const Display = require('./display')
     , mainWindow = Display.getWindow('main');

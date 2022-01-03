@@ -1,10 +1,11 @@
 const {
-        BrowserWindow
+        BrowserWindow, // app windows generator
+        shell
     } = require('electron')
-    , path = require('path')
+    , path = require('path');
 
 const Display = require('../../models/display')
-    , lang = require('../../../cosma-core/models/lang');
+    , lang = require('../../cosma-core/models/lang');
 
 let window;
 
@@ -21,7 +22,7 @@ module.exports = function () {
         return;
     }
 
-    const pageName = 'history';
+    const pageName = 'config';
 
     let windowSpecs = Display.getWindowSpecs(pageName);
 
@@ -33,11 +34,16 @@ module.exports = function () {
             }
         })
     );
-
+    
     if (windowSpecs.maximized === true) {
         window.maximize(); }
 
     Display.storeSpecs(pageName, window);
+
+    window.webContents.on('will-navigate', function(e, url) {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
 
     window.on('resized', () => {
         Display.storeSpecs(pageName, window);
@@ -57,7 +63,7 @@ module.exports = function () {
         window.setPosition(windowSpecs.x, windowSpecs.y, true);
         Display.storeSpecs(pageName, window);
     });
-
+    
     window.loadFile(path.join(__dirname, './source.html'));
 
     window.once('ready-to-show', () => {
