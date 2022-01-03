@@ -58,6 +58,10 @@ function setConfigView () {
                 input.value = config[input.name];
                 break;
 
+            case 'color':
+                input.value = config[input.name];
+                break;
+
             case 'number':
                 input.value = config[input.name];
                 break;
