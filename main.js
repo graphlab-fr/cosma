@@ -53,8 +53,6 @@ app.whenReady().then(() => {
 
     require('./controllers');
 
-    require('./core/models/shortcuts');
-
     openCosmoscope([], runLast = true);
 
     /**
