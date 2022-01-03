@@ -28,7 +28,7 @@ ipcMain.on("record-add", (event, title, type, tags) => {
             title: lang.getFor(lang.i.dialog.record_overwriting.title),
             message: lang.getWith(lang.i.dialog.record_overwriting.message, [record.fileName]),
             type: 'warning',
-            buttons: [lang.getFor(lang.i.dialog.btn.cancel), 'Ok'],
+            buttons: [lang.getFor(lang.i.dialog.btn.cancel), lang.getFor(lang.i.dialog.btn.ok)],
             defaultId: 0,
             cancelId: 0,
             noLink: true

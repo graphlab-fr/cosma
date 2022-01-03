@@ -95,8 +95,8 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.share),
                 accelerator: 'CommandOrControl+E',
                 role: 'export-cosmoscope',
-                click (item, window) {
-                    require('../views/export/index')(window);
+                click () {
+                    require('../views/export/')();
                 }
             },
             {

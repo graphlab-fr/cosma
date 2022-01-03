@@ -1,10 +1,13 @@
 const {
     ipcMain,
-    Menu
+    Menu,
+    dialog,
+    BrowserWindow
 } = require('electron');
 
 const Config = require('../cosma-core/models/config')
-    , Display = require('../core/models/display');
+    , Display = require('../core/models/display')
+    , lang = require('../cosma-core/models/lang');
 
 ipcMain.on("get-config-options", (event) => {
     event.returnValue = Config.get();
@@ -22,20 +25,30 @@ ipcMain.on("save-config-option", (event, name, value) => {
 
     if (config.report.includes(name)) {
         event.returnValue = config.writeReport();
-    } else {
-        config.save();
-        event.returnValue = true;
+        return;
+    }
 
-        let windowForSend = Display.getWindow('export');
-        if (windowForSend) {
-            windowForSend.webContents.send("config-change");
-        }
+    config.save();
+    event.returnValue = true;
 
+    let windowForSend = Display.getWindow('export');
+    if (windowForSend) {
+        windowForSend.webContents.send("config-change");
+    }
+
+    if (['lang'].includes(name)) {
+        dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+            message: lang.getFor(lang.i.config.info.lang),
+            type: 'info'
+        })
+    }
+
+    if (['devtools', 'bibliography', 'csl', 'csl_locale'].includes(name)) {
         const appMenu = Menu.getApplicationMenu();
-
+    
         appMenu.getMenuItemById('citeproc')
             .enabled = config.canCiteproc();
-
+    
         appMenu.getMenuItemById('devtools')
             .visible = config.opts.devtools;
     }
@@ -72,9 +85,13 @@ ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, color, ac
             break;
 
         case 'delete-all':
-            config = new Config ({
-                record_types: Config.base.record_types
-            })
+            if (askDeleteAll() === true) {
+                config = new Config ({
+                    record_types: Config.base.record_types
+                })
+            } else {
+                config = new Config();
+            }
             break;
     }
 
@@ -132,9 +149,13 @@ ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stro
             break;
 
         case 'delete-all':
-            config = new Config ({
-                link_types: Config.base.link_types
-            })
+            if (askDeleteAll() === true) {
+                config = new Config ({
+                    link_types: Config.base.link_types
+                })
+            } else {
+                config = new Config();
+            }
             break;
     }
 
@@ -186,9 +207,13 @@ ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) =>
             break;
 
         case 'delete-all':
-            config = new Config ({
-                views: Config.base.views
-            })
+            if (askDeleteAll() === true) {
+                config = new Config ({
+                    views: Config.base.views
+                })
+            } else {
+                config = new Config();
+            }
             break;
     }
 
@@ -209,3 +234,23 @@ ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) =>
         }
     }
 });
+
+/**
+ * Ask user by a dialog modal to confirm delete_all
+ * @returns {boolean} - True if the user answer 'Ok'
+ */
+
+function askDeleteAll () {
+    const result = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
+        message: lang.getFor(lang.i.dialog.delete_all.message),
+        type: 'warning',
+        buttons: [lang.getFor(lang.i.dialog.btn.cancel), lang.getFor(lang.i.dialog.btn.ok)],
+        defaultId: 0,
+        cancelId: 0,
+        noLink: true
+    })
+
+    if (result === 1) { return true; }
+
+    return false;
+}
