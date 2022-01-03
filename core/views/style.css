@@ -27,15 +27,12 @@ html {
 body {
     padding: 20px;
     margin: 0;
+    max-width: 95vw;
+    margin: 0 auto;
     font-family: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
     font-size: 1.4rem;
     overflow-x: hidden;
     background-color: var(--mac-menu-background-color);
-}
-
-.wrapper {
-    max-width: 95vw;
-    margin: 0 auto;
 }
 
 /** Components

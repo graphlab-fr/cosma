@@ -5,10 +5,7 @@ const {
     } = require('electron')
     , path = require('path');
 
-const windowsModel = require('./core/models/windows')
-    , History = require('./core/models/history')
-    , Config = require('./cosma-core/models/config')
-    , Display = require('./core/models/display');
+const Display = require('./models/display');
 
 /**
  * Test if a window is stored into 'BrowserWindow' object.
