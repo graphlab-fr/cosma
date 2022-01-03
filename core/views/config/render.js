@@ -146,6 +146,14 @@ function manageTypeRecord (formData, action, input) {
             window.api.openModalTypeRecord(formData.record_types, action);
             break;
 
+        case 'delete-all':
+            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, action)
+            break;
+    }
+
+    if (input === undefined) { return; }
+
+    switch (action) {
         case 'update':
             window.api.openModalTypeRecord(formData.record_types, action);
             break;
@@ -153,13 +161,7 @@ function manageTypeRecord (formData, action, input) {
         case 'delete':
             result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, action)
             break;
-
-        case 'delete-all':
-            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, action)
-            break;
     }
-
-    if (input === undefined) { return; }
 
     if (result === true) { input.setCustomValidity(''); }
     else { input.setCustomValidity(result); }
@@ -175,6 +177,14 @@ function manageTypeLink (formData, action, input) {
             window.api.openModalTypeLink(formData.link_types, action);
             break;
 
+        case 'delete-all':
+            result = window.api.saveConfigOptionTypeLink(formData.link_types, undefined, undefined, undefined, action)
+            break;
+    }
+
+    if (input === undefined) { return; }
+
+    switch (action) {
         case 'update':
             window.api.openModalTypeLink(formData.link_types, action);
             break;
@@ -182,13 +192,7 @@ function manageTypeLink (formData, action, input) {
         case 'delete':
             result = window.api.saveConfigOptionTypeLink(formData.link_types, undefined, undefined, undefined, action)
             break;
-
-        case 'delete-all':
-            result = window.api.saveConfigOptionTypeLink(formData.link_types, undefined, undefined, undefined, action)
-            break;
     }
-
-    if (input === undefined) { return; }
 
     if (result === true) { input.setCustomValidity(''); }
     else { input.setCustomValidity(result); }
