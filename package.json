@@ -7,7 +7,7 @@
     "start": "electron .",
     "build-win": "electron-packager ./ Cosma --out=build/win --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=x64",
     "build-mac": "electron-packager ./ Cosma --out=build/osx --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=x64",
-		"doc-gen": "cd docs && sh pandoc-build.sh",
+    "doc-gen": "cd docs && sh pandoc-build.sh",
     "doc-upload": "ghp-import -p docs"
   },
   "author": "HyperOtlet",
@@ -19,7 +19,6 @@
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
     "citeproc": "^2.4.59",
-    "html-minifier": "^4.0.0",
     "js-yaml": "^3.14.0",
     "markdown-it": "^12.0.2",
     "markdown-it-attrs": "^4.0.0",

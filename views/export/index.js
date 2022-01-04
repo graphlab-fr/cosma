@@ -19,7 +19,7 @@ module.exports = {
             Object.assign(Display.getBaseSpecs('modal'), {
                 title: lang.getFor(lang.i.windows[pageName].title),
                 parent: Display.getWindow('main'),
-                height: 230,
+                height: 220,
                 webPreferences: {
                     preload: path.join(__dirname, './preload.js')
                 }

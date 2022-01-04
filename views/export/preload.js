@@ -15,7 +15,6 @@ let checkboxs;
 
 window.addEventListener("DOMContentLoaded", () => {
     checkboxs = {
-        minify: document.querySelector('input[name="minify"]'),
         citeproc: document.querySelector('input[name="citeproc"]'),
         css_custom: document.querySelector('input[name="css_custom"]')
     };

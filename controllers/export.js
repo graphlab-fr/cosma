@@ -14,7 +14,6 @@ ipcMain.on("get-export-options", (event) => {
     const config = new Config();
 
     event.returnValue = {
-        minify: config.canMinify(),
         citeproc: config.canCiteproc(),
         css_custom: config.canCssCustom()
     };
@@ -25,7 +24,6 @@ ipcMain.on("export-cosmoscope", (event, graphParams) => {
         , window = BrowserWindow.getFocusedWindow();
 
     graphParams = {
-        minify: (config.canMinify() === true && graphParams['minify'] === true),
         citeproc: (config.canCiteproc() === true && graphParams['citeproc'] === true),
         css_custom: (config.canCssCustom() === true && graphParams['css_custom'] === true)
     }
