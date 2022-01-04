@@ -167,6 +167,8 @@ form.form-list table {
 
 form.form-list div.buttons-box {
     width: 25%;
+    display: flex;
+    flex-direction: column;
 }
 
 form.form-list div.buttons-box button {

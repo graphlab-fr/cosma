@@ -173,7 +173,10 @@ ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stro
 });
 
 ipcMain.on("get-link-strokes", (event) => {
-    event.returnValue = Config.validLinkStrokes;
+    event.returnValue = Config.validLinkStrokes
+        .map((stroke) => {
+            return {id: stroke, name: lang.getFor(lang.i.windows.linktype.strokes[stroke])};
+        })
 });
 
 ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) => {

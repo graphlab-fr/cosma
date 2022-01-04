@@ -19,14 +19,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const selectStroke = document.querySelector('select[name="stroke"]');
     for (const stroke of linkStrokes) {
-        if (linkType !== undefined && stroke === config.link_types[linkType].stroke) {
+        if (linkType !== undefined && stroke.id === config.link_types[linkType].stroke) {
             selectStroke.insertAdjacentHTML('beforeend',
-            `<option value="${stroke}" selected>${stroke}</option>`);
+            `<option value="${stroke.id}" selected>${stroke.name}</option>`);
             continue;
         }
 
         selectStroke.insertAdjacentHTML('beforeend',
-        `<option value="${stroke}">${stroke}</option>`);
+        `<option value="${stroke.id}">${stroke.name}</option>`);
     }
 
     if (linkType === undefined) {

@@ -79,19 +79,34 @@ function setConfigView () {
         `<tr>
             <td><input type="radio" name="record_types" value="${recordType}"></td>
             <td>${recordType}</td>
-            <td>${config.record_types[recordType]}</td>
+            <td style="background-color: ${config.record_types[recordType]}"></td>
         </tr>`);
     }
 
     tableTypesLink.innerHTML = '';
 
     for (const linkType in config.link_types) {
+    
+        let strokeCss;
+        switch (config.link_types[linkType].stroke) {
+            case 'simple':
+                strokeCss = 'solid';
+                break;
+            case 'dash':
+                strokeCss = 'dashed';
+                break;
+            default:
+                strokeCss = config.link_types[linkType].stroke;
+                break;
+        }
+
         tableTypesLink.insertAdjacentHTML('beforeend',
         `<tr>
             <td><input type="radio" name="link_types" value="${linkType}"></td>
             <td>${linkType}</td>
-            <td>${config.link_types[linkType].stroke}</td>
-            <td>${config.link_types[linkType].color}</td>
+            <td>
+                <span class="stroke-exemple" style="border: 3px ${config.link_types[linkType].color} ${strokeCss}"></span>
+            </td>
         </tr>`);
     }
 
