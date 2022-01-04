@@ -5,18 +5,16 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 
 <body>
-
-    <div class="wrapper">
     
         <main>
 
             <form>
                 <label>
-                    Nom :
+                    {{ lang.fields.name[flag] }}
                     <input type="text" name="name">
                 </label>
 
@@ -34,9 +32,7 @@
 
         </main>
 
-    </div>
-
-    <script src="render.js"></script>
+    <script src="../render.js"></script>
 </body>
 
 </html>

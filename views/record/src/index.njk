@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+    
+        <main>
+            <form id="form-record">
+                <label>
+                    {{ lang.fields.title[flag] }}
+                    <input type="text" name="title" required>
+                </label>
+
+                <label>
+                    {{ lang.fields.type[flag] }}
+                    <select name="type"></select>
+                </label>
+
+                <label>
+                    {{ lang.fields.keywords[flag] }}
+                    <input type="text" name="tags">
+                </label>
+
+                <div class="cancel-ok">
+                    <button class="window-close" type="button">Annuler</button>
+                    <button class="primary" type="submit">OK</button>
+                </div>
+            </form>
+
+        </main>
+
+    <script src="../render.js"></script>
+</body>
+
+</html>

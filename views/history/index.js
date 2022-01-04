@@ -3,72 +3,70 @@ const {
     } = require('electron')
     , path = require('path')
 
-const Display = require('../../models/display')
-    , lang = require('../../cosma-core/models/lang');
+const lang = require('../../cosma-core/models/lang');
 
 let window;
 
-module.exports = function () {
+const pageName = 'history';
 
-    /**
-     * Window
-     * ---
-     * manage displaying
-     */
+module.exports = {
+    open: function () {
+        if (window !== undefined) {
+            window.focus();
+            return;
+        }
 
-    if (window !== undefined) {
-        window.focus();
-        return;
-    }
+        const Display = require('../../models/display');
 
-    const pageName = 'history';
+        let windowSpecs = Display.getWindowSpecs(pageName);
 
-    let windowSpecs = Display.getWindowSpecs(pageName);
+        window = new BrowserWindow(
+            Object.assign(windowSpecs, {
+                title: lang.getFor(lang.i.windows[pageName].title),
+                webPreferences: {
+                    preload: path.join(__dirname, './preload.js')
+                }
+            })
+        );
 
-    window = new BrowserWindow(
-        Object.assign(windowSpecs, {
-            title: lang.getFor(lang.i.windows[pageName].title),
-            webPreferences: {
-                preload: path.join(__dirname, './preload.js')
-            }
-        })
-    );
+        if (windowSpecs.maximized === true) {
+            window.maximize(); }
 
-    if (windowSpecs.maximized === true) {
-        window.maximize(); }
-
-    Display.storeSpecs(pageName, window);
-
-    window.on('resized', () => {
         Display.storeSpecs(pageName, window);
-    });
 
-    window.on('moved', () => {
-        Display.storeSpecs(pageName, window);
-    });
+        window.on('resized', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.on('maximize', () => {
-        Display.storeSpecs(pageName, window);
-    });
+        window.on('moved', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.on('unmaximize', () => {
-        windowSpecs = Display.getWindowSpecs(pageName);
-        window.setSize(windowSpecs.width, windowSpecs.height, true);
-        window.setPosition(windowSpecs.x, windowSpecs.y, true);
-        Display.storeSpecs(pageName, window);
-    });
+        window.on('maximize', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.loadFile(path.join(__dirname, './source.html'));
+        window.on('unmaximize', () => {
+            windowSpecs = Display.getWindowSpecs(pageName);
+            window.setSize(windowSpecs.width, windowSpecs.height, true);
+            window.setPosition(windowSpecs.x, windowSpecs.y, true);
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.once('ready-to-show', () => {
-        window.show();
-    });
+        window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
 
-    window.once('close', () => {
-        Display.emptyWindow(pageName);
-    });
+        window.once('ready-to-show', () => {
+            window.show();
+        });
 
-    window.once('closed', () => {
-        window = undefined;
-    });
+        window.once('close', () => {
+            Display.emptyWindow(pageName);
+        });
+
+        window.once('closed', () => {
+            window = undefined;
+        });
+    },
+
+    build: () => require('../build-page')(pageName, __dirname)
 }

@@ -5,44 +5,51 @@ const {
     } = require('electron')
     , path = require('path');
 
-const lang = require('../../cosma-core/models/lang')
-    , Display = require('../../models/display');
+const lang = require('../../cosma-core/models/lang');
 
 let window;
 
-module.exports = function (recordType, action) {
-    if (window !== undefined) {
-        window.focus();
-        return;
-    }
+const pageName = 'recordtype';
 
-    window = new BrowserWindow(
-        Object.assign(Display.getBaseSpecs('modal'), {
-            title: lang.getFor(lang.i.windows[`recordtype_${action}`].title),
-            parent: Display.getWindow('config'),
-            webPreferences: {
-                preload: path.join(__dirname, './preload.js')
-            }
-        })
-    );
-    
-    window.loadFile(path.join(__dirname, './source.html'));
+module.exports = {
+    open: function (recordType, action) {
+        if (window !== undefined) {
+            window.focus();
+            return;
+        }
 
-    window.once('ready-to-show', () => {
-        window.show();
-    });
+        const Display = require('../../models/display');
 
-    window.once('closed', () => {
-        window = undefined;
-    });
+        window = new BrowserWindow(
+            Object.assign(Display.getBaseSpecs('modal'), {
+                title: lang.getFor(lang.i.windows[pageName].title[action]),
+                parent: Display.getWindow('config'),
+                webPreferences: {
+                    preload: path.join(__dirname, './preload.js')
+                }
+            })
+        );
+        
+        window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
 
-    ipcMain.once("get-recordtype", (event) => {
-        event.returnValue = recordType;
-    });
+        window.once('ready-to-show', () => {
+            window.show();
+        });
 
-    ipcMain.once("get-action", (event) => {
-        event.returnValue = action;
-    });
+        window.once('closed', () => {
+            window = undefined;
+        });
 
-    return window;
+        ipcMain.once("get-recordtype", (event) => {
+            event.returnValue = recordType;
+        });
+
+        ipcMain.once("get-action", (event) => {
+            event.returnValue = action;
+        });
+
+        return window;
+    },
+
+    build: () => require('../build-page')(pageName, __dirname)
 }

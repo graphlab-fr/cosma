@@ -34,7 +34,7 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
         case 'open-report':
             report = new History(recordId).report;
             report = Graph.reportToSentences(report);
-            require('../views/report')(report);
+            require('../views/report').open(report);
             break;
 
         case 'delete':

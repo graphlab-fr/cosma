@@ -1,45 +1,50 @@
 const {
-        app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        ipcMain, // interface of data exchange
-        clipboard
+        ipcMain
     } = require('electron')
     , path = require('path');
 
-const lang = require('../../cosma-core/models/lang')
-    , Display = require('../../models/display');
+const lang = require('../../cosma-core/models/lang');
 
 let window;
 
-module.exports = function (recordId) {
-    if (window !== undefined) {
-        window.focus();
-        return;
-    }
+const pageName = 'history_update';
 
-    window = new BrowserWindow(
-        Object.assign(Display.getBaseSpecs('modal'), {
-            title: lang.getFor(lang.i.windows[`history_update`].title),
-            parent: Display.getWindow('history'),
-            webPreferences: {
-                preload: path.join(__dirname, './preload.js')
-            }
-        })
-    );
+module.exports = {
+    open: function (recordId) {
+        if (window !== undefined) {
+            window.focus();
+            return;
+        }
 
-    window.loadFile(path.join(__dirname, './source.html'));
+        const Display = require('../../models/display');
 
-    window.once('ready-to-show', () => {
-        window.show();
-    });
+        window = new BrowserWindow(
+            Object.assign(Display.getBaseSpecs('modal'), {
+                title: lang.getFor(lang.i.windows[pageName].title),
+                parent: Display.getWindow('history'),
+                webPreferences: {
+                    preload: path.join(__dirname, './preload.js')
+                }
+            })
+        );
 
-    window.once('closed', () => {
-        window = undefined;
-    });
+        window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
 
-    ipcMain.once("get-record-id", (event) => {
-        event.returnValue = recordId;
-    });
+        window.once('ready-to-show', () => {
+            window.show();
+        });
 
-    return window;
+        window.once('closed', () => {
+            window = undefined;
+        });
+
+        ipcMain.once("get-record-id", (event) => {
+            event.returnValue = recordId;
+        });
+
+        return window;
+    },
+
+    build: () => require('../build-page')(pageName, __dirname)
 }

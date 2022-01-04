@@ -119,14 +119,14 @@ ipcMain.on("askForward", (event) => {
     };
 });
 
-ipcMain.on("askShare", (event) => {
-    require('../export/index')(window);
+ipcMain.on("askShare", () => {
+    require('../export').open();
 });
 
-ipcMain.on("askRecordNew", (event) => {
-    require('../record/index')();
+ipcMain.on("askRecordNew", () => {
+    require('../record').open();
 });
 
-ipcMain.on("askCosmoscopeNew", (event) => {
+ipcMain.on("askCosmoscopeNew", () => {
     require('./index')();
 });

@@ -88,7 +88,7 @@ module.exports = [
                 role: 'new-record',
                 accelerator: 'CommandOrControl+N',
                 click () {
-                    require('../views/record')();
+                    require('../views/record').open();
                 }
             },
             {
@@ -96,7 +96,7 @@ module.exports = [
                 accelerator: 'CommandOrControl+E',
                 role: 'export-cosmoscope',
                 click () {
-                    require('../views/export/')();
+                    require('../views/export/').open();
                 }
             },
             {
@@ -114,7 +114,7 @@ module.exports = [
                 accelerator: 'CommandOrControl+H',
                 role: 'history',
                 click () {
-                    require('../views/history')();
+                    require('../views/history').open();
                 }
             },
             { type: 'separator' },
