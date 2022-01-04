@@ -11,6 +11,8 @@ module.exports = function (pageName, dirPath) {
     for (const flag of Object.keys(Config.validLangages)) {
         html = nunjucks.render('index.njk', {
             lang: lang.i.windows[pageName],
+            langBtnCancel: lang.i.dialog.btn.cancel,
+            langBtnOk: lang.i.dialog.btn.ok,
             flag: flag
         });
 
