@@ -59,7 +59,7 @@ module.exports = function (graphParams = [], runLast = false) {
     });
 
     window.once('closed', () => {
-        app.quit();
+        window = undefined;
     });
 
     window.webContents.on('will-navigate', function(e, url) {

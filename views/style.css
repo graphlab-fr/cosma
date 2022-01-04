@@ -126,6 +126,10 @@ form {
     flex-direction: column;
 }
 
+form + form {
+    margin-top: 5px;
+}
+
 form fieldset {
     display: flex;
     flex-direction: column;

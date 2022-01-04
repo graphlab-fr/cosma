@@ -5,51 +5,51 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 
 <body>
 
     <nav class="menu-vertical">
         <ul>
-            <li data-section="general">
-                <span class="ico">?</span>
-                {{ lang.nav.general }}
+            <li tabindex="0" data-section="general">
+                <span class="ico">web</span>
+                {{ lang.nav.general[flag] }}
             </li>
 
-            <li data-section="record_types">
+            <li tabindex="0" data-section="record_types">
                 <span class="ico">bubble_chart</span>
-                {{ lang.nav.record_types }}
+                {{ lang.nav.record_types[flag] }}
             </li>
 
-            <li data-section="link_types">
-                <span class="ico">?</span>
-                {{ lang.nav.link_types }}
+            <li tabindex="0" data-section="link_types">
+                <span class="ico">power_input</span>
+                {{ lang.nav.link_types[flag] }}
             </li>
 
-            <li data-section="graph">
+            <li tabindex="0" data-section="graph">
                 <span class="ico">polyline</span>
-                {{ lang.nav.graph }}
+                {{ lang.nav.graph[flag] }}
             </li>
 
-            <li data-section="metas">
+            <li tabindex="0" data-section="metas">
                 <span class="ico">label</span>
-                {{ lang.nav.metas }}
+                {{ lang.nav.metas[flag] }}
             </li>
 
-            <li data-section="bibliography">
+            <li tabindex="0" data-section="bibliography">
                 <span class="ico">collections_bookmark</span>
-                {{ lang.nav.bibliography }}
+                {{ lang.nav.bibliography[flag] }}
             </li>
 
-            <li data-section="views">
-                <span class="ico">?</span>
-                {{ lang.nav.views }}
+            <li tabindex="0" data-section="views">
+                <span class="ico">dvr</span>
+                {{ lang.nav.views[flag] }}
             </li>
 
-            <li data-section="advanced">
-                <span class="ico">?</span>
-                {{ lang.nav.advanced }}
+            <li tabindex="0" data-section="advanced">
+                <span class="ico">tune</span>
+                {{ lang.nav.advanced[flag] }}
             </li>
         </ul>
     </nav>
@@ -97,13 +97,13 @@
             {% include "csl.njk" %}
 
             <p>
-                <a href="https://www.zotero.org/styles">{{ lang.help.csl }}</a>
+                <a href="https://www.zotero.org/styles">{{ lang.help.csl[flag] }}</a>
             </p>
 
             {% include "csl_locale.njk" %}
 
             <p>
-                <a href="https://github.com/citation-style-language/locales">{{ lang.help.csl_locale }}</a>
+                <a href="https://github.com/citation-style-language/locales">{{ lang.help.csl_locale[flag] }}</a>
             </p>
         </section>
 
@@ -118,7 +118,7 @@
 
     </main>
 
-    <script src="render.js"></script>
+    <script src="../render.js"></script>
 </body>
 
 </html>

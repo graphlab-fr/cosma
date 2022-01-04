@@ -1,0 +1,1 @@
+require('../views/config').build();

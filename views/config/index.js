@@ -4,77 +4,74 @@ const {
     } = require('electron')
     , path = require('path');
 
-const Display = require('../../models/display')
-    , lang = require('../../cosma-core/models/lang');
+const lang = require('../../cosma-core/models/lang');
 
 let window;
 
-module.exports = function () {
+const pageName = 'config';
 
-    /**
-     * Window
-     * ---
-     * manage displaying
-     */
+module.exports = {
+    open: function () {
+        if (window !== undefined) {
+            window.focus();
+            return;
+        }
 
-    if (window !== undefined) {
-        window.focus();
-        return;
-    }
-
-    const pageName = 'config';
-
-    let windowSpecs = Display.getWindowSpecs(pageName);
-
-    window = new BrowserWindow(
-        Object.assign(windowSpecs, {
-            title: lang.getFor(lang.i.windows[pageName].title),
-            webPreferences: {
-                preload: path.join(__dirname, './preload.js')
-            }
-        })
-    );
+        const Display = require('../../models/display');
+        let windowSpecs = Display.getWindowSpecs(pageName);
     
-    if (windowSpecs.maximized === true) {
-        window.maximize(); }
+        window = new BrowserWindow(
+            Object.assign(windowSpecs, {
+                title: lang.getFor(lang.i.windows[pageName].title),
+                webPreferences: {
+                    preload: path.join(__dirname, './preload.js')
+                }
+            })
+        );
 
-    Display.storeSpecs(pageName, window);
+        if (windowSpecs.maximized === true) {
+            window.maximize(); }
 
-    window.webContents.on('will-navigate', function(e, url) {
-        e.preventDefault();
-        shell.openExternal(url);
-    });
-
-    window.on('resized', () => {
         Display.storeSpecs(pageName, window);
-    });
 
-    window.on('moved', () => {
-        Display.storeSpecs(pageName, window);
-    });
+        window.webContents.on('will-navigate', function(e, url) {
+            e.preventDefault();
+            shell.openExternal(url);
+        });
 
-    window.on('maximize', () => {
-        Display.storeSpecs(pageName, window);
-    });
+        window.on('resized', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.on('unmaximize', () => {
-        windowSpecs = Display.getWindowSpecs(pageName);
-        window.setSize(windowSpecs.width, windowSpecs.height, true);
-        window.setPosition(windowSpecs.x, windowSpecs.y, true);
-        Display.storeSpecs(pageName, window);
-    });
-    
-    window.loadFile(path.join(__dirname, './source.html'));
+        window.on('moved', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.once('ready-to-show', () => {
-        window.show();
-    });
+        window.on('maximize', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.once('close', () => {
-        Display.emptyWindow(pageName);
-    });
+        window.on('unmaximize', () => {
+            windowSpecs = Display.getWindowSpecs(pageName);
+            window.setSize(windowSpecs.width, windowSpecs.height, true);
+            window.setPosition(windowSpecs.x, windowSpecs.y, true);
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.once('closed', () => {
-        window = undefined;
-    });
+        window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
+
+        window.once('ready-to-show', () => {
+            window.show();
+        });
+
+        window.once('close', () => {
+            Display.emptyWindow(pageName);
+        });
+
+        window.once('closed', () => {
+            window = undefined;
+        });
+    },
+
+    build: () => require('../build-page')(pageName, __dirname)
 }

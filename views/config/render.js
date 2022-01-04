@@ -21,6 +21,9 @@ let sections = {}
 
         sectionElt.addEventListener('click', () => {
             sectionVisibility(i, 'display'); })
+
+        sectionElt.addEventListener('focus', () => {
+            sectionVisibility(i, 'display'); })
     }
 
 })();

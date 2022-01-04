@@ -8,23 +8,10 @@ const {
 const Display = require('./models/display');
 
 /**
- * Test if a window is stored into 'BrowserWindow' object.
- * @returns {boolean}
- */
-
-function noWindowOpen () {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        return true;
-    }
-    return false;
-}
-
-/**
  * Wait for 'app ready' event, before lauch the window.
  */
 
 app.whenReady().then(() => {
-
     const windowSpecs = Display.getWindowSpecs('main');
 
     const mainWindow = new BrowserWindow(
@@ -58,8 +45,9 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) {
-            openCosmoscope([], runLast = true); }
+        if (BrowserWindow.getAllWindows().length === 0) {
+            openCosmoscope([], runLast = true);
+        }
     });
 });
 
@@ -72,3 +60,7 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
 });
+
+if (app.isPackaged === false) {
+    require('./controllers/build-pages');
+}

@@ -31,7 +31,7 @@ module.exports = [
                 accelerator: 'CommandOrControl+,',
                 role: 'options',
                 click () {
-                    require('../views/config/index')();
+                    require('../views/config').open();
                 }
             },
             { type: 'separator' },
@@ -88,7 +88,7 @@ module.exports = [
                 role: 'new-record',
                 accelerator: 'CommandOrControl+N',
                 click () {
-                    require('../views/record/index')();
+                    require('../views/record')();
                 }
             },
             {
@@ -114,7 +114,7 @@ module.exports = [
                 accelerator: 'CommandOrControl+H',
                 role: 'history',
                 click () {
-                    require('../views/history/index')();
+                    require('../views/history')();
                 }
             },
             { type: 'separator' },
@@ -125,7 +125,7 @@ module.exports = [
                     accelerator: 'CommandOrControl+O',
                     role: 'options',
                     click () {
-                        require('../views/config/index')();
+                        require('../views/config').open();
                     }
                 }
             ]
