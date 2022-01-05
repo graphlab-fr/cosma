@@ -39,6 +39,12 @@ body {
 ------------------------------------------------------------*/
 
 /* ---
+- Text
+--- */
+
+pre { font-family: inherit; }
+
+/* ---
 - Material Icons
 --- */
 
@@ -97,7 +103,7 @@ button.ico {
 }
 
 .cancel-ok {
-    position: absolute;
+    position: fixed;
     bottom: 15px;
     right: 15px;
     width: 100%;

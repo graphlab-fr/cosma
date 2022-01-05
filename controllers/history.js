@@ -32,7 +32,7 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
             break;
 
         case 'open-report':
-            report = new History(recordId).report;
+            report = new History(recordId).getReport();
             report = Graph.reportToSentences(report);
             require('../views/report').open(report);
             break;

@@ -193,6 +193,22 @@ module.exports = class History {
     }
 
     /**
+     * Get not empty section from 'this.report' for Graph.reportToSentences()
+     * @return {object}
+     */
+
+    getReport () {
+        for (const reportSection in this.report) {
+            if (this.report[reportSection].length === 0) {
+                delete this.report[reportSection];
+                continue;
+            }
+        }
+
+        return this.report;
+    }
+
+    /**
      * Save the history dat file to the History.pathForData
      * @return {boolean} - True if the config file is saved, false if fatal error
      */
