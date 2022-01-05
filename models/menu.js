@@ -74,7 +74,12 @@ module.exports = [
                 accelerator: 'CommandOrControl+R',
                 role: 'new-cosmoscope',
                 click () {
-                    require('../controllers/cosmoscope')();
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow) {
+                        require('../controllers/cosmoscope')();
+                    } else {
+                        require('../views/cosmoscope').open();
+                    }
                 }
             },
             {
