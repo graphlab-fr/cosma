@@ -8,7 +8,7 @@
     "url": "https://github.com/graphlab-fr/cosma.git"
   },
   "bugs": {
-    "url" : "https://github.com/graphlab-fr/cosma/issues"
+    "url": "https://github.com/graphlab-fr/cosma/issues"
   },
   "main": "main.js",
   "scripts": {
@@ -26,17 +26,17 @@
   ],
   "license": "GNU GPL 3.0",
   "devDependencies": {
-    "electron": "^13.1.7",
-    "electron-packager": "^15.3.0"
+    "electron": "^16.0.6",
+    "electron-packager": "^15.4.0"
   },
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
-    "citeproc": "^2.4.59",
-    "js-yaml": "^3.14.0",
-    "markdown-it": "^12.0.2",
-    "markdown-it-attrs": "^4.0.0",
+    "citeproc": "^2.4.62",
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^12.3.0",
+    "markdown-it-attrs": "^4.1.3",
     "moment": "^2.29.1",
     "nunjucks": "^3.2.3",
-    "yaml-front-matter": "^4.1.0"
+    "yaml-front-matter": "^4.1.1"
   }
 }
