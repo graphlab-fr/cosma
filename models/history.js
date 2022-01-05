@@ -241,7 +241,7 @@ module.exports = class History {
     }
 
     deleteAll () {
-        fs.rmdirSync(History.pathForDirs, { recursive: true });
+        fs.rmSync(History.pathForDirs, { recursive: true });
         this.data = History.baseData;
 
         this.save();

@@ -7,6 +7,8 @@ const History = require('../models/history')
     , Display = require('../models/display')
     , Graph = require('../cosma-core/models/graph');
 
+const config = require('../cosma-core/models/config').get();
+
 ipcMain.on("get-history-records", (event) => {
     event.returnValue = History.get().records;
 });
@@ -32,9 +34,15 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
             break;
 
         case 'open-report':
-            report = new History(recordId).getReport();
+            record = new History(recordId);
+
+            report = record.getReport();
             report = Graph.reportToSentences(report);
-            require('../views/report').open(report);
+
+            const moment = require('moment');
+            moment.locale(config.lang);
+
+            require('../views/report').open(report, moment(record.date).format('LLLL'));
             break;
 
         case 'delete':

@@ -5,115 +5,90 @@
  */
 
 const {
-        app, // app event lifecycle, events
         ipcMain,
-        clipboard,
-        dialog,
         shell,
         BrowserWindow // app windows generator
     } = require('electron')
-    , path = require('path')
-    , fs = require('fs');
+    , path = require('path');
 
-const Config = require('../../cosma-core/models/config')
-    , Display = require('../../models/display');
+const Display = require('../../models/display');
 
-let windowPath, window;
+let window;
 
-const History = require('../../models/history')
-    , Graph = require('../../cosma-core/models/graph')
-    , Template = require('../../cosma-core/models/template');
+const pageName = 'main';
 
-module.exports = function (graphParams = [], runLast = false) {
-    const pageName = 'main';
+module.exports = {
+    open: function () {
+        if (window !== undefined) {
+            window.focus();
+            return;
+        }
 
-    window = Display.getWindow(pageName);
+        const windowSpecs = Display.getWindowSpecs(pageName);
 
-    const config = new Config();
+        window = new BrowserWindow(
+            Object.assign(windowSpecs, {
+                webPreferences: {
+                    preload: path.join(__dirname, './preload.js')
+                },
+                title: 'Cosma'
+            })
+        );
 
-    window.once('ready-to-show', () => {
-        window.show();
-    });
+        if (windowSpecs.maximized === true) {
+            mainWindow.maximize(); }
 
-    window.on('resized', () => {
         Display.storeSpecs(pageName, window);
-    });
 
-    window.on('moved', () => {
-        Display.storeSpecs(pageName, window);
-    });
-
-    window.on('maximize', () => {
-        Display.storeSpecs(pageName, window);
-    });
-
-    window.on('unmaximize', () => {
-        let windowSpecs = Display.getWindowSpecs(pageName);
-        window.setSize(windowSpecs.width, windowSpecs.height, true);
-        window.setPosition(windowSpecs.x, windowSpecs.y, true);
-        Display.storeSpecs(pageName, window);
-    });
-
-    window.once('close', () => {
-        Display.emptyWindow(pageName);
-    });
-
-    window.once('closed', () => {
-        window = undefined;
-    });
-
-    window.webContents.on('will-navigate', function(e, url) {
-        e.preventDefault();
-        shell.openExternal(url);
-    });
-
-    const lastHistoryEntry = History.getLast();
-
-    if (runLast === true && lastHistoryEntry !== undefined) {
-        windowPath = path.join(lastHistoryEntry.pathToStore);
-        window.loadFile(windowPath);
-        return;
-    }
-
-    graphParams.push('minify');
-
-    if (config.canCssCustom() === true) {
-        graphParams.push('css_custom'); }
-
-    let graph = new Graph(graphParams);
-
-    if (graph.errors.length > 0) {
-        dialog.showMessageBox(window, {
-            message: graph.errors.join('. '),
-            type: 'error',
-            title: "Erreur de génération du graphe"
+        window.on('resized', () => {
+            Display.storeSpecs(pageName, window);
         });
 
-        graph = new Graph(['empty']);
-    }
+        window.on('moved', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    let template = new Template(graph)
-        , history = new History();
+        window.on('maximize', () => {
+            Display.storeSpecs(pageName, window);
+        });
 
-    history.storeCosmoscope(template.html, graph.report);
+        window.on('unmaximize', () => {
+            windowSpecs = Display.getWindowSpecs(pageName);
+            window.setSize(windowSpecs.width, windowSpecs.height, true);
+            window.setPosition(windowSpecs.x, windowSpecs.y, true);
+            Display.storeSpecs(pageName, window);
+        });
 
-    window.loadFile(history.pathToStore);
+        require('../../controllers/cosmoscope')([], true);
 
-    windowHistory = Display.getWindow('history');
-    if (windowHistory) {
-        windowHistory.webContents.send("reset-history");
+        window.once('ready-to-show', () => {
+            window.show();
+        });
+
+        window.once('close', () => {
+            Display.emptyWindow(pageName);
+        });
+
+        window.once('closed', () => {
+            window = undefined;
+        });
+
+        window.webContents.on('will-navigate', function(e, url) {
+            e.preventDefault();
+            shell.openExternal(url);
+        });
     }
 }
 
-ipcMain.on("askReload", (event) => { window.reload(); });
+ipcMain.on("askReload", () => { window.reload(); });
 
-ipcMain.on("askBack", (event) => {
+ipcMain.on("askBack", () => {
     if (window.webContents.canGoBack()) {
         window.webContents.goBack();
     };
 });
 
-ipcMain.on("askForward", (event) => {
+ipcMain.on("askForward", () => {
     if (window.webContents.canGoForward()) {
         window.webContents.goForward();
     };
@@ -128,5 +103,5 @@ ipcMain.on("askRecordNew", () => {
 });
 
 ipcMain.on("askCosmoscopeNew", () => {
-    require('./index')();
+    require('../../controllers/cosmoscope')();
 });

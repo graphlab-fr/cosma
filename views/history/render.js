@@ -9,7 +9,14 @@ const form = document.querySelector('form');
         let data = new FormData(form);
         data = Object.fromEntries(data);
 
-        let result = true;
+        switch (action) {
+            case 'delete-all':
+                window.api.historyAction(data.history_record, undefined, action);
+                break;
+        }
+
+        if (data.history_record === undefined) {
+            return; }
 
         switch (action) {
             case 'update':
@@ -17,7 +24,7 @@ const form = document.querySelector('form');
                 break;
 
             default:
-                result = window.api.historyAction(data.history_record, undefined, action);
+                window.api.historyAction(data.history_record, undefined, action);
                 break;
         }
         

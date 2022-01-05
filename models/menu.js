@@ -10,8 +10,7 @@ const Config = require('../cosma-core/models/config')
     , config = new Config()
     , lang = require('../cosma-core/models/lang');
 
-const Display = require('./display')
-    , mainWindow = Display.getWindow('main');
+const Display = require('./display');
 
 const isMac = process.platform === 'darwin';
 
@@ -70,7 +69,7 @@ module.exports = [
                 accelerator: 'CommandOrControl+R',
                 role: 'new-cosmoscope',
                 click () {
-                    require('../views/cosmoscope')();
+                    require('../controllers/cosmoscope')();
                 }
             },
             {
@@ -80,7 +79,7 @@ module.exports = [
                 id: 'citeproc',
                 enabled: config.canCiteproc(),
                 click () {
-                    require('../views/cosmoscope')(['citeproc']);
+                    require('../controllers/cosmoscope')(['citeproc']);
                 }
             },
             {
@@ -105,7 +104,10 @@ module.exports = [
                 role: 'print',
                 id: 'print',
                 click () {
-                    console.log('print');
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow === undefined) { return; }
+                    mainWindow.focus();
+                    require('../controllers/print')();
                 }
             },
             { type: 'separator' },
@@ -206,7 +208,11 @@ module.exports = [
                 accelerator: 'CommandOrControl+Left',
                 role: 'back',
                 click () {
-                    if (mainWindow.webContents.canGoBack()) { mainWindow.webContents.goBack() };
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow && mainWindow.webContents.canGoBack()) {
+                        mainWindow.focus();
+                        mainWindow.webContents.goBack();
+                    };
                 }
             },
             {
@@ -214,13 +220,12 @@ module.exports = [
                 accelerator: 'CommandOrControl+Right',
                 role: 'back',
                 click () {
-                    if (mainWindow.webContents.canGoForward()) { mainWindow.webContents.goForward() };
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow && mainWindow.webContents.canGoForward()) {
+                        mainWindow.focus();
+                        mainWindow.webContents.goForward()
+                    };
                 }
-            },
-            { type: 'separator' },
-            {
-                label: lang.getFor(lang.i.app_menu.reload),
-                role: 'reload'
             },
             { type: 'separator' },
             {

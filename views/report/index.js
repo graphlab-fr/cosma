@@ -11,7 +11,7 @@ let window;
 const pageName = 'report';
 
 module.exports = {
-    open: function (report) {
+    open: function (report, date) {
         if (window !== undefined) {
             window.focus();
             return;
@@ -21,7 +21,7 @@ module.exports = {
 
         window = new BrowserWindow(
             Object.assign(Display.getBaseSpecs('modal'), {
-                title: lang.getFor(lang.i.windows[pageName].title),
+                title: `${lang.getFor(lang.i.windows[pageName].title)} — ${date}`,
                 parent: Display.getWindow('history'),
                 width: 700,
                 height: 700,

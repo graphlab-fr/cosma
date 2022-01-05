@@ -12,23 +12,7 @@ const Display = require('./models/display');
  */
 
 app.whenReady().then(() => {
-    const windowSpecs = Display.getWindowSpecs('main');
-
-    const mainWindow = new BrowserWindow(
-        Object.assign(windowSpecs, {
-            webPreferences: {
-                preload: path.join(__dirname, './views/cosmoscope/preload.js')
-            },
-            title: 'Cosma'
-        })
-    );
-    
-    if (windowSpecs.maximized === true) {
-        mainWindow.maximize(); }
-
-    Display.storeSpecs('main', mainWindow);
-
-    const openCosmoscope = require('./views/cosmoscope/index');
+    require('./views/cosmoscope').open();
 
     const menuTemplate = require('./models/menu');
 
@@ -36,8 +20,6 @@ app.whenReady().then(() => {
     Menu.setApplicationMenu(appMenu);
 
     require('./controllers');
-
-    openCosmoscope([], runLast = true);
 
     /**
      * MacOS apps generally continue running even without any windows open.
