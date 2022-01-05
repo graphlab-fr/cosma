@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+
+    <nav class="menu-vertical">
+        <ul>
+            <li tabindex="0" data-section="general">
+                <span class="ico">web</span>
+                Général
+            </li>
+
+            <li tabindex="0" data-section="record_types">
+                <span class="ico">bubble_chart</span>
+                Types de fiches
+            </li>
+
+            <li tabindex="0" data-section="link_types">
+                <span class="ico">power_input</span>
+                Types de liens
+            </li>
+
+            <li tabindex="0" data-section="graph">
+                <span class="ico">polyline</span>
+                Graphe
+            </li>
+
+            <li tabindex="0" data-section="metas">
+                <span class="ico">label</span>
+                Métadonnées
+            </li>
+
+            <li tabindex="0" data-section="bibliography">
+                <span class="ico">collections_bookmark</span>
+                Bibliographie
+            </li>
+
+            <li tabindex="0" data-section="views">
+                <span class="ico">dvr</span>
+                Vues
+            </li>
+
+            <li tabindex="0" data-section="advanced">
+                <span class="ico">tune</span>
+                Avancé
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="section-general" class="menu-section">
+            <form>
+    <label>
+        Sélectionner une langue d&#39;affichage
+        <select name="lang"></select>
+    </label>
+</form>
+            <form>
+    <label>
+        Répertoire des fiches
+        <input type="text" name="files_origin">
+        <button type="button" data-path="directory" id="dialog-path-fileorigin">Sélectionner</button>
+    </label>
+</form>
+            <form>
+    <label>
+        <input type="checkbox" name="history">
+        Enregistrer automatiquement les cosmoscopes dans l’historique
+    </label>
+</form>
+        </section>
+
+        <section id="section-record_types" class="menu-section">
+            <form id="form-type-record" class="form-list">
+    <table>
+        <thead>
+            <th width="10px"></th>
+            <th>Nom</th>
+            <th>Couleur</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="buttons-box">
+        <button data-action="add" class="primary" type="submit">Ajouter</button>
+        <button data-action="update" type="submit">Modifier</button>
+        <button data-action="delete" type="submit">Supprimer</button>
+        <button data-action="delete-all" type="submit">Tout supprimer…</button>
+    </div>
+</form>
+        </section>
+
+        <section id="section-link_types" class="menu-section">
+            <form id="form-type-link" class="form-list">
+    <table>
+        <thead>
+            <th width="10px"></th>
+            <th>Nom</th>
+            <th>Apparence</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="buttons-box">
+        <button data-action="add" class="primary" type="submit">Ajouter</button>
+        <button data-action="update" type="submit">Modifier</button>
+        <button data-action="delete" type="submit">Supprimer</button>
+        <button data-action="delete-all" type="submit">Tout supprimer…</button>
+    </div>
+</form>
+        </section>
+
+        <section id="section-graph" class="menu-section">
+            <form>
+    <label class="space-between">
+        Couleur de fond
+        <input type="color" name="graph_background_color">
+    </label>
+</form>
+            <form>
+    <label class="space-between">
+        Couleur de surbrillance
+        <input type="color" name="graph_highlight_color">
+    </label>
+</form>
+            <form>
+    <label>
+        <input type="checkbox" name="graph_highlight_on_hover">
+        Surbrillance des nœuds au survol
+    </label>
+</form>
+            <form>
+    <label class="space-between">
+        Taille du texte des étiquettes
+        <input type="number" name="graph_text_size" step="1">
+    </label>
+</form>
+            <form>
+    <label class="space-between">
+        Niveau maximum de focus
+        <input type="number" name="focus_max" step="1">
+    </label>
+</form>
+            <form>
+    <label>
+        <input type="checkbox" name="graph_arrows">
+        Afficher des flèches sur les liens
+    </label>
+</form>
+
+            <h3>Spatialisation</h3>
+
+            <form>
+    <label class="space-between">
+        Force d&#39;attraction
+        <input type="number" name="attraction_force" step="1">
+    </label>
+</form>
+            <form>
+    <label class="space-between">
+        Distance maximum entre les nœuds
+        <input type="number" name="attraction_distance_max" step="1">
+    </label>
+</form>
+            <form>
+    <label class="space-between">
+        Attraction verticale
+        <input type="number" name="attraction_vertical" step="0.1">
+    </label>
+</form>
+            <form>
+    <label class="space-between">
+        Attraction horizontale
+        <input type="number" name="attraction_horizontal" step="0.1">
+    </label>
+</form>
+        </section>
+
+        <section id="section-metas" class="menu-section">
+            <form>
+    <label class="flex-end">
+       Titre
+        <input type="text" name="title">
+    </label>
+</form>
+            <form>
+    <label class="flex-end">
+       Auteur
+        <input type="text" name="author">
+    </label>
+</form>
+            <form>
+    <label class="flex-end">
+        Mots-clés
+        <input type="text" name="keywords">
+    </label>
+</form>
+            <form>
+    <label class="flex-end">
+        Description
+        <textarea name="description"></textarea>
+    </label>
+</form>
+        </section>
+
+        <section id="section-bibliography" class="menu-section">
+            <form>
+    <label>
+        Données bibliographiques (CSL JSON)
+        <input type="text" name="bibliography">
+        <button type="button" data-path="json" id="dialog-path-bibliography">Sélectionner</button>
+    </label>
+</form>
+            <form>
+    <label>
+        Style bibliographique (CSL)
+        <input type="text" name="csl">
+        <button type="button" data-path="csl" id="dialog-path-csl">Sélectionner</button>
+    </label>
+</form>
+
+            <p>
+                <a href="https://www.zotero.org/styles">Télécharger des styles</a>
+            </p>
+
+            <form>
+    <label>
+        Localisation (XML)
+        <input type="text" name="csl_locale">
+        <button type="button" data-path="xml" id="dialog-path-locales">Sélectionner</button>
+    </label>
+</form>
+
+            <p>
+                <a href="https://github.com/citation-style-language/locales">Télécharger des fichiers de localisation</a>
+            </p>
+        </section>
+
+        <section id="section-views" class="menu-section">
+            <form id="form-view" class="form-list">
+    <table>
+        <thead>
+            <th width="10px"></th>
+            <th>Nom</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="buttons-box">
+        <button data-action="update" type="submit">Renommer</button>
+        <button data-action="delete" type="submit">Supprimer</button>
+        <button data-action="delete-all" type="submit">Tout supprimer…</button>
+    </div>
+</form>
+        </section>
+
+        <section id="section-advanced" class="menu-section">
+            <form>
+    <label>
+        CSS personnalisée
+        <input type="text" name="css_custom">
+        <button type="button" data-path="css" id="dialog-path-css">Sélectionner</button>
+    </label>
+</form>
+            <form>
+    <label>
+        <input type="checkbox" name="devtools">
+        Afficher les outils de développement
+    </label>
+</form>
+        </section>
+
+    </main>
+
+    <script src="../render.js"></script>
+</body>
+
+</html>

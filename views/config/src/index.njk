@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+
+    <nav class="menu-vertical">
+        <ul>
+            <li tabindex="0" data-section="general">
+                <span class="ico">web</span>
+                {{ lang.nav.general[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="record_types">
+                <span class="ico">bubble_chart</span>
+                {{ lang.nav.record_types[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="link_types">
+                <span class="ico">power_input</span>
+                {{ lang.nav.link_types[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="graph">
+                <span class="ico">polyline</span>
+                {{ lang.nav.graph[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="metas">
+                <span class="ico">label</span>
+                {{ lang.nav.metas[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="bibliography">
+                <span class="ico">collections_bookmark</span>
+                {{ lang.nav.bibliography[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="views">
+                <span class="ico">dvr</span>
+                {{ lang.nav.views[flag] }}
+            </li>
+
+            <li tabindex="0" data-section="advanced">
+                <span class="ico">tune</span>
+                {{ lang.nav.advanced[flag] }}
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="section-general" class="menu-section">
+            {% include "lang.njk" %}
+            {% include "files_origin.njk" %}
+            {% include "history.njk" %}
+        </section>
+
+        <section id="section-record_types" class="menu-section">
+            {% include "record_types.njk" %}
+        </section>
+
+        <section id="section-link_types" class="menu-section">
+            {% include "link_types.njk" %}
+        </section>
+
+        <section id="section-graph" class="menu-section">
+            {% include "graph_background_color.njk" %}
+            {% include "graph_highlight_color.njk" %}
+            {% include "graph_highlight_on_hover.njk" %}
+            {% include "graph_text_size.njk" %}
+            {% include "focus_max.njk" %}
+            {% include "graph_arrows.njk" %}
+
+            <h3>Spatialisation</h3>
+
+            {% include "attraction_force.njk" %}
+            {% include "attraction_distance_max.njk" %}
+            {% include "attraction_vertical.njk" %}
+            {% include "attraction_horizontal.njk" %}
+        </section>
+
+        <section id="section-metas" class="menu-section">
+            {% include "title.njk" %}
+            {% include "author.njk" %}
+            {% include "keywords.njk" %}
+            {% include "description.njk" %}
+        </section>
+
+        <section id="section-bibliography" class="menu-section">
+            {% include "bibliography.njk" %}
+            {% include "csl.njk" %}
+
+            <p>
+                <a href="https://www.zotero.org/styles">{{ lang.help.csl[flag] }}</a>
+            </p>
+
+            {% include "csl_locale.njk" %}
+
+            <p>
+                <a href="https://github.com/citation-style-language/locales">{{ lang.help.csl_locale[flag] }}</a>
+            </p>
+        </section>
+
+        <section id="section-views" class="menu-section">
+            {% include "views.njk" %}
+        </section>
+
+        <section id="section-advanced" class="menu-section">
+            {% include "css_custom.njk" %}
+            {% include "devtools.njk" %}
+        </section>
+
+    </main>
+
+    <script src="../render.js"></script>
+</body>
+
+</html>
