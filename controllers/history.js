@@ -25,7 +25,14 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
 
         case 'open-cosmoscope':
             path = new History(recordId).pathToStore;
-            Display.getWindow('main').webContents.loadFile(path);
+            let mainWindow = Display.getWindow('main');
+
+            if (mainWindow === undefined) {
+                require('../views/cosmoscope').open();
+                mainWindow = Display.getWindow('main');
+            }
+
+            mainWindow.webContents.loadFile(path);
             break;
 
         case 'open-finder':
