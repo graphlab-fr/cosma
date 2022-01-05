@@ -12,6 +12,8 @@ const Config = require('../cosma-core/models/config')
 
 const Display = require('./display');
 
+let mainWindow;
+
 const isMac = process.platform === 'darwin';
 
 module.exports = [
@@ -22,7 +24,10 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.about),
                 role: 'about',
                 click () {
-                    mainWindow.webContents.send("open-about");
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow) {
+                        mainWindow.webContents.send("open-about");
+                    }
                 }
             },
             {
@@ -105,9 +110,10 @@ module.exports = [
                 id: 'print',
                 click () {
                     mainWindow = Display.getWindow('main');
-                    if (mainWindow === undefined) { return; }
-                    mainWindow.focus();
-                    require('../controllers/print')();
+                    if (mainWindow) {
+                        mainWindow.focus();
+                        require('../controllers/print')();
+                    }
                 }
             },
             { type: 'separator' },
@@ -285,7 +291,10 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.shortcuts),
                 label: 'Raccourcis clavier',
                 click : () => {
-                    mainWindow.webContents.send("open-help");
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow) {
+                        mainWindow.webContents.send("open-help");
+                    }
                 }
             }
         ]
