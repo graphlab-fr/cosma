@@ -20,7 +20,7 @@ module.exports = {
         Display = require('../../models/display');
 
         window = new BrowserWindow(
-            Object.assign(Display.getBaseSpecs('modal'), {
+            Object.assign(Display.getBaseSpecs('form'), {
                 title: `${lang.getFor(lang.i.windows[pageName].title)} — ${date}`,
                 parent: Display.getWindow('history'),
                 width: 700,
