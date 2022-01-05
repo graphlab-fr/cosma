@@ -35,13 +35,19 @@ module.exports = class History {
 
     /**
      * Get history data from the 'pathForData'
-     * @return {mixed} - History data or undefined if errors
+     * @return {mixed} - Existing history records or empty data if errors
      */
 
     static get () {
         try {
             let fileContent = fs.readFileSync(History.pathForData, 'utf8');
             fileContent = JSON.parse(fileContent);
+
+            for (const record in fileContent.records) {
+                if (fs.existsSync(fileContent.records[record].path) === false) {
+                    delete fileContent.records[record];
+                }
+            }
 
             return fileContent;
         } catch (error) {
