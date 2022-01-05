@@ -1,40 +1,25 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        dialog
+        Menu
     } = require('electron')
-    , path = require('path')
-    , fs = require('fs');
+    , path = require('path');
 
-const windowsModel = require('./core/models/windows')
-    , History = require('./core/models/history');
-
-/**
- * Test if a window is stored into 'BrowserWindow' object.
- * @returns {boolean}
- */
-
-function noWindowOpen () {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        return true;
-    }
-    return false;
-}
+const Display = require('./models/display');
 
 /**
  * Wait for 'app ready' event, before lauch the window.
  */
 
 app.whenReady().then(() => {
+    require('./views/cosmoscope').open();
 
-    if (!fs.existsSync(History.path)) { fs.mkdirSync(History.path); }
+    const menuTemplate = require('./models/menu');
 
-    const mainWindow = new BrowserWindow(windowsModel.main);
-    exports.mainWindow = mainWindow;
+    const appMenu = Menu.buildFromTemplate(menuTemplate)
+    Menu.setApplicationMenu(appMenu);
 
-    require('./core/models/menu')(); // set app menu
-
-    require('./core/views/cosmoscope/index')([], runLast = true);
+    require('./controllers');
 
     /**
      * MacOS apps generally continue running even without any windows open.
@@ -42,7 +27,9 @@ app.whenReady().then(() => {
      */
 
     app.on('activate', function () {
-        if (noWindowOpen()) { require('./core/views/cosmoscope/index')([], runLast = true); }
+        if (BrowserWindow.getAllWindows().length === 0) {
+            openCosmoscope([], runLast = true);
+        }
     });
 });
 
@@ -55,3 +42,7 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
 });
+
+if (app.isPackaged === false) {
+    require('./controllers/build-pages');
+}
