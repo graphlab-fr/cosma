@@ -36,7 +36,7 @@ module.exports = {
         );
 
         if (windowSpecs.maximized === true) {
-            mainWindow.maximize(); }
+            window.maximize(); }
 
         Display.storeSpecs(pageName, window);
 
