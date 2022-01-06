@@ -24,7 +24,7 @@ module.exports = {
             return;
         }
 
-        const windowSpecs = Display.getWindowSpecs(pageName);
+        let windowSpecs = Display.getWindowSpecs(pageName);
 
         window = new BrowserWindow(
             Object.assign(windowSpecs, {
