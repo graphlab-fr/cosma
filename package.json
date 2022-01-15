@@ -26,7 +26,7 @@
   ],
   "license": "GNU GPL 3.0",
   "devDependencies": {
-    "electron": "^16.0.6",
+    "electron": "^15.3.4",
     "electron-packager": "^15.4.0"
   },
   "dependencies": {
