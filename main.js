@@ -28,7 +28,7 @@ app.whenReady().then(() => {
 
     app.on('activate', function () {
         if (BrowserWindow.getAllWindows().length === 0) {
-            openCosmoscope([], runLast = true);
+            require('./views/cosmoscope').open();
         }
     });
 });
