@@ -54,7 +54,7 @@ module.exports = {
             Display.storeSpecs(pageName, window);
         });
 
-        window.loadFile(path.join(__dirname, `../../docs/${lang.flag}/${lang.getFor(lang.i.windows[pageName].src)}`));
+        window.loadFile(path.join(__dirname, `../../docs/${lang.getFor(lang.i.windows[pageName].src)}`));
 
         window.once('ready-to-show', () => {
             window.show();
