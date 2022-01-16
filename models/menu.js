@@ -288,13 +288,11 @@ module.exports = [
             {
                 label: lang.getFor(lang.i.app_menu.manual),
                 click : () => {
-                    const { shell } = require('electron');
-                    shell.openExternal('https://cosma.graphlab.fr/docs/');
+                    require('../views/doc').open();
                 }
             },
             {
                 label: lang.getFor(lang.i.app_menu.shortcuts),
-                label: 'Raccourcis clavier',
                 click : () => {
                     mainWindow = Display.getWindow('main');
                     if (mainWindow) {
