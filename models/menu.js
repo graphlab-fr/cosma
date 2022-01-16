@@ -6,9 +6,9 @@
 
 const { app } = require('electron');
 
-const Config = require('../cosma-core/models/config')
+const Config = require('../core/models/config')
     , config = new Config()
-    , lang = require('../cosma-core/models/lang');
+    , lang = require('../core/models/lang');
 
 const Display = require('./display');
 

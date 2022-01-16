@@ -1,7 +1,7 @@
 const { BrowserWindow } = require('electron')
     , path = require('path')
 
-const lang = require('../../cosma-core/models/lang');
+const lang = require('../../core/models/lang');
 
 let window;
 

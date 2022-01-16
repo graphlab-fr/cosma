@@ -5,9 +5,9 @@ const {
 
 const History = require('../models/history')
     , Display = require('../models/display')
-    , Graph = require('../cosma-core/models/graph');
+    , Graph = require('../core/models/graph');
 
-const config = require('../cosma-core/models/config').get();
+const config = require('../core/models/config').get();
 
 ipcMain.on("get-history-records", (event) => {
     event.returnValue = History.get().records;

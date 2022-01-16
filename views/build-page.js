@@ -2,8 +2,8 @@ const fs = require('fs')
     , path = require('path')
     , nunjucks = require('nunjucks');
 
-const Config = require('../cosma-core/models/config')
-    , lang = require('../cosma-core/models/lang');
+const Config = require('../core/models/config')
+    , lang = require('../core/models/lang');
 
 module.exports = function (pageName, dirPath) {
     nunjucks.configure(path.join(dirPath, '/src'), { autoescape: true });

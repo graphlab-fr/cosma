@@ -5,9 +5,9 @@ const {
     BrowserWindow
 } = require('electron');
 
-const Config = require('../cosma-core/models/config')
+const Config = require('../core/models/config')
     , Display = require('../models/display')
-    , lang = require('../cosma-core/models/lang');
+    , lang = require('../core/models/lang');
 
 ipcMain.on("get-config-options", (event) => {
     event.returnValue = Config.get();

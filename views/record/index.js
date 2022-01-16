@@ -4,7 +4,7 @@ const {
 } = require('electron')
 , path = require('path');
 
-const lang = require('../../cosma-core/models/lang');
+const lang = require('../../core/models/lang');
 
 let window;
 
@@ -12,7 +12,7 @@ const pageName = 'record';
 
 module.exports = {
     open: function () {
-        const config = require('../../cosma-core/models/config').get();
+        const config = require('../../core/models/config').get();
 
         if (config['files_origin'] === '') {
             dialog.showMessageBox({

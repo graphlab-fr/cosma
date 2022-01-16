@@ -4,7 +4,7 @@ const { app, dialog } = require('electron')
 
 const Display = require('../models/display');
 
-const lang = require('../cosma-core/models/lang');
+const lang = require('../core/models/lang');
 
 module.exports = function () {
     const mainWindow = Display.getWindow('main');
