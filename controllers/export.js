@@ -6,9 +6,9 @@ const {
     , fs = require('fs')
     , path = require('path');
 
-const Config = require('../cosma-core/models/config')
-    , Graph = require('../cosma-core/models/graph')
-    , Template = require('../cosma-core/models/template');
+const Config = require('../core/models/config')
+    , Graph = require('../core/models/graph')
+    , Template = require('../core/models/template');
 
 ipcMain.on("get-export-options", (event) => {
     const config = new Config();

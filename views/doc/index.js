@@ -1,14 +1,14 @@
 const {
-        BrowserWindow, // app windows generator
+        BrowserWindow,
         shell
     } = require('electron')
-    , path = require('path');
+    , path = require('path')
 
 const lang = require('../../core/models/lang');
 
 let window;
 
-const pageName = 'config';
+const pageName = 'doc';
 
 module.exports = {
     open: function () {
@@ -18,8 +18,9 @@ module.exports = {
         }
 
         const Display = require('../../models/display');
+
         let windowSpecs = Display.getWindowSpecs(pageName);
-    
+
         window = new BrowserWindow(
             Object.assign(windowSpecs, {
                 title: lang.getFor(lang.i.windows[pageName].title),
@@ -33,11 +34,6 @@ module.exports = {
             window.maximize(); }
 
         Display.storeSpecs(pageName, window);
-
-        window.webContents.on('will-navigate', function(e, url) {
-            e.preventDefault();
-            shell.openExternal(url);
-        });
 
         window.on('resized', () => {
             Display.storeSpecs(pageName, window);
@@ -58,7 +54,7 @@ module.exports = {
             Display.storeSpecs(pageName, window);
         });
 
-        window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
+        window.loadFile(path.join(__dirname, `../../docs/${lang.flag}/${lang.getFor(lang.i.windows[pageName].src)}`));
 
         window.once('ready-to-show', () => {
             window.show();
@@ -71,7 +67,10 @@ module.exports = {
         window.once('closed', () => {
             window = undefined;
         });
-    },
 
-    build: () => require('../build-page')(pageName, __dirname)
+        window.webContents.on('will-navigate', function(e, url) {
+            e.preventDefault();
+            shell.openExternal(url);
+        });
+    }
 }

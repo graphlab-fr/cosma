@@ -4,8 +4,8 @@ const {
     dialog
 } = require('electron');
 
-const Record = require('../cosma-core/models/record')
-    lang = require('../cosma-core/models/lang');
+const Record = require('../core/models/record')
+    lang = require('../core/models/lang');
 
 ipcMain.on("record-add", (event, title, type, tags) => {
     const record = new Record(title, type, tags);

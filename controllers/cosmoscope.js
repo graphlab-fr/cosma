@@ -1,10 +1,10 @@
 const { dialog } = require('electron')
     , path = require('path');
 
-const Config = require('../cosma-core/models/config')
+const Config = require('../core/models/config')
     , History = require('../models/history')
-    , Graph = require('../cosma-core/models/graph')
-    , Template = require('../cosma-core/models/template');
+    , Graph = require('../core/models/graph')
+    , Template = require('../core/models/template');
 
 const Display = require('../models/display');
 

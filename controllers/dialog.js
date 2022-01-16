@@ -5,7 +5,7 @@ const {
     BrowserWindow
 } = require('electron');
 
-const lang = require('../cosma-core/models/lang');
+const lang = require('../core/models/lang');
 
 ipcMain.on("dialog-request-dir-path", (event, name) => {
     const window = BrowserWindow.getFocusedWindow();

@@ -6,9 +6,9 @@
 
 const { app } = require('electron');
 
-const Config = require('../cosma-core/models/config')
+const Config = require('../core/models/config')
     , config = new Config()
-    , lang = require('../cosma-core/models/lang');
+    , lang = require('../core/models/lang');
 
 const Display = require('./display');
 
@@ -288,13 +288,11 @@ module.exports = [
             {
                 label: lang.getFor(lang.i.app_menu.manual),
                 click : () => {
-                    const { shell } = require('electron');
-                    shell.openExternal('https://cosma.graphlab.fr/docs/');
+                    require('../views/doc').open();
                 }
             },
             {
                 label: lang.getFor(lang.i.app_menu.shortcuts),
-                label: 'Raccourcis clavier',
                 click : () => {
                     mainWindow = Display.getWindow('main');
                     if (mainWindow) {
