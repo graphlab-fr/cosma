@@ -24,9 +24,9 @@
     "Olivier Le Deuff",
     "Clément Borel"
   ],
-  "license": "GNU GPL 3.0",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "electron": "^16.0.6",
+    "electron": "^15.3.4",
     "electron-packager": "^15.4.0"
   },
   "dependencies": {
