@@ -1,4 +1,4 @@
-# Cosma [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5412315.svg)](https://doi.org/10.5281/zenodo.5412315)
+# Cosma [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5920616.svg)](https://doi.org/10.5281/zenodo.5920616)
 
 *(Texte en français plus bas)*
 
