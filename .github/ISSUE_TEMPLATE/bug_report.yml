@@ -1,5 +1,5 @@
-name: Rapport de bug
-description: Signalez les dysfonctionnements de Cosma
+name: Bug report
+description: Unexpected behaviour, bugs, glitches and other issues
 title: "[Bug] "
 labels: [bug]
 
@@ -8,60 +8,56 @@ body:
   - type: markdown
     attributes:
       value: >
-        Merci d'avance pour votre **précision** dans vos descriptions.
-        Les dysfonctionnements se cachent dans les détails.
-        Si vous avez rencontré plusieurs dysfonctionnements, merci de créer autant de tickets.
+        Thank you for taking the time to report issues with Cosma. 
+        Please be as accurate as possible when describing the issue.
+        If you have encountered several bugs, please create a new issue for each one.
 
   - type: textarea
     id: action-before-bug
     attributes:
-      label: Action précédant le bug
+      label: Actions leading to the bug
       description: >
-        Veuillez décrire vos actions avant que le dysfonctionnement survienne.
+        Please describe the actions that led to the bug.
     validations:
       required: true
 
   - type: textarea
     id: bug
     attributes:
-      label: Manifestation du bug
+      label: Bug description
       description: >
-        Quel comportement attendu du logiciel n'a pas eu lieu,
-        ou quel comportement inattendu avez-vous rencontré ?
+        Which expected behaviour failed, or which unexpected behaviour occured?
     validations:
       required: true
 
   - type: checkboxes
     id: os
     attributes:
-      label: Quel est votre système d'exploitation ?
+      label: What is your operating system?
       description: >
-        Merci de préciser sur quel(s) système(s) d'exploitation
-        vous avez rencontrer ce dysfonctionnement.
+        Please select the OS on which you observed the bug.
       options:
         - label: Windows
-        - label: Mac OS
+        - label: macOS
     validations:
       required: true
 
   - type: input
     id: os-version
     attributes:
-      label: Quelle version du système d'exploitation ?
+      label: What version of the operating system are you on?
       description: >
-        Merci de préciser la version de(s) votre système(s) d'exploitation
-        avec le(s)quel vous avez rencontré ce dysfonctionnement.
-      placeholder: "ex : Big Sur 11.4, Windows 10"
+        Please indicate the OS version to improve our understanding of the bug.
+      placeholder: "Big Sur 11.4, Windows 10…"
     validations:
       required: true
 
   - type: textarea
     id: more
     attributes:
-      label: Informations supplémentaires
+      label: Additional information
       description: >
-        Vous pouvez nous donner tous les détails supplémentaires
-        qui vous semblent coïncider avec ce dysfonctionnement.
+        Please add any other relevant information to help us fix the issue.
     validations:
       required: false
 
@@ -69,5 +65,6 @@ body:
     id: out
     attributes:
       value: |
-        Le bug peut être corrigé dans un temps variable. 
-        Merci de participer à l'amélioration de Cosma !
+        We are a small team with intermittent funding.
+        The issue may not be fixed before some time.
+        Thank you for your patience and for using Cosma!
