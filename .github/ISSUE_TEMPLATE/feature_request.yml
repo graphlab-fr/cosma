@@ -16,7 +16,7 @@ body:
     attributes:
       label: Which part of Cosma is your request about?
       description: >
-        Please select the OS on which you observed the bug.
+        This helps us situate the request on our roadmap.
       options:
         - label: GUI version (Electron-based app)
         - label: CLI version (command-line tool)
