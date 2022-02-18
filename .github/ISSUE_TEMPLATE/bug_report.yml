@@ -37,8 +37,9 @@ body:
       description: >
         Please select the OS on which you observed the bug.
       options:
-        - label: Windows
         - label: macOS
+        - label: Windows
+        - label: Linux
     validations:
       required: true
 
