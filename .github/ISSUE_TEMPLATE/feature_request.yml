@@ -1,0 +1,45 @@
+name: Feature request
+description: Help us improve Cosma by sharing ideas for possible enhancements
+title: "[Enhancement] "
+labels: [enhancement]
+
+body:
+
+  - type: markdown
+    attributes:
+      value: >
+        Help us improve Cosma by sharing ideas for possible enhancements.
+        Before going further, have you checked [existing requests](https://github.com/graphlab-fr/cosma/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for similar ideas?
+
+  - type: checkboxes
+    id: os
+    attributes:
+      label: Which part of Cosma is your request about?
+      description: >
+        This helps us situate the request on our roadmap.
+      options:
+        - label: GUI version (Electron-based app)
+        - label: CLI version (command-line tool)
+        - label: cosmograph (records & cosmoscope creation)
+        - label: cosmoscope (exported graph & records)
+        - label: documentation
+        - label: other
+    validations:
+      required: true
+
+  - type: textarea
+    id: more
+    attributes:
+      label: "Describe your request:"
+      description: >
+        Please describe your request in as many words as needed.
+    validations:
+      required: true
+
+  - type: markdown
+    id: out
+    attributes:
+      value: |
+        We are a small team with intermittent funding.
+        We may not be able to treat your request before some time.
+        Thank you for your patience and for using Cosma!
