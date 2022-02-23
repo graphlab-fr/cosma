@@ -24,6 +24,7 @@
     "Olivier Le Deuff",
     "Clément Borel"
   ],
+  "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "electron": "^15.3.4",
@@ -38,6 +39,7 @@
     "moment": "^2.29.1",
     "nunjucks": "^3.2.3",
     "slugify": "^1.6.5",
-    "yaml-front-matter": "^4.1.1"
+    "yaml-front-matter": "^4.1.1",
+    "glob": "^7.2.0"
   }
 }
