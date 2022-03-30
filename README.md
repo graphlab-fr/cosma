@@ -22,13 +22,19 @@ Cosma is available for macOS and Windows. [Click here to access the latest relea
 
 Developing Cosma requires [Node.js](https://nodejs.org/fr/) v16 or higher.
 
-1. Clone the repository.
-2. In your command-line application, run `npm i` to install dependencies.
-3. Run `npm start` to start Cosma.
+Run these commands :
 
-Cosma consists of two main elements: an HTML file called a *cosmoscope*, and a graphical user interface built around it. The files used to build the cosmoscope are located in the `/cosmoscope` directory. The files to build the application are located in the `/core` directory.
+```bash
+# clone the repository
+git clone --recurse-submodules https://github.com/graphlab-fr/cosma cosma
+cd cosma
+# install dependencies
+npm i
+# launch Cosma (Electron)
+npm start
+```
 
-Developer documentation is not available yet but will be made published progressively in 2022.
+A draft of the developers' documentation is available in French: https://cosma.graphlab.fr/docs/manuel-developpement/
 
 ***
 
@@ -52,10 +58,16 @@ Cosma est disponible pour macOS et Windows. [Visitez la page Releases pour obten
 
 Pré-requis : [Node.js](https://nodejs.org/fr/) version 16 ou supérieure.
 
-1. Clonez le dépôt.
-2. Via un terminal, installez les dépendances : `npm i`.
-3. Lancez Electron : `npm start`.
+Exécutez ces commandes :
 
-L'application se compose de deux principaux éléments : un fichier HTML appelé « cosmoscope », et une interface graphique qui se déploie autour. Les fichiers permettant de générer le cosmoscope sont dans le répertoire `/cosmoscope`. Les fichiers permettant de construire l'application sont dans le répertoire `/core`.
+```bash
+# cloner le dépôt
+git clone --recurse-submodules https://github.com/graphlab-fr/cosma cosma
+cd cosma
+# intaller les dépendances
+npm i
+# lancer Cosma (Electron)
+npm start
+```
 
-La documentation de développement sera mise à jour et publiée prochainement.
+Une ébauche de la documentation des développeurs est disponible : https://cosma.graphlab.fr/docs/manuel-developpement/
