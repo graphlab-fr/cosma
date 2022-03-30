@@ -16,7 +16,7 @@ Cosma is available for macOS and Windows. [Click here to access the latest relea
 
 **All platforms:** you can also download `cosma-help.zip` which contains sample records for you to test Cosma with. When first launching the application, visit Preferences and set Records directory to the `cosma-help` folder.
 
-[User documentation](https://cosma.graphlab.fr/docs/) is online and updated periodically.
+[User documentation](https://cosma.graphlab.fr/en/docs/user-manual/) is online and updated periodically.
 
 ## Development
 
@@ -52,7 +52,7 @@ Cosma est disponible pour macOS et Windows. [Visitez la page Releases pour obten
 
 **Pour toutes les plateformes :** vous pouvez également télécharger et décompresser le fichier `cosma-fiches-aide.zip` pour obtenir un répertoire `cosma-fiches-aide` contenant une documentation utilisateur sous forme de fiches. Ceci vous permet de tester le logiciel : au premier lancement de Cosma, indiquez le chemin du répertoire `cosma-fiches-aides` dans Préférences › Répertoire de fiches.
 
-[La documentation utilisateur est à jour et en ligne.](https://graphlab-fr.github.io/cosma/fr.html)
+[La documentation utilisateur est à jour et en ligne.](https://cosma.graphlab.fr/docs/manuel-developpement/)
 
 ## Développement
 
