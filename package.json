@@ -1,6 +1,6 @@
 {
   "name": "cosma",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.graphlab.fr/",
   "repository": {
@@ -23,8 +23,8 @@
   "contributors": [
     "Arthur Perret",
     "Guillaume Brioudes",
-    "Olivier Le Deuff",
-    "Clément Borel"
+    "Clément Borel",
+    "Olivier Le Deuff"
   ],
   "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
