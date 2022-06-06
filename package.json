@@ -1,6 +1,6 @@
 {
   "name": "cosma",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.graphlab.fr/",
   "repository": {
@@ -13,27 +13,32 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build-win": "electron-packager ./ Cosma --out=build/win --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=x64",
-    "build-mac": "electron-packager ./ Cosma --out=build/osx --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=x64",
+    "build:win": "electron-packager ./ cosma --out=build/ --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=x64 --prune --overwrite",
+    "build:mac": "electron-packager ./ cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=x64 --prune --overwrite",
+    "build:linux": "electron-packager ./ cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=linux --arch=x64 --prune --overwrite",
+    "postbuild:linux": "./node_modules/.bin/electron-installer-debian --src=build/cosma-linux-x64 --dest=build/ --arch=amd64 --icon=./assets/icons/1024x1024.png",
     "modules": "git submodule foreach git pull origin master",
     "doc": "open docs/index.html"
   },
   "contributors": [
     "Arthur Perret",
     "Guillaume Brioudes",
-    "Olivier Le Deuff",
-    "Clément Borel"
+    "Clément Borel",
+    "Olivier Le Deuff"
   ],
+  "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "electron": "^15.3.4",
+    "electron": "^17.1.2",
+    "electron-installer-debian": "^3.1.0",
     "electron-packager": "^15.4.0"
   },
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
     "citeproc": "^2.4.62",
+    "glob": "^7.2.0",
     "js-yaml": "^4.1.0",
-    "markdown-it": "^12.3.0",
+    "markdown-it": "^12.3.2",
     "markdown-it-attrs": "^4.1.3",
     "moment": "^2.29.1",
     "nunjucks": "^3.2.3",
