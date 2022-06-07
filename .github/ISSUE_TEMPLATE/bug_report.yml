@@ -30,6 +30,20 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: cosma-version
+    attributes:
+      label: What version of Cosma are you using?
+      description: >
+        Please select the version number on which you observed the bug.
+      options:
+        - label: GUI 1.1
+        - label: GUI 1.0
+        - label: CLI 1.1
+        - label: CLI 1.0
+    validations:
+      required: true
+
   - type: checkboxes
     id: os
     attributes:
