@@ -16,6 +16,7 @@ ipcMain.on("record-add", (event, title, type, tags) => {
     const window = BrowserWindow.getFocusedWindow();
     
     if (record.isValid() === false) {
+        console.log(record.report);
         return window.webContents.send('record-backup', {
             isOk: false,
             msg: record.writeReport(),
