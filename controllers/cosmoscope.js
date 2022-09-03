@@ -1,21 +1,25 @@
-const { dialog } = require('electron')
-    , path = require('path');
+const path = require('path');
 
 const Config = require('../core/models/config')
     , History = require('../models/history')
-    , Graph = require('../core/models/graph')
+    , Cosmoscope = require('../core/models/cosmoscope')
     , Template = require('../core/models/template');
 
 const Display = require('../models/display');
 
+// const { cosmocope } = require('../core/utils/generate')
+
 let windowPath;
 
-module.exports = function (graphParams = [], runLast = false) {
+module.exports = function (templateParams = [], runLast = false) {
     const window = Display.getWindow('main');
 
     if (window === undefined) { return; }
 
     const config = new Config();
+    const {
+        files_origin: filesPath
+    } = config.opts;
     const lastHistoryEntry = History.getLast();
 
     if (runLast === true && lastHistoryEntry !== undefined) {
@@ -24,27 +28,40 @@ module.exports = function (graphParams = [], runLast = false) {
         return;
     }
 
-    graphParams.push('minify');
+    templateParams.push('minify');
 
     if (config.canCssCustom() === true) {
-        graphParams.push('css_custom'); }
+        templateParams.push('css_custom'); }
 
-    let graph = new Graph(graphParams);
+    const files = Cosmoscope.getFromPathFiles(filesPath);
+    const records = Cosmoscope.getRecordsFromFiles(files, config.opts);    
+    const graph = new Cosmoscope(records, config.opts, []);
 
-    if (graph.errors.length > 0) {
-        dialog.showMessageBox(window, {
-            message: graph.errors.join('. '),
-            type: 'error',
-            title: "Erreur de génération du graphe"
-        });
+    // if (graph.errors.length > 0) {
+    //     dialog.showMessageBox(window, {
+    //         message: graph.errors.join('. '),
+    //         type: 'error',
+    //         title: "Erreur de génération du graphe"
+    //     });
 
-        graph = new Graph(['empty']);
-    }
+    //     graph = new Cosmoscope(['empty']);
+    // }
 
-    let template = new Template(graph)
+    let { html } = new Template(graph, templateParams)
         , history = new History();
 
-    history.storeCosmoscope(template.html, graph.report);
+    history.storeCosmoscope(html, graph.report);
+
+    // const tempDirPath = path.join(__dirname, '../core/temp');
+    // if (fs.existsSync(tempDirPath) === false) {
+    //     fs.mkdirSync(tempDirPath);
+    // }
+
+    // cosmocope(app.getPath('userData')).then(({ savePath }) => {
+    //     window.loadFile(savePath);
+    // })
+
+    
 
     window.loadFile(history.pathToStore);
 
