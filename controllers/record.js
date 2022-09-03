@@ -8,11 +8,13 @@ const Record = require('../core/models/record')
     lang = require('../core/models/lang');
 
 ipcMain.on("record-add", (event, title, type, tags) => {
-    const record = new Record(title, type, tags);
+    const record = new Record(undefined, title, type, tags);
 
     const window = BrowserWindow.getFocusedWindow();
 
+    
     if (record.isValid() === false) {
+        console.log(record.report);
         return window.webContents.send('record-backup', {
             isOk: false,
             msg: record.writeReport(),
@@ -20,7 +22,7 @@ ipcMain.on("record-add", (event, title, type, tags) => {
         });
     }
 
-    let result = record.save();
+    let result = record.saveAsFile();
 
     if (result === 'overwriting') {
 
@@ -34,7 +36,7 @@ ipcMain.on("record-add", (event, title, type, tags) => {
             noLink: true
         }).then((response) => {
             if (response.response === 1) {
-                result = record.save(true);
+                result = record.saveAsFile(true);
 
                 window.webContents.send("record-backup", {
                     isOk: result

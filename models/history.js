@@ -160,8 +160,8 @@ module.exports = class History {
 
     /**
      * Save a file into the current history directory
-     * @param {string} templateHtml - HTML page
-     * @param {object} graphReport - new Graph().report
+     * @param {Template.html} templateHtml - HTML page
+     * @param {Graph.report} graphReport - new Graph().report
      * @return {boolean} - If the file is saved
      */
 
