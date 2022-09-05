@@ -54,12 +54,12 @@ ipcMain.on("save-config-option", (event, name, value) => {
     }
 });
 
-ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, color, action) => {
+ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, fill, stroke, action) => {
     let config = Config.get();
 
     switch (action) {
         case 'add':
-            config.record_types[name] = color;
+            config.record_types[name] = { fill, stroke };
 
             config = new Config ({
                 record_types: config.record_types
@@ -69,7 +69,7 @@ ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, color, ac
         case 'update':
             delete config.record_types[nameInitial];
 
-            config.record_types[name] = color;
+            config.record_types[name] = { fill, stroke };
 
             config = new Config ({
                 record_types: config.record_types
