@@ -29,6 +29,8 @@ module.exports = {
                 }
             })
         );
+
+        window.webContents.toggleDevTools()
         
         window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
 

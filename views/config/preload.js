@@ -79,7 +79,8 @@ function setConfigView () {
         `<tr>
             <td><input type="radio" name="record_types" value="${recordType}"></td>
             <td>${recordType}</td>
-            <td style="background-color: ${config.record_types[recordType]}"></td>
+            <td style="background-color: ${config.record_types[recordType]['fill']}"></td>
+            <td style="background-color: ${config.record_types[recordType]['stroke']}"></td>
         </tr>`);
     }
 

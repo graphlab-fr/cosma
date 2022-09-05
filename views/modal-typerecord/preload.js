@@ -21,9 +21,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     document.querySelector('input[name="name"]').value = recordType;
     document.querySelector('input[name="initial_name"]').value = recordType;
-    document.querySelector('input[name="color"]').value = config.record_types[recordType];
+    document.querySelector('input[name="fill"]').value = config.record_types[recordType]['fill'];
+    document.querySelector('input[name="stroke"]').value = config.record_types[recordType]['stroke'];
 });
 
 contextBridge.exposeInMainWorld('api',
-    { saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action) }
+    { saveConfigOptionTypeRecord: (name, nameInitial, fill, stroke, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, fill, stroke, action) }
 );
