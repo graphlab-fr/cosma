@@ -3,7 +3,10 @@ const {
     ipcMain,
     dialog,
     BrowserWindow
-} = require('electron');
+} = require('electron')
+    , path = require('path');
+
+const Config = require('../core/models/config');
 
 const lang = require('../core/models/lang');
 
@@ -44,6 +47,29 @@ ipcMain.on("dialog-request-file-path", (event, name, fileExtension) => {
             data: response.filePaths[0]
         });
     }).catch(error => window.webContents.send('get-file-path-from-dialog', {
+        isOk: false
+    }))
+});
+
+ipcMain.on("dialog-request-image-path", (event, name) => {
+    const window = BrowserWindow.getFocusedWindow();
+    const { images_origin: imagePath } = Config.get();
+
+    dialog.showOpenDialog(window, {
+        title: lang.getFor('Get image'),
+        defaultPath: imagePath,
+        filters: [
+            { name : 'Images', extensions: ['jpg', 'jpeg', 'png'] },
+        ],
+        buttonLabel: lang.getFor(lang.i.dialog.btn.select),
+        properties: ['openFile']
+    }).then((response) => {
+        window.webContents.send("get-image-path-from-dialog", {
+            isOk: !response.canceled,
+            target: name,
+            data: path.basename(response.filePaths[0])
+        });
+    }).catch(error => window.webContents.send('get-image-path-from-dialog', {
         isOk: false
     }))
 });

@@ -38,7 +38,7 @@ ipcRenderer.on('reset-config', () => {
 contextBridge.exposeInMainWorld('api',
     {
         saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
-        saveConfigOptionTypeRecord: (name, nameInitial, color, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, color, action),
+        saveConfigOptionTypeRecord: (name, nameInitial, fill, stroke, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, fill, stroke, action),
         saveConfigOptionTypeLink: (name, nameInitial, color, stroke, action) => ipcRenderer.sendSync('save-config-option-typelink', name, nameInitial, color, stroke, action),
         openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action),
         openModalTypeLink: (recordType, action) => ipcRenderer.send('open-modal-typelink', recordType, action),

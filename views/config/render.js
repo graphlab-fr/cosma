@@ -150,7 +150,7 @@ function manageTypeRecord (formData, action, input) {
             break;
 
         case 'delete-all':
-            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, action)
+            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, undefined, action)
             break;
     }
 
@@ -162,7 +162,7 @@ function manageTypeRecord (formData, action, input) {
             break;
 
         case 'delete':
-            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, action)
+            result = window.api.saveConfigOptionTypeRecord(formData.record_types, undefined, undefined, undefined, action)
             break;
     }
 
