@@ -60,12 +60,33 @@
         <select name="lang"></select>
     </label>
 </form>
-            <form>
-    <label>
-        Répertoire des fiches
-        <input type="text" name="files_origin">
-        <button type="button" data-path="directory" id="dialog-path-fileorigin">Sélectionner</button>
-    </label>
+            <form id="form-origin">
+    <fieldset>
+        <legend>Source de données</legend>
+
+        <select name="select_origin" id="files-select">
+            <option value="directory">Fichiers Markdown</option>
+            <option value="csv">Feuille de calcul</option>
+        </select>
+    
+        <label>
+            Répertoire des fiches
+            <input type="text" name="files_origin">
+            <button type="button" data-path="directory" id="dialog-path-fileorigin">Sélectionner</button>
+        </label>
+
+        <label>
+            Feuille de calcul des nœuds
+            <input type="text" name="nodes_origin">
+            <button type="button" data-path="csv" id="dialog-path-nodeorigin">Sélectionner</button>
+        </label>
+
+        <label>
+            Feuille de calcul des liens
+            <input type="text" name="links_origin">
+            <button type="button" data-path="csv" id="dialog-path-linkorigin">Sélectionner</button>
+        </label>
+    </fieldset>
 </form>
             <form>
     <label>

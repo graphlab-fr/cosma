@@ -26,6 +26,8 @@ window.addEventListener("DOMContentLoaded", () => {
         .getElementById('form-view')
         .querySelector('tbody')
     selectLang = document.querySelector('select[name="lang"]')
+    selectOrigin = document.querySelector('select[name="select_origin"]')
+    selectOriginOptions = selectOrigin.querySelectorAll('option')
 
     setConfigView();
 });
@@ -133,4 +135,13 @@ function setConfigView () {
         selectLang.insertAdjacentHTML('beforeend',
         `<option value="${lang}">${langages[lang]}</option>`);
     }
+
+    selectOriginOptions.forEach(option => {
+        const {select_origin} = config;
+        if (option.value === select_origin) {
+            option.setAttribute('selected', true);
+        }
+    });
+    const changeEvent = new Event('change');
+    selectOrigin.dispatchEvent(changeEvent);
 }

@@ -245,17 +245,35 @@ function manageView (formData, action, input) {
             window.api.dialogRequestFilePath(input.name, btn.dataset.path);
         });
     }
+})();
 
-    window.api.getDirPathFromDialog(setValueFromDialog);
-    window.api.getFilePathFromDialog(setValueFromDialog);
+window.api.getDirPathFromDialog(setValueFromDialog);
+window.api.getFilePathFromDialog(setValueFromDialog);
 
-    function setValueFromDialog (response) {
-        if (response.isOk === false) {
-            return; }
+function setValueFromDialog (response) {
+    if (response.isOk === false) {
+        return; }
 
-        const input = document.querySelector(`input[name="${response.target}"]`);
-        input.value = response.data;
+    const input = document.querySelector(`input[name="${response.target}"]`);
+    input.value = response.data;
 
-        saveInput(input);
-    }
+    saveInput(input);
+}
+
+(function () {
+    const form = document.getElementById('form-origin');
+    const filesSelect = document.getElementById('files-select');
+
+    filesSelect.addEventListener('change', () => {
+        const { value: pathTypeSelected } = filesSelect;
+        const pathInputs = form.querySelectorAll(`[data-path]`);
+        for (const pathInput of pathInputs) {
+            const { path: pathType } = pathInput.dataset;
+            if (pathType === pathTypeSelected) {
+                pathInput.parentElement.style.display = null;
+            } else {
+                pathInput.parentElement.style.display = 'none';
+            }
+        }
+    });
 })();
