@@ -169,6 +169,35 @@
         <input type="number" name="graph_text_size" step="1">
     </label>
 </form>
+            <form id="form-node-size">
+    <fieldset>
+        <legend>Dimensionnement des nœuds</legend>
+
+        <select name="node_size_method">
+            <option value="unique">Taille unique</option>
+            <option value="degree">Taille proportionnelle</option>
+        </select>
+    
+        <div data-method="unique">
+            <label class="space-between">
+                Taille des nœuds
+                <input type="number" name="node_size" step="1">
+            </label>
+        </div>
+    
+        <div data-method="degree">
+            <label class="space-between">
+                Taille minimum des nœuds
+                <input type="number" name="node_size_min" step="1">
+            </label>
+        
+            <label class="space-between">
+                Taille maximum des nœuds
+                <input type="number" name="node_size_max" step="1">
+            </label>
+        </div>
+    </fieldset>
+</form>
             <form>
     <label class="space-between">
         Niveau maximum de focus
