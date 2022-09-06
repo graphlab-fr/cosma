@@ -12,8 +12,6 @@ const {
 let config = ipcRenderer.sendSync('get-config-options');
 let langages = ipcRenderer.sendSync('get-langages');
 
-let inputs, tableTypesLink, tableTypesRecord, tableView, selectLang;
-
 window.addEventListener("DOMContentLoaded", () => {
     inputs = document.querySelectorAll('input');
     tableTypesRecord = document
@@ -28,6 +26,8 @@ window.addEventListener("DOMContentLoaded", () => {
     selectLang = document.querySelector('select[name="lang"]')
     selectOrigin = document.querySelector('select[name="select_origin"]')
     selectOriginOptions = selectOrigin.querySelectorAll('option')
+    selectNodeSize = document.querySelector('select[name="node_size_method"]')
+    selectNodeSizeOptions = selectNodeSize.querySelectorAll('option')
 
     setConfigView();
 });
@@ -144,4 +144,12 @@ function setConfigView () {
     });
     const changeEvent = new Event('change');
     selectOrigin.dispatchEvent(changeEvent);
+
+    selectNodeSizeOptions.forEach(option => {
+        const {node_size_method} = config;
+        if (option.value === node_size_method) {
+            option.setAttribute('selected', true);
+        }
+    })
+    selectNodeSize.dispatchEvent(changeEvent);
 }

@@ -277,3 +277,21 @@ function setValueFromDialog (response) {
         }
     });
 })();
+
+(function () {
+    const form = document.getElementById('form-node-size');
+    const nodeSizeMethodSelect = form.querySelector('select');
+
+    nodeSizeMethodSelect.addEventListener('change', () => {
+        const { value: methodSelected } = nodeSizeMethodSelect;
+        const divs = form.querySelectorAll(`[data-method]`);
+        for (const div of divs) {
+            const { method } = div.dataset;
+            if (method === methodSelected) {
+                div.style.display = null;
+            } else {
+                div.style.display = 'none';
+            }
+        }
+    });
+})();

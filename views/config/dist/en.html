@@ -169,6 +169,35 @@
         <input type="number" name="graph_text_size" step="1">
     </label>
 </form>
+            <form id="form-node-size">
+    <fieldset>
+        <legend>Node sizing</legend>
+
+        <select name="node_size_method">
+            <option value="unique">Unique size</option>
+            <option value="degree">Proportional size</option>
+        </select>
+    
+        <div data-method="unique">
+            <label class="space-between">
+                Nodes size
+                <input type="number" name="node_size" step="1">
+            </label>
+        </div>
+    
+        <div data-method="degree">
+            <label class="space-between">
+                Min nodes size
+                <input type="number" name="node_size_min" step="1">
+            </label>
+        
+            <label class="space-between">
+                Max nodes size
+                <input type="number" name="node_size_max" step="1">
+            </label>
+        </div>
+    </fieldset>
+</form>
             <form>
     <label class="space-between">
         Maximum focus level
