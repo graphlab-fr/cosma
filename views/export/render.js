@@ -1,7 +1,8 @@
 const form = document.getElementById('form-export');
+const output = form.querySelector('output');
+const submitBtn = form.querySelector('button[type="submit"]');
 
 (function () {
-    const submitBtn = form.querySelector('button[type="submit"]');
 
     form.addEventListener('submit', (e) => {
         e.preventDefault(e);
@@ -11,19 +12,23 @@ const form = document.getElementById('form-export');
         let data = new FormData(form);
         data = Object.fromEntries(data);
 
-        const result = window.api.exportCosmoscope({
+        window.api.exportCosmoscope({
             minify: (data['minify'] !== undefined),
             citeproc: (data['citeproc'] !== undefined),
             css_custom: (data['css_custom'] !== undefined)
-        })
-
-        if (result === false) {
-            submitBtn.disabled = false;
-        } else {
-            window.close();
-        }
+        });
     });
 })();
+
+
+window.api.exportResult(({ isOk, message }) => {
+    if (isOk) {
+        window.close();
+    } else {
+        output.textContent = 'Erreur : ' + message;
+        submitBtn.disabled = false;
+    }
+});
 
 (function () {
     const btnRequestPath = document.querySelector('[data-path]')

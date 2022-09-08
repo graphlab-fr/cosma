@@ -18,22 +18,22 @@ window.addEventListener("DOMContentLoaded", () => {
         citeproc: document.querySelector('input[name="citeproc"]'),
         css_custom: document.querySelector('input[name="css_custom"]')
     };
+    submitBtn = document.querySelector('button[type="submit"]');
 
     setOptions();
 
     document.querySelector('input[name="export_target"]').value = config.export_target;
 });
 
-ipcRenderer.on('config-change', () => {
-    setOptions();
-});
+ipcRenderer.on('config-change', () => setOptions());
 
 contextBridge.exposeInMainWorld('api',
     {
         saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
         exportCosmoscope: (graphParams) => ipcRenderer.sendSync('export-cosmoscope', graphParams),
         dialogRequestDirPath: (name) => ipcRenderer.send('dialog-request-dir-path', name),
-        getDirPathFromDialog: (fx) => ipcRenderer.on('get-dir-path-from-dialog', (event, response) => fx(response))
+        getDirPathFromDialog: (fx) => ipcRenderer.on('get-dir-path-from-dialog', (event, response) => fx(response)),
+        exportResult: (fx) => ipcRenderer.on('export-result', (event, response) => fx(response))
     }
 );
 
@@ -49,4 +49,7 @@ function setOptions () {
             checkbox.disabled = true;
         }
     }
+
+    const canModelize = ipcRenderer.sendSync('can-modelize-with-source-options');
+    submitBtn.disabled = !canModelize;
 }

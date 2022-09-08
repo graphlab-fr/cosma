@@ -19,7 +19,7 @@ process.on('uncaughtException', ({ name, message, stack }) => {
         default:
             dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
                 title: name,
-                message: message,
+                message: message + "\n\n" + stack,
                 type: 'error',
             });
             break;
