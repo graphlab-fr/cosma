@@ -1,37 +1,56 @@
 const {
         app, // app event lifecycle, events
         BrowserWindow, // app windows generator
-        Menu
-    } = require('electron')
-    , path = require('path');
+        Menu,
+        dialog
+    } = require('electron');;
 
-const Display = require('./models/display');
+const Config = require('./core/models/config');
+const buildPages = require('./controllers/build-pages');
+
+process.on('uncaughtException', ({ name, message, stack }) => {
+    switch (name) {
+        case 'Error Config':
+            new Config();
+            app.relaunch();
+            app.exit();
+            break;
+    
+        default:
+            dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+                title: name,
+                message: message,
+                type: 'error',
+            });
+            break;
+    }
+})
 
 /**
  * Wait for 'app ready' event, before lauch the window.
  */
 
-app.whenReady().then(() => {
-    require('./views/cosmoscope').open();
-
-    const menuTemplate = require('./models/menu');
-
-    const appMenu = Menu.buildFromTemplate(menuTemplate)
-    Menu.setApplicationMenu(appMenu);
-
-    require('./controllers');
-
-    /**
-     * MacOS apps generally continue running even without any windows open.
-     * Activating the app when no windows are available should open a new one.
-     */
-
-    app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            require('./views/cosmoscope').open();
-        }
-    });
-});
+Promise.all([app.whenReady(), new Config(), buildPages()])
+    .then(() => {
+        require('./views/cosmoscope').open();
+    
+        const menuTemplate = require('./models/menu');
+        const appMenu = Menu.buildFromTemplate(menuTemplate)
+        Menu.setApplicationMenu(appMenu);
+    
+        require('./controllers');
+    
+        /**
+         * MacOS apps generally continue running even without any windows open.
+         * Activating the app when no windows are available should open a new one.
+         */
+    
+        app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) {
+                require('./views/cosmoscope').open();
+            }
+        });
+    })
 
 /**
  * Except on MacOs :
@@ -42,7 +61,3 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') { // except on MacOs
         app.quit(); }
 });
-
-if (app.isPackaged === false) {
-    require('./controllers/build-pages');
-}

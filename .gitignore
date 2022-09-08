@@ -2,3 +2,4 @@
 package-lock.json
 .DS_Store
 /build
+config.yml
