@@ -1,3 +1,5 @@
+const { dialog } = require('electron');
+
 const path = require('path');
 
 const Config = require('../core/models/config')
@@ -5,7 +7,8 @@ const Config = require('../core/models/config')
     , Cosmoscope = require('../core/models/cosmoscope')
     , Link = require('../core/models/link')
     , Record = require('../core/models/record')
-    , Template = require('../core/models/template');
+    , Template = require('../core/models/template')
+    , lang = require('../core/models/lang');
 
 const Display = require('../models/display');
 
@@ -33,6 +36,27 @@ module.exports = async function (templateParams = [], runLast = false) {
         return;
     }
 
+    switch (originType) {
+        case 'csv':
+            if (config.canModelizeFromCsvFiles() === false) {
+                dialog.showMessageBox(window, {
+                    title: lang.getFor(lang.i.dialog.error_modelize.title),
+                    message: lang.getFor(lang.i.dialog.error_modelize.message_source_csv),
+                    type: 'error'
+                });
+            }
+            return;
+        case 'directory':
+            if (config.canModelizeFromDirectory() === false) {
+                dialog.showMessageBox(window, {
+                    title: lang.getFor(lang.i.dialog.error_modelize.title),
+                    message: lang.getFor(lang.i.dialog.error_modelize.message_source_directory),
+                    type: 'error'
+                });
+            }   
+            break;
+    }
+
     templateParams.push('minify');
 
     if (config.canCssCustom() === true) {
@@ -46,7 +70,6 @@ module.exports = async function (templateParams = [], runLast = false) {
             records = Record.formatedDatasetToRecords(formatedRecords, links, config);
             break;
         case 'directory':
-        default:
         const files = Cosmoscope.getFromPathFiles(filesPath);
         records = Cosmoscope.getRecordsFromFiles(files, config.opts);    
         break;

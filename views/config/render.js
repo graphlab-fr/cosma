@@ -128,6 +128,11 @@ for (const form of forms) {
             return;
         }
 
+        if (input.type === 'number') {
+            saveInput(input, input.valueAsNumber);
+            return;
+        }
+
         saveInput(input);
     })
 }

@@ -49,7 +49,7 @@ window.api.getImagePathFromDialog((response) => {
 
         if (result === true) {
             input.setCustomValidity('');
-            // window.close();
+            window.close();
         }
         else {
             input.setCustomValidity(result);
