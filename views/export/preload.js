@@ -30,7 +30,7 @@ ipcRenderer.on('config-change', () => setOptions());
 contextBridge.exposeInMainWorld('api',
     {
         saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
-        exportCosmoscope: (graphParams) => ipcRenderer.sendSync('export-cosmoscope', graphParams),
+        exportCosmoscope: (graphParams) => ipcRenderer.send('export-cosmoscope', graphParams),
         dialogRequestDirPath: (name) => ipcRenderer.send('dialog-request-dir-path', name),
         getDirPathFromDialog: (fx) => ipcRenderer.on('get-dir-path-from-dialog', (event, response) => fx(response)),
         exportResult: (fx) => ipcRenderer.on('export-result', (event, response) => fx(response))
