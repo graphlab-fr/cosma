@@ -12,6 +12,8 @@ const submitBtn = form.querySelector('button[type="submit"]');
         let data = new FormData(form);
         data = Object.fromEntries(data);
 
+        output.textContent = 'Chargement en cours…';
+
         window.api.exportCosmoscope({
             minify: (data['minify'] !== undefined),
             citeproc: (data['citeproc'] !== undefined),
@@ -22,12 +24,14 @@ const submitBtn = form.querySelector('button[type="submit"]');
 
 
 window.api.exportResult(({ isOk, message }) => {
+    document.body.style.cursor = null;
     if (isOk) {
         window.close();
     } else {
         output.textContent = 'Erreur : ' + message;
         submitBtn.disabled = false;
     }
+    output.textContent = null;
 });
 
 (function () {
