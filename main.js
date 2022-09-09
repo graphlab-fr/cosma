@@ -6,6 +6,7 @@ const {
     } = require('electron');;
 
 const Config = require('./core/models/config');
+const History = require('./models/history');
 const buildPages = require('./controllers/build-pages');
 
 process.on('uncaughtException', ({ name, message, stack }) => {
@@ -14,6 +15,11 @@ process.on('uncaughtException', ({ name, message, stack }) => {
             new Config();
             app.relaunch();
             app.exit();
+            break;
+
+        case 'Error History':
+            /**  @todo Reset config  */
+            new History().deleteAll();
             break;
     
         default:

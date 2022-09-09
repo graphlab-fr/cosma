@@ -9,15 +9,11 @@
     ipcRenderer
 } = require('electron');
 
-const moment = require('moment');
-
 let table;
 
-let config = ipcRenderer.sendSync('get-config-options');
+let { lang } = ipcRenderer.sendSync('get-config-options');
 
 window.addEventListener("DOMContentLoaded", () => {
-    moment.locale(config.lang);
-
     table = document
         .getElementById('form-history')
         .querySelector('tbody');
@@ -45,7 +41,9 @@ function setView () {
         table.insertAdjacentHTML('afterbegin',
         `<tr>
             <td><input type="radio" name="history_record" value="${record}"></td>
-            <td>${moment(historyRecords[record].date).format('LLLL')}</td>
+            <td>${new Date(historyRecords[record].date).toLocaleDateString(lang, {
+                year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
+            })}</td>
             <td>${historyRecords[record].description || ''}</td>
         </tr>`);
     }
