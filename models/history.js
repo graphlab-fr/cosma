@@ -51,7 +51,7 @@ module.exports = class History {
 
             return fileContent;
         } catch (error) {
-            return History.baseData;
+            throw new ErrorHistory("The history data file cannot be read or parse.")
         }
     }
 
@@ -140,7 +140,7 @@ module.exports = class History {
         if (id === undefined) {
             this.id = History.generateId();
             this.pathToStore = path.join(History.pathForDirs, `${this.id}.html`);
-            this.date = moment().format();
+            this.date = Date.now();
             return;
         }
 
@@ -179,7 +179,7 @@ module.exports = class History {
 
             this.data.records[this.id] = {
                 path: this.pathToStore,
-                date: moment().format(),
+                date: Date.now(),
                 description: this.description,
                 report: graphReport
             }
@@ -235,7 +235,6 @@ module.exports = class History {
 
             return true;
         } catch (error) {
-            console.log(error);
             return false;
         }
     }
@@ -245,5 +244,12 @@ module.exports = class History {
         this.data = History.baseData;
 
         this.save();
+    }
+}
+
+class ErrorHistory extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'Error History';
     }
 }

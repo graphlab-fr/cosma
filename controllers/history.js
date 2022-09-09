@@ -1,11 +1,14 @@
 const {
     ipcMain,
-    shell
+    shell,
+    dialog,
+    BrowserWindow
 } = require('electron');
 
 const History = require('../models/history')
     , Display = require('../models/display')
-    , Graph = require('../core/models/graph');
+    , Graph = require('../core/models/graph')
+    , lang = require('../core/models/lang');
 
 const config = require('../core/models/config').get();
 
@@ -57,7 +60,9 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
             break;
 
         case 'delete-all':
-            new History().deleteAll();
+            if (askDeleteAll() === true) {
+                new History().deleteAll();
+            }
             break;
     }
 
@@ -70,3 +75,23 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
         window.webContents.send("reset-history");
     }
 });
+
+/**
+ * Ask user by a dialog modal to confirm delete_all
+ * @returns {boolean} - True if the user answer 'Ok'
+ */
+
+function askDeleteAll () {
+    const result = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
+        message: lang.getFor(lang.i.dialog.delete_all.message),
+        type: 'warning',
+        buttons: [lang.getFor(lang.i.dialog.btn.cancel), lang.getFor(lang.i.dialog.btn.ok)],
+        defaultId: 0,
+        cancelId: 0,
+        noLink: true
+    })
+
+    if (result === 1) { return true; }
+
+    return false;
+}
