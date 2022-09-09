@@ -12,8 +12,6 @@ const Config = require('../core/models/config')
 
 const Display = require('../models/display');
 
-// const { cosmocope } = require('../core/utils/generate')
-
 let windowPath;
 
 module.exports = async function (templateParams = [], runLast = false) {
