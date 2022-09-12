@@ -48,7 +48,7 @@ contextBridge.exposeInMainWorld('api',
         openModalView: (view, action) => ipcRenderer.send('open-modal-view', view, action),
         dialogRequestDirPath: (name) => ipcRenderer.send('dialog-request-dir-path', name),
         dialogRequestFilePath: (name, fileExtension) => ipcRenderer.send('dialog-request-file-path', name, fileExtension),
-        getFilePathFromDialog: (fx) => ipcRenderer.on('get-dir-path-from-dialog', (event, response) => fx(response)),
+        getFilePathFromDialog: (fx) => ipcRenderer.on('get-file-path-from-dialog', (event, response) => fx(response)),
         getDirPathFromDialog: (fx) => ipcRenderer.on('get-file-path-from-dialog', (event, response) => fx(response))
     }
 );
