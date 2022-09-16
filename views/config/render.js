@@ -261,6 +261,8 @@ function setValueFromDialog (response) {
 
     const input = document.querySelector(`input[name="${response.target}"]`);
     input.value = response.data;
+    const inputEvent = new Event('input');
+    input.dispatchEvent(inputEvent);
 
     saveInput(input);
 }
