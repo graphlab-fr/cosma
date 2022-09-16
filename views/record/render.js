@@ -18,9 +18,7 @@ window.api.getRecordTags((response) => {
             allow_spaces: true,
             wrap: true,
             completion: {
-                list: function() {
-                    return Promise.resolve(completionList);
-                }
+                list: () => Promise.resolve(completionList)
             },
         }
     );
