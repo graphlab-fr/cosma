@@ -1,6 +1,7 @@
-const { dialog } = require('electron');
+const { app, dialog } = require('electron');
 
-const path = require('path');
+const fs = require('fs')
+    , path = require('path');
 
 const Config = require('../core/models/config')
     , History = require('../models/history')
@@ -74,15 +75,27 @@ module.exports = async function (templateParams = [], runLast = false) {
     }
 
     const graph = new Cosmoscope(records, config.opts, []);
+    fs.writeFile(path.join(app.getPath('userData'), 'folks.json'), graph.getFolksonomyAsText(), (err) => {});
 
     let { html } = new Template(graph, templateParams)
         , history = new History();
 
-    history.storeCosmoscope(html, graph.report);
-    window.loadFile(history.pathToStore);
+    fs.writeFile(path.join(history.pathToStore), html, (err) => {
+        if (err) { throw new ErrorSaveCosmoscope("Can not save and open Cosmoscope"); }
 
-    windowHistory = Display.getWindow('history');
-    if (windowHistory) {
-        windowHistory.webContents.send("reset-history");
+        history.registerCosmoscope();
+        window.loadFile(history.pathToStore);
+        windowHistory = Display.getWindow('history');
+        if (windowHistory) {
+            windowHistory.webContents.send("reset-history");
+        }
+    });
+
+}
+
+class ErrorSaveCosmoscope extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'Error save Cosmocope';
     }
 }

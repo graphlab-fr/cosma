@@ -162,10 +162,10 @@ module.exports = class History {
      * Save a file into the current history directory
      * @param {Template.html} templateHtml - HTML page
      * @param {Graph.report} graphReport - new Graph().report
-     * @return {boolean} - If the file is saved
+     * @return {Promise}
      */
 
-    storeCosmoscope (templateHtml, graphReport) {
+    registerCosmoscope () {
         try {
             if (this.config.history === false) {
                 const lastRecord = History.getLast();
@@ -175,20 +175,15 @@ module.exports = class History {
                 }
             }
 
-            fs.writeFileSync(this.pathToStore, templateHtml);
-
             this.data.records[this.id] = {
                 path: this.pathToStore,
                 date: Date.now(),
                 description: this.description,
-                report: graphReport
+                report: {}
             }
-
             this.save();
-
-            return true;
         } catch (error) {
-            return false;
+            throw new ErrorHistory("The history data file cannot be save.")
         }
     }
 
