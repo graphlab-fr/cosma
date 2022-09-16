@@ -121,7 +121,9 @@ for (const form of forms) {
         continue; }
 
     form.addEventListener('input', (e) => {
-        const input = e.target;
+        const { target: input } = e;
+
+        if (!input.name) { return; }
 
         if (input.type === 'checkbox') {
             saveInput(input, (input.checked === true));
@@ -302,3 +304,11 @@ function setValueFromDialog (response) {
         }
     });
 })();
+
+window.addEventListener("DOMContentLoaded", () => {
+    const tagsInput = document.querySelector('input[name="keywords"]');
+    tagger(tagsInput,{ allow_spaces: true });
+    tagsInput.addEventListener('input', () => {
+        saveInput(tagsInput, tagsInput.value.split(','));
+    });
+});

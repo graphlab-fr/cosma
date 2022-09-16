@@ -57,17 +57,13 @@ function setConfigView () {
     for (const input of inputs) {
         switch (input.type) {
             case 'text':
-                input.value = config[input.name];
-                break;
-
+                if (Array.isArray(config[input.name])) {
+                    config[input.name] = config[input.name].join(',');
+                }
             case 'color':
-                input.value = config[input.name];
-                break;
-
             case 'number':
                 input.value = config[input.name];
                 break;
-
             case 'checkbox':
                 input.checked = config[input.name];
                 break;

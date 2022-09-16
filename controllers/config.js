@@ -18,6 +18,10 @@ ipcMain.on("get-langages", (event) => {
 });
 
 ipcMain.on("save-config-option", (event, name, value) => {
+    if (Config.getOptionsList().has(name) === false) {
+        return;
+    }
+
     const newConfig = {};
     newConfig[name] = value;
 
@@ -36,11 +40,12 @@ ipcMain.on("save-config-option", (event, name, value) => {
         windowForSend.webContents.send("config-change");
     }
 
-    if (['lang'].includes(name)) {
+    if (name === 'lang') {
         dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
             message: lang.getFor(lang.i.config.info.lang),
             type: 'info'
         })
+        return;
     }
 
     if (['devtools', 'bibliography', 'csl', 'csl_locale'].includes(name)) {
