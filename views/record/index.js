@@ -1,13 +1,13 @@
 const {
     BrowserWindow,
-    dialog,
-    app
+    dialog
 } = require('electron')
 , path = require('path')
 , fs = require('fs');
 
-const Graph = require('../../core/models/graph')
-    , lang = require('../../core/models/lang');
+const lang = require('../../core/models/lang');
+
+const { getFolksonomyFromUserData } = require('../misc');
 
 let window;
 
@@ -54,8 +54,7 @@ module.exports = {
             getFolksonomyFromUserData().then((folksonomy) => {
                 const tagsList = Object.keys(folksonomy.tags);
                 window.webContents.send('get-record-tags', tagsList);
-                console.log('envoyé !');
-            })
+            });
         });
 
         window.once('closed', () => {
@@ -64,19 +63,4 @@ module.exports = {
     },
 
     build: () => require('../build-page')(pageName, __dirname)
-}
-
-/**
- * @returns {Promise<Graph.Folksonomy>}
- */
-
-async function getFolksonomyFromUserData() {
-    return new Promise((resolve, reject) => {
-        fs.readFile(path.join(app.getPath('userData'), 'folks.json'), (err, data) => {
-            if (err) { reject(err) }
-            data = Buffer.from(data).toString('utf-8');
-            data = JSON.parse(data);
-            resolve(data);
-        })
-    })
 }
