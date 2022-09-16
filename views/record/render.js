@@ -1,8 +1,29 @@
 const form = document.getElementById('form-record');
+let completionList = [];
 
 (function () {
     const firstInput = form.querySelector('input');
     firstInput.focus();
+})();
+
+window.api.getRecordTags((response) => {
+    completionList = response;
+});
+
+(function () {
+    const tagsInput = form.querySelector('input[name="tags"]');
+    tagger(
+        tagsInput,
+        {
+            allow_spaces: true,
+            wrap: true,
+            completion: {
+                list: function() {
+                    return Promise.resolve(completionList);
+                }
+            },
+        }
+    );
 })();
 
 (function () {
@@ -17,24 +38,24 @@ const form = document.getElementById('form-record');
         data = Object.fromEntries(data);
 
         window.api.recordAdd(data.title, data.type, data.tags);
-
-        window.api.recordBackup((response) =>  {
-            if (response.isOk === false) {
-
-                if (response.invalidField !== undefined) {
-                    const input = form.querySelector(`[name="${response.invalidField}"]`)
-                    input.setCustomValidity(response.msg);
-                    input.reportValidity();
-                }
-    
-                btn.disabled = false;
-                return;
-            }
-
-            window.close();
-        });
     })
 })();
+
+window.api.recordBackup((response) =>  {
+    if (response.isOk === false) {
+
+        if (response.invalidField !== undefined) {
+            const input = form.querySelector(`[name="${response.invalidField}"]`)
+            input.setCustomValidity(response.msg);
+            input.reportValidity();
+        }
+
+        btn.disabled = false;
+        return;
+    }
+
+    window.close();
+});
 
 (function () {
     document.querySelector('.window-close')

@@ -17,6 +17,7 @@ process.on('uncaughtException', ({ name, message, stack }) => {
             app.exit();
             break;
 
+        case 'Error save Cosmocope':
         case 'Error History':
             /**  @todo Reset config  */
             new History().deleteAll();
