@@ -93,6 +93,19 @@ module.exports = [
                 }
             },
             {
+                label: 'Fake cosmoscope',
+                role: 'new-cosmoscope-fake',
+                click () {
+                    mainWindow = Display.getWindow('main');
+                    if (mainWindow) {
+                        require('../controllers/cosmoscope')(undefined, undefined, true);
+                    } else {
+                        require('../views/cosmoscope').open();
+                    }
+                },
+                visible: config.opts.devtools
+            },
+            {
                 label: lang.getFor(lang.i.app_menu.new_record),
                 role: 'new-record',
                 accelerator: 'CommandOrControl+N',
