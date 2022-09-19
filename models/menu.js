@@ -95,6 +95,8 @@ module.exports = [
             {
                 label: 'Fake cosmoscope',
                 role: 'new-cosmoscope-fake',
+                id: 'new-cosmoscope-fake',
+                visible: config.opts.devtools,
                 click () {
                     mainWindow = Display.getWindow('main');
                     if (mainWindow) {
@@ -102,8 +104,7 @@ module.exports = [
                     } else {
                         require('../views/cosmoscope').open();
                     }
-                },
-                visible: config.opts.devtools
+                }
             },
             {
                 label: lang.getFor(lang.i.app_menu.new_record),
