@@ -15,10 +15,18 @@ const Display = require('../models/display');
 
 let windowPath;
 
-module.exports = async function (templateParams = [], runLast = false) {
+module.exports = async function (templateParams = [], runLast = false, fake = false) {
     const window = Display.getWindow('main');
 
     if (window === undefined) { return; }
+
+    if (fake) {
+        const { cosmocope: generateFake, tempDirPath } = require('../core/utils/generate');
+        const { graph } = await generateFake(tempDirPath);
+        window.loadFile(path.join(tempDirPath, 'cosmoscope.html'));
+        fs.writeFile(path.join(app.getPath('userData'), 'folks.json'), graph.getFolksonomyAsText(), (err) => {});
+        return;
+    }
 
     const config = new Config();
     const {
@@ -69,7 +77,7 @@ module.exports = async function (templateParams = [], runLast = false) {
             records = Record.formatedDatasetToRecords(formatedRecords, links, config);
             break;
         case 'directory':
-        const files = Cosmoscope.getFromPathFiles(filesPath);
+        const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
         records = Cosmoscope.getRecordsFromFiles(files, config.opts);    
         break;
     }
