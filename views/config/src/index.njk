@@ -46,6 +46,11 @@
                 {{ lang.nav.views[flag] }}
             </li>
 
+            <li tabindex="0" data-section="records_filter">
+                <span class="ico">filter_alt</span>
+                {{ lang.nav.records_filter[flag] }}
+            </li>
+
             <li tabindex="0" data-section="advanced">
                 <span class="ico">tune</span>
                 {{ lang.nav.advanced[flag] }}
@@ -111,6 +116,10 @@
 
         <section id="section-views" class="menu-section">
             {% include "views.njk" %}
+        </section>
+
+        <section id="section-records_filter" class="menu-section">
+            {% include "records_filter.njk" %}
         </section>
 
         <section id="section-advanced" class="menu-section">
