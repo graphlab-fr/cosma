@@ -46,6 +46,11 @@
                 Views
             </li>
 
+            <li tabindex="0" data-section="records_filter">
+                <span class="ico">filter_alt</span>
+                Records filter
+            </li>
+
             <li tabindex="0" data-section="advanced">
                 <span class="ico">tune</span>
                 Advanced
@@ -318,6 +323,25 @@
 
     <div class="buttons-box">
         <button data-action="update" type="submit">Rename</button>
+        <button data-action="delete" type="submit">Delete</button>
+        <button data-action="delete-all" type="submit">Delete all…</button>
+    </div>
+</form>
+        </section>
+
+        <section id="section-records_filter" class="menu-section">
+            <form id="form-records-filter" class="form-list">
+    <table>
+        <thead>
+            <th width="10px"></th>
+            <th>Meta</th>
+            <th>Filted value</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="buttons-box">
+        <button data-action="add" class="primary" type="submit">Add</button>
         <button data-action="delete" type="submit">Delete</button>
         <button data-action="delete-all" type="submit">Delete all…</button>
     </div>

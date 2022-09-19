@@ -56,6 +56,54 @@ ipcMain.on("save-config-option", (event, name, value) => {
     
         appMenu.getMenuItemById('devtools')
             .visible = config.opts.devtools;
+
+        appMenu.getMenuItemById('new-cosmoscope-fake')
+            .visible = config.opts.devtools;
+    }
+});
+
+ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, action) => {
+    let opts = Config.get();
+
+    switch (action) {
+        case 'add':
+            config = new Config ({
+                record_filters: [
+                    ...opts.record_filters,
+                    { meta, value }
+                ]
+            });
+            break;
+
+        case 'delete':
+            config = new Config ({
+                record_filters: [
+                    ...opts.record_filters.filter((filter, i) => i !== index)
+                ]
+            });
+            break;
+
+        case 'delete-all':
+            if (askDeleteAll() === true) {
+                config = new Config ({
+                    record_filters: Config.base.record_filters
+                });
+            } else {
+                config = new Config();
+            }
+            break;
+    }
+
+    if (config.report.includes('record_filters')) {
+        event.returnValue = config.writeReport();
+    } else {
+        config.save();
+        event.returnValue = true;
+
+        let windowForSend = Display.getWindow('config');
+        if (windowForSend) {
+            windowForSend.webContents.send("reset-config");
+        }
     }
 });
 

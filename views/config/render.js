@@ -108,6 +108,13 @@ for (const form of forms) {
                 manageTypeLink(data, action, input);
                 break;
 
+            case 'form-records-filter':
+                input = Array.from(form.elements)
+                    .find(input => input.value === data['record_filters']);
+
+                manageRecordsFilter(data, action, input);
+                break;
+
             case 'form-view':
                 input = Array.from(form.elements)
                     .find(input => input.value === data['view']);
@@ -117,7 +124,7 @@ for (const form of forms) {
         }
     })
 
-    if (['form-type-record', 'form-type-link', 'form-view'].includes(form.id)) {
+    if (['form-type-record', 'form-type-link', 'form-records-filter', 'form-view'].includes(form.id)) {
         continue; }
 
     form.addEventListener('input', (e) => {
@@ -201,6 +208,33 @@ function manageTypeLink (formData, action, input) {
 
         case 'delete':
             result = window.api.saveConfigOptionTypeLink(formData.link_types, undefined, undefined, undefined, action)
+            break;
+    }
+
+    if (result === true) { input.setCustomValidity(''); }
+    else { input.setCustomValidity(result); }
+
+    input.reportValidity();
+}
+
+function manageRecordsFilter (formData, action, input) {
+    let result = true;
+
+    switch (action) {
+        case 'add':
+            window.api.openModalRecordsFilter();
+            break;
+
+        case 'delete-all':
+            result = window.api.saveConfigOptionRecordsFilter(undefined, undefined, undefined, action)
+            break;
+    }
+
+    if (input === undefined) { return; }
+
+    switch (action) {
+        case 'delete':
+            result = window.api.saveConfigOptionRecordsFilter(undefined, undefined, Number(formData.record_filters), action)
             break;
     }
 

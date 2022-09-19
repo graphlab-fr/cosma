@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+    
+    <main>
+
+        <form>
+            <label>
+                Métadonnée de filtrage
+                <select name="meta">
+                    <option value="type">Type de fiche</option>
+                    <option value="tags">Tag de fiches</option>
+                    <optgroup class="other_metas" label="Métadonnées personnalisées" hidden></optgroup>
+                </select>
+            </label>
+
+            <label>
+                Valeur filtrée
+                <input type="text" name="value" list="values_database">
+            </label>
+
+            <datalist id="values_database"></datalist>
+
+            <div class="cancel-ok">
+                <button class="window-close" type="button">Annuler</button>
+                <button class="primary" type="submit">Ok</button>
+            </div>
+        </form>
+
+    </main>
+
+    <script src="../render.js"></script>
+</body>
+
+</html>

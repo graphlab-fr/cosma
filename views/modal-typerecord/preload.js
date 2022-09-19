@@ -17,7 +17,6 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelector('input[name="action"]').value = action;
 
     const fillImageBtn = document.getElementById('dialog-image');
-    console.log(fillImageBtn, config['images_origin']);
     if (!config['images_origin']) {
         fillImageBtn.disabled = true;
     }

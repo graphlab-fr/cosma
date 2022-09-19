@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+    
+    <main>
+
+        <form>
+            <label>
+                {{ lang.fields.meta[flag] }}
+                <select name="meta">
+                    <option value="type">{{ lang.options.meta_type[flag] }}</option>
+                    <option value="tags">{{ lang.options.meta_tags[flag] }}</option>
+                    <optgroup class="other_metas" label="{{ lang.options.meta_custom[flag] }}" hidden></optgroup>
+                </select>
+            </label>
+
+            <label>
+                {{ lang.fields.value[flag] }}
+                <input type="text" name="value" list="values_database">
+            </label>
+
+            <datalist id="values_database"></datalist>
+
+            <div class="cancel-ok">
+                <button class="window-close" type="button">{{ langBtnCancel[flag] }}</button>
+                <button class="primary" type="submit">{{ langBtnOk[flag] }}</button>
+            </div>
+        </form>
+
+    </main>
+
+    <script src="../render.js"></script>
+</body>
+
+</html>

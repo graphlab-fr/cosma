@@ -8,6 +8,10 @@ ipcMain.on("open-modal-typelink", (event, linkType, action) => {
     require('../views/modal-typelink').open(linkType, action);
 });
 
+ipcMain.on("open-modal-recordsfilter", (event) => {
+    require('../views/modal-recordsfilter').open();
+});
+
 ipcMain.on("open-modal-view", (event, viewName, action) => {
     require('../views/modal-view').open(viewName, action);
 });

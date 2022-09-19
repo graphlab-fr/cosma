@@ -65,7 +65,7 @@ module.exports = {
         window.once('ready-to-show', () => {
             window.show();
             getFolksonomyFromUserData().then((folksonomy) => {
-                window.webContents.send('get-record-metas', folksonomy.metas);
+                window.webContents.send('get-record-metas', Object.keys(folksonomy.metas));
             });
         });
 

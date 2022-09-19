@@ -20,6 +20,9 @@ window.addEventListener("DOMContentLoaded", () => {
     tableTypesLink = document
         .getElementById('form-type-link')
         .querySelector('tbody')
+    tableRecordsFilter = document
+        .getElementById('form-records-filter')
+        .querySelector('tbody')
     tableView = document
         .getElementById('form-view')
         .querySelector('tbody')
@@ -42,8 +45,10 @@ contextBridge.exposeInMainWorld('api',
         saveConfigOption: (name, value) => ipcRenderer.sendSync('save-config-option', name, value),
         saveConfigOptionTypeRecord: (name, nameInitial, fill, stroke, action) => ipcRenderer.sendSync('save-config-option-typerecord', name, nameInitial, fill, stroke, action),
         saveConfigOptionTypeLink: (name, nameInitial, color, stroke, action) => ipcRenderer.sendSync('save-config-option-typelink', name, nameInitial, color, stroke, action),
+        saveConfigOptionRecordsFilter: (meta, value, index, action) => ipcRenderer.sendSync('save-config-option-recordsfilter', meta, value, index, action),
         openModalTypeRecord: (recordType, action) => ipcRenderer.send('open-modal-typerecord', recordType, action),
         openModalTypeLink: (recordType, action) => ipcRenderer.send('open-modal-typelink', recordType, action),
+        openModalRecordsFilter: () => ipcRenderer.send('open-modal-recordsfilter'),
         saveConfigOptionView: (name, nameInitial, key, action) => ipcRenderer.sendSync('save-config-option-view', name, nameInitial, key, action),
         openModalView: (view, action) => ipcRenderer.send('open-modal-view', view, action),
         dialogRequestDirPath: (name) => ipcRenderer.send('dialog-request-dir-path', name),
@@ -107,6 +112,18 @@ function setConfigView () {
             <td>
                 <span class="stroke-exemple" style="border: 3px ${config.link_types[linkType].color} ${strokeCss}"></span>
             </td>
+        </tr>`);
+    }
+
+    tableRecordsFilter.innerHTML = '';
+
+    for (let i = 0; i < config.record_filters.length; i++) {
+        const { meta, value } = config.record_filters[i];
+        tableRecordsFilter.insertAdjacentHTML('beforeend',
+        `<tr>
+            <td><input type="radio" name="record_filters" value="${i}"></td>
+            <td>${meta}</td>
+            <td>${value}</td>
         </tr>`);
     }
 

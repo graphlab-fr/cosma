@@ -12,6 +12,7 @@ module.exports = function() {
         require('../views/history').build();
         require('../views/modal-typerecord').build();
         require('../views/modal-typelink').build();
+        require('../views/modal-recordsfilter').build();
         require('../views/modal-view').build();
         require('../views/modal-historyrename').build();
     }
