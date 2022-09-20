@@ -5,14 +5,17 @@ const {
         dialog
     } = require('electron');;
 
-const Config = require('./core/models/config');
-const History = require('./models/history');
-const buildPages = require('./controllers/build-pages');
-
 process.on('uncaughtException', ({ name, message, stack }) => {
+    console.log('coucuo');
     switch (name) {
         case 'Error Config':
             new Config();
+            app.relaunch();
+            app.exit();
+            break;
+
+        case 'Error Project':
+            Project.init();
             app.relaunch();
             app.exit();
             break;
@@ -33,13 +36,19 @@ process.on('uncaughtException', ({ name, message, stack }) => {
     }
 })
 
+const Config = require('./core/models/config');
+const History = require('./models/history');
+const Project = require('./models/project');
+const buildPages = require('./controllers/build-pages');
+
 /**
  * Wait for 'app ready' event, before lauch the window.
  */
 
-Promise.all([app.whenReady(), new Config(), buildPages()])
+Promise.all([app.whenReady(), buildPages(), Project.init()])
     .then(() => {
-        require('./views/cosmoscope').open();
+        // require('./views/cosmoscope').open();
+        require('./views/projects').open();
     
         const menuTemplate = require('./models/menu');
         const appMenu = Menu.buildFromTemplate(menuTemplate)
