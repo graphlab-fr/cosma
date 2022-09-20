@@ -3,7 +3,7 @@ const { app, dialog } = require('electron');
 const fs = require('fs')
     , path = require('path');
 
-const Config = require('../core/models/config')
+const ProjectConfig = require('../models/project-config')
     , History = require('../models/history')
     , Cosmoscope = require('../core/models/cosmoscope')
     , Link = require('../core/models/link')
@@ -28,7 +28,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         return;
     }
 
-    const config = new Config();
+    const config = new ProjectConfig();
     const {
         select_origin: originType,
         files_origin: filesPath,
@@ -67,16 +67,12 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
             }
             break;
         case 'online':
-            try {
-                await config.canModelizeFromOnline();
-            } catch (err) {
+            if (await config.canModelizeFromOnline() === false) {
                 dialog.showMessageBox(window, {
                     title: lang.getFor(lang.i.dialog.error_modelize.title),
                     message: lang.getFor(lang.i.dialog.error_modelize.message_source_online),
                     type: 'error'
                 });
-            }
-            if (config.canModelizeFromDirectory() === false) {
             }
             break;
     }

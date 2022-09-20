@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+    
+    <main>
+
+        <form id="form-origin">
+            <label>
+                Data origin
+                <select name="select_origin" id="files-select">
+                    <option value="directory">Markdown files</option>
+                    <option value="csv">Spreadsheet files</option>
+                    <option value="online">Online spreadsheet files</option>
+                </select>
+            </label>
+            
+            <label>
+                Records directory
+                <input type="text" name="files_origin">
+                <button type="button" data-path="directory" id="dialog-path-fileorigin">Select</button>
+            </label>
+    
+            <label>
+                Spreadsheet file of nodes
+                <input type="text" name="nodes_origin">
+                <button type="button" data-path="csv" id="dialog-path-nodeorigin">Select</button>
+            </label>
+    
+            <label>
+                Spreadsheet file of links
+                <input type="text" name="links_origin">
+                <button type="button" data-path="csv" id="dialog-path-linkorigin">Select</button>
+            </label>
+    
+            <label>
+                Spreadsheet for links
+                <input type="text" data-path="online" name="nodes_online">
+            </label>
+    
+            <label>
+                Spreadsheet for links
+                <input type="text" data-path="online" name="links_online">
+            </label>
+
+            <div class="cancel-ok">
+                <button class="window-close" type="button">Cancel</button>
+                <button class="primary" type="submit">Ok</button>
+            </div>
+        </form>
+
+    </main>
+
+    <script src="../render.js"></script>
+</body>
+
+</html>
