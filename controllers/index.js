@@ -10,3 +10,4 @@ require('./export');
 require('./history');
 require('./modal');
 require('./dialog');
+require('./project');

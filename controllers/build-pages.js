@@ -6,6 +6,7 @@ const { app } = require('electron');
 
 module.exports = function() {
     if (app.isPackaged === false) {
+        require('../views/projects').build();
         require('../views/config').build();
         require('../views/record').build();
         require('../views/export').build();

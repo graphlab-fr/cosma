@@ -13,6 +13,8 @@
     --sans: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
 }
 
+* { box-sizing: border-box; }
+
 html {
     font-size: 62.5%;
 }
@@ -444,3 +446,44 @@ details summary {
     margin-top: 0;
 }
 
+/** Page Projects
+------------------------------------------------------------*/
+
+#project-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+article.project {
+    position: relative;
+    width: 300px;
+    height: 230px;
+    border: 2px solid var(--mac-border-bottom-color);
+    background-color: var(--cosma-blue-dark);
+    border-radius: 10px;
+    margin: 1rem;
+    transition: border-radius 1s, background-color 1s;
+}
+
+article.project:hover {
+    background-color: var(--cosma-blue-dark);
+    border: 2px solid var(--cosma-blue-dark);
+}
+
+.project-thumbnail {
+    cursor: pointer;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+}
+
+.project h3 {
+    color: white;
+    margin: 0 0 0 10px;
+}
+
+.project input[type="radio"] {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}

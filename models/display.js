@@ -22,12 +22,14 @@ module.exports = class Display {
     static windows = {
         main: undefined,
         config: undefined,
-        record: undefined
+        record: undefined,
+        projects: undefined
     };
 
     static windowsType = {
         main: 'main',
         config: 'form',
+        projects: 'form',
         history: 'form',
         record: 'form'
     };
