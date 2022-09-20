@@ -32,6 +32,10 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
     const {
         select_origin: originType,
         files_origin: filesPath,
+        nodes_online: nodesUrl,
+        links_online: linksUrl
+    } = config.opts;
+    let {
         nodes_origin: nodesPath,
         links_origin: linksPath
     } = config.opts;
@@ -60,7 +64,20 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
                     message: lang.getFor(lang.i.dialog.error_modelize.message_source_directory),
                     type: 'error'
                 });
-            }   
+            }
+            break;
+        case 'online':
+            try {
+                await config.canModelizeFromOnline();
+            } catch (err) {
+                dialog.showMessageBox(window, {
+                    title: lang.getFor(lang.i.dialog.error_modelize.title),
+                    message: lang.getFor(lang.i.dialog.error_modelize.message_source_online),
+                    type: 'error'
+                });
+            }
+            if (config.canModelizeFromDirectory() === false) {
+            }
             break;
     }
 
@@ -71,14 +88,21 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
 
     let records;
     switch (originType) {
+        case 'online':
+            const { downloadFile } = require('../core/utils/misc');
+            const tempDir = app.getPath('temp');
+            nodesPath = path.join(tempDir, 'cosma-nodes.csv');
+            linksPath = path.join(tempDir, 'cosma-links.csv');
+            await downloadFile(nodesUrl, nodesPath);
+            await downloadFile(linksUrl, linksPath);
         case 'csv':
             let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
             const links = Link.formatedDatasetToLinks(formatedLinks);
             records = Record.formatedDatasetToRecords(formatedRecords, links, config);
             break;
         case 'directory':
-        const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
-        records = Cosmoscope.getRecordsFromFiles(files, config.opts);    
+            const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
+            records = Cosmoscope.getRecordsFromFiles(files, config.opts);    
         break;
     }
 

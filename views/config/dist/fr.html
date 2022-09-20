@@ -73,6 +73,7 @@
         <select name="select_origin" id="files-select">
             <option value="directory">Fichiers Markdown</option>
             <option value="csv">Feuille de calcul</option>
+            <option value="online">Feuille de calcul en ligne</option>
         </select>
     
         <label>
@@ -91,6 +92,16 @@
             Feuille de calcul des liens
             <input type="text" name="links_origin">
             <button type="button" data-path="csv" id="dialog-path-linkorigin">Sélectionner</button>
+        </label>
+
+        <label>
+            URL vers la feuille de calcul des nœuds
+            <input type="text" data-path="online" name="nodes_online">
+        </label>
+
+        <label>
+            URL vers la feuille de calcul des liens
+            <input type="text" data-path="online" name="links_online">
         </label>
     </fieldset>
 </form>
