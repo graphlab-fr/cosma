@@ -19,3 +19,7 @@ ipcMain.on("open-modal-view", (event, viewName, action) => {
 ipcMain.on("open-modal-historyrename", (event, recordId) => {
     require('../views/modal-historyrename').open(recordId);
 });
+
+ipcMain.on("open-modal-projectorigin", (event) => {
+    require('../views/modal-projectorigin').open();
+});

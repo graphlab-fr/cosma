@@ -13,9 +13,24 @@ window.addEventListener("DOMContentLoaded", () => {
     projectList = document.getElementById('project-list');
     submitBtn = document.querySelector('button[type="submit"]');
     init();
+
+    // submitBtn.addEventListener('click', () => {
+    //     ipcRenderer.send('add-new-project');
+    // })
 });
 
-ipcRenderer.on('reset-project', init);
+// ipcRenderer.on('new-project-response', (event, response) => {
+//     if (response.isOk) {
+//         window.close();
+//     }
+// });
+// ipcRenderer.on('reset-project', init);
+
+ipcRenderer.on('new-project-result', (event, response) => {
+    if (response.isOk) {
+        window.close();
+    }
+});
 
 function init() {
     /** @type {Map<number,Project>} */
@@ -32,17 +47,9 @@ function init() {
     })
 }
 
-// ipcRenderer.on('config-change', () => {
-//     setTypeList();
-// });
-
-
-
-
-
 contextBridge.exposeInMainWorld('api',
     {
-        // recordAdd: (title, type, tags) => ipcRenderer.send('record-add', title, type, tags),
-        // recordBackup: (fx) => ipcRenderer.on('record-backup', (event, response) => fx(response)),
+        openNewProjectModal: () => ipcRenderer.send('open-modal-projectorigin'),
+        // newProjectResult: (fx) => ipcRenderer.on('new-project-result', (event, response) => fx(response)),
     }
 );

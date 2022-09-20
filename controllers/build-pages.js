@@ -16,5 +16,6 @@ module.exports = function() {
         require('../views/modal-recordsfilter').build();
         require('../views/modal-view').build();
         require('../views/modal-historyrename').build();
+        require('../views/modal-projectorigin').build();
     }
 }

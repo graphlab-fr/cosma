@@ -1,0 +1,22 @@
+const Config = require('../core/models/config');
+
+const Project = require('./project');
+
+module.exports = class ProjectConfig extends Config {
+    static get() {
+        console.log('tata');
+    }
+
+    constructor(opts) {
+        if (Project.current !== undefined) {
+            const { opts: currentOpts } = Project.getCurrent();
+            opts = Object.assign({}, currentOpts, opts);
+        }
+        super(opts);
+    }
+
+    save() {
+        console.log('toto');
+        Project.getCurrent().opts = this.opts;
+    }
+}

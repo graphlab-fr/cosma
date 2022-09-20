@@ -7,11 +7,9 @@ const {
 
 const lang = require('../../core/models/lang');
 
-const { getFolksonomyFromUserData } = require('../misc');
-
 let window;
 
-const pageName = 'records_filter';
+const pageName = 'project_origin';
 
 module.exports = {
     open: function () {
@@ -25,20 +23,19 @@ module.exports = {
         window = new BrowserWindow(
             Object.assign(Display.getBaseSpecs('modal'), {
                 title: lang.getFor(lang.i.windows[pageName].title),
-                parent: Display.getWindow('config'),
+                parent: Display.getWindow('projects'),
                 webPreferences: {
                     preload: path.join(__dirname, './preload.js')
                 }
             })
         );
+        
+        window.webContents.openDevTools({ mode: 'detach' });
 
         window.loadFile(path.join(__dirname, `/dist/${lang.flag}.html`));
 
         window.once('ready-to-show', () => {
             window.show();
-            getFolksonomyFromUserData().then((folksonomy) => {
-                window.webContents.send('get-records-folksonomy', folksonomy);
-            });
         });
 
         window.once('closed', () => {
