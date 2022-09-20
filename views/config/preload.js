@@ -68,6 +68,10 @@ function setConfigView () {
                 }
             case 'color':
             case 'number':
+                if (config[input.name] === undefined) {
+                    input.value = '';
+                    break;
+                }
                 input.value = config[input.name];
                 break;
             case 'checkbox':
