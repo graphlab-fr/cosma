@@ -18,8 +18,10 @@
             <div id="project-list"></div>
 
             <div class="cancel-ok">
-                <button class="primary" type="submit" data-action="new-project">Ajouter un projet</button>
-                <button>Modifier</button>
+                <button class="primary" type="submit" data-action="new">{{ lang.btns.new[flag] }}</button>
+                <button class="primary" type="submit" data-action="edit-end" hidden>{{ lang.btns.edit_end[flag] }}</button>
+                <button type="submit" data-action="edit-start">{{ lang.btns.edit_start[flag] }}</button>
+                <button type="submit" data-action="delete" hidden>{{ lang.btns.delete[flag] }}</button>
             </div>
         </form>
     </main>

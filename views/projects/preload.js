@@ -13,18 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
     projectList = document.getElementById('project-list');
     submitBtn = document.querySelector('button[type="submit"]');
     init();
-
-    // submitBtn.addEventListener('click', () => {
-    //     ipcRenderer.send('add-new-project');
-    // })
 });
-
-// ipcRenderer.on('new-project-response', (event, response) => {
-//     if (response.isOk) {
-//         window.close();
-//     }
-// });
-// ipcRenderer.on('reset-project', init);
 
 ipcRenderer.on('new-project-result', (event, response) => {
     if (response.isOk) {
@@ -39,17 +28,19 @@ function init() {
     projectList.innerHTML = '';
     list.forEach(({ title, thumbnail }, index) => {
         projectList.insertAdjacentHTML('beforeend',
-        `<article class="project">
+        `<article class="project" data-project-index="${index}">
             <img class="project-thumbnail" src="" alt="" />
-            <input type="radio" name="project">
+            <input type="radio" name="project" value="${index}" hidden>
             <h3>${title}</h3>
         </article>`);
-    })
+    });
 }
 
 contextBridge.exposeInMainWorld('api',
     {
         openNewProjectModal: () => ipcRenderer.send('open-modal-projectorigin'),
-        // newProjectResult: (fx) => ipcRenderer.on('new-project-result', (event, response) => fx(response)),
+        openProject: (index) => ipcRenderer.sendSync('open-project', index),
+        deleteProject: (index) => ipcRenderer.send('delete-project', index),
+        onProjectDelete: (fx) => ipcRenderer.on('project-has-been-delete', (event, index) => fx(index))
     }
 );
