@@ -3,15 +3,16 @@ const { app, dialog } = require('electron');
 const fs = require('fs')
     , path = require('path');
 
-const ProjectConfig = require('../models/project-config')
-    , History = require('../models/history')
+const History = require('../models/history')
     , Cosmoscope = require('../core/models/cosmoscope')
     , Link = require('../core/models/link')
     , Record = require('../core/models/record')
     , Template = require('../core/models/template')
     , lang = require('../core/models/lang');
 
-const Display = require('../models/display');
+const Display = require('../models/display')
+    , ProjectConfig = require('../models/project-config')
+    , Project = require('../models/project');
 
 let windowPath;
 
@@ -113,6 +114,23 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
 
         history.registerCosmoscope();
         window.loadFile(history.pathToStore);
+
+        window.once('ready-to-show', () => {
+            setTimeout(() => {
+                window.capturePage()
+                    .then((image) => {
+                        const { width, height } = image.getSize();
+                        image = image.crop({ x: 500, y: 0, width: width - 500, height: height - 100 })
+                        image = image.resize({ width: 300, quality: 'best'})
+                        const imageBuffer = image.toJPEG(70);
+                        const imageBase64 = imageBuffer.toString('base64');
+                        Project.getCurrent().thumbnail = imageBase64;
+                        Project.save();
+                    })
+            }, 3000);
+        });
+
+
         windowHistory = Display.getWindow('history');
         if (windowHistory) {
             windowHistory.webContents.send("reset-history");

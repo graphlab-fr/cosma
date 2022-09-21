@@ -29,7 +29,7 @@ function init() {
     list.forEach(({ opts, thumbnail }, index) => {
         projectList.insertAdjacentHTML('beforeend',
         `<article class="project" data-project-index="${index}">
-            <img class="project-thumbnail" src="" alt="" />
+            <img class="project-thumbnail" src="data:image/jpg;base64,${thumbnail}" alt="" />
             <input type="radio" name="project" value="${index}" hidden>
             <h3>${opts.name}</h3>
         </article>`);
