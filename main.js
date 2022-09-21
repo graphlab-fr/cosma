@@ -36,7 +36,6 @@ process.on('uncaughtException', ({ name, message, stack }) => {
     }
 })
 
-const ProjectConfig = require('./models/project-config');
 const History = require('./models/history');
 const Project = require('./models/project');
 const buildPages = require('./controllers/build-pages');
@@ -47,9 +46,11 @@ const buildPages = require('./controllers/build-pages');
 
 Promise.all([app.whenReady(), buildPages(), Project.init()])
     .then(() => {
-        // require('./views/cosmoscope').open();
-        require('./views/projects').open();
-        // new ProjectConfig();
+        if (Project.current !== undefined) {
+            require('./views/cosmoscope').open();
+        } else {
+            require('./views/projects').open();
+        }
     
         const menuTemplate = require('./models/menu');
         const appMenu = Menu.buildFromTemplate(menuTemplate)
@@ -68,6 +69,18 @@ Promise.all([app.whenReady(), buildPages(), Project.init()])
             }
         });
     })
+
+app.on('will-quit', function (e) {
+    e.preventDefault();
+    Project.save()
+        .then(() => {
+            app.exit();
+        })
+        .catch(async (err) => {
+            await Project.init();
+            app.exit();
+        })
+});
 
 /**
  * Except on MacOs :

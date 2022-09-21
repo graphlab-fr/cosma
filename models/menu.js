@@ -157,7 +157,14 @@ module.exports = [
                 }
             ]
             :
-            [])
+            []),
+            {
+                label: lang.getFor(lang.i.app_menu.projects),
+                role: 'projects',
+                click () {
+                    require('../views/projects').open();
+                }
+            }
         ]
     },
 

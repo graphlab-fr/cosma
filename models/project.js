@@ -41,6 +41,9 @@ module.exports = class Project {
                     for (let i = 0; i < data.length; i++) {
                         const token = data[i];
                         Project.list.set(i, new Project(token.opts, token.thumbnail, undefined));
+                        if (token.isCurrent) {
+                            Project.current = i;
+                        }
                     }
                     resolve();
                 })
@@ -77,6 +80,7 @@ module.exports = class Project {
         return new Promise((resolve, reject) => {
             let payload = [];
             Project.list.forEach((project, index) => {
+                if (Project.current === index) { project.isCurrent = true; }
                 payload.push(project);
             });
             payload = JSON.stringify(payload);

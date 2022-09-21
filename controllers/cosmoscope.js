@@ -125,9 +125,8 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
                         const imageBuffer = image.toJPEG(70);
                         const imageBase64 = imageBuffer.toString('base64');
                         Project.getCurrent().thumbnail = imageBase64;
-                        Project.save();
                     })
-            }, 3000);
+            }, 1000);
         });
 
 
