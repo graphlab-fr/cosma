@@ -22,28 +22,11 @@ module.exports = class Project {
     static current = undefined;
 
     static getCurrent() {
-        if (!Project.current || Project.list.has(Project.current) === false) {
+        if (Project.current === undefined || Project.list.has(Project.current) === false) {
             throw new Error("Can not find current project.");
         }
         return Project.list.get(Project.current);
     }
-
-    // static get(projectId) {
-    //     try {
-    //         const dataProjects = fs.readFileSync(Project.filePath, 'utf-8');
-    //     } catch (error) {
-    //         throw new ErrorProject("The projects file can not be readed")
-    //     }
-    // }
-
-    // static getAll() {
-    //     try {
-    //         const dataProjects = fs.readFileSync(Project.filePath, 'utf-8');
-    //         console.log(dataProjects);
-    //     } catch (error) {
-    //         throw new ErrorProject("The projects file can not be readed")
-    //     }
-    // }
 
     static init() {
         return new Promise((resolve, reject) => {
@@ -57,7 +40,7 @@ module.exports = class Project {
                     }
                     for (let i = 0; i < data.length; i++) {
                         const token = data[i];
-                        Project.list.set(i, new Project(token.title, token.opts, token.thumbnail, token.history));
+                        Project.list.set(i, new Project(token.opts, token.thumbnail, undefined));
                     }
                     resolve();
                 })
@@ -77,17 +60,16 @@ module.exports = class Project {
     }
 
     /**
+     * @param {Project} project
      * @returns {number}
      */
 
-    static add() {
+    static add(project) {
+        if (!project || project instanceof Project === false) {
+            throw new Error('Need instance of Project to process');
+        }
         const index = Project.list.size;
-        Project.list.set(index, new Project(
-            `Mon super projet n°${Project.list.size + 1}`,
-            Config.base,
-            undefined,
-            new Map()
-        ));
+        Project.list.set(index, project);
         return index;
     }
 
@@ -113,8 +95,7 @@ module.exports = class Project {
      * @param {Map} history 
      */
 
-    constructor(title, opts, thumbnail, history) {
-        this.title = title;
+    constructor(opts, thumbnail, history) {
         this.opts = opts;
         this.thumbnail = thumbnail;
         this.history = history;

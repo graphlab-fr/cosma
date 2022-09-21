@@ -26,12 +26,12 @@ function init() {
     let list = ipcRenderer.sendSync('get-project-list');
 
     projectList.innerHTML = '';
-    list.forEach(({ title, thumbnail }, index) => {
+    list.forEach(({ opts, thumbnail }, index) => {
         projectList.insertAdjacentHTML('beforeend',
         `<article class="project" data-project-index="${index}">
             <img class="project-thumbnail" src="" alt="" />
             <input type="radio" name="project" value="${index}" hidden>
-            <h3>${title}</h3>
+            <h3>${opts.name}</h3>
         </article>`);
     });
 }
