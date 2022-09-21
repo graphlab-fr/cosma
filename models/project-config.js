@@ -16,7 +16,7 @@ module.exports = class ProjectConfig extends Config {
     }
 
     save() {
-        console.log('toto');
         Project.getCurrent().opts = this.opts;
+        Project.save();
     }
 }

@@ -6,11 +6,17 @@ const {
 } = require('electron');
 
 const Config = require('../core/models/config')
-    , Display = require('../models/display')
     , lang = require('../core/models/lang');
 
-ipcMain.on("get-config-options", (event) => {
+const Display = require('../models/display')
+    , ProjectConfig = require('../models/project-config');
+
+ipcMain.on("get-default-config-options", (event) => {
     event.returnValue = Config.get();
+});
+
+ipcMain.on("get-config-options", (event) => {
+    event.returnValue = new ProjectConfig().opts;
 });
 
 ipcMain.on("get-langages", (event) => {
@@ -25,7 +31,7 @@ ipcMain.on("save-config-option", (event, name, value) => {
     const newConfig = {};
     newConfig[name] = value;
 
-    const config = new Config(newConfig);
+    const config = new ProjectConfig(newConfig);
 
     if (config.report.includes(name)) {
         event.returnValue = config.writeReport();
@@ -63,7 +69,7 @@ ipcMain.on("save-config-option", (event, name, value) => {
 });
 
 ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, action) => {
-    let opts = Config.get();
+    let opts = new ProjectConfig().opts;
 
     switch (action) {
         case 'add':
@@ -108,7 +114,7 @@ ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, actio
 });
 
 ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, fill, stroke, action) => {
-    let config = Config.get();
+    let config = new ProjectConfig().opts;
 
     switch (action) {
         case 'add':
@@ -166,7 +172,7 @@ ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, fill, str
 });
 
 ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stroke, action) => {
-    let config = Config.get();
+    let config = new ProjectConfig().opts;
 
     switch (action) {
         case 'add':
@@ -233,7 +239,7 @@ ipcMain.on("get-link-strokes", (event) => {
 });
 
 ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) => {
-    let config = Config.get();
+    let config = new ProjectConfig().opts;
 
     switch (action) {
         case 'add':
