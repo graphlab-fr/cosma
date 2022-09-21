@@ -6,6 +6,7 @@ const {
 } = require('electron');
 
 const Config = require('../core/models/config')
+    , Link = require('../core/models/link')
     , lang = require('../core/models/lang');
 
 const Display = require('../models/display')
@@ -20,11 +21,11 @@ ipcMain.on("get-config-options", (event) => {
 });
 
 ipcMain.on("get-langages", (event) => {
-    event.returnValue = Config.validLangages;
+    event.returnValue = ProjectConfig.validLangages;
 });
 
 ipcMain.on("save-config-option", (event, name, value) => {
-    if (Config.getOptionsList().has(name) === false) {
+    if (ProjectConfig.getOptionsList().has(name) === false) {
         return;
     }
 
@@ -69,11 +70,11 @@ ipcMain.on("save-config-option", (event, name, value) => {
 });
 
 ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, action) => {
-    let opts = new ProjectConfig().opts;
+    let opts = new ProjectConfig().opts, config;
 
     switch (action) {
         case 'add':
-            config = new Config ({
+            config = new ProjectConfig ({
                 record_filters: [
                     ...opts.record_filters,
                     { meta, value }
@@ -82,7 +83,7 @@ ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, actio
             break;
 
         case 'delete':
-            config = new Config ({
+            config = new ProjectConfig ({
                 record_filters: [
                     ...opts.record_filters.filter((filter, i) => i !== index)
                 ]
@@ -91,11 +92,11 @@ ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, actio
 
         case 'delete-all':
             if (askDeleteAll() === true) {
-                config = new Config ({
-                    record_filters: Config.base.record_filters
+                config = new ProjectConfig ({
+                    record_filters: ProjectConfig.base.record_filters
                 });
             } else {
-                config = new Config();
+                config = new ProjectConfig();
             }
             break;
     }
@@ -114,42 +115,42 @@ ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, actio
 });
 
 ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, fill, stroke, action) => {
-    let config = new ProjectConfig().opts;
+    let opts = new ProjectConfig().opts, config;
 
     switch (action) {
         case 'add':
-            config.record_types[name] = { fill, stroke };
+            opts.record_types[name] = { fill, stroke };
 
-            config = new Config ({
-                record_types: config.record_types
+            config = new ProjectConfig ({
+                record_types: opts.record_types
             });
             break;
 
         case 'update':
-            delete config.record_types[nameInitial];
+            delete opts.record_types[nameInitial];
 
-            config.record_types[name] = { fill, stroke };
+            opts.record_types[name] = { fill, stroke };
 
-            config = new Config ({
-                record_types: config.record_types
+            config = new ProjectConfig ({
+                record_types: opts.record_types
             });
             break;
 
         case 'delete':
-            delete config.record_types[name];
+            delete opts.record_types[name];
 
-            config = new Config ({
-                record_types: config.record_types
+            config = new ProjectConfig ({
+                record_types: opts.record_types
             });
             break;
 
         case 'delete-all':
             if (askDeleteAll() === true) {
-                config = new Config ({
-                    record_types: Config.base.record_types
+                config = new ProjectConfig ({
+                    record_types: ProjectConfig.base.record_types
                 })
             } else {
-                config = new Config();
+                config = new ProjectConfig();
             }
             break;
     }
@@ -172,48 +173,48 @@ ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, fill, str
 });
 
 ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stroke, action) => {
-    let config = new ProjectConfig().opts;
+    let opts = new ProjectConfig().opts, config;
 
     switch (action) {
         case 'add':
-            config.link_types[name] = {
+            opts.link_types[name] = {
                 stroke: stroke,
                 color: color
             };
 
-            config = new Config ({
-                link_types: config.link_types
+            config = new ProjectConfig ({
+                link_types: opts.link_types
             });
             break;
 
         case 'update':
-            delete config.link_types[nameInitial];
+            delete opts.link_types[nameInitial];
 
-            config.link_types[name] = {
+            opts.link_types[name] = {
                 stroke: stroke,
                 color: color
             };
 
-            config = new Config ({
-                link_types: config.link_types
+            config = new ProjectConfig ({
+                link_types: opts.link_types
             });
             break;
 
         case 'delete':
-            delete config.link_types[name];
+            delete opts.link_types[name];
 
-            config = new Config ({
-                link_types: config.link_types
+            config = new ProjectConfig ({
+                link_types: opts.link_types
             });
             break;
 
         case 'delete-all':
             if (askDeleteAll() === true) {
-                config = new Config ({
-                    link_types: Config.base.link_types
+                config = new ProjectConfig ({
+                    link_types: ProjectConfig.base.link_types
                 })
             } else {
-                config = new Config();
+                config = new ProjectConfig();
             }
             break;
     }
@@ -232,49 +233,49 @@ ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stro
 });
 
 ipcMain.on("get-link-strokes", (event) => {
-    event.returnValue = Array.from(Config.validLinkStrokes)
+    event.returnValue = Array.from(Link.validLinkStrokes)
         .map((stroke) => {
             return {id: stroke, name: lang.getFor(lang.i.windows.linktype.strokes[stroke])};
         })
 });
 
 ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) => {
-    let config = new ProjectConfig().opts;
+    let opts = new ProjectConfig().opts, config;
 
     switch (action) {
         case 'add':
-            config.views[name] = key;
+            opts.views[name] = key;
 
-            config = new Config ({
-                views: config.views
+            config = new ProjectConfig ({
+                views: opts.views
             });
             break;
 
         case 'update':
-            delete config.views[nameInitial];
+            delete opts.views[nameInitial];
 
-            config.views[name] = key;
+            opts.views[name] = key;
 
-            config = new Config ({
-                views: config.views
+            config = new ProjectConfig ({
+                views: opts.views
             });
             break;
 
         case 'delete':
-            delete config.views[name];
+            delete opts.views[name];
 
-            config = new Config ({
-                views: config.views
+            config = new ProjectConfig ({
+                views: opts.views
             });
             break;
 
         case 'delete-all':
             if (askDeleteAll() === true) {
-                config = new Config ({
-                    views: Config.base.views
+                config = new ProjectConfig ({
+                    views: ProjectConfig.base.views
                 })
             } else {
-                config = new Config();
+                config = new ProjectConfig();
             }
             break;
     }
