@@ -38,13 +38,13 @@ ipcMain.on("add-new-project", async (event, opts) => {
     Project.getCurrent().opts = config.opts;
     Project.save()
         .then(() => {
-            event.reply('new-project-result', { isOk: true });
             require('../views/cosmoscope').open();
+
+            event.reply('new-project-result', { isOk: true });
+            let windowForSend = Display.getWindow('projects');
+            if (windowForSend) {
+                windowForSend.webContents.send('new-project-result', { isOk: true });
+            }
         })
         .catch(() => event.reply('new-project-result', { isOk: false }));
-
-    let windowForSend = Display.getWindow('projects');
-    if (windowForSend) {
-        windowForSend.webContents.send('new-project-result', { isOk: true });
-    }
 });

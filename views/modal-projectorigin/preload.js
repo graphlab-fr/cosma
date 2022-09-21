@@ -9,7 +9,7 @@ const {
     ipcRenderer
 } = require('electron');
 
-let config = ipcRenderer.sendSync('get-config-options');
+let config = ipcRenderer.sendSync('get-default-config-options');
 
 window.addEventListener("DOMContentLoaded", () => {
     const selectOrigin = document.querySelector('select[name="select_origin"]');
