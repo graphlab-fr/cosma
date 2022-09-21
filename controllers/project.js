@@ -76,9 +76,18 @@ ipcMain.on("add-new-project", async (event, opts) => {
         return event.reply('new-project-result', { isOk });
     }
 
-    const newProjectIndex = Project.add();
+    switch (lang.flag) {
+        case 'fr':
+            config.opts.name = `Projet sans nom n°${Project.list.size + 1}`;
+            break;
+        case 'en':
+            config.opts.name = `Unnamed project number ${Project.list.size + 1}`;
+            break;
+    }
+
+    const project = new Project(config.opts, undefined, new Map());
+    const newProjectIndex = Project.add(project);
     Project.current = newProjectIndex;
-    Project.getCurrent().opts = config.opts;
     Project.save()
         .then(() => {
             require('../views/cosmoscope').open();
