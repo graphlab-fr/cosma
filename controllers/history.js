@@ -4,8 +4,10 @@ const {
     dialog,
     BrowserWindow
 } = require('electron');
+const fs = require('fs/promises');
 
 const History = require('../models/history')
+    , Project = require('../models/project')
     , Display = require('../models/display')
     , Graph = require('../core/models/graph')
     , lang = require('../core/models/lang');
@@ -13,7 +15,7 @@ const History = require('../models/history')
 const config = require('../core/models/config').get();
 
 ipcMain.on("get-history-records", (event) => {
-    event.returnValue = History.get().records;
+    event.returnValue = Project.getCurrent().history
 });
 
 ipcMain.on("history-action", (event, recordId, description, action) => {
@@ -21,59 +23,68 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
 
     switch (action) {
         case 'update':
-            record = new History()
-            record.data.records[recordId].description = description;
-            result = record.save();
+            Project.getCurrent().history.get(recordId).description = description;
+            resetHistoryWindow();
             break;
 
         case 'open-cosmoscope':
-            path = new History(recordId).pathToStore;
+            path = Project.getCurrent().history.get(recordId).path;
             let mainWindow = Display.getWindow('main');
-
             if (mainWindow === undefined) {
                 require('../views/cosmoscope').open();
                 mainWindow = Display.getWindow('main');
             }
-
             mainWindow.webContents.loadFile(path);
             break;
 
         case 'open-finder':
-            path = new History(recordId).pathToStore;
+            path = Project.getCurrent().history.get(recordId).path;
             shell.showItemInFolder(path);
             break;
 
         case 'open-report':
-            record = new History(recordId);
+            // record = new History(recordId);
 
-            report = record.getReport();
-            report = Graph.reportToSentences(report);
+            // report = record.getReport();
+            // report = Graph.reportToSentences(report);
 
-            const moment = require('moment');
-            moment.locale(config.lang);
+            // const moment = require('moment');
+            // moment.locale(config.lang);
 
-            require('../views/report').open(report, moment(record.date).format('LLLL'));
+            // require('../views/report').open(report, moment(record.date).format('LLLL'));
             break;
 
         case 'delete':
-            result = new History(recordId).delete();
+            path = Project.getCurrent().history.get(recordId).path;
+            fs.rm(path).then(() => {
+                Project.getCurrent().history.delete(recordId);
+                resetHistoryWindow();
+            }).catch(() => {
+                return;
+            })
             break;
 
         case 'delete-all':
             if (askDeleteAll() === true) {
-                new History().deleteAll();
+                const paths = Array.from(Project.getCurrent().history.values()).map(({ path }) => path);
+                Promise.all(paths.map(path => fs.rm(path)))
+                    .then(() => {
+                        Project.getCurrent().history = new Map();
+                        resetHistoryWindow();
+                    }).catch(() => {
+                        return;
+                    });
             }
             break;
     }
 
-    event.returnValue = result;
-
-    if (result === false) { return; }
-
-    window = Display.getWindow('history');
-    if (window) {
-        window.webContents.send("reset-history");
+    function resetHistoryWindow() {
+        window = Display.getWindow('history');
+        if (window) {
+            window.webContents.send("reset-history");
+        }
     }
+
 });
 
 /**

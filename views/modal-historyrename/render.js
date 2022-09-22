@@ -16,20 +16,8 @@ const form = document.querySelector('form');
         let data = new FormData(form);
         data = Object.fromEntries(data);
 
-        const result = window.api.historyAction(data.record_id, data.description, 'update');
-
-        const input = form.elements[0];
-
-        if (result === true) {
-            input.setCustomValidity('');
-            window.close();
-        }
-        else {
-            input.setCustomValidity(result);
-            btn.disabled = false;
-        }
-
-        input.reportValidity();
+        window.api.historyAction(Number(data.record_id), data.description, 'update');
+        window.close();
     })
 })();
 

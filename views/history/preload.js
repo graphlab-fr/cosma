@@ -27,24 +27,33 @@ ipcRenderer.on('reset-history', () => {
 
 contextBridge.exposeInMainWorld('api',
     {
-        historyAction: (recordId, description, action) => ipcRenderer.sendSync('history-action', recordId, description, action),
+        historyAction: (recordId, description, action) => ipcRenderer.send('history-action', recordId, description, action),
         openModalHistoryRecordRename: (recordId) => ipcRenderer.send('open-modal-historyrename', recordId)
     }
 );
 
 function setView () {
+    /** @type {Map<number,object>} */
     const historyRecords = ipcRenderer.sendSync('get-history-records');
 
     table.innerHTML = '';
 
-    for (const record in historyRecords) {
+    historyRecords.forEach(({ description }, id) => {
+        id = id.toString();
+        const year = id.substring(0, 4);
+        const month = id.substring(4, 6);
+        const day = id.substring(6, 8);
+        const hour = id.substring(8, 10);
+        const minute = id.substring(10, 12);
+        const second = id.substring(12, 14);
+
         table.insertAdjacentHTML('afterbegin',
         `<tr>
-            <td><input type="radio" name="history_record" value="${record}"></td>
-            <td>${new Date(historyRecords[record].date).toLocaleDateString(lang, {
+            <td><input type="radio" name="history_record" value="${id}"></td>
+            <td>${new Date(`${[year, month, day].join('-')} ${[hour, minute, second].join(':')}`).toLocaleDateString(lang, {
                 year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
             })}</td>
-            <td>${historyRecords[record].description || ''}</td>
+            <td>${description || ''}</td>
         </tr>`);
-    }
+    })
 }

@@ -60,7 +60,7 @@ module.exports = {
         });
 
         // require('../../controllers/cosmoscope')([], true);
-        require('../../controllers/cosmoscope')();
+        require('../../controllers/cosmoscope')(undefined, true);
 
         window.once('ready-to-show', () => {
             window.show();
