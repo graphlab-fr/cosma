@@ -11,12 +11,14 @@ const form = document.querySelector('form');
 
         switch (action) {
             case 'delete-all':
-                window.api.historyAction(data.history_record, undefined, action);
+                window.api.historyAction(undefined, undefined, action);
                 break;
         }
 
         if (data.history_record === undefined) {
             return; }
+
+        data.history_record = Number(data.history_record);
 
         switch (action) {
             case 'update':

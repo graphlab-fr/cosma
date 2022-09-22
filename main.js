@@ -6,7 +6,6 @@ const {
     } = require('electron');;
 
 process.on('uncaughtException', ({ name, message, stack }) => {
-    console.log('coucuo');
     switch (name) {
         case 'Error Config':
             new Config();

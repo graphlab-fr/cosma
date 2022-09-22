@@ -34,17 +34,19 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         select_origin: originType,
         files_origin: filesPath,
         nodes_online: nodesUrl,
-        links_online: linksUrl
+        links_online: linksUrl,
+        history: isHistoryActive
     } = config.opts;
     let {
         nodes_origin: nodesPath,
         links_origin: linksPath
     } = config.opts;
-    const lastHistoryEntry = History.getLast();
+    const currentProject = Project.getCurrent();
 
-    if (runLast === true && lastHistoryEntry !== undefined) {
-        windowPath = path.join(lastHistoryEntry.pathToStore);
-        window.loadFile(windowPath);
+    if (runLast === true && currentProject.history.size > 0) {
+        const lastHistoryItemfromCurrentProject = Array.from(currentProject.history)[currentProject.history.size-1][1];
+        const { path } = lastHistoryItemfromCurrentProject;
+        window.loadFile(path);
         return;
     }
 
@@ -106,14 +108,22 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
     const graph = new Cosmoscope(records, config.opts, []);
     fs.writeFile(path.join(app.getPath('userData'), 'folks.json'), graph.getFolksonomyAsText(), (err) => {});
 
-    let { html } = new Template(graph, templateParams)
-        , history = new History();
+    let { html } = new Template(graph, templateParams);
 
-    fs.writeFile(path.join(history.pathToStore), html, (err) => {
+
+    let historyId;
+    if (isHistoryActive === false && currentProject.history.size > 0) {
+        historyId = Array.from(currentProject.history)[currentProject.history.size-1][0];
+    } else {
+        historyId = History.generateId();
+    }
+    const historyPath = path.join(History.dirPath, `${historyId}.html`);
+
+    fs.writeFile(historyPath, html, (err) => {
         if (err) { throw new ErrorSaveCosmoscope("Can not save and open Cosmoscope"); }
+        window.loadFile(historyPath);
 
-        history.registerCosmoscope();
-        window.loadFile(history.pathToStore);
+        currentProject.history.set(historyId, new History(historyPath, ''));
 
         window.once('ready-to-show', () => {
             setTimeout(() => {
@@ -124,7 +134,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
                         image = image.resize({ width: 300, quality: 'best'})
                         const imageBuffer = image.toJPEG(70);
                         const imageBase64 = imageBuffer.toString('base64');
-                        Project.getCurrent().thumbnail = imageBase64;
+                        currentProject.thumbnail = imageBase64;
                     })
             }, 1000);
         });
@@ -135,7 +145,6 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
             windowHistory.webContents.send("reset-history");
         }
     });
-
 }
 
 class ErrorSaveCosmoscope extends Error {
