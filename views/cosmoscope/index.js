@@ -59,12 +59,7 @@ module.exports = {
             Display.storeSpecs(pageName, window);
         });
 
-        // require('../../controllers/cosmoscope')([], true);
         require('../../controllers/cosmoscope')(undefined, true);
-
-        window.once('ready-to-show', () => {
-            window.show();
-        });
 
         window.once('close', () => {
             Display.emptyWindow(pageName);

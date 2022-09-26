@@ -32,6 +32,7 @@ module.exports = class History {
 
     constructor(path, description = '', isTemp = false) {
         this.path = path;
+        this.pathReport;
         this.description = description;
         this.isTemp = isTemp;
         this.date = new Date();
