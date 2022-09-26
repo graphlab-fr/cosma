@@ -14,8 +14,12 @@ ipcMain.on("get-project-list", (event) => {
     event.returnValue = Project.list;
 });
 
+ipcMain.on("get-project-current-id", (event) => {
+    event.returnValue = Project.current;
+});
+
 ipcMain.on("open-project", (event, index) => {
-    if (Project.current === index) {
+    if (Project.current && Project.current === index) {
         event.returnValue = { isOk: false };
         return;
     }
@@ -30,6 +34,8 @@ ipcMain.on("open-project", (event, index) => {
 
     try {
         Project.current = index;
+        const unixDate = new Date().getTime() / 1000;
+        Project.getCurrent().lastOpenDate = unixDate;
         const mainIsOpen = Display.getWindow('main') !== undefined;
         if (mainIsOpen) {
             require('../controllers/cosmoscope')();
@@ -85,7 +91,8 @@ ipcMain.on("add-new-project", async (event, opts) => {
             break;
     }
 
-    const project = new Project(config.opts, undefined, new Map());
+    const unixDate = new Date().getTime() / 1000;
+    const project = new Project(config.opts, undefined, new Map(), unixDate);
     const newProjectIndex = Project.add(project);
     Project.current = newProjectIndex;
     event.reply('new-project-result', { isOk: true });

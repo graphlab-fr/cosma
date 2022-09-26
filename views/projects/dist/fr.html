@@ -15,6 +15,18 @@
 
     <main>
         <form id="form-project">
+            <label>
+                Trier les projets
+                <select name="project_sorting" id="select-sorting">
+                    <option value="new_old" selected>Du plus récemment ouvert au plus ancien</option>
+                    <option value="old_new">Du plus anciennement ouvert au plus récent</option>
+                    <option value="first_last">Du premier créé au dernier</option>
+                    <option value="last_first">Du dernier créé au premier</option>
+                    <option value="a_z">De A à Z</option>
+                    <option value="z_a">De Z à A</option>
+                </select>
+            </label>
+
             <div id="project-list"></div>
 
             <div class="cancel-ok">

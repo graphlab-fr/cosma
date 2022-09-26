@@ -15,6 +15,18 @@
 
     <main>
         <form id="form-project">
+            <label>
+                {{ lang.fields.project_sorting[flag] }}
+                <select name="project_sorting" id="select-sorting">
+                    <option value="new_old" selected>{{ lang.options.new_old[flag] }}</option>
+                    <option value="old_new">{{ lang.options.old_new[flag] }}</option>
+                    <option value="first_last">{{ lang.options.first_last[flag] }}</option>
+                    <option value="last_first">{{ lang.options.last_first[flag] }}</option>
+                    <option value="a_z">{{ lang.options.a_z[flag] }}</option>
+                    <option value="z_a">{{ lang.options.z_a[flag] }}</option>
+                </select>
+            </label>
+
             <div id="project-list"></div>
 
             <div class="cancel-ok">
