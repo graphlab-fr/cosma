@@ -38,19 +38,11 @@ function setView () {
 
     table.innerHTML = '';
 
-    historyRecords.forEach(({ description }, id) => {
-        id = id.toString();
-        const year = id.substring(0, 4);
-        const month = id.substring(4, 6);
-        const day = id.substring(6, 8);
-        const hour = id.substring(8, 10);
-        const minute = id.substring(10, 12);
-        const second = id.substring(12, 14);
-
+    historyRecords.forEach(({ description, date }, id) => {
         table.insertAdjacentHTML('afterbegin',
         `<tr>
             <td><input type="radio" name="history_record" value="${id}"></td>
-            <td>${new Date(`${[year, month, day].join('-')} ${[hour, minute, second].join(':')}`).toLocaleDateString(lang, {
+            <td>${new Date(date).toLocaleDateString(lang, {
                 year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
             })}</td>
             <td>${description || ''}</td>

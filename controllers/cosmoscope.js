@@ -113,7 +113,10 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
 
     let historyId;
     if (isHistoryActive === false && currentProject.history.size > 0) {
-        historyId = Array.from(currentProject.history)[currentProject.history.size-1][0];
+        const [lastHistoryRecordId, lastHistoryRecordValues] = Array.from(currentProject.history)[currentProject.history.size-1];
+        if (lastHistoryRecordValues.isTemp) {
+            historyId = lastHistoryRecordId;
+        }
     } else {
         historyId = History.generateId();
     }
@@ -123,7 +126,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         if (err) { throw new ErrorSaveCosmoscope("Can not save and open Cosmoscope"); }
         window.loadFile(historyPath);
 
-        currentProject.history.set(historyId, new History(historyPath, ''));
+        currentProject.history.set(historyId, new History(historyPath));
 
         window.once('ready-to-show', () => {
             setTimeout(() => {
