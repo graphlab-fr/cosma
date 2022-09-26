@@ -6,8 +6,8 @@
 
 const { app } = require('electron');
 
-const Config = require('../core/models/config')
-    , config = new Config()
+const ProjectConfig = require('../models/project-config')
+    , config = new ProjectConfig()
     , lang = require('../core/models/lang');
 
 const Display = require('./display');
