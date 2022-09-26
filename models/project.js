@@ -10,8 +10,7 @@ const {
 , fs = require('fs')
 , path = require('path');
 
-const Config = require('../core/models/config')
-    , History = require('./history');
+const History = require('./history');
 
 module.exports = class Project {
     static filePath = path.join(app.getPath('userData'), 'projects.json');

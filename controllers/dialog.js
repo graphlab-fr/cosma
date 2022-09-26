@@ -6,7 +6,7 @@ const {
 } = require('electron')
     , path = require('path');
 
-const Config = require('../core/models/config');
+const ProjectConfig = require('../models/project-config');
 
 const lang = require('../core/models/lang');
 
@@ -53,7 +53,7 @@ ipcMain.on("dialog-request-file-path", (event, name, fileExtension) => {
 
 ipcMain.on("dialog-request-image-path", (event, name) => {
     const window = BrowserWindow.getFocusedWindow();
-    const { images_origin: imagePath } = Config.get();
+    const { images_origin: imagePath } = new ProjectConfig().opts;
 
     dialog.showOpenDialog(window, {
         title: lang.getFor('Get image'),
