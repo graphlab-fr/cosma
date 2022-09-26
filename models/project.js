@@ -46,12 +46,10 @@ module.exports = class Project {
                             token.history = JSON.parse(token.history);
                             const history = new Map();
                             for (const [id, { path, description }] of Object.entries(token.history)) {
-                                if (fs.existsSync(path) === false) {
-                                    continue;
-                                }
+                                if (fs.existsSync(path) === false) { continue; }
                                 history.set(Number(id), new History(path, description));
                             }
-                            Project.list.set(i, new Project(token.opts, token.thumbnail, history));
+                            Project.list.set(i, new Project(token.opts, token.thumbnail, history, token.lastOpenDate));
                             if (token.isCurrent) {
                                 Project.current = i;
                             }
@@ -114,10 +112,11 @@ module.exports = class Project {
      * @param {Map} history 
      */
 
-    constructor(opts, thumbnail, history) {
+    constructor(opts, thumbnail, history, lastOpenDate) {
         this.opts = opts;
         this.thumbnail = thumbnail;
         this.history = history;
+        this.lastOpenDate = lastOpenDate;
     }
 
     fromList(index) {
