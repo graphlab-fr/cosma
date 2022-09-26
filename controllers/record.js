@@ -7,8 +7,11 @@ const {
 const Record = require('../core/models/record')
     lang = require('../core/models/lang');
 
+const ProjectConfig = require('../models/project-config');
+
 ipcMain.on("record-add", (event, title, type, tags) => {
-    const record = new Record(undefined, title, type, tags);
+    const projectOpts = new ProjectConfig().opts;
+    const record = new Record(undefined, title, type, tags, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, projectOpts);
 
     const window = BrowserWindow.getFocusedWindow();
     
@@ -59,6 +62,13 @@ ipcMain.on("record-add", (event, title, type, tags) => {
                     }
                 });
                 return;
+            case 'no dir':
+                dialog.showMessageBox({
+                    title: lang.getFor(lang.i.dialog['files_origin_unknown'].title),
+                    message: lang.getFor(lang.i.dialog['files_origin_unknown'].message),
+                    type: 'info',
+                    buttons: ['Ok']
+                });
             case 'fs error':
             case 'report':
             default:

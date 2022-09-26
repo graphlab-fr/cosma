@@ -2,8 +2,7 @@ const {
     BrowserWindow,
     dialog
 } = require('electron')
-, path = require('path')
-, fs = require('fs');
+, path = require('path');
 
 const lang = require('../../core/models/lang');
 
@@ -15,19 +14,6 @@ const pageName = 'record';
 
 module.exports = {
     open: function () {
-        const config = require('../../core/models/config').get();
-
-        if (config['files_origin'] === '') {
-            dialog.showMessageBox({
-                title: lang.getFor(lang.i.dialog['files_origin_unknown'].title),
-                message: lang.getFor(lang.i.dialog['files_origin_unknown'].message),
-                type: 'info',
-                buttons: ['Ok']
-            });
-
-            return;
-        }
-
         if (window !== undefined) {
             window.focus();
             return;
