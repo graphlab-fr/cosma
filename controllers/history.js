@@ -43,15 +43,17 @@ ipcMain.on("history-action", (event, recordId, description, action) => {
             break;
 
         case 'open-report':
-            // record = new History(recordId);
+            const pathReport = Project.getCurrent().history.get(recordId).pathReport;
+            if (pathReport === undefined) {
+                return;
+            }
 
-            // report = record.getReport();
-            // report = Graph.reportToSentences(report);
-
-            // const moment = require('moment');
-            // moment.locale(config.lang);
-
-            // require('../views/report').open(report, moment(record.date).format('LLLL'));
+            require('../views/report').open();
+            let reportWindow = Display.getWindow('report');
+            if (reportWindow) {
+                reportWindow.loadFile(pathReport);
+                reportWindow.once('ready-to-show', () => { reportWindow.show(); });
+            }
             break;
 
         case 'delete':

@@ -3,14 +3,15 @@ const { app, dialog } = require('electron');
 const fs = require('fs')
     , path = require('path');
 
-const History = require('../models/history')
-    , Cosmoscope = require('../core/models/cosmoscope')
+const Cosmoscope = require('../core/models/cosmoscope')
+    , Report = require('../core/models/report')
     , Link = require('../core/models/link')
     , Record = require('../core/models/record')
     , Template = require('../core/models/template')
     , lang = require('../core/models/lang');
 
 const Display = require('../models/display')
+    , History = require('../models/history')
     , ProjectConfig = require('../models/project-config')
     , Project = require('../models/project');
 
@@ -80,8 +81,9 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
             break;
     }
 
-    templateParams.push('minify');
+    Report.reset();
 
+    templateParams.push('minify');
     if (config.canCssCustom() === true) {
         templateParams.push('css_custom'); }
 
@@ -110,7 +112,6 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
 
     let { html } = new Template(graph, templateParams);
 
-
     let historyId;
     if (isHistoryActive === false && currentProject.history.size > 0) {
         const [lastHistoryRecordId, lastHistoryRecordValues] = Array.from(currentProject.history)[currentProject.history.size-1];
@@ -121,12 +122,18 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         historyId = History.generateId();
     }
     const historyPath = path.join(History.dirPath, `${historyId}.html`);
+    const reportPath = path.join(History.dirPath, `${historyId}-report.html`);
 
-    fs.writeFile(historyPath, html, (err) => {
+    fs.writeFile(historyPath, html, 'utf-8', (err) => {
         if (err) { throw new ErrorSaveCosmoscope("Can not save and open Cosmoscope"); }
         window.loadFile(historyPath);
+        window.once('ready-to-show', () => { window.show(); });
 
         currentProject.history.set(historyId, new History(historyPath));
+        fs.writeFile(reportPath, Report.getAsHtmlFile(), 'utf-8', (err) => {
+            if (err) { throw new Error("Can not save report"); }
+            currentProject.history.get(historyId).pathReport = reportPath;
+        });
 
         window.once('ready-to-show', () => {
             setTimeout(() => {
@@ -148,6 +155,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
             windowHistory.webContents.send("reset-history");
         }
     });
+
 }
 
 class ErrorSaveCosmoscope extends Error {
