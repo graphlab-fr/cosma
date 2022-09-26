@@ -25,11 +25,15 @@ module.exports = class History {
     }
 
     /**
+     * @param {fs.PathLike} path 
      * @param {string} description 
+     * @param {boolean} isTemp
      */
 
-    constructor(path, description) {
+    constructor(path, description = '', isTemp = false) {
         this.path = path;
         this.description = description;
+        this.isTemp = isTemp;
+        this.date = new Date();
     }
 }
