@@ -31,6 +31,11 @@ module.exports = class Project {
 
     static init() {
         return new Promise((resolve, reject) => {
+            if (fs.existsSync(History.dirPath) === false) {
+                fs.mkdir(History.dirPath, (err) => {
+                    if (err) { reject(err); }
+                });
+            }
             if (fs.existsSync(Project.filePath)) {
                 fs.readFile(Project.filePath, 'utf-8', (err, data) => {
                     if (err) { reject(err); }
