@@ -6,14 +6,14 @@ const {
     , fs = require('fs')
     , path = require('path');
 
-const Config = require('../core/models/config')
-    , Cosmoscope = require('../core/models/cosmoscope')
+const Cosmoscope = require('../core/models/cosmoscope')
     , Template = require('../core/models/template');
 
-const Display = require('../models/display');
+const Display = require('../models/display')
+    , ProjectConfig = require('../models/project-config');
 
 ipcMain.on("get-export-options", (event) => {
-    const config = new Config();
+    const config = new ProjectConfig();
 
     event.returnValue = {
         citeproc: config.canCiteproc(),
@@ -22,7 +22,7 @@ ipcMain.on("get-export-options", (event) => {
 });
 
 ipcMain.on("can-modelize-with-source-options", (event) => {
-    const config = new Config();
+    const config = new ProjectConfig();
     const { select_origin: originType } = config.opts;
 
     switch (originType) {
@@ -36,7 +36,7 @@ ipcMain.on("can-modelize-with-source-options", (event) => {
 });
 
 ipcMain.on("export-cosmoscope", async (event, templateParams) => {
-    const config = new Config()
+    const config = new ProjectConfig()
     const {
         select_origin: originType,
         files_origin: filesPath,
@@ -71,7 +71,7 @@ ipcMain.on("export-cosmoscope", async (event, templateParams) => {
     }
 
     const graph = new Cosmoscope(records, config.opts);
-    const { html } = new Template(graph, templateParams);
+    const { html } = new Template(graph, ['publish', ...templateParams]);
 
     fs.writeFile(path.join(exportPath, 'cosmoscope.html'), html, 'utf-8', (err) => {
         window.webContents.send("export-result", {

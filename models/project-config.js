@@ -13,6 +13,5 @@ module.exports = class ProjectConfig extends Config {
 
     save() {
         Project.getCurrent().opts = this.opts;
-        // Project.save();
     }
 }
