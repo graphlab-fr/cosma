@@ -47,6 +47,23 @@ ipcMain.on("open-project", (event, index) => {
     } catch (error) {
         event.returnValue = { isOk: false };
     }
+
+    let windowForSend = Display.getWindow('export');
+    if (windowForSend) {
+        windowForSend.webContents.send("config-change");
+    }
+    windowForSend = Display.getWindow('record');
+    if (windowForSend) {
+        windowForSend.webContents.send("config-change");
+    }
+    windowForSend = Display.getWindow('history');
+    if (windowForSend) {
+        windowForSend.webContents.send("reset-history");
+    }
+    windowForSend = Display.getWindow('config');
+    if (windowForSend) {
+        windowForSend.webContents.send("reset-config");
+    }
 });
 
 ipcMain.on("delete-project", (event, index) => {
