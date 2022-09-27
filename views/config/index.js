@@ -6,8 +6,6 @@ const {
 
 const lang = require('../../core/models/lang');
 
-const { getFolksonomyFromUserData } = require('../misc');
-
 let window;
 
 const pageName = 'config';
@@ -64,9 +62,6 @@ module.exports = {
 
         window.once('ready-to-show', () => {
             window.show();
-            getFolksonomyFromUserData().then((folksonomy) => {
-                window.webContents.send('get-record-metas', Object.keys(folksonomy.metas));
-            });
         });
 
         window.once('close', () => {

@@ -48,7 +48,13 @@ module.exports = class Project {
                                 if (fs.existsSync(path) === false) { continue; }
                                 history.set(Number(id), new History(path, description, isTemp, date));
                             }
-                            Project.list.set(i, new Project(token.opts, token.thumbnail, history, token.lastOpenDate));
+                            Project.list.set(i, new Project(
+                                token.opts,
+                                token.thumbnail,
+                                history,
+                                token.lastOpenDate,
+                                token.folksonomy
+                            ));
                             if (token.isCurrent) {
                                 Project.current = i;
                             }
@@ -109,13 +115,15 @@ module.exports = class Project {
      * @param {object} opts 
      * @param {string} thumbnail 
      * @param {Map} history 
+     * @param {Folksonomy} folksonomy 
      */
 
-    constructor(opts, thumbnail, history, lastOpenDate) {
+    constructor(opts, thumbnail, history, lastOpenDate, folksonomy) {
         this.opts = opts;
         this.thumbnail = thumbnail;
         this.history = history;
         this.lastOpenDate = lastOpenDate;
+        this.folksonomy = folksonomy;
     }
 
     fromList(index) {

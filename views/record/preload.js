@@ -25,7 +25,10 @@ contextBridge.exposeInMainWorld('api',
     {
         recordAdd: (title, type, tags) => ipcRenderer.send('record-add', title, type, tags),
         recordBackup: (fx) => ipcRenderer.on('record-backup', (event, response) => fx(response)),
-        getRecordTags: (fx) => ipcRenderer.on('get-record-tags', (event, response) => fx(response))
+        getRecordTags: () => {
+            const { tags } = ipcRenderer.sendSync('get-project-current-folksonomy');
+            return Object.keys(tags);
+        }
     }
 );
 

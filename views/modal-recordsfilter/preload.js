@@ -10,6 +10,7 @@ const {
 } = require('electron');
 
 let config = ipcRenderer.sendSync('get-config-options');
+const folksonomy = ipcRenderer.sendSync('get-project-current-folksonomy');
 
 let recordsTags, recordsMetas;
 
@@ -19,14 +20,8 @@ window.addEventListener("DOMContentLoaded", () => {
     metasGroupOther = document.querySelector('.other_metas');
 
     changeSelectableValues();
+    setGroupOtherOptions(Object.keys(folksonomy.metas));
     metasSelect.addEventListener('change', changeSelectableValues);
-});
-
-ipcRenderer.on('get-records-folksonomy', (event, { tags, metas }) => {
-    recordsTags = tags;
-    recordsMetas = metas;
-    setGroupOtherOptions(Object.keys(recordsMetas));
-    changeSelectableValues();
 });
 
 contextBridge.exposeInMainWorld('api',
@@ -41,13 +36,13 @@ function changeSelectableValues() {
             setValues(Object.keys(config.record_types));
             break;
         case 'tags':
-            if (recordsTags) {
-                setValues(Object.keys(recordsTags));
+            if (folksonomy.tags) {
+                setValues(Object.keys(folksonomy.tags));
             }
             break;
         default:
-            if (recordsMetas) {
-                setValues(recordsMetas[metasSelect.value]);
+            if (folksonomy.metas) {
+                setValues(folksonomy.metas[metasSelect.value]);
             }
             break;
     }

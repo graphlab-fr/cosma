@@ -347,14 +347,9 @@ function customKeywordsInput() {
     });
 }
 
-let completionList = [];
-window.api.getRecordMetas((response) => {
-    completionList = response;
-});
-
 function customRecordMetasInput() {
     const metasInput = document.querySelector('input[name="record_metas"]');
-    tagger(metasInput, { allow_spaces: true, completion: { list: () => Promise.resolve(completionList) } });
+    tagger(metasInput, { allow_spaces: true, completion: { list: () => Promise.resolve(window.api.getRecordMetas()) } });
     metasInput.addEventListener('input', () => {
         saveInput(metasInput, metasInput.value.split(','));
     });
