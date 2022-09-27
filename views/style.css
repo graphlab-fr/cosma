@@ -446,6 +446,7 @@ details summary {
 #project-list {
     display: flex;
     flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 article.project {
@@ -453,25 +454,23 @@ article.project {
     position: relative;
     width: 300px;
     height: 230px;
-    border: 2px solid var(--mac-border-bottom-color);
     background-color: var(--cosma-blue-dark);
-    border-radius: 10px;
     margin: 1rem;
-    transition: border-radius 1s, background-color 1s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border: 1px solid var(--mac-border-color);
 }
 
 article.project.active {
     background-color: var(--cosma-blue);
 }
 
-article.project:hover {
+/* article.project:hover {
     background-color: var(--cosma-blue-dark);
     border: 2px solid var(--cosma-blue-dark);
-}
+} */
 
 .project-thumbnail {
     width: 100%;
-    border-radius: 10px 10px 0 0;
     object-fit: cover;
 }
 
