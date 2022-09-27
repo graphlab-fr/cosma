@@ -26,7 +26,6 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         const { cosmocope: generateFake, tempDirPath } = require('../core/utils/generate');
         const { graph } = await generateFake(tempDirPath);
         window.loadFile(path.join(tempDirPath, 'cosmoscope.html'));
-        fs.writeFile(path.join(app.getPath('userData'), 'folks.json'), graph.getFolksonomyAsText(), (err) => {});
         return;
     }
 
@@ -108,7 +107,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
     }
 
     const graph = new Cosmoscope(records, config.opts, []);
-    fs.writeFile(path.join(app.getPath('userData'), 'folks.json'), graph.getFolksonomyAsText(), (err) => {});
+    currentProject.folksonomy = graph.getFolksonomyAsObjectOfArrays();
 
     let { html } = new Template(graph, templateParams);
 

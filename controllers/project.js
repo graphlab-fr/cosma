@@ -15,6 +15,14 @@ ipcMain.on("get-project-list", (event) => {
     event.returnValue = Project.list;
 });
 
+ipcMain.on("get-project-current-folksonomy", (event) => {
+    if (Project.current === undefined) {
+        event.returnValue = undefined;
+        return;
+    }
+    event.returnValue = Project.getCurrent().folksonomy;
+});
+
 ipcMain.on("get-project-current-id", (event) => {
     event.returnValue = Project.current;
 });

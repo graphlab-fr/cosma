@@ -6,10 +6,6 @@ let completionList = [];
     firstInput.focus();
 })();
 
-window.api.getRecordTags((response) => {
-    completionList = response;
-});
-
 (function () {
     const tagsInput = form.querySelector('input[name="tags"]');
     tagger(
@@ -18,7 +14,7 @@ window.api.getRecordTags((response) => {
             allow_spaces: true,
             wrap: true,
             completion: {
-                list: () => Promise.resolve(completionList)
+                list: () => Promise.resolve(window.api.getRecordTags())
             },
         }
     );
