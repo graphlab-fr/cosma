@@ -124,6 +124,7 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.share),
                 accelerator: 'CommandOrControl+E',
                 role: 'export-cosmoscope',
+                id: 'export-cosmoscope',
                 enabled: config.canModelizeFromDirectory() || config.canModelizeFromCsvFiles() || config.canModelizeFromOnlineSync(),
                 click () {
                     require('../views/export/').open();
