@@ -39,7 +39,7 @@ ipcMain.on("open-project", (event, index) => {
         Project.getCurrent().lastOpenDate = unixDate;
         const mainIsOpen = Display.getWindow('main') !== undefined;
         if (mainIsOpen) {
-            require('../controllers/cosmoscope')();
+            require('../controllers/cosmoscope')(undefined, true);
         } else {
             require('../views/cosmoscope').open();
         }
