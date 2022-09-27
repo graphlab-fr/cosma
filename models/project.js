@@ -44,9 +44,9 @@ module.exports = class Project {
                             const token = data[i];
                             token.history = JSON.parse(token.history);
                             const history = new Map();
-                            for (const [id, { path, description }] of Object.entries(token.history)) {
+                            for (const [id, { path, description, isTemp, date }] of Object.entries(token.history)) {
                                 if (fs.existsSync(path) === false) { continue; }
-                                history.set(Number(id), new History(path, description));
+                                history.set(Number(id), new History(path, description, isTemp, date));
                             }
                             Project.list.set(i, new Project(token.opts, token.thumbnail, history, token.lastOpenDate));
                             if (token.isCurrent) {

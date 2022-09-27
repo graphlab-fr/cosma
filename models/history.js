@@ -28,13 +28,18 @@ module.exports = class History {
      * @param {fs.PathLike} path 
      * @param {string} description 
      * @param {boolean} isTemp
+     * @param {string} date
      */
 
-    constructor(path, description = '', isTemp = false) {
+    constructor(path, description = '', isTemp = false, date) {
         this.path = path;
         this.pathReport;
         this.description = description;
         this.isTemp = isTemp;
         this.date = new Date();
+
+        if (date) {
+            this.date = new Date(date);
+        }
     }
 }
