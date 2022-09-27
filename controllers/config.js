@@ -47,25 +47,26 @@ ipcMain.on("save-config-option", (event, name, value) => {
         windowForSend.webContents.send("config-change");
     }
 
-    if (name === 'lang') {
-        dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
-            message: lang.getFor(lang.i.config.info.lang),
-            type: 'info'
-        })
-        return;
-    }
+    let appMenu;
 
-    if (['devtools', 'bibliography', 'csl', 'csl_locale'].includes(name)) {
-        const appMenu = Menu.getApplicationMenu();
-    
-        appMenu.getMenuItemById('citeproc')
-            .enabled = config.canCiteproc();
-    
-        appMenu.getMenuItemById('devtools')
-            .visible = config.opts.devtools;
-
-        appMenu.getMenuItemById('new-cosmoscope-fake')
-            .visible = config.opts.devtools;
+    switch (name) {
+        case 'lang':
+            dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+                message: lang.getFor(lang.i.config.info.lang),
+                type: 'info'
+            });
+            break;
+        case 'devtools':
+            appMenu = Menu.getApplicationMenu();
+            appMenu.getMenuItemById('devtools').visible = config.opts.devtools;
+            appMenu.getMenuItemById('new-cosmoscope-fake').visible = config.opts.devtools;
+            break;
+        case 'bibliography':
+        case 'csl':
+        case 'csl_locale':
+            appMenu = Menu.getApplicationMenu();
+            appMenu.getMenuItemById('citeproc').enabled = config.canCiteproc();
+            break;
     }
 });
 

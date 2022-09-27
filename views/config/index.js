@@ -5,7 +5,6 @@ const {
     , path = require('path');
 
 const lang = require('../../core/models/lang');
-const Project = require('../../models/project')
 
 const { getFolksonomyFromUserData } = require('../misc');
 
@@ -17,10 +16,6 @@ module.exports = {
     open: function () {
         if (window !== undefined) {
             window.focus();
-            return;
-        }
-
-        if (Project.current === undefined) {
             return;
         }
 

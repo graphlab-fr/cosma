@@ -10,7 +10,8 @@ const ProjectConfig = require('../models/project-config')
     , config = new ProjectConfig()
     , lang = require('../core/models/lang');
 
-const Display = require('./display');
+const Display = require('./display')
+    , Project = require('./project');
 
 let mainWindow;
 
@@ -34,6 +35,7 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.preferences),
                 accelerator: 'CommandOrControl+,',
                 role: 'options',
+                enabled: Project.current !== undefined,
                 click () {
                     require('../views/config').open();
                 }
@@ -73,6 +75,8 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.new_cosmoscope),
                 accelerator: 'CommandOrControl+R',
                 role: 'new-cosmoscope',
+                id: 'new-cosmoscope',
+                enabled: config.canModelizeFromDirectory() || config.canModelizeFromCsvFiles() || config.canModelizeFromOnlineSync(),
                 click () {
                     mainWindow = Display.getWindow('main');
                     if (mainWindow) {
@@ -109,7 +113,9 @@ module.exports = [
             {
                 label: lang.getFor(lang.i.app_menu.new_record),
                 role: 'new-record',
+                id: 'new-record',
                 accelerator: 'CommandOrControl+N',
+                enabled: config.canSaveRecords(),
                 click () {
                     require('../views/record').open();
                 }
@@ -118,6 +124,7 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.share),
                 accelerator: 'CommandOrControl+E',
                 role: 'export-cosmoscope',
+                enabled: config.canModelizeFromDirectory() || config.canModelizeFromCsvFiles() || config.canModelizeFromOnlineSync(),
                 click () {
                     require('../views/export/').open();
                 }
@@ -140,6 +147,8 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.history),
                 accelerator: 'CommandOrControl+H',
                 role: 'history',
+                id: 'history',
+                enabled: Project.current !== undefined,
                 click () {
                     require('../views/history').open();
                 }
@@ -151,6 +160,8 @@ module.exports = [
                     label: lang.getFor(lang.i.app_menu.preferences),
                     accelerator: 'CommandOrControl+O',
                     role: 'options',
+                    id: 'options',
+                    enabled: Project.current !== undefined,
                     click () {
                         require('../views/config').open();
                     }
