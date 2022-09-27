@@ -1,7 +1,8 @@
 const {
     ipcMain,
     dialog,
-    BrowserWindow
+    BrowserWindow,
+    Menu
 } = require('electron');
 
 const lang = require('../core/models/lang');
@@ -71,15 +72,15 @@ ipcMain.on("add-new-project", async (event, opts) => {
 
     Project.current = undefined;
     const config = new ProjectConfig(opts);
-    let isOk = config.canModelizeFromDirectory() || config.canModelizeFromCsvFiles() || await config.canModelizeFromOnline();
+    let isProjectWithValidOrigin = config.canModelizeFromDirectory() || config.canModelizeFromCsvFiles() || await config.canModelizeFromOnline();
     
-    if (isOk === false) {
+    if (isProjectWithValidOrigin === false) {
         dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
             title: lang.getFor(lang.i.dialog.no_origin.title),
             message: lang.getFor(lang.i.dialog.no_origin.message),
             type: 'info'
         });
-        return event.reply('new-project-result', { isOk });
+        return event.reply('new-project-result', { isOk: false });
     }
 
     switch (lang.flag) {
@@ -95,13 +96,19 @@ ipcMain.on("add-new-project", async (event, opts) => {
     const project = new Project(config.opts, undefined, new Map(), unixDate);
     const newProjectIndex = Project.add(project);
     Project.current = newProjectIndex;
-    event.reply('new-project-result', { isOk: true });
 
+    event.reply('new-project-result', { isOk: true });
     const mainIsOpen = Display.getWindow('main') !== undefined;
     let windowForSend = Display.getWindow('projects');
     if (windowForSend) {
         windowForSend.webContents.send('new-project-result', { isOk: true });
     }
+
+    const appMenu = Menu.getApplicationMenu();
+    appMenu.getMenuItemById('new-cosmoscope').enabled = isProjectWithValidOrigin;
+    appMenu.getMenuItemById('history').enabled = true;
+    appMenu.getMenuItemById('options').enabled = true;
+    appMenu.getMenuItemById('new-record').enabled = config.canSaveRecords();
 
     if (mainIsOpen) {
         require('../controllers/cosmoscope')();
