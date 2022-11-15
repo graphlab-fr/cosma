@@ -1,6 +1,6 @@
 {
   "name": "Cosma",
-  "version": "1.2.0",
+  "version": "2.0.0-beta-1",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.graphlab.fr/",
   "repository": {
@@ -29,9 +29,9 @@
   "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "electron": "^19.0.10",
+    "electron": "^21.2.3",
     "electron-installer-debian": "^3.1.0",
-    "electron-packager": "^15.5.2"
+    "electron-packager": "^17.1.1"
   },
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
@@ -48,5 +48,9 @@
     "nunjucks": "^3.2.3",
     "slugify": "^1.6.5",
     "yaml-front-matter": "^4.1.1"
+  },
+  "overrides": {
+    "minimatch": "^5.1.0",
+    "got": "^11.8.5"
   }
 }
