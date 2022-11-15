@@ -18,12 +18,12 @@
             <label>
                 Trier les projets
                 <select name="project_sorting" id="select-sorting">
-                    <option value="new_old" selected>Du plus récemment ouvert au plus ancien</option>
-                    <option value="old_new">Du plus anciennement ouvert au plus récent</option>
-                    <option value="first_last">Du premier créé au dernier</option>
-                    <option value="last_first">Du dernier créé au premier</option>
-                    <option value="a_z">De A à Z</option>
-                    <option value="z_a">De Z à A</option>
+                    <option value="new_old" selected>Date de dernière ouverture</option>
+                    <option value="old_new">Date de dernière ouverture</option>
+                    <option value="first_last">Date de création</option>
+                    <option value="last_first">Date de création</option>
+                    <option value="a_z">Nom</option>
+                    <option value="z_a">Nom</option>
                 </select>
             </label>
 
@@ -31,7 +31,7 @@
 
             <div class="cancel-ok">
                 <button class="primary" type="submit" data-action="new">Ajouter un projet</button>
-                <button class="primary" type="submit" data-action="edit-end" hidden>Terminer</button>
+                <button class="primary" type="submit" data-action="edit-end" hidden>Enregistrer</button>
                 <button type="submit" data-action="edit-start">Modifier</button>
                 <button type="submit" data-action="delete" hidden>Supprimer</button>
             </div>
