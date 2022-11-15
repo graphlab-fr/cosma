@@ -16,14 +16,14 @@
     <main>
         <form id="form-project">
             <label>
-                Projects sorting
+                Sort projects
                 <select name="project_sorting" id="select-sorting">
-                    <option value="new_old" selected>Newest to oldest</option>
-                    <option value="old_new">From oldest to newest</option>
-                    <option value="first_last">From the first created to the last</option>
-                    <option value="last_first">Last created to first</option>
-                    <option value="a_z">From A to Z</option>
-                    <option value="z_a">From Z to A</option>
+                    <option value="new_old" selected>Last opened date</option>
+                    <option value="old_new">Last opened date</option>
+                    <option value="first_last">Creation date</option>
+                    <option value="last_first">Creation date</option>
+                    <option value="a_z">Name</option>
+                    <option value="z_a">Name</option>
                 </select>
             </label>
 
@@ -31,7 +31,7 @@
 
             <div class="cancel-ok">
                 <button class="primary" type="submit" data-action="new">Add a project</button>
-                <button class="primary" type="submit" data-action="edit-end" hidden>Finish</button>
+                <button class="primary" type="submit" data-action="edit-end" hidden>Save</button>
                 <button type="submit" data-action="edit-start">Edit</button>
                 <button type="submit" data-action="delete" hidden>Delete</button>
             </div>

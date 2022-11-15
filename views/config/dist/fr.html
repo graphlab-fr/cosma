@@ -78,8 +78,8 @@
 
         <select name="select_origin" id="files-select">
             <option value="directory">Fichiers Markdown</option>
-            <option value="csv">Feuille de calcul</option>
-            <option value="online">Feuille de calcul en ligne</option>
+            <option value="csv">Données tabulaires</option>
+            <option value="online">Données tabulaires en ligne</option>
         </select>
     
         <label>
@@ -89,24 +89,24 @@
         </label>
 
         <label>
-            Feuille de calcul des nœuds
+            Fichier de nœuds
             <input type="text" name="nodes_origin">
             <button type="button" data-path="csv" id="dialog-path-nodeorigin">Sélectionner</button>
         </label>
 
         <label>
-            Feuille de calcul des liens
+            Fichier de liens
             <input type="text" name="links_origin">
             <button type="button" data-path="csv" id="dialog-path-linkorigin">Sélectionner</button>
         </label>
 
         <label>
-            URL vers la feuille de calcul des nœuds
+            URL du fichier de nœuds
             <input type="text" data-path="online" name="nodes_online">
         </label>
 
         <label>
-            URL vers la feuille de calcul des liens
+            URL du fichier de liens
             <input type="text" data-path="online" name="links_online">
         </label>
     </fieldset>
@@ -203,8 +203,8 @@
         <legend>Dimensionnement des nœuds</legend>
 
         <select name="node_size_method">
-            <option value="unique">Taille unique</option>
-            <option value="degree">Taille proportionnelle</option>
+            <option value="unique">Taille fixe</option>
+            <option value="degree">Taille proportionnelle au degré</option>
         </select>
     
         <div data-method="unique">
@@ -317,7 +317,7 @@
 
             <form>
     <label>
-        Localisation (XML)
+        Localisation bibliographique (XML)
         <input type="text" name="csl_locale">
         <button type="button" data-path="xml" id="dialog-path-locales">Sélectionner</button>
     </label>
