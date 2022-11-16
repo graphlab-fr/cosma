@@ -31,6 +31,9 @@ process.on('uncaughtException', ({ name, message, stack }) => {
 
 const History = require('./models/history');
 const Project = require('./models/project');
+const lang = require('./core/models/lang');
+const Config = require('./core/models/config');
+const ProjectConfig = require('./models/project-config');
 const buildPages = require('./controllers/build-pages');
 
 /**
@@ -39,6 +42,9 @@ const buildPages = require('./controllers/build-pages');
 
 Promise.all([app.whenReady(), buildPages(), Project.init()])
     .then(() => {
+        // need to edit flag from default config
+        lang.flag = Config.get(ProjectConfig.getDefaultConfigFilePath()).lang;
+
         if (Project.current !== undefined) {
             require('./views/cosmoscope').open();
         } else {

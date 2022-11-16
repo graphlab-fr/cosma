@@ -10,6 +10,7 @@ const {
 } = require('electron');
 
 let config = ipcRenderer.sendSync('get-config-options');
+let configDefault = ipcRenderer.sendSync('get-default-config-options');
 let langages = ipcRenderer.sendSync('get-langages');
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -147,7 +148,7 @@ function setConfigView () {
     selectLang.innerHTML = '';
 
     for (const lang in langages) {
-        if (lang === config.lang) {
+        if (lang === configDefault.lang) {
             selectLang.insertAdjacentHTML('beforeend',
             `<option value="${lang}" selected>${langages[lang]}</option>`);
             continue;
