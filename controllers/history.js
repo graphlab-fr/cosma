@@ -6,13 +6,9 @@ const {
 } = require('electron');
 const fs = require('fs/promises');
 
-const History = require('../models/history')
-    , Project = require('../models/project')
+const Project = require('../models/project')
     , Display = require('../models/display')
-    , Graph = require('../core/models/graph')
     , lang = require('../core/models/lang');
-
-const config = require('../core/models/config').get();
 
 ipcMain.on("get-history-records", (event) => {
     event.returnValue = Project.getCurrent().history
