@@ -110,10 +110,10 @@ ipcMain.on("add-new-project", async (event, opts) => {
 
     switch (lang.flag) {
         case 'fr':
-            config.opts.name = `Projet sans nom n°${Project.list.size + 1}`;
+            config.opts.title = `Projet sans nom n°${Project.list.size + 1}`;
             break;
         case 'en':
-            config.opts.name = `Unnamed project number ${Project.list.size + 1}`;
+            config.opts.title = `Unnamed project number ${Project.list.size + 1}`;
             break;
     }
 
