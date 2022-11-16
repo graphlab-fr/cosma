@@ -7,12 +7,6 @@ const {
 
 process.on('uncaughtException', ({ name, message, stack }) => {
     switch (name) {
-        case 'Error Config':
-            new Config();
-            app.relaunch();
-            app.exit();
-            break;
-
         case 'Error Project':
             Project.init();
             app.relaunch();
