@@ -13,7 +13,7 @@ const Display = require('../models/display')
     , ProjectConfig = require('../models/project-config');
 
 ipcMain.on("get-default-config-options", (event) => {
-    event.returnValue = Config.get();
+    event.returnValue = Config.get(ProjectConfig.getDefaultConfigFilePath());
 });
 
 ipcMain.on("get-config-options", (event) => {

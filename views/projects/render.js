@@ -41,7 +41,7 @@ function init() {
         projectArticle.innerHTML =
         `<img class="project-thumbnail" src="data:image/jpg;base64,${thumbnail}" alt="project thumbnail" />
         <input type="radio" name="project" value="${index}" hidden>
-        <h3>${opts.name}</h3>`;
+        <h3>${opts.title}</h3>`;
         projectList.appendChild(projectArticle);
 
         projectArticle.addEventListener('click', () => {
