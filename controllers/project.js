@@ -133,7 +133,7 @@ ipcMain.on("add-new-project", async (event, opts) => {
     appMenu.getMenuItemById('new-cosmoscope').enabled = isProjectWithValidOrigin;
     appMenu.getMenuItemById('export-cosmoscope').enabled = isProjectWithValidOrigin;
     appMenu.getMenuItemById('history').enabled = true;
-    appMenu.getMenuItemById('options').enabled = true;
+    // appMenu.getMenuItemById('options').enabled = true;
     appMenu.getMenuItemById('new-record').enabled = config.canSaveRecords();
 
     if (mainIsOpen) {
