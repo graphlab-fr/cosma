@@ -1,5 +1,6 @@
 const { app } = require('electron')
-    , path = require('path');
+    , path = require('path')
+    , fs = require('fs');
 
 const Config = require('../core/models/config');
 
@@ -9,6 +10,12 @@ module.exports = class ProjectConfig extends Config {
     static getDefaultConfigFilePath() {
         const configFileInElectronUserDataDir = path.join(app.getPath('userData'), 'default-options.json');
         return configFileInElectronUserDataDir;
+    }
+
+    static init() {
+        if (fs.existsSync(ProjectConfig.getDefaultConfigFilePath()) === false) {
+            new Config({}, ProjectConfig.getDefaultConfigFilePath()).save();
+        }
     }
 
     constructor(opts = {}) {

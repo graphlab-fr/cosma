@@ -40,7 +40,7 @@ const buildPages = require('./controllers/build-pages');
  * Wait for 'app ready' event, before lauch the window.
  */
 
-Promise.all([app.whenReady(), buildPages(), Project.init()])
+Promise.all([app.whenReady(), buildPages(), Project.init(), ProjectConfig.init()])
     .then(() => {
         // need to edit flag from default config
         lang.flag = Config.get(ProjectConfig.getDefaultConfigFilePath()).lang;
