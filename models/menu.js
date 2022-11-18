@@ -35,6 +35,7 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.preferences),
                 accelerator: 'CommandOrControl+,',
                 role: 'options',
+                id: 'options',
                 enabled: Project.current !== undefined,
                 click () {
                     require('../views/config').open();
