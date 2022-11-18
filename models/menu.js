@@ -4,7 +4,7 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-const { app } = require('electron');
+const { app, BrowserWindow } = require('electron');
 
 const ProjectConfig = require('../models/project-config')
     , config = new ProjectConfig()
@@ -175,6 +175,14 @@ module.exports = [
                 role: 'projects',
                 click () {
                     require('../views/projects').open();
+                }
+            },
+            { type: 'separator' },
+            {
+                label: lang.getFor(lang.i.app_menu.window_close),
+                accelerator: 'CommandOrControl+W',
+                click () {
+                    BrowserWindow.getFocusedWindow().close();
                 }
             }
         ]
