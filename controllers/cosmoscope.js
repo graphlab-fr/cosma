@@ -47,6 +47,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         const lastHistoryItemfromCurrentProject = Array.from(currentProject.history)[currentProject.history.size-1][1];
         const { path } = lastHistoryItemfromCurrentProject;
         window.loadFile(path);
+        window.once('ready-to-show', () => window.show());
         return;
     }
 
