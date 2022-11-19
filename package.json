@@ -1,5 +1,5 @@
 {
-  "name": "Cosma",
+  "name": "cosma",
   "version": "2.0.0-beta-1",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.graphlab.fr/",
@@ -13,9 +13,11 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=x64 --prune --overwrite",
-    "build:mac": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=x64 --prune --overwrite",
-    "build:linux": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=linux --arch=x64 --prune --overwrite",
+    "build:win:intel": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=x64 --overwrite --ignore=build/*",
+    "build:win:arm": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.ico --platform=win32 --arch=arm64 --overwrite --ignore=build/*",
+    "build:mac:intel": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=x64 --overwrite --ignore=build/*",
+    "build:mac:arm": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=darwin --arch=arm64 --overwrite --ignore=build/*",
+    "build:linux": "electron-packager ./ Cosma --out=build/ --icon=./assets/icons/1024x1024.icns --platform=linux --arch=x64 --overwrite --ignore=build/*",
     "postbuild:linux": "./node_modules/.bin/electron-installer-debian --src=build/cosma-linux-x64 --dest=build/ --arch=amd64 --icon=./assets/icons/1024x1024.png",
     "modules": "git submodule foreach git pull origin master",
     "doc": "open docs/index.html"
