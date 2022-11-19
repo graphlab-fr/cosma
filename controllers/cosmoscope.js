@@ -1,4 +1,4 @@
-const { app, dialog } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 
 const fs = require('fs')
     , path = require('path');
@@ -54,29 +54,32 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
     switch (originType) {
         case 'csv':
             if (config.canModelizeFromCsvFiles() === false) {
-                dialog.showMessageBox(window, {
+                dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
                     title: lang.getFor(lang.i.dialog.error_modelize.title),
                     message: lang.getFor(lang.i.dialog.error_modelize.message_source_csv),
                     type: 'error'
                 });
-            }
             return;
+            }
+            break;
         case 'directory':
             if (config.canModelizeFromDirectory() === false) {
-                dialog.showMessageBox(window, {
+                dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
                     title: lang.getFor(lang.i.dialog.error_modelize.title),
                     message: lang.getFor(lang.i.dialog.error_modelize.message_source_directory),
                     type: 'error'
                 });
+                return;
             }
             break;
         case 'online':
             if (await config.canModelizeFromOnline() === false) {
-                dialog.showMessageBox(window, {
+                dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
                     title: lang.getFor(lang.i.dialog.error_modelize.title),
                     message: lang.getFor(lang.i.dialog.error_modelize.message_source_online),
                     type: 'error'
                 });
+                return;
             }
             break;
     }
