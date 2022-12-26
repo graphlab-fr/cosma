@@ -37,10 +37,11 @@ body:
       description: >
         Please select the version number on which you observed the bug.
       options:
-        - label: GUI 1.1
-        - label: GUI 1.0
-        - label: CLI 1.1
-        - label: CLI 1.0
+        - CLI 2.0-beta-1
+        - GUI 1.1
+        - GUI 1.0
+        - CLI 1.1
+        - CLI 1.0
     validations:
       required: true
 
