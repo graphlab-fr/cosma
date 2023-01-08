@@ -16,7 +16,8 @@
     "modules": "git submodule foreach git pull origin master",
     "doc": "open docs/index.html",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
   "contributors": [
     "Arthur Perret",
@@ -35,6 +36,7 @@
     "electron": "^21.2.3"
   },
   "dependencies": {
+    "@electron-forge/publisher-github": "^6.0.4",
     "@zettlr/citr": "^1.2.2",
     "axios": "^0.27.2",
     "citeproc": "^2.4.62",
