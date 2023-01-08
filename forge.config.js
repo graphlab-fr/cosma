@@ -1,9 +1,7 @@
-const buildPages = require('./controllers/build-pages');
-
 module.exports = {
   hooks: {
     generateAssets: async () => {
-      buildPages();
+      require('./controllers/build-pages');
     }
   },
   packagerConfig: {

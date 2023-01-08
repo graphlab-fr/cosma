@@ -17,7 +17,8 @@
     "doc": "open docs/index.html",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "publish": "electron-forge publish",
+    "watch:pages": "nodemon -w ./ -e .njk -x 'node ./controllers/build-pages'"
   },
   "contributors": [
     "Arthur Perret",
