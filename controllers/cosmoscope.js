@@ -41,6 +41,7 @@ module.exports = async function (templateParams = [], runLast = false, fake = fa
         nodes_origin: nodesPath,
         links_origin: linksPath
     } = config.opts;
+    // N.B. currentProject.opts === config.opts
     const currentProject = Project.getCurrent();
 
     if (runLast === true && currentProject.history.size > 0) {
