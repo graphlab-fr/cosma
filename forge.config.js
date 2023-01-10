@@ -6,9 +6,9 @@ module.exports = {
   },
   packagerConfig: {
     dir: './',
-    out: 'build/',
-    icon: './assets/icons/',
-    ignore: 'build/*',
+    out: './build/',
+    icon: './assets/icons/appicon',
+    ignore: './out/*',
     overwrite: true,
     name: 'Cosma',
     executableName: 'cosma',
