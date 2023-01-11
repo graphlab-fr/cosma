@@ -29,7 +29,7 @@ ipcMain.on("get-project-current-id", (event) => {
 
 ipcMain.on("open-project", (event, index) => {
     if (Project.current !== undefined && Project.current === index) {
-        event.returnValue = { isOk: false };
+        require('../views/cosmoscope').open();
         return;
     }
     if (Project.list.has(index) === false) {
