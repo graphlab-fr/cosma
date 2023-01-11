@@ -19,14 +19,14 @@ const currentProjectIndex = window.api.getCurrentId();
             case 'new':
                 window.api.openNewProjectModal();
                 break;
+            case 'open':
+                const { isOk } = window.api.openProject(Number(projectIndex));
+                if (isOk) {
+                    window.close();
+                }
+                break;
             case 'delete':
                 window.api.deleteProject(Number(projectIndex));
-                break;
-
-            case 'edit-start':
-            case 'edit-end':
-                editMode = !editMode;
-                handleEditMode();
                 break;
         }
     })
@@ -36,22 +36,21 @@ function init() {
     projectList.innerHTML = '';
 
     for (const [index, { opts, thumbnail }] of projectsList) {
-        const projectArticle = document.createElement('article');
+        const projectArticle = document.createElement('tr');
         projectArticle.classList.add('project', currentProjectIndex === index ? 'active' : null);
         projectArticle.innerHTML =
-        `<img class="project-thumbnail" src="data:image/jpg;base64,${thumbnail}" alt="project thumbnail" />
-        <input type="radio" name="project" value="${index}" hidden>
-        <h3>${opts.title}</h3>`;
+        `<td>
+            <input type="radio" name="project" value="${index}" />
+        </td>
+
+        <td class="thumbnail">
+            <img class="project-thumbnail" src="data:image/jpg;base64,${thumbnail}" alt="" />
+        </td>
+
+        <td>
+            <span class="project-title">${opts.title}</span>
+        </td>`;
         projectList.appendChild(projectArticle);
-
-        projectArticle.addEventListener('click', () => {
-            if (editMode) { return; }
-
-            const { isOk } = window.api.openProject(index);
-            if (isOk) {
-                window.close();
-            }
-        });
     }
 }
 
@@ -103,30 +102,9 @@ projectSorting.addEventListener('change', () => {
     init();
 });
 
-projectSorting.dispatchEvent(new Event('change'))
+projectSorting.dispatchEvent(new Event('change'));
 
 window.api.onProjectDelete((index) => {
     const deletedProjectArticle = document.querySelector(`article.project[data-project-index="${index}"]`);
     deletedProjectArticle.remove();
-})
-
-function handleEditMode() {
-    const newProjectBtn = document.querySelector('button[data-action="new"]');
-    const editStartBtn = document.querySelector('button[data-action="edit-start"]');
-    const editEndBtn = document.querySelector('button[data-action="edit-end"]');
-    const deleteBtn = document.querySelector('button[data-action="delete"]');
-    const projectArticleInputs = document.querySelectorAll('article.project input[type="radio"]');
-    if (editMode) {
-        projectArticleInputs.forEach(input => input.removeAttribute('hidden'));
-        newProjectBtn.setAttribute('hidden', true);
-        editStartBtn.setAttribute('hidden', true);
-        editEndBtn.removeAttribute('hidden');
-        deleteBtn.removeAttribute('hidden');
-    } else {
-        projectArticleInputs.forEach(input => input.setAttribute('hidden', true));
-        newProjectBtn.removeAttribute('hidden');
-        editStartBtn.removeAttribute('hidden');
-        editEndBtn.setAttribute('hidden', true);
-        deleteBtn.setAttribute('hidden', true);
-    }
-}
+});

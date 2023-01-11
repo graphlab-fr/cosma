@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
@@ -27,13 +27,14 @@
                 </select>
             </label>
 
-            <div id="project-list"></div>
-
-            <div class="cancel-ok">
-                <button class="primary" type="submit" data-action="new">Add a project</button>
-                <button class="primary" type="submit" data-action="edit-end" hidden>Save</button>
-                <button type="submit" data-action="edit-start">Edit</button>
-                <button type="submit" data-action="delete" hidden>Delete</button>
+            <div class="form-list">
+                <table id="project-list"></table>
+    
+                <div class="buttons-box">
+                    <button data-action="new" class="primary" type="submit">Add a project</button>
+                    <button data-action="delete" type="submit">Delete</button>
+                    <button data-action="open" type="submit">Ouvrir</button>
+                </div>
             </div>
         </form>
     </main>

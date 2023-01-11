@@ -163,25 +163,25 @@ input:invalid {
     border: 1px solid red !important;
 }
 
-form.form-list {
+.form-list {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
 }
 
-form.form-list table {
+.form-list table {
     margin: unset;
     width: 70%;
 }
 
-form.form-list div.buttons-box {
+.form-list div.buttons-box {
     width: 25%;
     display: flex;
     flex-direction: column;
 }
 
-form.form-list div.buttons-box button {
+.form-list div.buttons-box button {
     margin: 1px 0;
 }
 
@@ -443,44 +443,25 @@ details summary {
 /** Page Projects
 ------------------------------------------------------------*/
 
-#project-list {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 1rem;
+.project-title {
+    font-size: 1.4rem;
+    text-align: center;
 }
 
-article.project {
+#project-list tr.active {
+    background-color: var(--select-color);
+}
+
+#project-list tr {
     cursor: pointer;
-    position: relative;
+}
+
+
+#project-list th.thumbnail {
     width: 300px;
-    height: 230px;
-    background-color: var(--cosma-blue-dark);
-    margin: 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    border: 1px solid var(--mac-border-color);
 }
-
-article.project.active {
-    background-color: var(--cosma-blue);
-}
-
-/* article.project:hover {
-    background-color: var(--cosma-blue-dark);
-    border: 2px solid var(--cosma-blue-dark);
-} */
 
 .project-thumbnail {
-    width: 100%;
+    height: 100%;
     object-fit: cover;
-}
-
-.project h3 {
-    color: white;
-    margin: 0 0 0 10px;
-}
-
-.project input[type="radio"] {
-    position: absolute;
-    right: 15px;
-    top: 15px;
 }
