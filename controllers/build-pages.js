@@ -13,3 +13,4 @@ require('../views/modal-recordsfilter').build();
 require('../views/modal-view').build();
 require('../views/modal-historyrename').build();
 require('../views/modal-projectorigin').build();
+require('../views/modal-appconfig').build();

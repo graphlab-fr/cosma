@@ -33,13 +33,23 @@ module.exports = [
             },
             {
                 label: lang.getFor(lang.i.app_menu.preferences),
-                accelerator: 'CommandOrControl+,',
                 role: 'options',
                 id: 'options',
-                enabled: Project.current !== undefined,
-                click () {
-                    require('../views/config').open();
-                }
+                submenu: [
+                    {
+                        label: lang.getFor(lang.i.app_menu.project_options),
+                        id: 'options-project',
+                        enabled: Project.current !== undefined,
+                        accelerator: 'CommandOrControl+,',
+                        click () {
+                            require('../views/config').open();
+                        },
+                    },
+                    {
+                        label: lang.getFor(lang.i.app_menu.app_options),
+                        id: 'options-app',
+                    },
+                ]
             },
             {
                 label: lang.getFor(lang.i.app_menu.projects),
@@ -165,9 +175,18 @@ module.exports = [
             { type: 'separator' },
 
             ...(isMac === false ? [
+                // {
+                //     label: lang.getFor(lang.i.app_menu.preferences),
+                //     accelerator: 'CommandOrControl+O',
+                //     role: 'options',
+                //     id: 'options',
+                //     enabled: Project.current !== undefined,
+                //     click () {
+                //         require('../views/config').open();
+                //     }
+                // },
                 {
                     label: lang.getFor(lang.i.app_menu.preferences),
-                    accelerator: 'CommandOrControl+O',
                     role: 'options',
                     id: 'options',
                     enabled: Project.current !== undefined,
