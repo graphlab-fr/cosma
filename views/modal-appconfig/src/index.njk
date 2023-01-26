@@ -13,6 +13,15 @@
     <main>
 
         <form id="form-appconfig">
+            <label>
+                Choisissez la langue d'affichage de l'application
+                <select name="select_langage" id="langage-select"></select>
+            </label>
+
+            <label>
+                <input type="checkbox" name="devtools">
+                Utiliser les outils de développement
+            </label>
 
             <div class="cancel-ok">
                 <button class="window-close" type="button">{{ langBtnCancel[flag] }}</button>
