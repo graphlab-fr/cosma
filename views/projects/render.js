@@ -37,7 +37,7 @@ function init() {
 
     for (const [index, { opts, thumbnail }] of projectsList) {
         const projectArticle = document.createElement('tr');
-        projectArticle.classList.add('project', currentProjectIndex === index ? 'active' : null);
+        projectArticle.classList.add('project');
         projectArticle.dataset.projectIndex = index;
         projectArticle.innerHTML =
         `<td>

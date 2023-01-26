@@ -448,10 +448,6 @@ details summary {
     text-align: center;
 }
 
-#project-list tr.active {
-    background-color: var(--select-color);
-}
-
 #project-list tr {
     cursor: pointer;
 }
