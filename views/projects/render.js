@@ -38,6 +38,7 @@ function init() {
     for (const [index, { opts, thumbnail }] of projectsList) {
         const projectArticle = document.createElement('tr');
         projectArticle.classList.add('project', currentProjectIndex === index ? 'active' : null);
+        projectArticle.dataset.projectIndex = index;
         projectArticle.innerHTML =
         `<td>
             <input type="radio" name="project" value="${index}" />
@@ -105,6 +106,6 @@ projectSorting.addEventListener('change', () => {
 projectSorting.dispatchEvent(new Event('change'));
 
 window.api.onProjectDelete((index) => {
-    const deletedProjectArticle = document.querySelector(`article.project[data-project-index="${index}"]`);
+    const deletedProjectArticle = document.querySelector(`[data-project-index="${index}"]`);
     deletedProjectArticle.remove();
 });
