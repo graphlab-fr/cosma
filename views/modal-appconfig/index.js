@@ -20,10 +20,9 @@ module.exports = {
 
         const Display = require('../../models/display');
 
-        this.win = new Browserthis.win(
-            Object.assign(Display.getBaseSpecs('modal'), {
-                title: lang.getFor(lang.i.this.windows[pageName].title),
-                parent: BrowserWindow.getFocusedWindow(),
+        this.win = new BrowserWindow(
+            Object.assign(Display.getBaseSpecs('form'), {
+                title: lang.getFor(lang.i.windows[pageName].title),
                 webPreferences: {
                     preload: path.join(__dirname, './preload.js')
                 }

@@ -35,27 +35,23 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.preferences),
                 role: 'options',
                 id: 'options',
-                submenu: [
-                    {
-                        label: lang.getFor(lang.i.app_menu.project_options),
-                        id: 'options-project',
-                        enabled: Project.current !== undefined,
-                        accelerator: 'CommandOrControl+,',
-                        click () {
-                            require('../views/config').open();
-                        },
-                    },
-                    {
-                        label: lang.getFor(lang.i.app_menu.app_options),
-                        id: 'options-app',
-                    },
-                ]
+                click () {
+                    require('../views/modal-appconfig').open();
+                }
             },
             {
                 label: lang.getFor(lang.i.app_menu.projects),
                 role: 'projects',
                 click () {
                     require('../views/projects').open();
+                }
+            },
+            {
+                label: lang.getFor(lang.i.app_menu.project_config),
+                enabled: Project.current !== undefined,
+                accelerator: 'CommandOrControl+,',
+                click () {
+                    require('../views/config').open();
                 }
             },
             { type: 'separator' },
@@ -175,23 +171,12 @@ module.exports = [
             { type: 'separator' },
 
             ...(isMac === false ? [
-                // {
-                //     label: lang.getFor(lang.i.app_menu.preferences),
-                //     accelerator: 'CommandOrControl+O',
-                //     role: 'options',
-                //     id: 'options',
-                //     enabled: Project.current !== undefined,
-                //     click () {
-                //         require('../views/config').open();
-                //     }
-                // },
                 {
                     label: lang.getFor(lang.i.app_menu.preferences),
                     role: 'options',
                     id: 'options',
-                    enabled: Project.current !== undefined,
                     click () {
-                        require('../views/config').open();
+                        require('../views/modal-appconfig').open();
                     }
                 },
                 {
@@ -199,6 +184,14 @@ module.exports = [
                     role: 'projects',
                     click () {
                         require('../views/projects').open();
+                    }
+                },
+                {
+                    label: lang.getFor(lang.i.app_menu.project_config),
+                    enabled: Project.current !== undefined,
+                    accelerator: 'CommandOrControl+O',
+                    click () {
+                        require('../views/config').open();
                     }
                 },
             ]
