@@ -41,6 +41,13 @@ module.exports = [
                     require('../views/config').open();
                 }
             },
+            {
+                label: lang.getFor(lang.i.app_menu.projects),
+                role: 'projects',
+                click () {
+                    require('../views/projects').open();
+                }
+            },
             { type: 'separator' },
             {
                 label: lang.getFor(lang.i.app_menu.services),
@@ -167,17 +174,17 @@ module.exports = [
                     click () {
                         require('../views/config').open();
                     }
-                }
+                },
+                {
+                    label: lang.getFor(lang.i.app_menu.projects),
+                    role: 'projects',
+                    click () {
+                        require('../views/projects').open();
+                    }
+                },
             ]
             :
             []),
-            {
-                label: lang.getFor(lang.i.app_menu.projects),
-                role: 'projects',
-                click () {
-                    require('../views/projects').open();
-                }
-            },
             { type: 'separator' },
             {
                 label: lang.getFor(lang.i.app_menu.window_close),
