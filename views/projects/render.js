@@ -89,14 +89,14 @@ projectSorting.addEventListener('change', () => {
             break;
         case 'a_z':
             projectsList = projectsList.sort(([aIndex, aProject], [bIndex, bProject]) => {
-                const { name: aName } = aProject.opts, { name: bName } = bProject.opts;
-                return aName.localeCompare(bName);
+                const { title: aTitle } = aProject.opts, { title: bTitle } = bProject.opts;
+                return aTitle.localeCompare(bTitle);
             });
             break;
         case 'z_a':
             projectsList = projectsList.sort(([aIndex, aProject], [bIndex, bProject]) => {
-                const { name: aName } = aProject.opts, { name: bName } = bProject.opts;
-                return aName.localeCompare(bName);
+                const { title: aTitle } = aProject.opts, { title: bTitle } = bProject.opts;
+                return aTitle.localeCompare(bTitle);
             }).reverse();
             break;
     }
