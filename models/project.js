@@ -33,6 +33,7 @@ module.exports = class Project {
             if (fs.existsSync(History.dirPath) === false) {
                 fs.mkdir(History.dirPath, (err) => {
                     if (err) { reject(err); }
+                    writeBaseFile();
                 });
             }
             if (fs.existsSync(Project.filePath)) {
