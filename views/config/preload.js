@@ -148,7 +148,7 @@ function setConfigView () {
     selectLang.innerHTML = '';
 
     for (const lang in langages) {
-        if (lang === configDefault.lang) {
+        if (lang === config.lang) {
             selectLang.insertAdjacentHTML('beforeend',
             `<option value="${lang}" selected>${langages[lang]}</option>`);
             continue;
