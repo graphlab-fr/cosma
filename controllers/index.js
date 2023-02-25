@@ -11,3 +11,4 @@ require('./history');
 require('./modal');
 require('./dialog');
 require('./project');
+require('./preferences');

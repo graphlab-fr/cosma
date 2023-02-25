@@ -32,23 +32,6 @@ ipcMain.on("save-config-option", (event, name, value) => {
     const newConfig = {};
     newConfig[name] = value;
 
-    if (name === 'lang') {
-        // lang is set per project, but must be for default config
-        const config = new Config(newConfig, ProjectConfig.getDefaultConfigFilePath());
-        const result = config.save();
-
-        if (result) {
-            dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
-                message: lang.getFor(lang.i.config.info.lang),
-                type: 'info'
-            });
-            event.returnValue = true;
-        } else {
-            event.returnValue = config.writeReport();
-        }
-        return;
-    }
-
     const config = new ProjectConfig(newConfig);
 
     if (config.report.includes(name)) {
@@ -67,17 +50,6 @@ ipcMain.on("save-config-option", (event, name, value) => {
     let appMenu;
 
     switch (name) {
-        case 'lang':
-            dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
-                message: lang.getFor(lang.i.config.info.lang),
-                type: 'info'
-            });
-            break;
-        case 'devtools':
-            appMenu = Menu.getApplicationMenu();
-            appMenu.getMenuItemById('devtools').visible = config.opts.devtools;
-            appMenu.getMenuItemById('new-cosmoscope-fake').visible = config.opts.devtools;
-            break;
         case 'bibliography':
         case 'csl':
         case 'csl_locale':

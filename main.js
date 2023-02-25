@@ -3,7 +3,7 @@ const {
         BrowserWindow, // app windows generator
         Menu,
         dialog
-    } = require('electron');;
+    } = require('electron');
 
 process.on('uncaughtException', ({ name, message, stack }) => {
     switch (name) {
@@ -34,15 +34,16 @@ const Project = require('./models/project');
 const lang = require('./core/models/lang');
 const Config = require('./core/models/config');
 const ProjectConfig = require('./models/project-config');
+const Preferences = require('./models/preferences');
 
 /**
  * Wait for 'app ready' event, before lauch the window.
  */
 
-Promise.all([app.whenReady(), Project.init(), ProjectConfig.init()])
+Promise.all([app.whenReady(), Project.init(), ProjectConfig.init(), Preferences.init()])
     .then(() => {
         // need to edit flag from default config
-        lang.flag = Config.get(ProjectConfig.getDefaultConfigFilePath()).lang;
+        lang.flag = Preferences.get().lang;
 
         if (Project.current !== undefined) {
             require('./views/cosmoscope').open();

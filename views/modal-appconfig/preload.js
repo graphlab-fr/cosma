@@ -8,35 +8,33 @@ const {
     ipcRenderer
 } = require('electron');
 
-const langages = [
-    {
-        flag: 'fr',
-        label: 'Français'
-    },
-    {
-        flag: 'en',
-        label: 'Anglais'
-    }
-];
+const preferences = ipcRenderer.sendSync('get-preferences-options');
+const langages = ipcRenderer.sendSync('get-langages');
+
 const currentLangage = 'fr';
 
 window.addEventListener("DOMContentLoaded", () => {
-    const select = document.getElementById('langage-select');
+    const langSelect = document.querySelector('[name="lang"]');
 
-    for (const { flag, label } of langages) {
-        if (flag === currentLangage) {
-            select.insertAdjacentHTML('afterbegin',
+    for (const [flag, label] of Object.entries(langages)) {
+        if (flag === preferences.lang) {
+            langSelect.insertAdjacentHTML('afterbegin',
             `<option value="${flag}" selected >${label}</option>`);
             continue;
         }
-        select.insertAdjacentHTML('afterbegin',
+        langSelect.insertAdjacentHTML('afterbegin',
         `<option value="${flag}">${label}</option>`);
     }
+
+    /** @type {HTMLInputElement} */
+    const devtoolsInput = document.querySelector('[name="devtools"]');
+    devtoolsInput.checked = preferences.devtools;
 });
 
 contextBridge.exposeInMainWorld('api',
     {
         setLangage: (flag) => console.log(flag),
         setDevTools: (bool) => console.log(bool),
+        saveOption: (name, value) => ipcRenderer.sendSync('save-preferences-option', name, value),
     }
 );

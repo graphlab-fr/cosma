@@ -7,6 +7,8 @@
 const { app, BrowserWindow } = require('electron');
 
 const ProjectConfig = require('../models/project-config')
+    , Preferences = require('../models/preferences')
+    , preferencesOpts = Preferences.get()
     , config = new ProjectConfig()
     , lang = require('../core/models/lang');
 
@@ -114,7 +116,7 @@ module.exports = [
                 label: 'Fake cosmoscope',
                 role: 'new-cosmoscope-fake',
                 id: 'new-cosmoscope-fake',
-                visible: config.opts.devtools,
+                visible: preferencesOpts.devtools,
                 click () {
                     mainWindow = Display.getWindow('main');
                     if (mainWindow) {
@@ -321,7 +323,7 @@ module.exports = [
                 label: lang.getFor(lang.i.app_menu.dev_tools),
                 role: 'toggleDevTools',
                 id: 'devtools',
-                visible: config.opts.devtools
+                visible: preferencesOpts.devtools
             }
         ]
     },

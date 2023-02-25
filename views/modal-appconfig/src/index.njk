@@ -14,13 +14,13 @@
 
         <form id="form-appconfig">
             <label>
-                Choisissez la langue d'affichage de l'application
-                <select name="select_langage" id="langage-select"></select>
+                {{ lang.fields.lang[flag] }}
+                <select name="lang" id="langage-select"></select>
             </label>
 
             <label>
                 <input type="checkbox" name="devtools">
-                Utiliser les outils de développement
+                {{ lang.fields.devtools[flag] }}
             </label>
 
             <div class="cancel-ok">
