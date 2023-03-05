@@ -34,18 +34,22 @@ module.exports = {
     }
   ],
   makers: [
-    {
-      name: '@electron-forge/maker-squirrel',
-      config: {
-        owners: packageConfig.contributors
-      },
-    },
+    // {
+    //   name: '@electron-forge/maker-squirrel',
+    //   config: {
+    //     owners: packageConfig.contributors
+    //   },
+    // },
     {
       name: '@electron-forge/maker-dmg',
       config: {
         icon: './assets/icons/appicon.icns',
         format: 'ULFO'
       },
+    },
+    {
+      name: "@electron-forge/maker-zip",
+      platforms: ["win32"],
     },
     {
       name: '@electron-forge/maker-deb',
