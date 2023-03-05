@@ -1,3 +1,5 @@
+const packageConfig = require('./package.json')
+
 module.exports = {
   hooks: {
     generateAssets: async () => {
@@ -34,19 +36,29 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        owners: packageConfig.contributors
+      },
     },
     {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      name: '@electron-forge/maker-dmg',
+      config: {
+        icon: './assets/icons/appicon.icns',
+        format: 'ULFO'
+      },
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {},
+      config: {
+        options: {
+          categories: ['Office', 'Science', 'Education'],
+          description: packageConfig.description,
+          homepage: packageConfig.homepage,
+          maintainer: packageConfig.author,
+          section: 'science',
+          version: packageConfig.version
+        }
+      },
     },
   ],
 };
