@@ -13,7 +13,7 @@ module.exports = {
     ignore: './out/*',
     overwrite: true,
     name: 'Cosma',
-    executableName: 'cosma',
+    executableName: 'Cosma',
     appCopyright: 'ANR HyperOtlet GPL-3.0-or-later'
   },
   rebuildConfig: {
