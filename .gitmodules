@@ -4,3 +4,4 @@
 [submodule "core"]
 	path = core
 	url = https://github.com/graphlab-fr/cosma-core
+	branch = dev-webpack
