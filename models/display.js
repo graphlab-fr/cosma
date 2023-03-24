@@ -54,7 +54,7 @@ module.exports = class Display {
         },
         modal: {
             width: 500,
-            height: 200,
+            height: 250,
             resizable: false,
             minimizable: false,
             maximizable: false,
