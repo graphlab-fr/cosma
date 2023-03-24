@@ -34,7 +34,7 @@
     "@electron-forge/maker-dmg": "^6.0.5",
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
-    "electron": "^21.4.2"
+    "electron": "^21.4.3"
   },
   "dependencies": {
     "@electron-forge/publisher-github": "^6.0.4",
