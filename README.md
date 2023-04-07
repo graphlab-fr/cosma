@@ -36,7 +36,18 @@ npm start
 
 A draft of the developers' documentation is available in French: https://cosma.graphlab.fr/docs/manuel-developpement/
 
-***
+## Build
+
+Read the doc: https://www.electronforge.io/cli#make
+
+```bash
+npm run make
+npm run make -- --platform (win32|darwin|linux) --arch (x64|arm64)
+```
+
+Find executables on `/out/make/`.
+
+---
 
 **Cosma** est un logiciel de visualisation de graphe documentaire. Il permet de représenter des notes interreliées sous la forme d’un réseau interactif dans une interface web.
 
