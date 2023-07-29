@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Cosma
+         - {{ 'title' | translate }}
+        {% if projectTitle %}
+         - {{ 'project' | translate({ project: projectTitle }) }}
+        {% endif %}
+    </title>
+    <style>
+        :root {
+            /* typography */
+            --sans: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
+            --mono: 'Consolas', "Courrier New", 'Courrier', monospace;
+            /* global size */
+            font-size: 62.5%;
+        }
+
+        body {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: var(--sans);
+            font-size: 1.4rem;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        li {
+            margin: 0.8rem 0;
+        }
+
+        em {
+            display: block;
+            font-size: 12px;
+            text-indent: 2rem;
+            margin-left: 3.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>
+            Cosma
+             - {{ 'title' | translate }}
+            {% if projectTitle %}
+             - {{ 'project' | translate({ project: projectTitle }) }}
+            {% endif %}
+             - {{ date }}
+        </h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>{{ 'section_error' | translate({ length: errorsLength }) }}</h2>
+            {% for recordId, lines in listErrors %}
+                {% set title = lines[0].recordTitle %}
+
+                {% if recordId == "ignored_csv_line" %}
+                <h3>{{ 'csv_error' | translate }}</h3>
+                {% else %}
+                <h3>{{ title }}</h3>
+                {% endif %}
+                
+                <ul>
+                    {% for line in lines %}
+                    <li>{{line.about | translate(line.args) | safe }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </section>
+
+        <section>
+            <h2>{{ 'section_warning' | translate({ length: warningsLength }) }}</h2>
+            {% for recordId, lines in listWarnings %}
+                {% set title = lines[0].recordTitle %}
+                <h3>{{ title }}</h3>
+                <ul>
+                    {% for line in lines %}
+                    <li>{{line.about | translate(line.args) | safe}}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+
+</html>

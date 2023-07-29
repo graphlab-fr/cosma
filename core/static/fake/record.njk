@@ -1,0 +1,34 @@
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. <span class="red">Molestiae architecto quisquam ducimus</span>. Lorem ipsum dolor sit amet, consectetur adipisicing elit. [[g:{{ids | random }}]] Molestiae architecto quisquam ducimus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. [[{{ids | random }}]] Molestiae architecto quisquam ducimus.
+
+<table>
+    <thead>
+        <tr>
+            <th>Lorem ipsum</th>
+            <th>Adipisicing elit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Molestiae architecto quisquam ducimus. Molestiae architecto quisquam ducimus.</td>
+            <td>Consectetur adipisicing elit. Consectetur adipisicing elit.</td>
+        </tr>
+        <tr>
+            <td>Molestiae architecto quisquam ducimus. Molestiae architecto quisquam ducimus.</td>
+            <td>Consectetur adipisicing elit. Consectetur adipisicing elit.</td>
+        </tr>
+        <tr>
+            <td>Molestiae architecto quisquam ducimus. Molestiae architecto quisquam ducimus.</td>
+            <td>Consectetur adipisicing elit. Consectetur adipisicing elit.</td>
+        </tr>
+    </tbody>
+</table>
+
+{% set doubleQuote = bibKeys | random %}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus [@{{ doubleQuote }}, 2]. Lorem ipsum dolor sit amet [@{{ doubleQuote }}, 2], consectetur adipisicing elit. [[{{ids | random }}|texte d’remplacement]].
+
+<div class="box info">Custom CSS box</div>
+
+> Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus eum nisi iusto ducimus eos ad debitis vitae aliquid excepturi architecto. [@{{bibKeys | random }}, 46-52 ; @{{bibKeys | random }}, 12]
+
+![]({{imgSrc}} "Image for fake generation")

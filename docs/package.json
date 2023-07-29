@@ -1,0 +1,34 @@
+{
+  "name": "cosma-docs",
+  "version": "2.0.1",
+  "description": "User and developer documentation for Cosma.",
+  "homepage": "https://cosma.graphlab.fr/en/docs/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphlab-fr/cosma-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/graphlab-fr/cosma-docs/issues"
+  },
+  "main": "./src/.eleventy.js",
+  "scripts": {
+    "start": "cd src && npx @11ty/eleventy --serve",
+    "build": "cd src && npx @11ty/eleventy"
+  },
+  "contributors": [
+    "Arthur Perret",
+    "Guillaume Brioudes"
+  ],
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.2",
+    "eleventy-plugin-toc": "^1.1.5",
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^8.6.4",
+    "markdown-it-container": "^3.0.0",
+    "markdown-it-deflist": "^2.1.0",
+    "moment": "^2.29.1",
+    "slugify": "^1.6.5"
+  }
+}

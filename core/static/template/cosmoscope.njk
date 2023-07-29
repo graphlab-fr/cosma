@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Cosma v{{ app.version }}">
+    {% for meta, value in metadata %}
+    <meta name="{{ meta }}" content="{{ value }}">
+    {% endfor %}
+    <meta name="date" content="{{ date }}">
+    <title>Cosma — {{ metadata.title }}</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ faviconPath | imgPathToBase64 }}" />
+
+    <style> 
+        :root {
+            {% for type_name, type_values in graph.config.record_types %}
+            --n_{{ type_name | slugify }}: {{ type_values.stroke }};
+            {% endfor %}
+            {% for type_name, type_values in graph.config.link_types %}
+            --l_{{ type_name | slugify }}: {{ type_values.color }};
+            {% endfor %}
+            --highlight: {{ graph.config.graph_highlight_color }};
+        }
+        {% include "styles/styles.css" %}
+        {% include "styles/print.css" %}
+
+        {% if customCss %}
+        {{ customCss | safe }}
+        {% endif %}
+    </style>
+</head>
+
+<body>
+
+    {# ========================================
+    left side menu board
+    ========================================= #}
+
+    <aside class="menu list-content-container">
+
+        <header role="banner">
+            {% if guiContext === true %}
+            <div id="menu-electron" hidden>
+                {% if canSaveRecords === true %}
+                <button id="electron-record-new" title="Nouvelle fiche">{% include "icons/add.svg" %}</button>
+                {% endif %}
+                <button id="electron-back" title="Précédent" class="icon-chevron">{% include "icons/back.svg" %}</button>
+                <button id="electron-forward" title="Suivant" class="icon-chevron">{% include "icons/forward.svg" %}</button>
+                <button id="electron-page-reload" title="Recharger la page">{% include "icons/reload.svg" %}</button>
+                <button id="electron-share" title="Partager">{% include "icons/share.svg" %}</button>
+                <button id="electron-cosmoscope-new" title="Nouveau cosmoscope">{% include "icons/cosmoscope.svg" %}</button>
+            </div>
+            {% endif %}
+
+            {% if publishMode and metadata.title %}
+            <h1 class="title">{{ metadata.title }}</h1>
+            {% endif %}
+
+            <div class="load-bar" onclick="updateForces()"
+                title="{{ translation.left_panel.header.spatialization_bar_desc[lang] }}">
+                <div id="load-bar-value"></div>
+            </div>
+        </header>
+
+        <section>
+            <input class="search-bar" id="search" placeholder="{{ translation.left_panel.input_search.placeholder[lang] }} (S)"
+                autocomplete="off" role="search" />
+            <ul id="search-result-list"></ul>
+        </section>
+
+        <details class="menu-types" open="open">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_types.title[lang] }}
+                <span id="types-counter" class="badge">{{ types | length }}</span>
+            </summary>
+
+            <form id="types-form" class="menu-types-container">
+                {% for filterName, filterMetas in filters %}
+                <label class="filter">
+                    <input type="checkbox" name="{{ filterName }}">
+                    <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
+                    <span class="badge">{{ filterMetas.nodes | length }}</span>
+                </label>
+                {% endfor %}
+            </form>
+        </details>
+
+        {% if tags.length !== 0 %}
+        <details class="menu-tags" data-sort="tag">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_keywords.title[lang] }}
+                <span id="tag-counter" class="badge">{{ tags | length }}</span>
+            </summary>
+
+            <select class="sorting-select" name="index_sorting">
+                <option value="alphabetical">A-Z</option>
+                <option value="alphabetical:reverse">Z-A</option>
+                <option value="digital">Croissant</option>
+                <option value="digital:reverse">Décroissant</option>
+            </select>
+
+            <form id="tags-form" class="menu-tags-container menu-tags-container-prim sort-box active">
+                {% for tag in tags %}
+                <label class="btn" style="order: {{ loop.index }}">
+                    <input type="checkbox" name="{{ tag.name }}">
+                    <span class="label">{{ tag.name }}</span>
+                    <span class="badge">{{ tag.nodes | length }}</span>
+                </label>
+                {% endfor %}
+            </form>
+        </details>
+        {% endif %}
+
+        <details class="menu-index" id="index">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_index.title[lang] }}
+                <span id="index-counter" class="badge">{{ records | length }}</span>
+            </summary>
+
+            <select class="sorting-select" name="index_sorting">
+                <option value="alphabetical">A-Z</option>
+                <option value="alphabetical:reverse">Z-A</option>
+                <option value="chronological">Chronologique</option>
+                <option value="chronological:reverse">Antéchronologique</option>
+            </select>
+
+            <ul class="menu-index-list">
+                {% for record in records %}
+                <li data-index="{{ record.id }}" onclick="openRecord({{ record.id }})" style="order: {{ loop.index }}">
+                    <span class="record-type-point" style="color: var(--n_{{ record.types[0] | slugify }});">⬤</span>
+                    <span>{{ record.title }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
+
+        <details class="menu-view" open="open">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_views.title[lang] }}
+                <span class="badge">{{ views | length }}</span>
+            </summary>
+
+            <button onclick="window.location.replace(window.location.pathname)">
+                {{ translation.left_panel.menu_views.btn_reset[lang] }}
+            </button>
+
+            <button id="view-save">
+                {% if guiContext %}
+                {{ translation.left_panel.menu_views.btn_save_gui[lang] }}
+                {% else %}
+                {{ translation.left_panel.menu_views.btn_save[lang] }}
+                {% endif %}
+            </button>
+
+            <span class="tooltip">?
+                <span class="tooltiptext">{{ translation.left_panel.menu_views.tooltip[lang] }}</span>
+            </span>
+
+            <div class="menu-view-container" id="views-container">
+            {% if views.length !== 0 %}
+                {% for viewName, viewString in views %}
+                <button class="btn" onclick="window.location.replace('{{viewString}}')">
+                    {{ viewName }}
+                </button>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </details>
+
+        <details class="menu-controls">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_controls.title[lang] }}
+            </summary>
+
+            <ul class="menu-controls-list">
+                <li>
+                    <label>
+                        <input type="checkbox" checked onchange="linksDisplayToggle(this.checked)">
+                        {{ translation.left_panel.menu_controls.input_links_show[lang] }}
+                        <span class="badge">{{ nblinks }}</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" checked onchange="labelDisplayToggle(this.checked)">
+                        {{ translation.left_panel.menu_controls.input_labels_show[lang] }}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" {{ "checked" if graph.config.graph_highlight_on_hover }}
+                            onchange="graphProperties.graph_highlight_on_hover = this.checked">
+                        {{ translation.left_panel.menu_controls.input_highlight_hover_node[lang] }}
+                    </label>
+                </li>
+            </ul>
+
+            {% macro inputRange(name, graphParameter, fx, defaultValue, min, max, step) %}
+            <form oninput="graphProperties.{{ graphParameter }} = range.value; {{ fx }}">
+                <label>{{ name }}</label>
+                <input type="number" value="{{ defaultValue }}" name="number" min="{{ min }}" max="{{ max }}" oninput="range.value = number.value"/>
+                <input type="range" min="{{ min }}" max="{{ max }}" value="{{ defaultValue }}" name="range" step="{{ step }}" oninput="number.value = range.value"/>
+            </form>
+            {% endmacro %}
+
+            <article class="menu-controls-container">
+                <p class="menu-controls-title">
+                    {{ translation.left_panel.menu_controls.form_attraction.title[lang] }}
+                    <span class="tooltip">?
+                        <span class="tooltiptext">{{ translation.left_panel.form_attraction.help[lang] }}</span>
+                    </span>
+                </p>
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_force[lang], 'attraction_force', 'updateForces()', graph.config.attraction_force, graph.minValues.attraction_force, 600, 0.1) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_distance_max[lang], 'attraction_distance_max', 'updateForces()', graph.config.attraction_distance_max, graph.minValues.attraction_distance_max, 800, 0.1) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_vertical[lang], 'attraction_vertical', 'updateForces()', graph.config.attraction_vertical, graph.minValues.attraction_vertical, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_horizontal[lang], 'attraction_horizontal', 'updateForces()', graph.config.attraction_horizontal, graph.minValues.attraction_horizontal, 1, 0.01) }}
+            </article>
+
+            <article class="menu-controls-container">
+                <p class="menu-controls-title">
+                    {{ translation.left_panel.menu_controls.form_text.title[lang] }}
+                </p>
+                {{ inputRange(translation.left_panel.menu_controls.form_text.input_size[lang], 'text_size', 'updateFontsize()', graph.config.graph_text_size, graph.minValues.graph_text_size, 15, 0.5) }}
+            </article>
+
+            {% if focusIsActive %}
+            <article class="menu-controls-container">
+                <p class="menu-controls-title">Mode de focus</p>
+                <select name="focus_mode" id="focus-mode-select">
+                    <option value="directed">Tous</option>
+                    <option value="inbound">Entrant</option>
+                    <option value="outbound">Sortant</option>
+                </select>
+            </article>
+            {% endif %}
+        </details>
+
+        <footer class="menu-footer">
+            {% if references %}
+            <button onclick="openRecord('citation-references', false)"
+                class="bibliography-open" title="Données bibliographiques">
+                {{ translation.left_panel.footer.btn_data[lang] }}
+            </button>
+            {% endif %}
+
+            <button class="btn-help" onclick="openRecord('help', false)">
+                {{ translation.left_panel.footer.btn_help[lang] }}
+            </button>
+
+            <button class="btn-about" onclick="openRecord('credits', false)">
+                {% if publishMode %}
+                    {{ translation.left_panel.footer.publish_mark[lang] + " " + translation.left_panel.footer.btn_about[lang] }}
+                {% else %}
+                    {{ translation.left_panel.footer.btn_about[lang] }}
+                {% endif %}
+            </button>
+        </footer>
+    </aside>
+
+    {# ========================================
+    right side records container
+    ========================================= #}
+
+    <main id="record-container" class="record-container">
+        <button class="record-btn-close" onclick="closeRecord()">
+            {{ translation.right_panel.record.header.btn_close[lang] }}
+        </button>
+
+        {% for record in records %}
+        <article id="{{ record.id }}" class="record">
+            <header>
+                <h1 class="record-title">{{ record.title }}</h1>
+
+                {% if record.thumbnail %}
+                <img class="record-img" src="{{ record.thumbnail | imgPathToBase64 }}" />
+                {% endif %}
+
+                <div class="record-id">
+                    <span>{{ translation.right_panel.record.metadata.id[lang] }} :</span>
+                    <span>{{ record.id }}</span>
+                </div>
+
+                <div class="record-type">
+                    <span>{{ translation.right_panel.record.metadata.type[lang] }} :</span>
+                    <span>{{ record.types | join(", ") }}</span>
+                </div>
+
+                {% if record.tags %}
+                <div class="record-tags">
+                    <span>{{ translation.right_panel.record.metadata.keywords[lang] }} :</span>
+                    {% for tag in record.tags %}
+                    <button class="btn" onclick="activeTag('{{tag}}');">{{ tag }}</button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% for meta, value in record.metas %}
+                <div class="record-{{meta}}">
+                    <span>{{ meta }} :</span>
+                    <span>{{ value }}</span>
+                </div>
+                {% endfor %}
+            </header>
+
+            <main class="record-content">
+                {{ record.content | markdown | safe }}
+
+                {% if record.bibliography %}
+                <section class="bibliography">
+                    <hr/>
+                    <h1>{{ translation.right_panel.record.bibliography[lang] }}</h1>
+
+                    {{ record.bibliography | urlize | safe }}
+
+                </section>
+                {% endif %}
+            </main>
+
+            <footer class="list-content-container">
+                {% if record.links.length !== 0 %}
+                <details class="record-links" open="open">
+                    <summary class="menu-title">
+                        {{ translation.right_panel.record.footer.list_links[lang] }}
+                        <span class="badge">{{ record.links | length }}</span>
+                    </summary>
+
+                    <ul class="record-links-list">
+                        {% for link in record.links %}
+                        <li data-target-id="{{ link.target.id }}" onclick="openRecord({{ link.target.id }})">
+                            <span class="record-type-point" style="color: var(--n_{{ link.target.type | slugify }});">⬤</span>
+                            <span>{{ link.target.title }}</span>
+                            <div class="record-links-context">
+                                {{ link.context | markdown | safe }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+
+                {% if record.backlinks.length !== 0 %}
+                <details class="record-backlinks" open="open">
+                    <summary class="menu-title">
+                        {{ translation.right_panel.record.footer.list_backlinks[lang] }}
+                        <span class="badge">{{ record.backlinks | length }}</span>
+                    </summary>
+
+                    <ul class="record-backlinks-list">
+                        {% for backlink in record.backlinks %}
+                        <li data-target-id="{{ backlink.source.id }}" onclick="openRecord({{ backlink.source.id }})">
+                            <span class="record-type-point" style="color: var(--n_{{ backlink.source.type | slugify }});">⬤</span>
+                            <span>{{ backlink.source.title }}</span>
+                            <div class="record-links-context">
+                                {{ backlink.context | markdown | safe }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+            </footer>
+        </article>
+        {% endfor %}
+        
+        {# Help #}
+        
+        <article id="help" class="record">
+            <main>
+                <h1>{{ translation.right_panel.help.title[lang] }}</h1>
+                
+                <p>
+                    <a href="{{ translation.right_panel.help.documentation_link_href[lang] }}" target="_blank" class="link-documentation">
+                        {{ translation.right_panel.help.documentation_link_placeholder[lang] }}
+                    </a>
+                </p>
+                
+                <h2>{{ translation.right_panel.help.shortcuts.title[lang] }}</h2>
+                
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.space.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.space.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.s.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.s.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_click.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_click.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.r.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.r.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_r.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_r.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.c.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.c.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.f.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.f.effect[lang] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ translation.right_panel.help.shortcuts.escap.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.escap.effect[lang] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </main>
+        </article>
+
+        {# Cosma's authors & contributors credits #}
+
+        <article id="credits" class="record">
+            <main>
+                {% if publishMode %}
+                    {% if metadata.title %}
+                    <h1 class="metas-title">{{ metadata.title }}</h1>
+                    {% endif %}
+
+                    {% if metadata.author %}
+                    <p class="metas-author">{{ metadata.author }}</p>
+                    {% endif %}
+
+                    {% if metadata.description %}
+                    <p class="metas-description">{{ metadata.description }}</p>
+                    {% endif %}
+                    
+                    <hr>
+                {% endif %}
+
+                {% if publishMode and metadata %}
+                <div class="logo">
+                    {% include "icons/cosmalogo.svg" %}
+                </div>
+                {% else %}
+                <h1>Cosma</h1>
+                {% endif %}
+
+                <p>
+                    {{ translation.right_panel.credits.version[lang] }} {{ app.version }}
+                    •
+                    {{ translation.right_panel.credits.license[lang] }} {{ app.license }}</p>
+
+                <ul>
+                    {% for person in app.contributors %}
+                    <li>{{ person }}</li>
+                    {% endfor %}
+
+                    <li>{{ translation.right_panel.credits.ANR_program[lang] }} <a href="https://hyperotlet.hypotheses.org/">HyperOtlet</a></li>
+                </ul>
+
+                <dl>
+                    <dt><a href="https://d3js.org/" target="_blank">D3 <span class="badge">v4.13.0</span></a></dt>
+                    <dd>Mike Bostock (BSD 3-Clause)</dd>
+                    <dt><a href="https://mozilla.github.io/nunjucks/" target="_blank">Nunjucks <span class="badge">v3.2.3</span></a></dt>
+                    <dd>James Long (BSD 2-Clause)</dd>
+                    <dt><a href="https://github.com/nodeca/js-yaml" target="_blank">Js-yaml <span class="badge">v4.1.0</span></a></dt>
+                    <dd>Vitaly Puzrin (MIT License)</dd>
+                    <dt><a href="https://github.com/markdown-it/markdown-it" target="_blank">Markdown-it <span class="badge">v12.3.0</span></a></dt>
+                    <dd>Vitaly Puzrin, Alex Kocharin (MIT License)</dd>
+                    <dt><a href="https://github.com/juris-m/citeproc-js" target="_blank">Citeproc <span class="badge">v2.4.62</span></a></dt>
+                    <dd>Frank Bennett (CPAL, AGPL)</dd>
+                    <dt><a href="https://fusejs.io/" target="_blank">Fuse-js <span class="badge">v6.4.6</span></a></dt>
+                    <dd>Kiro Risk (Apache License 2.0)</dd>
+                </dl>
+            </main>
+        </article>
+
+        {% if references %}
+        <article id="citation-references" class="record">
+            <main>
+                <h1>{{ translation.right_panel.bibliography_data.title[lang] }}</h1>
+    
+                <p>{{ translation.right_panel.bibliography_data.description[lang] }}</p>
+    
+                <button>{{ translation.right_panel.bibliography_data.btn_download[lang] }}</button>
+    
+                <code>{{ references | dump | escape }}</code>
+            </main>
+        </article>
+        {% endif %}
+
+    </main>
+
+    {# ========================================
+    Cosma graph
+    ========================================= #}
+
+    <div class="graph-wrapper" style="background-color: {{ graph.config.graph_background_color }}">
+        <svg id="graph-canvas">
+            <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                </marker>
+                <filter id="double">
+                    <feMorphology in="SourceGraphic" result="a" operator="dilate" radius="0.2"></feMorphology>
+                    <feComposite in="SourceGraphic" in2="a" result="xx" operator="xor"></feComposite>
+                </filter>
+                {% for thumbnail in nodeThumbnails %}
+                <pattern id="{{ thumbnail.name }}" class="thumnail-pattern" x="0%" y="0%" height="100%" width="100%" viewBox="0 0 512 512">
+                    <image x="0%" y="0%" width="512" height="512" xlink:href="{{ thumbnail.path | imgPathToBase64 }}"></image>
+                </pattern>
+                {% endfor %}
+            </defs>
+        </svg>
+
+        <div class="graph-controls">
+            <div class="graph-controls-zoom">
+                <button onclick="zoomLess()">-</button>
+                <button onclick="zoomReset()">{{ translation.graph.btn_zoom_reset[lang] }} (R)</button>
+                <button onclick="zoomMore()">+</button>
+            </div>
+
+            {% if focusIsActive %}
+            <div class="graph-controls-focus">
+                <label>
+                    <input id="focus-check" type="checkbox" name="checkbox">
+                    {{ translation.graph.btn_focus[lang] }} (F)
+                </label>
+
+                <input id="focus-input" type="range" min="1" max="{{ graph.config.focus_max }}" value="1" name="focus_range" step="1" />
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="graph-timeline">
+            <label>
+                <input id="timeline-checkbox" type="checkbox" name="checkbox">
+                Mode chronologique
+            </label>
+
+            <form id="timeline-form">
+                <output name="timeline_output">{{ timeline.begin | timestampToLocal }}</output>
+                <input
+                    type="range"
+                    name="timeline_range"
+                    min="{{ timeline.begin }}"
+                    max="{{ timeline.end }}"
+                    value="{{ timeline.begin }}"
+                    list="timeline-ticks"
+                >
+                <datalist id="timeline-ticks"></datalist>
+            </form>
+        </div>
+    </div>
+
+    {# Cosma data #}
+
+    <script>
+        const data = {{ graph.data | dump | safe }};
+        const graphProperties = {{ graph.config | dump | safe }};
+        const tagList = {{ tags | dump | safe }};
+        const typeList = {{ filters | dump | safe }};
+        const timeline = {{ timeline | dump | safe }};
+        const sorting = {{ sorting | dump | safe }};
+
+        const focusIsActive = {{ focusIsActive }};
+    </script>
+
+    {# Cosma functions #}
+
+    {% if devMode %}
+    <script src="../bundle.js"></script>
+    {% else %}
+    <script>
+        {% include "bundle.js" %}
+    </script>
+    {% endif %}
+
+</body>
+
+</html>
