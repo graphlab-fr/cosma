@@ -2,6 +2,14 @@
 title: Changelog
 ---
 
+# v2.0.1
+
+## Bug fixes
+
+- Modelization no longer fails on Windows
+- Windows style carriage return and line feeds hidden characters (CR LF) are now parsed correctly
+- Citations are now processed as expected in backlink context tooltips
+
 # v2.0.0
 
 ## Additions
