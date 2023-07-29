@@ -1,309 +1,62 @@
-const {
-    ipcMain,
-    Menu,
-    dialog,
-    BrowserWindow
-} = require('electron');
+const fs = require('fs')
+    , path = require('path')
+    , readline = require('readline');
 
-const Config = require('../core/models/config')
-    , Link = require('../core/models/link')
-    , lang = require('../core/models/lang');
+const ConfigCli = require('../models/config-cli'),
+    Config = require('../core/models/config');
 
-const Display = require('../models/display')
-    , ProjectConfig = require('../models/project-config');
-
-ipcMain.on("get-default-config-options", (event) => {
-    event.returnValue = Config.get(ProjectConfig.getDefaultConfigFilePath());
-});
-
-ipcMain.on("get-config-options", (event) => {
-    event.returnValue = new ProjectConfig().opts;
-});
-
-ipcMain.on("get-langages", (event) => {
-    event.returnValue = ProjectConfig.validLangages;
-});
-
-ipcMain.on("save-config-option", (event, name, value) => {
-    if (ProjectConfig.getOptionsList().has(name) === false) {
-        return;
+module.exports = function(title, { global: isGlobal }) {
+    if (fs.existsSync(ConfigCli.pathConfigFile.fromInstallationDir) === false) {
+        const isOk = new Config(undefined, ConfigCli.pathConfigFile.fromInstallationDir).save();
+        if (isOk === false) { log(isOk); }
+    }
+    if (isGlobal && fs.existsSync(ConfigCli.pathConfigDir) === false) {
+        return console.log(
+            ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
+            "To create global configuration files, first create a user data directory by running",
+            ['\x1b[1m', 'cosma --create-user-data-dir', '\x1b[0m'].join(''),
+            "."
+        );
+    }
+    if (ConfigCli.pathConfigFile.fromExecutionDir === ConfigCli.pathConfigFile.fromConfigDir) {
+        isGlobal = true;
     }
 
-    const newConfig = {};
-    newConfig[name] = value;
+    const isGlobalDefaultConfig = isGlobal && !title;
 
-    const config = new ProjectConfig(newConfig);
-
-    if (config.report.includes(name)) {
-        event.returnValue = config.writeReport();
-        return;
+    if (title) {
+        title = ConfigCli.getSlugConfigFileName(title);
     }
 
-    config.save();
-    event.returnValue = true;
-
-    let windowForSend = Display.getWindow('export');
-    if (windowForSend) {
-        windowForSend.webContents.send("config-change");
-    }
-
-    let appMenu;
-
-    switch (name) {
-        case 'bibliography':
-        case 'csl':
-        case 'csl_locale':
-            appMenu = Menu.getApplicationMenu();
-            appMenu.getMenuItemById('citeproc').enabled = config.canCiteproc();
-            break;
-    }
-});
-
-ipcMain.on("save-config-option-recordsfilter", (event, meta, value, index, action) => {
-    let opts = new ProjectConfig().opts, config;
-
-    switch (action) {
-        case 'add':
-            config = new ProjectConfig ({
-                record_filters: [
-                    ...opts.record_filters,
-                    { meta, value }
-                ]
-            });
-            break;
-
-        case 'delete':
-            config = new ProjectConfig ({
-                record_filters: [
-                    ...opts.record_filters.filter((filter, i) => i !== index)
-                ]
-            });
-            break;
-
-        case 'delete-all':
-            if (askDeleteAll() === true) {
-                config = new ProjectConfig ({
-                    record_filters: ProjectConfig.base.record_filters
-                });
-            } else {
-                config = new ProjectConfig();
-            }
-            break;
-    }
-
-    if (config.report.includes('record_filters')) {
-        event.returnValue = config.writeReport();
+    let configFilePath, opts = Object.assign({}, ConfigCli.getDefaultConfig(), { name: title || '' });
+    if (isGlobal) {
+        configFilePath = path.join(ConfigCli.pathConfigDir, `${title || 'defaults.yml'}`);
     } else {
-        config.save();
-        event.returnValue = true;
-
-        let windowForSend = Display.getWindow('config');
-        if (windowForSend) {
-            windowForSend.webContents.send("reset-config");
-        }
+        configFilePath = ConfigCli.pathConfigFile.fromExecutionDir;
     }
-});
+    const { dir: configFileDir, base: configFileName } = path.parse(configFilePath);
 
-ipcMain.on("save-config-option-typerecord", (event, name, nameInitial, fill, stroke, action) => {
-    let opts = new ProjectConfig().opts, config;
+    if (isGlobalDefaultConfig) { opts = Config.base; }
 
-    switch (action) {
-        case 'add':
-            opts.record_types[name] = { fill, stroke };
-
-            config = new ProjectConfig ({
-                record_types: opts.record_types
-            });
-            break;
-
-        case 'update':
-            delete opts.record_types[nameInitial];
-
-            opts.record_types[name] = { fill, stroke };
-
-            config = new ProjectConfig ({
-                record_types: opts.record_types
-            });
-            break;
-
-        case 'delete':
-            delete opts.record_types[name];
-
-            config = new ProjectConfig ({
-                record_types: opts.record_types
-            });
-            break;
-
-        case 'delete-all':
-            if (askDeleteAll() === true) {
-                config = new ProjectConfig ({
-                    record_types: ProjectConfig.base.record_types
-                })
-            } else {
-                config = new ProjectConfig();
+    if (fs.existsSync(configFilePath)) {
+        rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+        rl.question(`Do you want to overwrite '${configFileName}' ? (y/n) `, async (answer) => {
+            if (answer === 'y') {
+                const isOk = new Config(opts, configFilePath).save();
+                log(isOk)
             }
-            break;
-    }
-
-    if (config.report.includes('record_types')) {
-        event.returnValue = config.writeReport();
-    } else {
-        config.save();
-        event.returnValue = true;
-
-        let windowForSend = Display.getWindow('config');
-        if (windowForSend) {
-            windowForSend.webContents.send("reset-config");
-        }
-        windowForSend = Display.getWindow('record');
-        if (windowForSend) {
-            windowForSend.webContents.send("config-change");
-        }
-    }
-});
-
-ipcMain.on("save-config-option-typelink", (event, name, nameInitial, color, stroke, action) => {
-    let opts = new ProjectConfig().opts, config;
-
-    switch (action) {
-        case 'add':
-            opts.link_types[name] = {
-                stroke: stroke,
-                color: color
-            };
-
-            config = new ProjectConfig ({
-                link_types: opts.link_types
-            });
-            break;
-
-        case 'update':
-            delete opts.link_types[nameInitial];
-
-            opts.link_types[name] = {
-                stroke: stroke,
-                color: color
-            };
-
-            config = new ProjectConfig ({
-                link_types: opts.link_types
-            });
-            break;
-
-        case 'delete':
-            delete opts.link_types[name];
-
-            config = new ProjectConfig ({
-                link_types: opts.link_types
-            });
-            break;
-
-        case 'delete-all':
-            if (askDeleteAll() === true) {
-                config = new ProjectConfig ({
-                    link_types: ProjectConfig.base.link_types
-                })
-            } else {
-                config = new ProjectConfig();
-            }
-            break;
-    }
-
-    if (config.report.includes('link_types')) {
-        event.returnValue = config.writeReport();
-    } else {
-        config.save();
-        event.returnValue = true;
-
-        const configWindow = Display.getWindow('config');
-        if (configWindow) {
-            configWindow.webContents.send("reset-config");
-        }
-    }
-});
-
-ipcMain.on("get-link-strokes", (event) => {
-    event.returnValue = Array.from(Link.validLinkStrokes)
-        .map((stroke) => {
-            return {id: stroke, name: lang.getFor(lang.i.windows.linktype.strokes[stroke])};
+            rl.close();
         })
-});
-
-ipcMain.on("save-config-option-view", (event, name, nameInitial, key, action) => {
-    let opts = new ProjectConfig().opts, config;
-
-    switch (action) {
-        case 'add':
-            opts.views[name] = key;
-
-            config = new ProjectConfig ({
-                views: opts.views
-            });
-            break;
-
-        case 'update':
-            delete opts.views[nameInitial];
-
-            opts.views[name] = key;
-
-            config = new ProjectConfig ({
-                views: opts.views
-            });
-            break;
-
-        case 'delete':
-            delete opts.views[name];
-
-            config = new ProjectConfig ({
-                views: opts.views
-            });
-            break;
-
-        case 'delete-all':
-            if (askDeleteAll() === true) {
-                config = new ProjectConfig ({
-                    views: ProjectConfig.base.views
-                })
-            } else {
-                config = new ProjectConfig();
-            }
-            break;
-    }
-
-    if (config.report.includes('views')) {
-        event.returnValue = config.writeReport();
     } else {
-        config.save();
-        event.returnValue = true;
-
-        let window = Display.getWindow('config');
-        if (window) {
-            window.webContents.send("reset-config");
-        }
-
-        window = Display.getWindow('main');
-        if (window) {
-            window.webContents.send("reset-views");
+        const isOk = new Config(opts, configFilePath).save();
+        log(isOk)
+    }
+    
+    function log(isOk) {
+        if (isOk) {
+            console.log(['\x1b[32m', 'Configuration file created', '\x1b[0m'].join(''), `: ${['\x1b[2m', configFileDir, '/', '\x1b[0m', configFileName].join('')}`);
+        } else {
+            console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'could not save configuration file');
         }
     }
-});
-
-/**
- * Ask user by a dialog modal to confirm delete_all
- * @returns {boolean} - True if the user answer 'Ok'
- */
-
-function askDeleteAll () {
-    const result = dialog.showMessageBoxSync(BrowserWindow.getFocusedWindow(), {
-        message: lang.getFor(lang.i.dialog.delete_all.message),
-        type: 'warning',
-        buttons: [lang.getFor(lang.i.dialog.btn.cancel), lang.getFor(lang.i.dialog.btn.ok)],
-        defaultId: 0,
-        cancelId: 0,
-        noLink: true
-    })
-
-    if (result === 1) { return true; }
-
-    return false;
 }

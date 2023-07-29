@@ -1,84 +1,42 @@
 # Cosma [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5920616.svg)](https://doi.org/10.5281/zenodo.5920616)
 
-*(Texte en français plus bas)*
-
 **Cosma** is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.
 
 Visit <https://cosma.graphlab.fr/en/about/> to learn more about the project.
 
-## Installation
+This is the command-line interface (CLI) version of Cosma. It requires [NodeJS](https://nodejs.org/fr/) v12 or higher.
 
-Cosma is available for macOS and Windows. [Click here to access the latest release.](https://github.com/graphlab-fr/cosma/releases/latest) The application is not signed with a security certificate, so you must have administrator privileges on your session to be able to run it.
-
-**macOS :** download then unzip `Cosma.app.zip` in your Applications folder. For the first launch, right click the application and select Open.
-
-**Windows :** download then unzip `Cosma-win32-x64.zip`. Rename the folder `Cosma` and place it in your `C:\Programs` or `C:\Programs (86)` folder.
-
-**All platforms:** you can also download `cosma-help.zip` which contains sample records for you to test Cosma with. When first launching the application, visit Preferences and set Records directory to the `cosma-help` folder.
-
-[User documentation](https://cosma.graphlab.fr/en/docs/user-manual/) is online and updated periodically.
-
-## Development
-
-Developing Cosma requires [Node.js](https://nodejs.org/fr/) v16 or higher.
-
-Run these commands :
+Run these commands to clone and edit the repository :
 
 ```bash
-# clone the repository
-git clone --recurse-submodules https://github.com/graphlab-fr/cosma cosma
-cd cosma
-# install dependencies
+git clone --recurse-submodules https://github.com/graphlab-fr/cosma-cli cosma-cli
+cd cosma-cli
 npm i
-# launch Cosma (Electron)
-npm start
+node app modelize # cmd 'cosma modelize' -> 'node app modelize'
 ```
 
-A draft of the developers' documentation is available in French: https://cosma.graphlab.fr/docs/manuel-developpement/
+## Documentation
 
-## Build
+User and developer documentation for Cosma CLI will be published progressively in 2022 at <https://cosma.graphlab.fr/docs>.
 
-Read the doc: https://www.electronforge.io/cli#make
+## History
 
-```bash
-npm run make
-npm run make -- --platform (win32|darwin|linux) --arch (x64|arm64)
-```
+The first version of Cosma was a CLI prototype developed during late 2020 and early 2021. We then worked on a GUI version with Electron, and in the process much of the code was changed. After publishing the GUI version as Cosma 1.0, we came back to the CLI prototype and worked on integrating all the changes. As a result, Cosma is available again as a CLI tool.
 
-Find executables on `/out/make/`.
+## What’s new
 
----
+This section presents notes for the latest release. To check all release notes, visit the [Changelog section of the documentation](https://cosma.graphlab.fr/en/docs/user-manual/#changelog).
 
-**Cosma** est un logiciel de visualisation de graphe documentaire. Il permet de représenter des notes interreliées sous la forme d’un réseau interactif dans une interface web.
+Version 1.1 adds the following features:
 
-Consultez <https://cosma.graphlab.fr/a-propos/> pour plus d'informations sur le projet.
+- New `modelize` option, `--config`, the value of which must be the absolute path of a config file. This makes Cosma CLI capable of working with multiple directories, without having to manually shuffle around config files in the support folder.
+- If a config file includes YAML syntax mistakes, an error is thrown with a helpful message.
+- Records directories are now read recursively. This means all records are now taken into account, whatever their location in a possible subdirectory structure.
+- HTML elements used in the text of records are now recognized and interpreted.
 
-## Installation
+Bugs have also been solved:
 
-Cosma est disponible pour macOS et Windows. [Visitez la page Releases pour obtenir la dernière version du logiciel.](https://github.com/graphlab-fr/cosma/releases/latest) L'application n'est pas signée avec un certificat de sécurité, vous devez disposer des privilèges administrateurs sur votre session pour pouvoir l'exécuter.
-
-**macOS :** téléchargez puis décompressez le fichier `Cosma.app.zip` et placez le le fichier `Cosma.app` dans `~/Applications`. Au premier lancement, faites clic droit › Ouvrir sur l'application pour l'exécuter.
-
-**Windows :** téléchargez puis décompressez le fichier `Cosma-win32-x64.zip`, renommez le dossier « Cosma » et placez-le dans `C:\Programmes` ou `C:\Programmes (86)`.
-
-**Pour toutes les plateformes :** vous pouvez également télécharger et décompresser le fichier `cosma-fiches-aide.zip` pour obtenir un répertoire `cosma-fiches-aide` contenant une documentation utilisateur sous forme de fiches. Ceci vous permet de tester le logiciel : au premier lancement de Cosma, indiquez le chemin du répertoire `cosma-fiches-aides` dans Préférences › Répertoire de fiches.
-
-[La documentation utilisateur est à jour et en ligne.](https://cosma.graphlab.fr/docs/manuel-developpement/)
-
-## Développement
-
-Pré-requis : [Node.js](https://nodejs.org/fr/) version 16 ou supérieure.
-
-Exécutez ces commandes :
-
-```bash
-# cloner le dépôt
-git clone --recurse-submodules https://github.com/graphlab-fr/cosma cosma
-cd cosma
-# intaller les dépendances
-npm i
-# lancer Cosma (Electron)
-npm start
-```
-
-Une ébauche de la documentation des développeurs est disponible : https://cosma.graphlab.fr/docs/manuel-developpement/
+- Context tooltips for typed links are no longer empty (issue #15).
+- Clicking on saved views displays them again (issue #16).
+- Vertical and horizontal attraction settings are no longer switched (issue #18).
+- The `--custom-css` (or `-css`) option works again (issue #19).
