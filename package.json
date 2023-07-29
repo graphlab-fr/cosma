@@ -14,6 +14,7 @@
   "bin": {
     "cosma": "app.js"
   },
+  "man": ["./man/cosma.1"],
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
