@@ -2,6 +2,10 @@
 title: Changelog
 ---
 
+# v2.0.1.1
+
+- Man page can now be accessed as expected
+
 # v2.0.1
 
 ## Bug fixes
