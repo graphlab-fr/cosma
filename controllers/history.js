@@ -26,7 +26,7 @@ module.exports = async function (projectName, projectScope) {
       pathDir = path.join(data, projectName);
       break;
     case 'local':
-      pathDir = path.join(process.env.PWD, 'history');
+      pathDir = path.join(process.cwd(), 'history');
       break;
     default:
       throw new Error('Unknown project scope');
