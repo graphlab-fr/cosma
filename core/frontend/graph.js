@@ -43,7 +43,7 @@ const simulation = d3
   .forceSimulation(data.nodes)
   .force(
     'link',
-    d3.forceLink(data.links).id((d) => d.id)
+    d3.forceLink(data.links).id((d) => d.id),
   )
   .force('charge', d3.forceManyBody())
   .force('center', d3.forceCenter())
@@ -160,7 +160,7 @@ elts.circles = elts.nodes
         if (!d3.event.active) simulation.alphaTarget(0.0001);
         d.fx = null;
         d.fy = null;
-      })
+      }),
   )
   .on('mouseenter', function (nodeMetas) {
     if (!graphProperties.graph_highlight_on_hover) {

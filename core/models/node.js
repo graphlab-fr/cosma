@@ -25,7 +25,7 @@ module.exports = class Node {
     linksExtent,
     backlinksExtent,
     minRange,
-    maxRange
+    maxRange,
   ) {
     const [minLinks, maxLinks] = linksExtent;
     const [minBacklinks, maxBacklinks] = backlinksExtent;
@@ -94,7 +94,7 @@ module.exports = class Node {
             linksExtent,
             backlinksExtent,
             node_size_min,
-            node_size_max
+            node_size_max,
           );
           break;
       }
@@ -126,7 +126,7 @@ module.exports = class Node {
     size,
     strokeWidth,
     begin,
-    end
+    end,
   ) {
     this.id = id;
     this.label = label;

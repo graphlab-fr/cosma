@@ -11,7 +11,7 @@ module.exports = async function () {
   fetchSpreadsheets().then(() => {
     Cosmoscope.getFromPathCsv(
       path.join(tempDirPath, 'nodes.csv'),
-      path.join(tempDirPath, 'links.csv')
+      path.join(tempDirPath, 'links.csv'),
     )
       .then(async ([records, links]) => {
         Record.massSave(records, 1, { files_origin: tempDirPath }).then(async () => {

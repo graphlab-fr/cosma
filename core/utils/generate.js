@@ -149,7 +149,7 @@ function opensphere(savePath, templateOptions = ['publish', 'citeproc', 'dev']) 
     fetchSpreadsheets().then(() => {
       Cosmoscope.getFromPathCsv(
         path.join(tempDirPath, 'nodes.csv'),
-        path.join(tempDirPath, 'links.csv')
+        path.join(tempDirPath, 'links.csv'),
       )
         .then(([records, links]) => {
           links = Link.formatedDatasetToLinks(links);

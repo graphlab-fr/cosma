@@ -10,7 +10,7 @@ describe('Cosmoscope', () => {
           `---
 id: 20210901132906
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.id, '20210901132906');
       });
@@ -20,7 +20,7 @@ id: 20210901132906
           `---
 id: 'toto'
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.id, 'toto');
       });
@@ -30,7 +30,7 @@ id: 'toto'
           `---
 id: 2012-05-12
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.id, '2012-05-12');
       });
@@ -44,7 +44,7 @@ title: simple
 ---
 
 toto et tata`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.content, '\n\ntoto et tata');
       });
@@ -56,7 +56,7 @@ toto et tata`,
           `---
 title: simple
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.title, 'simple');
       });
@@ -66,7 +66,7 @@ title: simple
           `---
 title: 2001-01-01
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.title, '2001-01-01');
       });
@@ -76,7 +76,7 @@ title: 2001-01-01
           `---
 title: null
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.title, 'null');
       });
@@ -86,7 +86,7 @@ title: null
           `---
 title: true
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.title, 'true');
       });
@@ -96,7 +96,7 @@ title: true
           `---
 title: ['title', 'as', 'array']
 ---`,
-          'path'
+          'path',
         );
         assert.strictEqual(result.metas.title, 'title,as,array');
       });
@@ -108,7 +108,7 @@ title: ['title', 'as', 'array']
           `---
 type: ['toto', 'tata']
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.types, ['toto', 'tata']);
       });
@@ -118,7 +118,7 @@ type: ['toto', 'tata']
           `---
 type: toto
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.types, ['toto']);
       });
@@ -128,7 +128,7 @@ type: toto
           `---
 type: 
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.types, ['undefined']);
       });
@@ -138,7 +138,7 @@ type:
           `---
 type: []
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.types, ['undefined']);
       });
@@ -148,7 +148,7 @@ type: []
           `---
 type: [false]
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.types, ['false']);
       });
@@ -160,7 +160,7 @@ type: [false]
           `---
 tags: ['toto', 'tata']
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.tags, ['toto', 'tata']);
       });
@@ -170,7 +170,7 @@ tags: ['toto', 'tata']
           `---
 keywords: ['toto', 'tata']
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.tags, ['toto', 'tata']);
       });
@@ -182,7 +182,7 @@ keywords: ['toto', 'tata']
           `---
 references: ['toto', 'tata']
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.references, ['toto', 'tata']);
       });
@@ -192,7 +192,7 @@ references: ['toto', 'tata']
           `---
 references: [false]
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.references, ['false']);
       });
@@ -202,7 +202,7 @@ references: [false]
           `---
 references: tata
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.references, ['tata']);
       });
@@ -212,7 +212,7 @@ references: tata
           `---
 references:
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas.references, []);
       });
@@ -224,7 +224,7 @@ references:
           `---
 toto: tata
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas['toto'], 'tata');
       });
@@ -237,7 +237,7 @@ toto: tata
 begin: 1999
 end: 2001
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas['begin'], 915148800000);
         assert.deepStrictEqual(result.metas['end'], 978307200000);
@@ -248,7 +248,7 @@ end: 2001
           `---
 end:
 ---`,
-          'path'
+          'path',
         );
         assert.deepStrictEqual(result.metas['begin'], NaN);
         assert.deepStrictEqual(result.metas['end'], NaN);

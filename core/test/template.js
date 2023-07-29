@@ -33,11 +33,11 @@ describe.skip('Template', () => {
       for (const { context, target, type } of linksMarked) {
         if (type !== 'undefined') {
           context.should.to.include(
-            `*&#91;&#91;${type}:${target.id}&#93;&#93;*{.id-context data-target-id=${target.id}}`
+            `*&#91;&#91;${type}:${target.id}&#93;&#93;*{.id-context data-target-id=${target.id}}`,
           );
         } else {
           context.should.to.include(
-            `*&#91;&#91;${target.id}&#93;&#93;*{.id-context data-target-id=${target.id}}`
+            `*&#91;&#91;${target.id}&#93;&#93;*{.id-context data-target-id=${target.id}}`,
           );
         }
       }
@@ -49,11 +49,11 @@ describe.skip('Template', () => {
       for (const { context, type } of linksMarked) {
         if (type !== 'undefined') {
           context.should.to.include(
-            `*&#91;&#91;${type}:${id}&#93;&#93;*{.id-context data-target-id=${id}}`
+            `*&#91;&#91;${type}:${id}&#93;&#93;*{.id-context data-target-id=${id}}`,
           );
         } else {
           context.should.to.include(
-            `*&#91;&#91;${id}&#93;&#93;*{.id-context data-target-id=${id}}`
+            `*&#91;&#91;${id}&#93;&#93;*{.id-context data-target-id=${id}}`,
           );
         }
       }

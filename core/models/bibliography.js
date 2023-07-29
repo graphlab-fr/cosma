@@ -194,7 +194,7 @@ module.exports = class Bibliography {
     const cluster = this.citeproc.processCitationCluster(
       bibliographicRecord.quotesExtract,
       [],
-      []
+      [],
     )[1][0][1];
 
     return {
@@ -220,7 +220,7 @@ module.exports = class Bibliography {
           return this.library[id];
         },
       },
-      this.cslStyle
+      this.cslStyle,
     );
   }
 };

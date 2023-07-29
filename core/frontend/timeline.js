@@ -70,20 +70,20 @@ window.addEventListener('DOMContentLoaded', () => {
     ticks.innerHTML = '';
     ticks.insertAdjacentHTML(
       'beforeend',
-      `<option value="${begin}">${getDateFromTimesetamp(begin)}</option>`
+      `<option value="${begin}">${getDateFromTimesetamp(begin)}</option>`,
     );
     for (let i = 1; i <= tickNb; i++) {
       if (i === tickNb) {
         ticks.insertAdjacentHTML(
           'beforeend',
-          `<option value="${end}">${getDateFromTimesetamp(end)}</option>`
+          `<option value="${end}">${getDateFromTimesetamp(end)}</option>`,
         );
         continue;
       }
 
       ticks.insertAdjacentHTML(
         'beforeend',
-        `<option value="${begin + step * i}">${getDateFromTimesetamp(begin + step * i)}</option>`
+        `<option value="${begin + step * i}">${getDateFromTimesetamp(begin + step * i)}</option>`,
       );
     }
   }

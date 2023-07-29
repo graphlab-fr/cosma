@@ -10,7 +10,7 @@ describe('YAML Front Matter parser', () => {
   it('should find all properties from YAML file head', async () => {
     const fileContent = await fs.readFile(
       path.join(__dirname, './fixture', 'Paul Otlet.md'),
-      'utf-8'
+      'utf-8',
     );
     const { head } = readYmlFm(fileContent);
 
@@ -27,7 +27,7 @@ describe('YAML Front Matter parser', () => {
   it('should separate markdown content from YAML head', async () => {
     const fileContent = await fs.readFile(
       path.join(__dirname, './fixture', 'Paul Otlet.md'),
-      'utf-8'
+      'utf-8',
     );
     const { content } = readYmlFm(fileContent);
 
