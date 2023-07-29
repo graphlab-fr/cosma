@@ -37,7 +37,7 @@ module.exports = {
         'Can not read CSV lines for links.',
         JSON.stringify(cause),
         'read-csv-lines-links',
-        true
+        true,
       );
     }
   },

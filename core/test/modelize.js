@@ -65,7 +65,7 @@ describe('Modelize from csv files', () => {
   before(async () => {
     const [formattedRecords, formattedLinks] = await Cosmocope.getFromPathCsv(
       path.join(fixtureDirPath, 'nodes.csv'),
-      path.join(fixtureDirPath, 'links.csv')
+      path.join(fixtureDirPath, 'links.csv'),
     );
     records = formattedRecords;
     links = formattedLinks;

@@ -79,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
         neighborsNodeIds.push(nodeId);
         return depth >= input.valueAsNumber;
       },
-      { mode: focusMode }
+      { mode: focusMode },
     );
 
     setNodesDisplaying(neighborsNodeIds, filterPriority.filteredByFocus);

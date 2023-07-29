@@ -92,7 +92,7 @@ module.exports = class Template {
           }
 
           return mark;
-        }
+        },
       );
       return link;
     });
@@ -245,11 +245,11 @@ module.exports = class Template {
       });
 
     const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
+      new nunjucks.FileSystemLoader(path.join(__dirname, '../static')),
     );
 
     mdIt.inline.ruler2.push('image_to_base64', (state) =>
-      Template.mdItImageToBase64(imagesPath, state)
+      Template.mdItImageToBase64(imagesPath, state),
     );
 
     templateEngine.addFilter('slugify', (input) => {
@@ -313,7 +313,7 @@ module.exports = class Template {
       },
 
       nodeThumbnails: [...thumbnailsFromTypesRecords, ...thumbnailsFromRecords].filter(({ path }) =>
-        isAnImagePath(path)
+        isAnImagePath(path),
       ),
 
       focusIsActive: !(focusMax <= 0),

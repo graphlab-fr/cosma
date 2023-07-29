@@ -34,11 +34,11 @@ describe('Record', () => {
     it('should split tags strings in array', () => {
       assert.deepStrictEqual(
         new Record(undefined, 'the title', undefined, 'tag 1,tag 2'),
-        new Record(undefined, 'the title', undefined, ['tag 1', 'tag 2'])
+        new Record(undefined, 'the title', undefined, ['tag 1', 'tag 2']),
       );
       assert.deepStrictEqual(
         new Record(undefined, 'the title', undefined, ','),
-        new Record(undefined, 'the title', undefined, [])
+        new Record(undefined, 'the title', undefined, []),
       );
     });
 
@@ -69,7 +69,7 @@ describe('Record', () => {
             important: { fill: '#ccc', stroke: '#ccc' },
             done: { fill: '#ccc', stroke: '#ccc' },
           },
-        }
+        },
       );
       assert.deepStrictEqual(record.types, ['important', 'done', 'undefined']);
     });
@@ -106,7 +106,7 @@ describe('Record', () => {
             undefined: { stroke: 'double', color: '#ccc' },
             g: { stroke: 'simple', color: '#ccc' },
           },
-        }
+        },
       );
       const links = Link.getLinksFromRecords([record]);
       assert.deepEqual(links, [
@@ -147,7 +147,7 @@ describe('Record', () => {
       const second = recordIdAsString.substring(12, 14);
       assert.strictEqual(
         new Date(`${[year, month, day].join('-')} ${[hour, minute, second].join(':')}`).toString(),
-        new Date().toString()
+        new Date().toString(),
       );
     });
 
@@ -165,7 +165,7 @@ describe('Record', () => {
         undefined,
         undefined,
         Bibliography.getBibliographicRecordsFromList(['author1', 'author2']),
-        'image.jpg'
+        'image.jpg',
       ).ymlFrontMatter;
 
       let recordYmlFrontMatterExpected = `---
@@ -212,7 +212,7 @@ thumbnail: image.jpg
             'type 2': { fill: 'green', stroke: 'green' },
           },
           record_metas: ['name', 'lastname', 'isDead'],
-        }
+        },
       ).ymlFrontMatter;
 
       recordYmlFrontMatterExpected = `---
@@ -263,7 +263,7 @@ isDead: false
         undefined,
         undefined,
         undefined,
-        recordConfig
+        recordConfig,
       );
       await record.saveAsFile(true);
       filePath.should.be.a.file();
@@ -283,7 +283,7 @@ isDead: false
         undefined,
         undefined,
         undefined,
-        recordConfig
+        recordConfig,
       );
       await record.saveAsFile(true);
       filePath.should.be.a.file();
@@ -303,7 +303,7 @@ isDead: false
         undefined,
         undefined,
         undefined,
-        recordConfig
+        recordConfig,
       );
       await record.saveAsFile();
       record.saveAsFile().catch(({ type }) => {
@@ -325,7 +325,7 @@ isDead: false
         undefined,
         undefined,
         undefined,
-        recordConfig
+        recordConfig,
       );
       await record.saveAsFile();
       const fileContent = record.getYamlFrontMatter() + content;
@@ -379,7 +379,7 @@ isDead: false
           },
           thumbnail: 'photo.jpg',
           references: ['otlet1934'],
-        }
+        },
       );
     });
 
@@ -472,7 +472,7 @@ isDead: false
         const csv = parse(
           `title     ,content ,type:nature,type:field,meta:prenom,meta:nom,meta:ignored,tag:genre,time:begin,time:end,thumbnail,references
                      Paul Otlet,Lorem...,Personne   ,Histoire  ,Paul       ,Otlet   ,toto        ,homme    ,1868      ,1944    ,image.png,otlet1934`,
-          { columns: true, trim: true, rtrim: true, skip_empty_lines: true }
+          { columns: true, trim: true, rtrim: true, skip_empty_lines: true },
         );
         const data = csv.map((line) => Record.getFormatedDataFromCsvLine(line));
         const index = Cosmocope.getIndexToMassSave(tempFolderPath);
@@ -482,7 +482,7 @@ isDead: false
 
         const files = Cosmocope.getFromPathFiles(tempFolderPath);
         const record = Cosmocope.getRecordsFromFiles(files, opts).find(
-          ({ title }) => title === fileName
+          ({ title }) => title === fileName,
         );
         assert.deepEqual(record, {
           ...record,
@@ -561,19 +561,19 @@ isDead: false
         const increment = 10;
         assert.strictEqual(
           Record.generateOutDailyId(increment),
-          year + month + day + (246060 + increment).toString()
+          year + month + day + (246060 + increment).toString(),
         );
 
         const maxIncrement = 753939;
         assert.strictEqual(
           Record.generateOutDailyId(maxIncrement),
-          year + month + day + (246060 + maxIncrement).toString()
+          year + month + day + (246060 + maxIncrement).toString(),
         );
 
         const errorIncrement = maxIncrement + 1;
         (function () {
           Record.generateOutDailyId(errorIncrement);
-        }.should.throw(Error));
+        }).should.throw(Error);
       });
     });
   });

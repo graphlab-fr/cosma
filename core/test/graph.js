@@ -34,7 +34,7 @@ describe('Graph verif', () => {
       '1999-01-01',
       undefined,
       undefined,
-      opts
+      opts,
     ),
     new Record(
       2,
@@ -49,7 +49,7 @@ describe('Graph verif', () => {
       '2020-01-01',
       undefined,
       undefined,
-      opts
+      opts,
     ),
     new Record(
       3,
@@ -64,7 +64,7 @@ describe('Graph verif', () => {
       '1701-01-01',
       undefined,
       undefined,
-      opts
+      opts,
     ),
   ]);
 

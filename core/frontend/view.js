@@ -15,10 +15,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const url = new URL(window.location);
 
     const activeFilters = Array.from(document.querySelectorAll('#types-form input:checked')).map(
-      ({ name }) => name
+      ({ name }) => name,
     );
     const activeTags = Array.from(document.querySelectorAll('#tags-form input:checked')).map(
-      ({ name }) => name
+      ({ name }) => name,
     );
     const focusLevel = document.getElementById('focus-input').value;
 

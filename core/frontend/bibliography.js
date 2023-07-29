@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const virtualLink = document.createElement('a');
     virtualLink.setAttribute(
       'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(code.textContent)
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(code.textContent),
     );
     virtualLink.setAttribute('download', 'bibliography.json');
     virtualLink.style.display = 'none';

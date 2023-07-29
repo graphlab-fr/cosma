@@ -49,7 +49,7 @@ module.exports = class Link {
   /** @exemple `"[[a:20210424214230|link text]]"` */
   static regexWikilink = new RegExp(
     /\[\[((?<type>[\w ]+):)?(?<id>[\w ]+)(\|(?<text>.+?))?\]\]/,
-    'g'
+    'g',
   );
 
   /**
@@ -90,7 +90,7 @@ module.exports = class Link {
         undefined,
         undefined,
         fileId,
-        targetId
+        targetId,
       );
     });
   }
@@ -149,7 +149,7 @@ module.exports = class Link {
         if (!nodeTarget || !nodeSource) {
           new Report(nodeSource.id, nodeSource.label, 'error').aboutBrokenLinks(
             nodeSource.label,
-            context
+            context,
           );
           return undefined;
         }
@@ -224,8 +224,8 @@ module.exports = class Link {
             color,
             opts['graph_highlight_color'],
             source.id,
-            target.id
-          )
+            target.id,
+          ),
         );
         id++;
       }
@@ -282,7 +282,7 @@ module.exports = class Link {
     color,
     colorHighlight,
     source,
-    target
+    target,
   ) {
     this.id = id;
     this.context = context;

@@ -64,7 +64,7 @@ if (config.opts['files_origin']) {
 } else {
   for (const fileId of ids) {
     const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
+      new nunjucks.FileSystemLoader(path.join(__dirname, '../static')),
     );
     const content = templateEngine.render('fake/record.njk', {
       ids,
@@ -137,7 +137,7 @@ function fakeView({ withFilters, withTags, withFocus, withRecord }) {
   if (withFilters) {
     url.searchParams.set(
       'filters',
-      faker.helpers.arrayElements(Object.keys(recordTypes), withFilters).join('-')
+      faker.helpers.arrayElements(Object.keys(recordTypes), withFilters).join('-'),
     );
   }
   if (withTags) {

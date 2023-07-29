@@ -158,7 +158,7 @@ module.exports = class Graph {
       metas: Object.fromEntries(this.getMetasFromRecords()),
     };
     folksonomy = JSON.stringify(folksonomy, (key, value) =>
-      value instanceof Set ? Array.from(value) : value
+      value instanceof Set ? Array.from(value) : value,
     );
     return JSON.parse(folksonomy);
   }
