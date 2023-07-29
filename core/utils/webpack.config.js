@@ -9,6 +9,12 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.mjs$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.m?js$/,
         exclude: /(node_modules)/,
         use: {
@@ -21,7 +27,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['*', '.js'],
+    extensions: ['.js'],
   },
   watch: true,
   devServer: {
