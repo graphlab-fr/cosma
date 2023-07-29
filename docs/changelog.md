@@ -2,7 +2,7 @@
 title: Changelog
 ---
 
-# v2.0.1.1
+# v2.0.2
 
 - Man page can now be accessed as expected
 
