@@ -17,6 +17,9 @@ const Record = require('../models/record'),
 
 const { getTimestampTuple } = require('../utils/misc');
 
+const { fetchBibliographyFiles } = require('../utils/generate'),
+  { config: configFake, records: fakeRecords } = require('../utils/fake');
+
 const tempFolderPath = path.join(__dirname, '../temp');
 
 describe('Record', () => {
@@ -575,6 +578,52 @@ isDead: false
           Record.generateOutDailyId(errorIncrement);
         }).should.throw(Error);
       });
+    });
+  });
+
+  describe('bibliography', () => {
+    let bibliography;
+
+    before(() => {
+      return new Promise((resolve) => {
+        fetchBibliographyFiles().then(() => {
+          const { bib, cslStyle, xmlLocal } =
+            Bibliography.getBibliographicFilesFromConfig(configFake);
+          bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+          resolve();
+        });
+      });
+    });
+
+    const content = 'Molestiae [@Cockburn_2002, 10] architecto quisquam ducimus [@Brooks_1983, 2].';
+
+    it('should replace content and context of links and backlinks', () => {
+      const record = fakeRecords[0];
+      record.content = content;
+      record.links = [
+        {
+          ...record.links[0],
+          context: ['Molestiae [@Cockburn_2002, 10]'], // part of content
+        },
+      ];
+      record.backlinks = [
+        {
+          ...record.backlinks[0],
+          context: ['Lorem ipsum dolor sit amet [@Clements_2003, 5]'], // from another content
+        },
+      ];
+      record.bibliographicRecords = Bibliography.getBibliographicRecordsFromText(content);
+
+      record.replaceBibliographicText(bibliography);
+      record.content
+        .replace(/\s/g, ' ') // remove special whitespaces
+        .should.to.include('(Brooks 1983, p. 2)');
+
+      record.links[0].context[0].replace(/\s/g, ' ').should.to.include('(Cockburn 2002, p. 10)');
+
+      record.backlinks[0].context[0]
+        .replace(/\s/g, ' ')
+        .should.to.include('(Clements et al. 2003, p. 5)');
     });
   });
 });
