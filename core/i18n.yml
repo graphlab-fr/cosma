@@ -1,0 +1,1231 @@
+graph:
+  btn_zoom_reset:
+    fr: Réinitialiser
+    en: Reset
+  btn_focus:
+    fr: Focus
+    en: Focus
+
+left_panel:
+  header:
+    spatialization_bar_desc:
+      fr: Spatialisation (Espace)
+      en: Spatialization (Space)
+
+  input_search:
+    placeholder:
+      fr: Rechercher…
+      en: Search…
+
+  menu_types:
+    title:
+      fr: Types
+      en: Types
+
+  menu_keywords:
+    title:
+      fr: Mots-clés
+      en: Keywords
+
+  menu_index:
+    title:
+      fr: Index
+      en: Index
+
+  menu_views:
+    title:
+      fr: Vues
+      en: Views
+    btn_reset:
+      fr: Retour à la vue par défaut
+      en: Back to default view
+    btn_save:
+      fr: Appliquer cette vue à l'URL
+      en: Set the view to URL
+    btn_save_gui:
+      fr: Enregistrer cette vue
+      en: Save this view
+    tooltip:
+      fr: >
+        Enregistre l'état actuel de l'interface
+        (types et mots-clés actifs, mode focus)
+        et crée un raccourci vers cet état dans le menu Vues.
+      en: >
+        Save the current state of the interface
+        (selected node, types and keywords, focus)
+        and creates a shortcut to this state in the Views section.
+
+  menu_controls:
+    title:
+      fr: Paramètres du graphe
+      en: Graph parameters
+    input_links_show:
+      fr: Afficher les liens
+      en: Display links
+    input_labels_show:
+      fr: Afficher les étiquettes
+      en: Display labels
+    input_highlight_hover_node:
+      fr: Surbrillance au survol
+      en: Highlight on hover
+
+    form_attraction:
+      title:
+        fr: Forces
+        en: Forces
+      help:
+        fr: >
+          Contrôlez la répartition des nœuds dans l’espace
+          en modifiant la simulation des forces.
+        en: >
+          Tweak the force-layout simulation to control
+          the way nodes are displayed.
+      input_force:
+        fr: répulsion
+        en: repulsion
+      input_distance_max:
+        fr: distance max
+        en: max distance
+      input_vertical:
+        fr: attraction verticale
+        en: vertical attraction
+      input_horizontal:
+        fr: attraction horizontale
+        en: horizontal attraction
+
+    form_text:
+      title:
+        fr: Étiquettes
+        en: Labels
+      input_size:
+        fr: taille du texte
+        en: font size
+
+  footer:
+    btn_data:
+      fr: Données
+      en: Data
+    btn_help:
+      fr: Aide
+      en: Help
+    btn_about:
+      fr: À propos
+      en: About
+    publish_mark:
+      fr: Fabriqué avec Cosma –
+      en: Made with Cosma –
+
+right_panel:
+  record:
+    header:
+      btn_close:
+        fr: Fermer (Echap)
+        en: Close (Escape)
+
+    metadata:
+      id:
+        fr: id
+        en: id
+      last_edit:
+        fr: dernière modification
+        en: last modified
+      type:
+        fr: types
+        en: types
+      keywords:
+        fr: mots-clés
+        en: keywords
+
+    bibliography:
+      fr: Bibliographie
+      en: Bibliography
+
+    footer:
+      list_links:
+        fr: liens
+        en: links
+      list_backlinks:
+        fr: rétroliens
+        en: backlinks
+
+  help:
+    title:
+      fr: Aide
+      en: Help
+
+    documentation_link_href:
+      fr: https://cosma.graphlab.fr/docs/
+      en: https://cosma.graphlab.fr/en/docs/
+    documentation_link_placeholder:
+      fr: Cliquez ici pour accéder à la documentation de Cosma
+      en: Click here to access Cosma's documentation
+
+    shortcuts:
+      title:
+        fr: Raccourcis
+        en: Shortcuts
+      space:
+        key:
+          fr: Espace
+          en: Space
+        effect:
+          fr: Réactiver l'algorithme de dessin du graphe
+          en: Re-run the force-layout algorithm
+      s:
+        key:
+          fr: S
+          en: S
+        effect:
+          fr: Déplacer le curseur dans le champ Recherche
+          en: Move the cursor to Search
+      alt_click:
+        key:
+          fr: Alt + clic
+          en: Alt + click
+        effect:
+          fr: (sur un type de fiche) Désélectionner les autres types
+          en: (on a record type) Deselect other types
+      r:
+        key:
+          fr: R
+          en: R
+        effect:
+          fr: Réinitialiser le zoom
+          en: Reset zoom
+      alt_r:
+        key:
+          fr: Alt + R
+          en: Alt + R
+        effect:
+          fr: Réinitialiser l'affichage
+          en: Reset the display
+      c:
+        key:
+          fr: C
+          en: C
+        effect:
+          fr: Zoomer et centrer sur le nœud sélectionné
+          en: Zoom in on the selected node
+      f:
+        key:
+          fr: F
+          en: F
+        effect:
+          fr: Passer en mode Focus
+          en: Switch to Focus mode
+      escap:
+        key:
+          fr: Echap
+          en: Escape
+        effect:
+          fr: Fermer la fiche sélectionnée
+          en: Close the active record
+
+  credits:
+    version:
+      fr: Version
+      en: Version
+    license:
+      fr: Licence
+      en: License
+    ANR_program:
+      fr: Programme ANR
+      en: ANR research programme
+
+  bibliography_data:
+    title:
+      fr: Données bibliographiques
+      en: Bibliographical data
+    description:
+      fr: >
+        Les données ci-dessous correspondent aux références citées dans ce cosmoscope.
+        Elles sont structurées conformément au standard Citation Style Language et exprimées en JSON.
+        Ce format est reconnu par la plupart des logiciels de gestion bibliographique,
+        comme Zotero, Mendeley ou Papers.
+        Cliquez sur le bouton ci-dessous pour télécharger les données.
+      en: >
+        Below is the bibliographic data for this cosmoscope's citations.
+        They are structured according to the Citation Style Language standard and expressed in JSON.
+        This format is recognized by most popular bibliographic management software,
+        such as Zotero, Mendeley or Papers.
+        Click on the button below to download the data.
+    btn_download:
+      fr: Télécharger
+      en: Download
+
+windows:
+  config:
+    title:
+      fr: Configuration
+      en: Configuration
+    nav:
+      general:
+        fr: Général
+        en: General
+      record_types:
+        fr: Types de fiches
+        en: Record types
+      link_types:
+        fr: Types de liens
+        en: Link types
+      graph:
+        fr: Graphe
+        en: Graph
+      metas:
+        fr: Métadonnées
+        en: Metadata
+      bibliography:
+        fr: Bibliographie
+        en: Bibliography
+      views:
+        fr: Vues
+        en: Views
+      records_filter:
+        fr: Filtrage des fiches
+        en: Records filter
+      advanced:
+        fr: Avancé
+        en: Advanced
+    fields:
+      project_name:
+        fr: Nom du projet
+        en: Project name
+      select_origin:
+        fr: Source de données
+        en: Data origin
+      directory_origin:
+        fr: Fichiers Markdown
+        en: Markdown files
+      csv_origin:
+        fr: Données tabulaires
+        en: Tabular data
+      online_origin:
+        fr: Données tabulaires en ligne
+        en: Online tabular data
+      files_origin:
+        fr: Répertoire des fiches
+        en: Records directory
+      nodes_origin:
+        fr: Fichier de nœuds
+        en: Nodes file
+      links_origin:
+        fr: Fichier de liens
+        en: Links file
+      nodes_online:
+        fr: URL du fichier de nœuds
+        en: Nodes file URL
+      links_online:
+        fr: URL du fichier de liens
+        en: Links file URL
+      images_origin:
+        fr: Répertoire des images
+        en: Images directory
+      record_metas:
+        fr: Métadonnées supplémentaires
+        en: User-defined metadata
+      history:
+        fr: Enregistrer automatiquement les cosmoscopes dans l’historique
+        en: Automatically save cosmoscopes in the history
+      focus_max:
+        fr: Niveau maximum de focus
+        en: Maximum focus level
+      graph_background_color:
+        fr: Couleur de fond
+        en: Background color
+      graph_highlight_color:
+        fr: Couleur de surbrillance
+        en: Highlight color
+      graph_highlight_on_hover:
+        fr: Surbrillance des nœuds au survol
+        en: Highlighting of nodes on mouse-over
+      graph_text_size:
+        fr: Taille du texte des étiquettes
+        en: Label text size
+      graph_arrows:
+        fr: Afficher des flèches sur les liens
+        en: Show arrows on links
+      attraction_force:
+        fr: Force d'attraction
+        en: Strength of attraction
+      attraction_distance_max:
+        fr: Distance maximum entre les nœuds
+        en: Maximum distance between nodes
+      attraction_vertical:
+        fr: Attraction verticale
+        en: Vertical attraction
+      attraction_horizontal:
+        fr: Attraction horizontale
+        en: Horizontal attraction
+      node_sizing:
+        fr: Dimensionnement des nœuds
+        en: Node sizing
+      node_size_method:
+        fr: Méthode de dimensionnement des nœuds
+        en: Node sizing method
+      node_size_method_unique:
+        fr: Taille fixe
+        en: Fixed size
+      node_size_method_degree:
+        fr: Taille proportionnelle au degré
+        en: Size proportional to degree
+      node_size:
+        fr: Taille des nœuds
+        en: Nodes size
+      node_size_min:
+        fr: Taille minimum des nœuds
+        en: Min. node size
+      node_size_max:
+        fr: Taille maximum des nœuds
+        en: Max. node size
+      title:
+        fr: Titre
+        en: Title
+      author:
+        fr: Auteur
+        en: Author
+      description:
+        fr: Description
+        en: Description
+      keywords:
+        fr: Mots-clés
+        en: Keywords
+      link_symbol:
+        fr: Symbole de lien
+        en: Link symbol
+      csl:
+        fr: Style bibliographique (CSL)
+        en: Bibliographic style (CSL)
+      bibliography:
+        fr: Données bibliographiques (CSL JSON)
+        en: Bibliographic data (CSL JSON)
+      csl_locale:
+        fr: Localisation bibliographique (XML)
+        en: Bibliographical localization (XML)
+      css_custom:
+        fr: CSS personnalisée
+        en: Custom CSS
+      devtools:
+        fr: Afficher les outils de développement
+        en: Show development tools
+      lang:
+        fr: Sélectionner une langue pour le cosmoscope
+        en: Select a language for the cosmoscope
+      name:
+        fr: Nom
+        en: Name
+      color:
+        fr: Couleur
+        en: Color
+      color_fill:
+        fr: Couleur de fond
+        en: Fill color
+      color_stroke:
+        fr: Couleur de bordure
+        en: Stroke color
+      look:
+        fr: Apparence
+        en: Look
+      meta:
+        fr: Métadonnée
+        en: Metadata
+      value_filter:
+        fr: Valeur filtrée
+        en: Filtered value
+    btns:
+      add:
+        fr: Ajouter
+        en: Add…
+      update:
+        fr: Modifier
+        en: Edit…
+      rename:
+        fr: Renommer
+        en: Rename
+      delete:
+        fr: Supprimer
+        en: Delete
+      delete_all:
+        fr: Tout supprimer…
+        en: Delete all…
+      select:
+        fr: Sélectionner
+        en: Select
+    help:
+      csl:
+        fr: Télécharger des styles
+        en: Download styles
+      csl_locale:
+        fr: Télécharger des fichiers de localisation
+        en: Download localization files
+  record:
+    title:
+      fr: Nouvelle fiche
+      en: New record
+    fields:
+      title:
+        fr: Titre
+        en: Title
+      type:
+        fr: Type
+        en: Type
+      keywords:
+        fr: Mots-clés
+        en: Keywords
+  export:
+    title:
+      fr: Partager le cosmoscope
+      en: Share cosmoscope
+    fields:
+      export:
+        fr: Exporter vers
+        en: Export to
+      css_custom:
+        fr: CSS personnalisée
+        en: Custom CSS
+      citeproc:
+        fr: Traiter les citations
+        en: Process citations
+      minify:
+        fr: Réduire la taille de l'export
+        en: Minify export size
+    btns:
+      select:
+        fr: Sélectionner
+        en: Select
+  history:
+    title:
+      fr: Historique
+      en: History
+    table_header:
+      date:
+        fr: Date
+        en: Date
+      description:
+        fr: Description
+        en: Description
+    btns:
+      update:
+        fr: Modifier la description
+        en: Edit description
+      open_cosmoscope:
+        fr: Ouvrir dans Cosma
+        en: Open in Cosma
+      open_finder:
+        fr: Localiser le fichier
+        en: Locate file
+      open_report:
+        fr: Rapport d'erreurs
+        en: Error report
+      delete:
+        fr: Supprimer
+        en: Delete
+      delete_all:
+        fr: Vider l'historique…
+        en: Empty history…
+  report:
+    title:
+      fr: Rapport d'erreurs et d'alertes
+      en: Warnings and errors report
+  linktype:
+    title:
+      add:
+        fr: Ajouter un type de lien
+        en: Add link type
+      update:
+        fr: Modifier le type de lien
+        en: Modify link type
+    fields:
+      name:
+        fr: Nom
+        en: Name
+      stroke:
+        fr: Tracé
+        en: Stroke
+      color:
+        fr: Couleur
+        en: Color
+    strokes:
+      simple:
+        fr: simple
+        en: simple
+      double:
+        fr: double
+        en: double
+      dotted:
+        fr: pointillés
+        en: dotted
+      dash:
+        fr: tirets
+        en: dash
+  recordtype:
+    title:
+      add:
+        fr: Ajouter un type de fiche
+        en: Add record type
+      update:
+        fr: Modifier le type de fiche
+        en: Modify record type
+    fields:
+      name:
+        fr: Nom
+        en: Name
+      color_fill:
+        fr: Couleur/image de fond
+        en: Fill color/image
+      fill_select_color:
+        fr: Sélectionner une couleur de fond
+        en: Select a fill color
+      fill_select_image:
+        fr: Sélectionner une image de fond
+        en: Select a fill image
+      color_stroke:
+        fr: Couleur de bordure
+        en: Stroke color
+  view:
+    title:
+      add:
+        fr: Ajouter une vue
+        en: Add view
+      update:
+        fr: Renommer la vue
+        en: Rename view
+    fields:
+      name:
+        fr: Nom
+        en: Name
+  history_update:
+    title:
+      fr: Modifier la description de l'entrée
+      en: Edit the entry description
+    fields:
+      description:
+        fr: Description
+        en: Description
+  records_filter:
+    title:
+      fr: Ajouter un filtre de fiches
+      en: Add a records filter
+    fields:
+      meta:
+        fr: Métadonnée de filtrage
+        en: Filter metadata
+      value:
+        fr: Valeur filtrée
+        en: Filtered value
+    options:
+      meta_type:
+        fr: Type de fiche
+        en: Record type
+      meta_tags:
+        fr: Mot-clé
+        en: Keyword
+      meta_custom:
+        fr: Métadonnées personnalisées
+        en: Custom metadata
+  doc:
+    title:
+      fr: Manuel d'utilisation
+      en: User manual
+    src:
+      fr: manuel-d-utilisation-gui.html
+      en: user-manual-gui.html
+  projects:
+    title:
+      fr: Projets
+      en: Projects
+    fields:
+      project_sorting:
+        fr: Trier les projets
+        en: Sort projects
+    options:
+      first_last:
+        fr: Du plus récent au plus ancien
+        en: Newest to oldest
+      last_first:
+        fr: Du plus ancien au plus récent
+        en: Oldest to newest
+      new_old:
+        fr: Du premier ouvert au dernier
+        en: First open to last
+      old_new:
+        fr: Du dernier ouvert au premier
+        en: Last open to first
+      a_z:
+        fr: De A à Z
+        en: From A to Z
+      z_a:
+        fr: De Z à A
+        en: From Z to A
+    btns:
+      new:
+        fr: Ajouter un projet
+        en: Add a project
+      open:
+        fr: Ouvrir
+        en: Open
+      delete:
+        fr: Supprimer
+        en: Delete
+  project_origin:
+    title:
+      fr: Nature des données
+      en: Nature of the data
+    fields:
+      select_origin:
+        fr: Nature des données
+        en: Nature of the data
+      directory_origin:
+        fr: Fichiers Markdown
+        en: Markdown files
+      csv_origin:
+        fr: Fichiers CSV (locaux)
+        en: CSV files (local)
+      online_origin:
+        fr: Fichiers CSV (en ligne)
+        en: CSV files (online)
+      files_origin:
+        fr: Répertoire des fiches
+        en: Records directory
+      nodes_origin:
+        fr: Fichier de nœuds
+        en: Nodes file
+      links_origin:
+        fr: Fichier de liens
+        en: Links file
+      nodes_online:
+        fr: URL du fichier de nœuds
+        en: Nodes file URL
+      links_online:
+        fr: URL du fichier de liens
+        en: Links file URL
+    btns:
+      select:
+        fr: Sélectionner
+        en: Select
+  app_preferences:
+    title:
+      fr: Paramètres de l'application
+      en: App preferences
+    fields:
+      lang:
+        fr: Choisissez la langue d'affichage de l'application
+        en: Choose app displaying langage
+      devtools:
+        fr: Activer les outils de développement dans le menu "Affichage"
+        en: Activate developer tools from "View" menu
+
+dialog:
+  file_filter:
+    fr: Fichiers $1
+    en: $1 files
+  btn:
+    select:
+      fr: Sélectionner
+      en: Select
+    cancel:
+      fr: Annuler
+      en: Cancel
+    ok:
+      fr: Ok
+      en: Ok
+  files_origin:
+    title:
+      fr: Répertoire des fiches
+      en: Records directory
+  nodes_origin:
+    title:
+      fr: Fichier de nœuds
+      en: Nodes file
+  links_origin:
+    title:
+      fr: Fichier de liens
+      en: Links file
+  images_origin:
+    title:
+      fr: Répertoire des images
+      en: images directory
+  bibliography:
+    title:
+      fr: Données bibliographiques (JSON)
+      en: Bibliographical data (JSON)
+  csl:
+    title:
+      fr: Style bibliographique (CSL)
+      en: Bibliographical style (CSL)
+  csl_locale:
+    title:
+      fr: Localisation bibliographique (XML)
+      en: Bibliographical localization (XML)
+  css_custom:
+    title:
+      fr: CSS personnalisée
+      en: Custom CSS
+  export_target:
+    title:
+      fr: Répertoire d'export
+      en: Export directory
+  files_origin_unknown:
+    title:
+      fr: Répertoire des fiches manquant
+      en: Missing records directory
+    message:
+      fr: Veuillez indiquer un répertoire de fiches dans la configuration
+      en: Please set the records directory in the configuration
+  record_overwriting:
+    title:
+      fr: Un fichier existe déjà avec ce nom
+      en: This file name is already taken
+    message:
+      fr: Voulez-vous écraser le fichier $1 ? Cette opération est irréversible.
+      en: Do you wish to overwrite $1 ? This operation cannot be reversed.
+  delete_all:
+    message:
+      fr: Voulez-vous vraiment tout supprimer ?
+      en: Do you really want to delete everything?
+  print:
+    title:
+      fr: Enregistrer le PDF
+      en: Save PDF
+    error:
+      fr: Erreur de l'impression PDF
+      en: PDF printing error
+  error_modelize:
+    title:
+      fr: Erreur de génération
+      en: Modelize error
+    message_source_directory:
+      fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré le répertoires de fiches dans la configuration.
+      en: You cannot generate a cosmoscope.\nYou have not configured the file directory in the configuration.
+    message_source_csv:
+      fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré les feuilles de calcul dans la configuration.
+      en: You cannot generate a cosmoscope. You have not configured the spreadsheets in the configuration.
+    message_source_online:
+      fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré les feuilles de calcul en ligne dans la configuration.
+      en: You cannot generate a cosmoscope. You have not configured online spreadsheets in the configuration.
+  no_origin:
+    title:
+      fr: Aucune source
+      en: No origin
+    message:
+      fr: Veuillez compléter au moins une source
+      en: Please complete at least one origin
+  project_no_exist:
+    title:
+      fr: Ce projet n'existe pas
+      en: Project does not exist
+    message:
+      fr: Le projet ciblé n'existe pas.
+      en: Target project does not exist.
+  project_can_not_save:
+    title:
+      fr: Erreur de sauvegarde
+      en: Saving error
+    message:
+      fr: La sauvegarde du projet a échoué.
+      en: The project saving failed.
+
+record:
+  errors:
+    title:
+      fr: Titre manquant
+      en: Missing title
+    type:
+      fr: Type inconnu
+      en: Unknown type
+    id:
+      fr: Identifiant invalid
+      en: Invalid id
+    overwriting:
+      fr: Un fichier existe déjà avec ce nom
+      en: This file name is already taken
+
+config:
+  errors:
+    no_name:
+      fr: La configuration n'a pas de nom
+      en: The configuration has no name
+    name_already_used:
+      fr: Ce nom de configuration est déjà utilisé
+      en: This name is already used
+    name:
+      fr: Le nom de configuration est invalide
+      en: The configuration name is invalid
+    invalid_path:
+      fr: Le chemin vers la configuration est invalide
+      en: The config file path is invalid
+    select_origin:
+      fr: Ce type de source de données n'est pas valide
+      en: This type of data origin is invalid
+    files_origin:
+      fr: Le chemin vers le répertoire de fiches sélectionné est invalide
+      en: Invalid records directory path
+    nodes_origin:
+      fr: Le chemin vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    links_origin:
+      fr: Le chemin vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    images_origin:
+      fr: Le chemin vers l'image sélectionnée est invalide
+      en: Invalid image file path
+    nodes_online:
+      fr: L'url vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    links_online:
+      fr: L'url vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    export_target:
+      fr: Le chemin vers le répertoire d'export du cosmocope est invalide
+      en: Invalid export directory path
+    bibliography:
+      fr: Le chemin vers le fichier de références bibliographiques est invalide
+      en: Invalid bibliographical data file path
+    csl:
+      fr: Le chemin vers le fichier de style bibliographique est invalide
+      en: Invalid bibliographical style file path
+    csl_locale:
+      fr: Le chemin vers le fichier de localisation bibliographique est invalide
+      en: Invalid bibliographical locale file path
+    css_custom:
+      fr: Le chemin vers la CSS personnalisée est invalide
+      en: Invalid custom CSS file path
+    record_metas:
+      fr: La liste des métadonnées des fiches est invalide
+      en: The list of metadata of the records is invalid
+    record_filters:
+      fr: La liste des filtres de fiches est invalide
+      en: The list of filters of the records is invalid
+    focus_max:
+      fr: Le niveau maximum de focus est invalide
+      en: Invalid maximum focus level
+    graph_text_size:
+      fr: La taille du texte des étiquettes doit être supérieure ou égale à $1
+      en: Labels font size must be $1 or higher
+    attraction_force:
+      fr: La force de répulsion doit être supérieure ou égale à $1
+      en: Repulsion force must be $1 or higher
+    attraction_distance_max:
+      fr: La distance maximum doit être supérieure ou égale à $1
+      en: Maximum distance between nodes must be $1 or higher
+    attraction_vertical:
+      fr: La force d'attraction verticale doit être supérieure ou égale à $1
+      en: Vertical attraction must be $1 or higher
+    attraction_horizontal:
+      fr: La force d'attraction verticale doit être supérieure ou égale à $1
+      en: Horizontal attraction must be $1 or higher
+    node_size_method:
+      fr: Cette méthode de dimensionnement des nœuds est invalide
+      en: This method of sizing nodes is invalid
+    node_size:
+      fr: La taille des nœuds doit être supérieur ou égale à $1
+      en: Nodes size must be $1 or higher
+    node_size_min:
+      fr: La taille minimum des nœuds doit être supérieur ou égale à $1
+      en: Min nodes size must be $1 or higher
+    node_size_max:
+      fr: La taille maximum des nœuds doit être supérieur ou égale à $1
+      en: Max nodes size must be $1 or higher
+    history:
+      fr: La commande d'enregistrement de l'historique est invalide
+      en: Invalid history recording command
+    views:
+      fr: L'enregistrement de la vue a échoué
+      en: View registration failed
+    graph_highlight_on_hover:
+      fr: La commande de surbrillance des nœuds au survol est invalide
+      en: Invalid command to highlight nodes on the flyover
+    graph_arrows:
+      fr: La commande de fléchage des liens est invalide
+      en: Invalid link arrow command
+    devtools:
+      fr: La commande d'activation des outils de développement est invalide
+      en: Invalid devtools activation command
+    minify:
+      fr: La commande de compression de l'export est invalide
+      en: Invalid export minification command
+    record_types:
+      fr: La liste des types de fiches est invalide
+      en: Invalid record types list
+    link_types:
+      fr: La liste des types de liens est invalide
+      en: Invalid link types list
+    graph_background_color:
+      fr: Cette couleur de fond n'est pas valide
+      en: This background color is invalid
+    graph_highlight_color:
+      fr: Cette couleur de surbrillance n'est pas valide
+      en: This highlight color is invalid
+    title:
+      fr: Le titre d'export n'est pas valide
+      en: The export title is invalid
+    author:
+      fr: L'auteur de l'export n'est pas valide
+      en: The export author is invalid
+    description:
+      fr: La description de l'export n'est pas valide
+      en: The export description is invalid
+    keywords:
+      fr: Les mots-clés de l'export ne sont pas valides
+      en: Export keywords are invalid
+    link_symbol:
+      fr: Le symbole de remplacement des liens n'est pas valide
+      en: The link replacement symbol is invalid
+    lang:
+      fr: La langue n'est pas configurée
+      en: Language not set
+  list:
+    label:
+      fr: Liste des configurations enregistrées
+      en: List of saved configurations
+  info:
+    lang:
+      fr: Le changement de langue sera effectif après un redémarrage de l'application
+      en: The change of language will be effective after restarting the application
+
+graph_report:
+  ignored_files:
+    head_message:
+      fr: 'Les fichiers suivants ont été ignorés :'
+      en: 'The following files have been ignored:'
+    item_message:
+      fr: '$1 : $2 invalide'
+      en: '$1: $2 invalid'
+  duplicates:
+    head_message:
+      fr: "Des doublons d'identifiants ont été trouvés dans les fichiers suivants :"
+      en: 'Duplicate identifiers were found in the following files:'
+    item_message:
+      fr: "id '$1' depuis $2"
+      en: "id '$1' from $2"
+  type_record_change:
+    head_message:
+      fr: "Les fichiers suivants ont un type de fiche inconnu qui a été interprété comme 'undefined' :"
+      en: "The following records' type is unknown and has been interpreted as 'undefined':"
+    item_message:
+      fr: '$1'
+      en: '$1'
+  type_link_change:
+    head_message:
+      fr: "Les fichiers suivants comportent un type de lien inconnu qui a été interprété comme 'undefined' :"
+      en: "The following records contain an unknown link type which has been interpreted as 'undefined':"
+    item_message:
+      fr: '$1'
+      en: '$1'
+  link_invalid:
+    head_message:
+      fr: 'Les liens suivants sont invalides :'
+      en: 'The following links are invalid:'
+    item_message:
+      fr: "'$1' depuis $2"
+      en: "'$1' from $2"
+  link_no_target:
+    head_message:
+      fr: "Les liens suivants n'ont pas de cible :"
+      en: 'The following links do not have a target:'
+    item_message:
+      fr: "'$1' depuis $2"
+      en: "'$1' from $2"
+  quotes_without_reference:
+    head_message:
+      fr: "Les clés de citations suivantes n'ont pas été trouvées dans les données bibliographiques :"
+      en: 'The following citation keys are not present in the bibliographical data:'
+    item_message:
+      fr: "'$1' depuis $2"
+      en: "'$1' from $2"
+
+demo:
+  title:
+    fr: Démo de Cosma
+    en: Cosma demo
+  description:
+    fr: >
+      Cosma est un logiciel de visualisation et de partage pour les travailleurs de la connaissance.
+      À partir d’un répertoire de fichiers rédigés en Markdown, Cosma génère une collection de fiches
+      au format HTML, rassemblées dans un fichier unique : le cosmoscope.
+      Ce cosmoscope de démonstration a été exporté avec Cosma.
+    en: >
+      Cosma is a visualisation and sharing software for knowledge workers.
+      From a directory of files written in Markdown, Cosma generates a collection of cards
+      in HTML format, assembled in a single file: the cosmoscope.
+      This demonstration cosmoscope has been exported with Cosma.
+
+app_menu:
+  about:
+    fr: À propos
+    en: About
+  preferences:
+    fr: Préférences…
+    en: Preferences…
+  app_options:
+    fr: Paramètres de l'application
+    en: App preferences…
+  project_config:
+    fr: Configuration du projet…
+    en: Project configuration…
+  services:
+    fr: Services
+    en: Services
+  hide:
+    fr: Masquer Cosma
+    en: Hide Cosma
+  hide_others:
+    fr: Masquer les autres
+    en: Hide others
+  unhide:
+    fr: Tout afficher
+    en: Show all
+  quit:
+    fr: Quitter Cosma
+    en: Quit Cosma
+  window_close:
+    fr: Fermer la fenêtre
+    en: Close window
+  file:
+    fr: Fichier
+    en: File
+  new_cosmoscope:
+    fr: Nouveau cosmoscope
+    en: New cosmoscope
+  new_cosmoscope_quotes:
+    fr: Nouveau cosmoscope avec citations
+    en: New cosmoscope with citations
+  new_record:
+    fr: Nouvelle fiche…
+    en: New record…
+  share:
+    fr: Partager…
+    en: Share…
+  print_record:
+    fr: Imprimer la fiche…
+    en: Print record…
+  history:
+    fr: Historique…
+    en: History…
+  edit:
+    fr: Éditer
+    en: Edit
+  undo:
+    fr: Annuler
+    en: Undo
+  redo:
+    fr: Rétablir
+    en: Redo
+  cut:
+    fr: Couper
+    en: Cut
+  copy:
+    fr: Copier
+    en: Copy
+  paste:
+    fr: Coller
+    en: Paste
+  delete:
+    fr: Supprimer
+    en: Delete
+  select_all:
+    fr: Tout sélectionner
+    en: Select all
+  projects:
+    fr: Projets…
+    en: Projects…
+  speech:
+    fr: Parole
+    en: Speech
+  start_speaking:
+    fr: Commencer la lecture
+    en: Start speaking
+  stop_speaking:
+    fr: Arrêter la lecture
+    en: Stop speaking
+  view:
+    fr: Affichage
+    en: View
+  record_back:
+    fr: Fiche précédente
+    en: Previous record
+  record_forward:
+    fr: Fiche suivante
+    en: Next record
+  reload:
+    fr: Recharger
+    en: Reload
+  reset_zoom:
+    fr: Réinitialiser le zoom
+    en: Reset zoom
+  zoom_in:
+    fr: Augmenter le zoom
+    en: Zoom in
+  zoom_out:
+    fr: Réduire le zoom
+    en: Zoom out
+  fullscreen:
+    fr: Plein écran
+    en: Full screen
+  dev_tools:
+    fr: Outils de développement
+    en: Developer tools
+  window:
+    fr: Fenêtre
+    en: Window
+  close:
+    fr: Fermer
+    en: Close
+  help:
+    fr: Aide
+    en: Help
+  manual:
+    fr: Documentation
+    en: Manual
+  shortcuts:
+    fr: Raccourcis clavier
+    en: Shortcuts
+
+report:
+  title:
+    fr: Rapport
+    en: Log file
+  project:
+    fr: Projet "$1"
+    en: Project "$1"
+  section_error:
+    fr: Erreurs ($1 fiches)
+    en: Errors ($1 records)
+  csv_error:
+    fr: Lecture fichiers CSV
+    en: CSV files reading
+  section_warning:
+    fr: Avertissements ($1 fiches)
+    en: Warnings ($1 records)
+  no_id:
+    fr: Le fichier "$1" n'a pas d'identifiant
+    en: The file "$1" has no identifier
+  duplicated_ids:
+    fr: La fiche "$2" ($1) a un identifiant commun avec la fiche "$3"
+    en: The file "$2" ($1) has a common identifier with the file "$3"
+  broken_links:
+    fr: Dans la fiche "$1", le paragraphe suivant contient un lien dont la cible n'a pas été trouvée <em>"$2"</em>
+    en: The following paragraph contains a broken link <em>"$2"</em>
+  link_type_change:
+    fr: Type "$3" du lien "$2" dans la fiche "$1" non reconnu, interprété comme "undefined"
+    en: Type "$3" of link "$2" in the record "$1" unrecognized, treated as "undefined"
+  record_type_change:
+    fr: Type "$2" de la fiche "$1" non reconnu, interprété comme "undefined"
+    en: Type "$2" of record "$1" unrecognized, treated as "undefined"
+  ignored_record_meta:
+    fr: Métadonnée "$2" de la fiche "$1" non reconnue, ignorée
+    en: Ignored unknown metadata "$2" from record "$1"
+  null_record_meta:
+    fr: Métadonnée "$2" de la fiche "$1" ignorée (valeur nulle)
+    en: Ignored metadata "$2" from record "$1" (null value)
+  invalid_record_time_begin:
+    fr: La date de début "$2" de la fiche "$1" est invalide
+    en: Invalid start date "$2" for record "$1"
+  invalid_record_time_end:
+    fr: La date de fin "$2" de la fiche "$1" est invalide
+    en: Invalid end date "$2" for record "$1"
+  unknown_bibliographic_reference:
+    fr: Clé de citation "$2" dans la fiche "$1" non trouvée dans les données bibliographiques
+    en: Citation key "$2" in record "$1" not found in bibliographic data
+  ignored_csv_line:
+    fr: 'Ligne CSV n°$3 pour les $2 ignorée : colonne(s) $4 manquante(s)'
+    en: 'Ignored CSV line number $3 for $2: col(s) $4 left'

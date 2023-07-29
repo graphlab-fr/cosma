@@ -1,0 +1,10 @@
+div.box.info {
+  background-color: #c2c2ea;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.red {
+  color: rgb(209, 112, 112);
+  font-style: italic;
+}

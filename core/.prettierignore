@@ -1,0 +1,7 @@
+**/.git
+**/node_modules
+**/package-lock.json
+
+**/temp
+
+static/bundle.js
