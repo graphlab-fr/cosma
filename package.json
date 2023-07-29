@@ -1,6 +1,6 @@
 {
   "name": "@graphlab-fr/cosma",
-  "version": "2.0.1",
+  "version": "2.0.1.1",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.arthurperret.fr/",
   "repository": {
