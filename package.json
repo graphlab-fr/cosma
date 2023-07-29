@@ -15,8 +15,6 @@
     "cosma": "app.js"
   },
   "scripts": {
-    "modules": "git submodule foreach git pull origin master",
-    "modules:reset": "git submodule foreach git reset --hard origin/master",
     "doc": "open docs/index.html",
     "test": "./node_modules/.bin/mocha"
   },
