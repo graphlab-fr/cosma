@@ -257,7 +257,7 @@ module.exports = class Record {
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
         links,
-        nodes
+        nodes,
       );
       const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
 
@@ -274,7 +274,7 @@ module.exports = class Record {
         end,
         bibliographicRecords,
         thumbnail,
-        config.opts
+        config.opts,
       );
     });
   }
@@ -315,9 +315,9 @@ module.exports = class Record {
               end,
               Bibliography.getBibliographicRecordsFromList(references),
               thumbnail,
-              configOpts
+              configOpts,
             );
-          }
+          },
         );
 
         Promise.all(records.map((record) => record.saveAsFile(true)))
@@ -503,7 +503,7 @@ module.exports = class Record {
     end,
     bibliographicRecords = [],
     thumbnail,
-    opts
+    opts,
   ) {
     this.id = id;
     this.title = title;
@@ -588,7 +588,7 @@ module.exports = class Record {
       new Report(this.id, this.title, 'warning').aboutLinkTypeChange(
         this.title,
         link.target.id,
-        link.type
+        link.type,
       );
       link.type = 'undefined';
       return link;

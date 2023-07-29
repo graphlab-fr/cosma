@@ -19,7 +19,7 @@ module.exports = class Report {
   static getAsHtmlFile(projectTitle) {
     const lang = require('./lang');
     const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../static/template/'))
+      new nunjucks.FileSystemLoader(path.join(__dirname, '../static/template/')),
     );
     templateEngine.addFilter('translate', (input, args) => {
       if (args) {

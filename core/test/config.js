@@ -200,7 +200,7 @@ describe('Config', () => {
       return new Promise(async (resolve) => {
         bibliographyFiles = await fetchBibliographyFiles();
         bibliographyFiles = bibliographyFiles.map(([url, fileName]) =>
-          path.join(tempFolderPath, fileName)
+          path.join(tempFolderPath, fileName),
         );
         resolve();
       });

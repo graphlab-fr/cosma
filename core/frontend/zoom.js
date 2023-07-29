@@ -41,7 +41,7 @@ function zoomReset() {
   View.position.y = 0;
   svg.call(
     zoom.transform,
-    d3.zoomIdentity.translate(View.position.y, View.position.x).scale(View.position.zoom)
+    d3.zoomIdentity.translate(View.position.y, View.position.x).scale(View.position.zoom),
   );
   translate();
 }

@@ -503,7 +503,7 @@ module.exports = class Config {
     const views = Config.isValidViews(this.opts['views']) ? null : 'views';
 
     const chronological_record_meta = new Set(['lastOpen', 'lastEdit', 'created', 'timestamp']).has(
-      this.opts.chronological_record_meta
+      this.opts.chronological_record_meta,
     )
       ? null
       : 'chronological_record_meta';

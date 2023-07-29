@@ -101,7 +101,7 @@ module.exports = class Cosmoscope extends Graph {
                 resolveFile();
               });
             });
-          })
+          }),
         )
           .then(() => resolve(files))
           .catch((err) => reject);
@@ -242,7 +242,7 @@ module.exports = class Cosmoscope extends Graph {
                 recordsFilePath,
                 '"nodes"',
                 i,
-                [...(!line['id'] ? ['"id"'] : []), ...(!line['title'] ? ['"title"'] : [])]
+                [...(!line['id'] ? ['"id"'] : []), ...(!line['title'] ? ['"title"'] : [])],
               );
             }
           })
@@ -277,7 +277,10 @@ module.exports = class Cosmoscope extends Graph {
                 linksFilePath,
                 '"links"',
                 i,
-                [...(!line['source'] ? ['"source"'] : []), ...(!line['target'] ? ['"target"'] : [])]
+                [
+                  ...(!line['source'] ? ['"source"'] : []),
+                  ...(!line['target'] ? ['"target"'] : []),
+                ],
               );
             }
           })
@@ -314,7 +317,7 @@ module.exports = class Cosmoscope extends Graph {
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
         links,
-        nodes
+        nodes,
       );
       const bibliographicRecords = [
         ...Bibliography.getBibliographicRecordsFromText(file.content),
@@ -339,7 +342,7 @@ module.exports = class Cosmoscope extends Graph {
         end,
         bibliographicRecords,
         thumbnail,
-        opts
+        opts,
       );
     });
 

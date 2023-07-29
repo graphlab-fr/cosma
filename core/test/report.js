@@ -48,7 +48,7 @@ describe('Report', () => {
         new Link(1, 'foo [[2]]', undefined, undefined, undefined, undefined, 1, 2),
         new Link(2, 'bar [[777]]', undefined, undefined, undefined, undefined, 1, 777),
       ],
-      [new Node(1, 'node 1'), new Node(2, 'node 2')]
+      [new Node(1, 'node 1'), new Node(2, 'node 2')],
     );
     Report.listErrors.size.should.be.equal(1);
     Report.listErrors.has(1).should.be.true;
@@ -85,7 +85,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      opts
+      opts,
     );
     Report.listWarnings.size.should.be.equal(1);
     Report.listWarnings.has(1).should.be.true;
@@ -119,7 +119,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      opts
+      opts,
     );
     new Record(
       2,
@@ -134,7 +134,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      opts
+      opts,
     );
     Report.listWarnings.size.should.be.equal(1);
     Report.listWarnings.has(2).should.be.true;
@@ -162,7 +162,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      opts
+      opts,
     );
     Report.listWarnings.size.should.be.equal(1);
     Report.listWarnings.has(1).should.be.true;
@@ -190,7 +190,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      opts
+      opts,
     );
     Report.listWarnings.size.should.be.equal(1);
     Report.listWarnings.has(1).should.be.true;
@@ -214,7 +214,7 @@ describe('Report', () => {
       undefined,
       undefined,
       '2001/2/8',
-      '2022-10-02'
+      '2022-10-02',
     );
     new Record(
       2,
@@ -226,7 +226,7 @@ describe('Report', () => {
       undefined,
       undefined,
       'foo',
-      '1999'
+      '1999',
     );
     new Record(
       3,
@@ -238,7 +238,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      '2022-10-02'
+      '2022-10-02',
     );
     Report.listErrors.size.should.be.equal(1);
     Report.listErrors.has(2).should.be.true;
@@ -279,7 +279,7 @@ describe('Report', () => {
       undefined,
       undefined,
       undefined,
-      bibliographicRecords
+      bibliographicRecords,
     ).replaceBibliographicText(bibliography);
     Report.listErrors.size.should.be.equal(1);
     Report.listErrors.has(1).should.be.true;

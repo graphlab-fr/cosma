@@ -1,5 +1,5 @@
 Cypress.Commands.add('shouldGraphHasNodes', (nb) =>
-  cy.get('[data-node]').filter(':visible').its('length').should('equal', nb)
+  cy.get('[data-node]').filter(':visible').its('length').should('equal', nb),
 );
 
 Cypress.Commands.add('openARecord', () => {
