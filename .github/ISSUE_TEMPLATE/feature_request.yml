@@ -18,10 +18,8 @@ body:
       description: >
         This helps us situate the request on our roadmap.
       options:
-        - label: GUI version (Electron-based app)
-        - label: CLI version (command-line tool)
-        - label: cosmograph (records & cosmoscope creation)
-        - label: cosmoscope (exported graph & records)
+        - label: command-line interface
+        - label: cosmoscope (HTML file)
         - label: documentation
         - label: other
     validations:
