@@ -1,56 +1,55 @@
 {
-  "name": "cosma",
-  "version": "2.0.0-beta-2",
+  "name": "@graphlab-fr/cosma",
+  "version": "2.0.0-beta-6",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.graphlab.fr/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/graphlab-fr/cosma.git"
+    "url": "git+https://github.com/graphlab-fr/cosma-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/graphlab-fr/cosma/issues"
+    "url": "https://github.com/graphlab-fr/cosma-cli/issues"
   },
-  "main": "main.js",
+  "main": "app.js",
+  "bin": {
+    "cosma": "app.js"
+  },
   "scripts": {
-    "start": "electron-forge start",
     "modules": "git submodule foreach git pull origin master",
+    "modules:reset": "git submodule foreach git reset --hard origin/master",
     "doc": "open docs/index.html",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "watch:pages": "nodemon -w ./ -e .njk -x 'node ./controllers/build-pages'"
+    "test": "./node_modules/.bin/mocha"
   },
   "contributors": [
     "Arthur Perret",
     "Guillaume Brioudes",
-    "Clément Borel",
-    "Olivier Le Deuff"
+    "Olivier Le Deuff",
+    "Clément Borel"
   ],
-  "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
-  "devDependencies": {
-    "@electron-forge/cli": "^6.0.5",
-    "@electron-forge/maker-deb": "^6.0.5",
-    "@electron-forge/maker-dmg": "^6.0.5",
-    "@electron-forge/maker-squirrel": "^6.0.5",
-    "@electron-forge/maker-zip": "^6.0.5",
-    "electron": "^21.4.3"
-  },
   "dependencies": {
-    "@electron-forge/publisher-github": "^6.0.4",
     "@zettlr/citr": "^1.2.2",
     "axios": "^0.27.2",
     "citeproc": "^2.4.62",
+    "commander": "^8.3.0",
     "csv-parse": "^5.3.0",
     "d3-array": "^2.12.1",
     "d3-scale": "^3.3.0",
-    "electron-squirrel-startup": "^1.0.0",
+    "env-paths": "^2.2.1",
     "glob": "^7.2.0",
     "markdown-it": "^13.0.1",
     "markdown-it-attrs": "^4.1.4",
-    "moment": "^2.29.1",
     "nunjucks": "^3.2.3",
     "slugify": "^1.6.5",
     "yaml": "^2.2.1"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "Guillaume Brioudes (https://myllaume.fr/)",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0"
   }
 }

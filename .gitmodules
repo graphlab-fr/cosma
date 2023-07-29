@@ -1,7 +1,0 @@
-[submodule "docs"]
-	path = docs
-	url = https://github.com/graphlab-fr/cosma-docs
-[submodule "core"]
-	path = core
-	url = https://github.com/graphlab-fr/cosma-core
-	branch = master
