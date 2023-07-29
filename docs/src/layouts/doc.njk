@@ -1,0 +1,30 @@
+---
+permalink: "/{{ title | slugify }}.html"
+---
+<!doctype html>
+{% include "head.njk" %}
+
+<body>
+    {% include "header-doc.njk" %}
+
+    {% include "aside.njk" %}
+
+    <main>
+        {% if lang === 'fr' %}
+        {% if version %}<p><strong>Version :</strong> {{ version }}</p>{% endif %}
+        <p><strong>Dernière mise à jour :</strong> {{ page.date | fulldate(lang) }}</p>
+        {% endif %}
+        {% if lang === 'en' %}
+        {% if version %}<p><strong>Version:</strong> {{ version }}</p>{% endif %}
+        <p>Last updated: {{ page.date | fulldate(lang) }}</p>
+        {% endif %}
+
+        {{ content | safe }}
+    </main>
+
+    {% include "footer.njk" %}
+
+    {% include "toc-toggle.njk" %}
+</body>
+
+</html>
