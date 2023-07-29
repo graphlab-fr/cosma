@@ -13,6 +13,9 @@ module.exports = {
    */
 
   read: function (fileContent, options = {}) {
+    const windowsCariageReturn = new RegExp(/\r\n/g);
+    fileContent = fileContent.replace(windowsCariageReturn, '\n');
+
     const [, withDash, withoutDash, content] = regex.exec(fileContent);
 
     let ymlResult = {};
