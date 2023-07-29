@@ -12,24 +12,6 @@ body:
         Please be as accurate as possible when describing the issue.
         If you have encountered several bugs, please create a new issue for each one.
 
-  - type: textarea
-    id: action-before-bug
-    attributes:
-      label: Actions leading to the bug
-      description: >
-        Please describe the actions that led to the bug.
-    validations:
-      required: true
-
-  - type: textarea
-    id: bug
-    attributes:
-      label: Bug description
-      description: >
-        Which expected behaviour failed, or which unexpected behaviour occured?
-    validations:
-      required: true
-
   - type: dropdown
     id: cosma-version
     attributes:
@@ -37,18 +19,14 @@ body:
       description: >
         Please select the version number on which you observed the bug.
       options:
-        - CLI 2.0-beta-1
-        - GUI 1.1
-        - GUI 1.0
-        - CLI 1.1
-        - CLI 1.0
+        - CLI 2.0.0
     validations:
       required: true
 
   - type: checkboxes
     id: os
     attributes:
-      label: What is your operating system?
+      label: On which operating system(s) did you observe the bug?
       description: >
         Please select the OS on which you observed the bug.
       options:
@@ -64,7 +42,25 @@ body:
       label: What version of the operating system are you on?
       description: >
         Please indicate the OS version to improve our understanding of the bug.
-      placeholder: "Big Sur 11.4, Windows 10…"
+      placeholder: "macOS 12.6, Windows 10…"
+    validations:
+      required: true
+
+  - type: textarea
+    id: action-before-bug
+    attributes:
+      label: Actions leading to the bug
+      description: >
+        Please describe the actions that led to the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug
+    attributes:
+      label: Bug description
+      description: >
+        Which expected behaviour failed, or which unexpected behaviour occured?
     validations:
       required: true
 
