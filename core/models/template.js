@@ -75,10 +75,8 @@ module.exports = class Template {
 
   static markLinkContext(recordLinks, linkSymbol) {
     return recordLinks.map((link) => {
-      if (link.context.length > 1) {
+      if (link.context.length > 0) {
         link.context = link.context.join('\n\n');
-      } else if (link.context.length === 1) {
-        link.context = link.context[0];
       } else {
         link.context = '';
       }
