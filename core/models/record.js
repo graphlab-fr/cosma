@@ -654,7 +654,6 @@ module.exports = class Record {
         for (const bibliographicRecord of bibliographicRecords) {
           const { cluster } = bibliography.get(bibliographicRecord);
           const { text } = bibliographicRecord;
-          console.log({ paragraph, text, cluster });
           paragraph = paragraph.replaceAll(text, cluster);
         }
         return paragraph;
