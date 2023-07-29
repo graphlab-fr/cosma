@@ -16,7 +16,8 @@
   },
   "scripts": {
     "doc": "open docs/index.html",
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha",
+    "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'"
   },
   "contributors": [
     "Arthur Perret",
@@ -48,6 +49,17 @@
   "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "devDependencies": {
     "chai": "^4.3.6",
-    "mocha": "^10.0.0"
+    "mocha": "^10.0.0",
+    "prettier": "^3.0.0"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "bracketSpacing": true,
+    "arrowParens": "always"
   }
 }
