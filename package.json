@@ -15,7 +15,6 @@
     "cosma": "app.js"
   },
   "scripts": {
-    "doc": "open docs/index.html",
     "test": "./node_modules/.bin/mocha",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'"
   },
