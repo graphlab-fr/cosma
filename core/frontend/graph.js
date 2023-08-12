@@ -132,10 +132,8 @@ elts.nodes = svgSub
   .enter()
   .append('g')
   .attr('data-node', (d) => d.id)
-  .attr('data-toto', (d) => d.superToto)
-  .on('click', function (d) {
-    openRecord(d.id);
-  });
+  .append('a')
+  .attr('href', (d) => '#' + d.id);
 
 /** @type {d3.Selection<SVGCircleElement, any, SVGElement, any>} */
 elts.circles = elts.nodes

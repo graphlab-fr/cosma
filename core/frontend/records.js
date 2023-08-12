@@ -1,12 +1,11 @@
 import View from './view';
-import historique from './history';
 import { nodes, highlightNodes, unlightNodes } from './graph';
 import hotkeys from 'hotkeys-js';
 import filterPriority from './filterPriority';
 
 const recordContainer = document.getElementById('record-container');
 
-window.openRecord = function (id, history = true) {
+window.openRecord = function (id) {
   const recordContent = document.getElementById(id);
 
   if (!recordContent) {
@@ -32,11 +31,8 @@ window.openRecord = function (id, history = true) {
   unlightNodes();
   highlightNodes([id]);
 
-  if (history) {
-    // page's <title> become record's name
-    const recordTitle = recordContent.querySelector('h1').textContent;
-    historique.actualiser(id, recordTitle);
-  }
+  const recordTitle = recordContent.querySelector('h1').textContent;
+  document.title = recordTitle;
 };
 
 /**
@@ -55,25 +51,17 @@ hotkeys('escape', (e) => {
   closeRecord();
 });
 
-window.addEventListener('DOMContentLoaded', () => {
+window.hashRecord = function () {
   const { hash } = new URL(window.location);
   if (hash) {
     const recordId = hash.substring(1);
     openRecord(recordId);
   }
-});
-
-// At navigation travel, with forward/backward webbrowser's buttons
-window.onpopstate = function (e) {
-  if (e.state === null) {
-    return;
-  }
-  // open record from a history entry
-  const timeline = e.state.hist,
-    recordId = timeline[timeline.length - 1];
-
-  openRecord(recordId, false);
 };
+
+window.addEventListener('hashchange', window.hashRecord);
+
+window.addEventListener('DOMContentLoaded', window.hashRecord);
 
 const indexContainer = document.getElementById('index');
 

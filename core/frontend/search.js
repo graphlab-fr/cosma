@@ -38,15 +38,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const resultElement = document.createElement('li');
         resultElement.classList.add('search-result-item');
-        resultElement.innerHTML = `<span
-          class="record-type-point"
-          style="color:var(--n_${type})"
-        >⬤</span>
-        <span>${label}</span>`;
-
-        resultElement.addEventListener('click', () => {
-          window.openRecord(id);
-        });
+        resultElement.innerHTML = `
+        <a href="#${id}">
+          <span
+            class="record-type-point"
+            style="color:var(--n_${type})"
+          >⬤</span>
+          <span>${label}</span>
+        </a>`;
 
         resultContainer.appendChild(resultElement);
       }
