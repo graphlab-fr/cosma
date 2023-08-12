@@ -62,12 +62,7 @@ module.exports = class Template {
 
       const linkContent = text || linkSymbol || match;
 
-      return `
-      <a
-        href="#${link.target.id}"
-        title="${link.target.title}"
-        class="record-link"
-      >${linkContent}</a>`;
+      return `<a href="#${link.target.id}" title="${link.target.title}" class="record-link">${linkContent}</a>`;
     });
   }
 
