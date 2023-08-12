@@ -62,7 +62,12 @@ module.exports = class Template {
 
       const linkContent = text || linkSymbol || match;
 
-      return `[${linkContent}](#${link.target.id}){title="${link.target.title}" onclick=openRecord(${link.target.id}) .record-link}`;
+      return `
+      <a
+        href="#${link.target.id}"
+        title="${link.target.title}"
+        class="record-link"
+      >${linkContent}</a>`;
     });
   }
 
