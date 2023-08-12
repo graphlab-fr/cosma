@@ -8,8 +8,8 @@ describe('Link', () => {
     const recordId = 20210907180436;
     const ids = [
       '20210613084440',
-      '20210424214230',
-      '20210613165413',
+      'simpleString',
+      'string with white spaces',
       '20210619085713',
       '20210613173849',
     ];
