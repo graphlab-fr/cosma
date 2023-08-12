@@ -84,20 +84,20 @@ if (config.opts['files_origin']) {
       content,
       dates: {
         timestamp: faker.datatype.datetime({
-          min: new Date('2000-01-01'),
-          max: new Date('2010-01-01'),
+          min: new Date('1990-01-01'),
+          max: new Date('2000-01-01'),
         }),
         created: faker.datatype.datetime({
           min: new Date('2000-01-01'),
           max: new Date('2010-01-01'),
         }),
         lastEdit: faker.datatype.datetime({
-          min: new Date('2021-01-01'),
-          max: new Date('2022-01-01'),
+          min: new Date('2010-01-01'),
+          max: new Date('2020-01-01'),
         }),
         lastOpen: faker.datatype.datetime({
-          min: new Date('2022-01-01'),
-          max: new Date('2023-01-01'),
+          min: new Date('2020-01-01'),
+          max: new Date('2030-01-01'),
         }),
       },
       metas: {

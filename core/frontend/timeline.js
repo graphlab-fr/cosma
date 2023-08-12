@@ -11,6 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('timeline-form');
   /** @type {HTMLDataListElement} */
   const ticks = document.getElementById('timeline-ticks');
+
+  if (!form) return;
+
   /** @type {HTMLOutputElement} */
   const output = form.querySelector('output');
   /** @type {HTMLInputElement} */
@@ -38,10 +41,6 @@ window.addEventListener('DOMContentLoaded', () => {
   function action() {
     const timestamp = range.value;
     output.value = getDateFromTimesetamp(timestamp);
-
-    if (begin === undefined || end === undefined) {
-      return;
-    }
 
     const toDisplay = [];
 

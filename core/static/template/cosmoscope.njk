@@ -537,6 +537,7 @@
             {% endif %}
         </div>
 
+        {% if timeline.begin or timeline.end %}
         <div class="graph-timeline">
             <label>
                 <input id="timeline-checkbox" type="checkbox" name="checkbox">
@@ -556,6 +557,7 @@
                 <datalist id="timeline-ticks"></datalist>
             </form>
         </div>
+        {% endif %}
     </div>
 
     {# Cosma data #}
