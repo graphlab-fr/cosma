@@ -54,7 +54,7 @@ hotkeys('escape', (e) => {
 window.hashRecord = function () {
   const { hash } = new URL(window.location);
   if (hash) {
-    const recordId = hash.substring(1);
+    const recordId = decodeURI(hash.substring(1));
     openRecord(recordId);
   }
 };
