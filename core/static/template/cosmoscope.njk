@@ -127,9 +127,11 @@
 
             <ul class="menu-index-list">
                 {% for record in records %}
-                <li data-index="{{ record.id }}" onclick="openRecord({{ record.id }})" style="order: {{ loop.index }}">
-                    <span class="record-type-point" style="color: var(--n_{{ record.types[0] | slugify }});">⬤</span>
-                    <span>{{ record.title }}</span>
+                <li data-index="{{ record.id }}" style="order: {{ loop.index }}">
+                    <a href="#{{ record.id }}">
+                        <span class="record-type-point" style="color: var(--n_{{ record.types[0] | slugify }});">⬤</span>
+                        <span>{{ record.title }}</span>
+                    </a>
                 </li>
                 {% endfor %}
             </ul>
@@ -327,12 +329,14 @@
 
                     <ul class="record-links-list">
                         {% for link in record.links %}
-                        <li data-target-id="{{ link.target.id }}" onclick="openRecord({{ link.target.id }})">
-                            <span class="record-type-point" style="color: var(--n_{{ link.target.type | slugify }});">⬤</span>
-                            <span>{{ link.target.title }}</span>
-                            <div class="record-links-context">
-                                {{ link.context | markdown | safe }}
-                            </div>
+                        <li data-target-id="{{ link.target.id }}">
+                            <a href="#{{ link.target.id }}">
+                                <span class="record-type-point" style="color: var(--n_{{ link.target.type | slugify }});">⬤</span>
+                                <span>{{ link.target.title }}</span>
+                                <div class="record-links-context">
+                                    {{ link.context | markdown | safe }}
+                                </div>
+                            </a>
                         </li>
                         {% endfor %}
                     </ul>
@@ -348,12 +352,14 @@
 
                     <ul class="record-backlinks-list">
                         {% for backlink in record.backlinks %}
-                        <li data-target-id="{{ backlink.source.id }}" onclick="openRecord({{ backlink.source.id }})">
-                            <span class="record-type-point" style="color: var(--n_{{ backlink.source.type | slugify }});">⬤</span>
-                            <span>{{ backlink.source.title }}</span>
-                            <div class="record-links-context">
-                                {{ backlink.context | markdown | safe }}
-                            </div>
+                        <li data-target-id="{{ backlink.source.id }}">
+                            <a href="#{{ backlink.source.id }}">
+                                <span class="record-type-point" style="color: var(--n_{{ backlink.source.type | slugify }});">⬤</span>
+                                <span>{{ backlink.source.title }}</span>
+                                <div class="record-links-context">
+                                    {{ backlink.context | markdown | safe }}
+                                </div>
+                            </a>
                         </li>
                         {% endfor %}
                     </ul>

@@ -58,6 +58,10 @@ article + article:not(.record) {
 /** Elements
 ------------------------------------------------------------*/
 
+a {
+  text-decoration: none;
+}
+
 /* ---
 - Buttons
 --- */
@@ -468,6 +472,10 @@ main.record-container:not(.active) {
 /* ---
 - Record content
 --- */
+
+.record-content a {
+  text-decoration: underline;
+}
 
 .record img {
   height: auto;
