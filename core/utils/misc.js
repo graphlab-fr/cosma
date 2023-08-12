@@ -80,4 +80,14 @@ module.exports = {
     const second = date.getSeconds().toString().padStart(2, '0');
     return [year, month, day, hour, minute, second];
   },
+
+  slugify: function (string) {
+    const slugifyTool = require('slugify');
+
+    return slugifyTool(string, {
+      replacement: '-',
+      remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/\.]/g,
+      lower: true,
+    });
+  },
 };

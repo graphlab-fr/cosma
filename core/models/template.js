@@ -28,7 +28,7 @@ const Link = require('./link'),
   Bibliography = require('./bibliography'),
   Graph = require('./graph');
 
-const { isAnImagePath } = require('../utils/misc');
+const { isAnImagePath, slugify } = require('../utils/misc');
 const translation = require('./lang').i;
 
 /**
@@ -256,7 +256,7 @@ module.exports = class Template {
     );
 
     templateEngine.addFilter('slugify', (input) => {
-      return input.split(' ').join('-');
+      return slugify(input);
     });
     templateEngine.addFilter('markdown', (input) => {
       return mdIt.render(input);

@@ -52,8 +52,7 @@
 
 const path = require('path'),
   fs = require('fs'),
-  yml = require('yaml'),
-  slugify = require('slugify');
+  yml = require('yaml');
 
 const Config = require('./config'),
   Bibliography = require('./bibliography'),
@@ -62,7 +61,7 @@ const Config = require('./config'),
   lang = require('./lang'),
   Report = require('./report');
 
-const { getTimestampTuple } = require('../utils/misc');
+const { getTimestampTuple, slugify } = require('../utils/misc');
 
 const { RecordMaxOutDailyIdError } = require('./errors');
 
@@ -339,11 +338,7 @@ module.exports = class Record {
    */
 
   static getSlugFileName(fileName) {
-    const slugName = slugify(fileName, {
-      replacement: '-',
-      remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
-      lower: true,
-    });
+    const slugName = slugify(fileName);
     return slugName + '.md';
   }
 
