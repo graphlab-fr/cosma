@@ -324,10 +324,20 @@ module.exports = class Cosmoscope extends Graph {
         ...Bibliography.getBibliographicRecordsFromList(references),
       ];
 
-      let { begin, end } = metas;
-      begin = begin || Number(file.dates[opts.chronological_record_meta]);
-      delete metas.end;
-      delete metas.begin;
+      let begin, end;
+
+      switch (opts.chronological_record_meta) {
+        case 'lastOpen':
+        case 'lastEdit':
+        case 'created':
+        case 'timestamp':
+          begin = file.dates[opts.chronological_record_meta];
+          break;
+        case 'custom':
+          begin = metas.begin;
+          end = metas.end;
+          break;
+      }
 
       return new Record(
         id,
