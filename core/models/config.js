@@ -507,7 +507,7 @@ module.exports = class Config {
       'lastEdit',
       'created',
       'timestamp',
-      'custom',
+      'manual',
     ]).has(this.opts.chronological_record_meta)
       ? null
       : 'chronological_record_meta';

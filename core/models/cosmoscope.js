@@ -314,7 +314,7 @@ module.exports = class Cosmoscope extends Graph {
 
     const records = files.map((file) => {
       const { id, title, types, tags, thumbnail, references, ...rest } = file.metas;
-      let { begin: customBegin, end: customEnd, ...metas } = rest;
+      let { begin: manualBegin, end: manualEnd, ...metas } = rest;
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
         links,
@@ -334,9 +334,9 @@ module.exports = class Cosmoscope extends Graph {
         case 'timestamp':
           begin = file.dates[opts.chronological_record_meta];
           break;
-        case 'custom':
-          begin = customBegin;
-          end = customEnd;
+        case 'manual':
+          begin = manualBegin;
+          end = manualEnd;
           break;
       }
 
