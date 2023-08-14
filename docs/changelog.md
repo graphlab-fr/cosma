@@ -20,7 +20,7 @@ title: Changelog
 
 # v2.0.2
 
-- Man page can now be accessed as expected
+- Added a man page, which can be displayed by running `man cosma` in the terminal
 
 # v2.0.1
 
