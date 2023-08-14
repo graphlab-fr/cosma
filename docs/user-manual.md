@@ -163,7 +163,7 @@ metadata filter | Entities for which this metadata is present will be excluded w
 `attraction_vertical` | Additional attraction towards the vertical axis | Number between 0 (disabled) and 1 | 0
 `attraction_horizontal` | Additional attraction towards the horizontal axis | Number between 0 (disabled) and 1 | 0
 `views` | List of registered views (which can only be created with the GUI version) | list 
-`chronological_record_meta` | Metadata to be used for chronological mode | `created`, `last_edit`, `last_open`, `timestamp`, metadata declared in `record_metas` | `created`
+`chronological_record_meta` | Metadata to be used for chronological mode | `created` (OS date of file creation), `last_edit` (OS date of last modification), `last_open` (OS date of last opening), `timestamp` (use the 14-digit identifier, if it exists), `manual` (use `begin` and `end` metadata that have been manually entered in records, if they exist) | `created`
 `record_metas` | List of metadata (present in the data source) to be included in the cosmoscope | list
 `title` | Cosmoscope title | string |
 `author` | Cosmoscope author | string | 
@@ -323,11 +323,11 @@ Cosma recognises and uses the following four fields:
 
 `begin`
 : Optional.
-: Time metadata used for chronological mode.
+: Time metadata used for chronological mode, when `chronological_record_meta` is set to `manual` in the config.
 
 `end`
 : Optional.
-: Time metadata used for chronological mode.
+: Time metadata used for chronological mode, when `chronological_record_meta` is set to `manual` in the config.
 
 ### User-defined metadata
 

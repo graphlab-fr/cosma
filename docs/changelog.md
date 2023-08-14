@@ -2,6 +2,22 @@
 title: Changelog
 ---
 
+# v2.0.3
+
+## Additions
+
+- `chronological_record_meta` can be set to `manual` in order to use `begin` and `end` metadata from records for Chronological mode
+
+## Bug fixes
+
+- Links work correctly when identifiers contain spaces and/or dots
+- Type color is displayed correctly when the type name contains dots
+
+## Known bugs
+
+- `chronological_record_meta` reverts to `created` when set to `last_edit` or `last_open`
+- the `created` setting for `chronological_record_meta` does not work as expected
+
 # v2.0.2
 
 - Man page can now be accessed as expected
