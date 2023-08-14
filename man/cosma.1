@@ -351,12 +351,25 @@ reinsert them the next time you use the file.
                               be created with                     
                               the GUI version)                    
 
-  chronological_record_meta   Metadata to be    created,          created
-                              used for          last_edit,        
-                              chronological     last_open,        
-                              mode              timestamp,        
-                                                metadata declared 
-                                                in record_metas   
+  chronological_record_meta   Metadata to be    created (OS date  created
+                              used for          of file           
+                              chronological     creation),        
+                              mode              last_edit (OS     
+                                                date of last      
+                                                modification),    
+                                                last_open (OS     
+                                                date of last      
+                                                opening),         
+                                                timestamp (use    
+                                                the 14-digit      
+                                                identifier, if it 
+                                                exists), manual   
+                                                (use begin and    
+                                                end metadata that 
+                                                have been         
+                                                manually entered  
+                                                in records, if    
+                                                they exist)       
 
   record_metas                List of metadata  list              
                               (present in the                     
@@ -602,11 +615,15 @@ pane).
 .TP
 \f[V]begin\f[R]
 Optional.
-Time metadata used for chronological mode.
+Time metadata used for chronological mode, when
+\f[V]chronological_record_meta\f[R] is set to \f[V]manual\f[R] in the
+config.
 .TP
 \f[V]end\f[R]
 Optional.
-Time metadata used for chronological mode.
+Time metadata used for chronological mode, when
+\f[V]chronological_record_meta\f[R] is set to \f[V]manual\f[R] in the
+config.
 .SS User-defined metadata
 .PP
 Other metadata can be added freely in the YAML header.
@@ -1466,12 +1483,6 @@ Webpack\ : 5.74.0
 Webpack-cli\ : 4.10.0
 .IP \[bu] 2
 Webpack-dev-server\ : 4.11.1
-.PP
-\&.SH NAME cosma - document graph visualization
-.PP
-\&.PP The Cosma source code may be downloaded from
-https://github.com/graphlab-fr/cosma.
-Further documentation is available at https://cosma.arthurperret.fr.
 .PP
 The Cosma source code may be downloaded
 from <https://github.com/graphlab-fr/cosma>.
