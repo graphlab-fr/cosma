@@ -10,7 +10,6 @@ module.exports = defineConfig({
   trashAssetsBeforeRuns: false,
   e2e: {
     baseUrl: `http://localhost:${devServer.port}`,
-    supportFile: false,
     specPattern: 'e2e/**/*.js',
     supportFile: 'utils/e2e-support.js',
   },

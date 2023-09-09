@@ -26,17 +26,11 @@ const { getTimestampTuple } = require('./misc');
 const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
 
-const nodesNb = 40;
 const tags = [];
-const ids = [];
-const files = [];
 const bibKeys = Object.values(bib).map(({ id }) => `${id}`);
 
 for (let i = 0; i < 5; i++) {
   tags.push(faker.random.word());
-}
-for (let i = 0; i < nodesNb; i++) {
-  ids.push(Record.generateOutDailyId() + i);
 }
 
 let config = Config.get(path.join(__dirname, '../static/fake/config.yml'));
@@ -48,24 +42,36 @@ config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml');
 config.opts['css_custom'] = path.join(__dirname, '../static/fake/style.css');
 config.opts['bibliography'] = path.join(__dirname, '../static/fake/bib.json');
 config.opts['views'] = {
-  [faker.word.verb()]: fakeView({ withFilters: 2, withFocus: 2, withRecord: true }),
+  [faker.word.verb()]: fakeView({ withFilters: 2, withFocus: 2 }),
   [faker.word.verb()]: fakeView({ withFilters: 3, withTags: 1 }),
   withFilters: fakeView({ withFilters: 2 }),
   withTags: fakeView({ withTags: 1 }),
-  withFocus: fakeView({ withFocus: 1, withRecord: true }),
+  withFocus: fakeView({ withFocus: 1 }),
 };
 const nodeThumbnails = Array.from(config.getTypesRecords())
   .filter((type) => config.getFormatOfTypeRecord(type) === 'image')
   .map((type) => recordTypes[type]['fill']);
 const images = ['exemple-image.jpeg'];
 
-if (config.opts['files_origin']) {
-  files.push(...Cosmoscope.getFromPathFiles(config.opts['files_origin'], config.opts));
-} else {
+const templateEngine = new nunjucks.Environment(
+  new nunjucks.FileSystemLoader(path.join(__dirname, '../static')),
+);
+
+/**
+ * Generate many records with fake default values
+ * @param {number} nb Number of records to generate
+ * @param {Config.opts} opts
+ * @returns {Record[]}
+ */
+
+function getRecords(nb, opts = config.opts) {
+  const ids = [];
+  for (let i = 0; i < nb; i++) {
+    ids.push(Record.generateOutDailyId() + i);
+  }
+
+  const files = [];
   for (const fileId of ids) {
-    const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../static')),
-    );
     const content = templateEngine.render('fake/record.njk', {
       ids,
       imgSrc: images[0],
@@ -113,13 +119,13 @@ if (config.opts['files_origin']) {
       },
     });
   }
-}
 
-const records = Cosmoscope.getRecordsFromFiles(files, config.opts);
+  return Cosmoscope.getRecordsFromFiles(files, opts);
+}
 
 module.exports = {
   config,
-  records,
+  getRecords,
   bib,
   nodeThumbnails,
   images,
@@ -130,7 +136,7 @@ module.exports = {
  * @returns {string}
  */
 
-function fakeView({ withFilters, withTags, withFocus, withRecord }) {
+function fakeView({ withFilters, withTags, withFocus, withThisRecordId }) {
   const fakeHost = 'https://fake.fr/';
   let url = new URL(fakeHost);
 
@@ -146,8 +152,8 @@ function fakeView({ withFilters, withTags, withFocus, withRecord }) {
   if (withFocus) {
     url.searchParams.set('focus', withFocus);
   }
-  if (withRecord) {
-    url.hash = faker.helpers.arrayElement(ids);
+  if (withThisRecordId) {
+    url.hash = faker.helpers.arrayElement(withThisRecordId);
   }
 
   url = url.toString().split(fakeHost)[1];

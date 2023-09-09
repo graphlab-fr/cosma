@@ -1,6 +1,6 @@
 describe('Graph controls', () => {
   before(() => {
-    cy.visit('/temp/cosmoscope.html');
+    cy.visit('/');
   });
 
   describe.skip('zoom', () => {

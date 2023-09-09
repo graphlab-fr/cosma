@@ -32,10 +32,9 @@ module.exports = {
   watch: true,
   devServer: {
     static: {
-      directory: path.join(__dirname, '..'),
+      directory: path.join(__dirname, '../temp'),
     },
     port: 9000,
-    open: ['./temp/cosmoscope.html'],
   },
   mode: 'production',
 };

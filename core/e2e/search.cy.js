@@ -1,6 +1,6 @@
 describe('Search', () => {
   beforeEach(() => {
-    cy.visit('/temp/cosmoscope.html');
+    cy.visit('/');
   });
 
   it('should get search result after type record name', () => {

@@ -1,6 +1,6 @@
 describe('Panels', () => {
   before(() => {
-    cy.visit('/temp/cosmoscope.html');
+    cy.visit('/');
   });
 
   describe('help', () => {

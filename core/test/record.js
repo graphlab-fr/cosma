@@ -18,7 +18,7 @@ const Record = require('../models/record'),
 const { getTimestampTuple } = require('../utils/misc');
 
 const { fetchBibliographyFiles } = require('../utils/generate'),
-  { config: configFake, records: fakeRecords } = require('../utils/fake');
+  { config: configFake, getRecords } = require('../utils/fake');
 
 const tempFolderPath = path.join(__dirname, '../temp');
 
@@ -598,6 +598,7 @@ isDead: false
     const content = 'Molestiae [@Cockburn_2002, 10] architecto quisquam ducimus [@Brooks_1983, 2].';
 
     it('should replace content and context of links and backlinks', () => {
+      const fakeRecords = getRecords(1);
       const record = fakeRecords[0];
       record.content = content;
       record.links = [

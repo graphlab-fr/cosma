@@ -1,6 +1,6 @@
 describe('Filters', () => {
   beforeEach(() => {
-    cy.visit('/temp/cosmoscope.html');
+    cy.visit('/');
   });
 
   it('should uncheck input on filter label click', () => {
@@ -10,7 +10,7 @@ describe('Filters', () => {
   });
 
   it('should check only filter in search params if set', () => {
-    cy.visit('/temp/cosmoscope.html?filters=task,note');
+    cy.visit('/?filters=task,note');
 
     cy.get('.menu-types .filter input:checked').should('have.length', 2);
     cy.get('.menu-types .filter:contains("task") input').should('is.checked');
