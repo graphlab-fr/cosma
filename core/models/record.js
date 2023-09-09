@@ -61,7 +61,7 @@ const Config = require('./config'),
   lang = require('./lang'),
   Report = require('./report');
 
-const { getTimestampTuple, slugify } = require('../utils/misc');
+const { getTimestampTuple, getTimestamp, slugify } = require('../utils/misc');
 
 const { RecordMaxOutDailyIdError } = require('./errors');
 
@@ -559,7 +559,7 @@ module.exports = class Record {
     this.backlinks = backlinks;
     this.begin;
     if (begin) {
-      const beginUnix = new Date(begin).getTime() / 1000;
+      const beginUnix = getTimestamp(begin);
       if (isNaN(beginUnix)) {
         new Report(this.id, this.title, 'error').aboutInvalidRecordTimeBegin(this.title, begin);
       } else {
@@ -568,7 +568,7 @@ module.exports = class Record {
     }
     this.end;
     if (end) {
-      const endUnix = new Date(end).getTime() / 1000;
+      const endUnix = getTimestamp(end);
       if (isNaN(endUnix)) {
         new Report(this.id, this.title, 'error').aboutInvalidRecordTimeEnd(this.title, end);
       } else {

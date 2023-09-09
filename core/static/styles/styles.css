@@ -803,6 +803,7 @@ input[type='range'] + datalist {
 }
 
 input[type='range'] + datalist option {
+  cursor: pointer;
   display: inline-block;
   width: calc((100% - 12px) / (var(--list-length) - 1));
   text-align: center;

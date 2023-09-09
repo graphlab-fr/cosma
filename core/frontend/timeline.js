@@ -67,23 +67,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ticks.setAttribute('style', `--list-length: ${tickNb + 1};`);
     ticks.innerHTML = '';
-    ticks.insertAdjacentHTML(
-      'beforeend',
-      `<option value="${begin}">${getDateFromTimesetamp(begin)}</option>`,
-    );
+
+    const addTick = (timestamp) => {
+      const optionElt = document.createElement('option');
+      optionElt.value = timestamp;
+      optionElt.textContent = getDateFromTimesetamp(timestamp);
+      optionElt.addEventListener('click', () => {
+        range.value = timestamp;
+        action();
+      });
+      ticks.appendChild(optionElt);
+    };
+
+    addTick(begin);
+
     for (let i = 1; i <= tickNb; i++) {
       if (i === tickNb) {
-        ticks.insertAdjacentHTML(
-          'beforeend',
-          `<option value="${end}">${getDateFromTimesetamp(end)}</option>`,
-        );
+        addTick(end);
         continue;
       }
 
-      ticks.insertAdjacentHTML(
-        'beforeend',
-        `<option value="${begin + step * i}">${getDateFromTimesetamp(begin + step * i)}</option>`,
-      );
+      addTick(begin + step * i);
     }
   }
 });

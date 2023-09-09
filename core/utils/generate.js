@@ -1,7 +1,7 @@
 const fs = require('fs'),
   path = require('path'),
   { faker } = require('@faker-js/faker');
-const { downloadFile } = require('./misc');
+const { downloadFile, getTimestamp } = require('./misc');
 
 const tempDirPath = path.join(__dirname, '../temp');
 if (fs.existsSync(tempDirPath) === false) {
@@ -110,7 +110,12 @@ function fetchFakeThumbnails(thumbnailNames) {
 function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc', 'dev']) {
   const Cosmoscope = require('../models/cosmoscope'),
     Template = require('../models/template');
-  const { config: fakeConfig, records, nodeThumbnails, images: recordImages } = require('./fake');
+  const {
+    config: fakeConfig,
+    getRecords,
+    nodeThumbnails,
+    images: recordImages,
+  } = require('./fake');
   return new Promise(async (resolve, reject) => {
     Promise.all([
       fetchBibliographyFiles(),
@@ -118,10 +123,12 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
       fetchFakeThumbnails(nodeThumbnails),
     ])
       .then(() => {
+        const records = getRecords(20);
+
         const graph = new Cosmoscope(records, fakeConfig.opts, ['fake']),
           { html } = new Template(graph, templateOptions);
 
-        savePath = path.join(savePath, 'cosmoscope.html');
+        savePath = path.join(savePath, 'index.html');
 
         fs.writeFile(savePath, html, (err) => {
           if (err) {
@@ -138,46 +145,44 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
   });
 }
 
-function opensphere(savePath, templateOptions = ['publish', 'citeproc', 'dev']) {
+function cosmocopeTimeline() {
   const Cosmoscope = require('../models/cosmoscope'),
-    Record = require('../models/record'),
-    Link = require('../models/link'),
     Template = require('../models/template');
 
-  const { config: fakeConfig, nodeThumbnails } = require('./fake');
-  return new Promise(async (resolve, reject) => {
-    fetchSpreadsheets().then(() => {
-      Cosmoscope.getFromPathCsv(
-        path.join(tempDirPath, 'nodes.csv'),
-        path.join(tempDirPath, 'links.csv'),
-      )
-        .then(([records, links]) => {
-          links = Link.formatedDatasetToLinks(links);
-          records = Record.formatedDatasetToRecords(records, links, fakeConfig);
-          Promise.all([fetchBibliographyFiles(), fetchFakeThumbnails(nodeThumbnails)]).then(() => {
-            const graph = new Cosmoscope(records, fakeConfig.opts),
-              { html } = new Template(graph, templateOptions);
+  const { config: fakeConfig, getRecords } = require('./fake');
 
-            savePath = path.join(savePath, 'otletosphere.html');
-            fs.writeFile(savePath, html, (err) => {
-              if (err) {
-                reject(err);
-              }
-              resolve({
-                nbRecords: graph.records.length,
-                savePath,
-              });
-            });
-          });
-        })
-        .catch(reject);
+  const fakeRecords = getRecords(5);
+
+  const records = [
+    { ...fakeRecords[0], begin: getTimestamp('01-01-2020'), end: undefined },
+    { ...fakeRecords[1], begin: getTimestamp('01-01-2021'), end: getTimestamp('01-01-2024') },
+    { ...fakeRecords[2], begin: getTimestamp('01-01-2022'), end: undefined },
+    { ...fakeRecords[3], begin: getTimestamp('01-01-2023'), end: undefined },
+    { ...fakeRecords[4], begin: getTimestamp('01-01-2025'), end: undefined },
+  ];
+
+  return new Promise(async (resolve, reject) => {
+    const graph = new Cosmoscope(records, fakeConfig.opts),
+      { html } = new Template(graph, ['publish', 'dev']);
+
+    const savePath = path.join(tempDirPath, 'cosmocopeTimeline.html');
+
+    fs.writeFile(savePath, html, (err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve({
+        nbRecords: graph.records.length,
+        graph,
+        savePath,
+      });
     });
   });
 }
 
 module.exports = {
   cosmocope,
-  opensphere,
+  cosmocopeTimeline,
   fetchBibliographyFiles,
   fetchFakeImages,
   fetchFakeThumbnails,

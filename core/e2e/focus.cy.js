@@ -1,6 +1,6 @@
 describe('Focus', () => {
   beforeEach(() => {
-    cy.visit('/temp/cosmoscope.html');
+    cy.visit('/');
   });
 
   function openRecord() {

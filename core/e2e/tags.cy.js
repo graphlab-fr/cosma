@@ -1,6 +1,6 @@
 describe('Tags', () => {
   beforeEach(() => {
-    cy.visit('/temp/cosmoscope.html');
+    cy.visit('/');
   });
 
   it('should check input on tag label click', () => {

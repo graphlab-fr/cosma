@@ -81,6 +81,20 @@ module.exports = {
     return [year, month, day, hour, minute, second];
   },
 
+  /**
+   * Get stringify date as timestamp
+   * @param {string}
+   * @returns {number}
+   * @example
+   * ```
+   * getTimestamp('12/31/2020') // => 1609390800
+   * ```
+   */
+
+  getTimestamp: function (date) {
+    return new Date(date).getTime() / 1000;
+  },
+
   slugify: function (string) {
     const slugifyTool = require('slugify');
 
