@@ -18,8 +18,6 @@ window.addEventListener('DOMContentLoaded', () => {
   input.addEventListener('focus', () => {
     fuse.setCollection(nodes.filter(({ hidden }) => hidden === 0));
 
-    console.log(fuse);
-
     input.addEventListener('input', () => {
       resultContainer.innerHTML = '';
       selectedResult = 0;
@@ -49,6 +47,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         resultContainer.appendChild(resultElement);
       }
+
+      activeOutline();
     });
   });
 
@@ -66,21 +66,22 @@ window.addEventListener('DOMContentLoaded', () => {
       case 'ArrowUp':
         e.preventDefault();
 
-        if (selectedResult === 0) {
-          input.focus();
-          return;
+        if (selectedResult > 0) {
+          removeOutlineElt();
+          selectedResult--;
+          activeOutline();
         }
 
-        removeOutlineElt();
-        selectedResult--;
-        activeOutline();
+        if (selectedResult === 0) {
+          input.focus();
+        }
 
         break;
       case 'ArrowDown':
         e.preventDefault();
 
         if (selectedResult === maxResultNb - 1 || selectedResult === resultList.length - 1) {
-          return;
+          break;
         }
 
         removeOutlineElt();
@@ -94,7 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
         break;
       case 'Enter':
         e.preventDefault();
-        openRecord(resultList[selectedResult].item.id);
+        window.location.hash = resultList[selectedResult].item.id;
         input.blur();
         break;
     }
