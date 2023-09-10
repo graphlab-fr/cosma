@@ -20,21 +20,20 @@ describe('Search', () => {
     cy.get('#search').should('have.focus');
   });
 
-  
   it('should outline first result', () => {
     cy.get('#search').type('a');
-    cy.get('.search-result-item').should('have.length', 5)
-    cy.get('.search-result-item').eq(0).should('have.class', 'outline')
-    
+    cy.get('.search-result-item').should('have.length', 5);
+    cy.get('.search-result-item').eq(0).should('have.class', 'outline');
+
     cy.get('#search').type('{downArrow}');
     cy.get('#search').should('not.have.focus');
-    cy.get('.search-result-item').eq(0).should('not.have.class', 'outline')
-    cy.get('.search-result-item').eq(1).should('have.class', 'outline')
+    cy.get('.search-result-item').eq(0).should('not.have.class', 'outline');
+    cy.get('.search-result-item').eq(1).should('have.class', 'outline');
 
     cy.get('#search').type('{downArrow}');
     cy.get('#search').type('{downArrow}');
     cy.get('#search').type('{downArrow}');
-    cy.get('.search-result-item').eq(4).should('have.class', 'outline')
+    cy.get('.search-result-item').eq(4).should('have.class', 'outline');
 
     cy.get('#search').type('{upArrow}');
     cy.get('#search').type('{upArrow}');
@@ -52,7 +51,7 @@ describe('Search', () => {
       const recordName = elt.text();
 
       cy.get('#search').type('{enter}');
-      cy.get('.record.active .record-title').should('have.text', recordName)
+      cy.get('.record.active .record-title').should('have.text', recordName);
     });
-  })
+  });
 });
