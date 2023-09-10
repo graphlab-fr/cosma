@@ -391,7 +391,6 @@ module.exports = class Config {
 
     if (this.isValid() === false) {
       this.fix();
-      this.save();
     }
   }
 
