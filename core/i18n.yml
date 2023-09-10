@@ -412,6 +412,21 @@ demo:
       in HTML format, assembled in a single file: the cosmoscope.
       This demonstration cosmoscope has been exported with Cosma.
 
+record:
+  errors:
+    title:
+      fr: Titre manquant
+      en: Missing title
+    type:
+      fr: Type inconnu
+      en: Unknown type
+    id:
+      fr: Identifiant invalid
+      en: Invalid id
+    overwriting:
+      fr: Un fichier existe déjà avec ce nom
+      en: This file name is already taken
+
 report:
   title:
     fr: Rapport
