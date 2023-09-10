@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
             class="record-type-point"
             style="color:var(--n_${type})"
           >⬤</span>
-          <span>${label}</span>
+          <span class="record-title">${label}</span>
         </a>`;
 
         resultContainer.appendChild(resultElement);
