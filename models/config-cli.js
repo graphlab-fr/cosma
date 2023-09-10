@@ -166,6 +166,18 @@ module.exports = class ConfigCli extends Config {
       ['\x1b[4m', name, '\x1b[0m'].join(''),
       ['\x1b[2m', this.path, '\x1b[0m'].join(''),
     ];
+
+    if (this.report.length > 0) {
+      messageSections.push(
+        [
+          '\n',
+          ['\x1b[31m', 'Config errors', '\x1b[0m'].join(''),
+          ' for options: ',
+          this.report.join(', '),
+        ].join(''),
+      );
+    }
+
     return messageSections.join(' ');
   }
 };
