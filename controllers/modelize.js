@@ -9,6 +9,7 @@ const Graph = require('../core/models/graph'),
   Config = require('../models/config-cli'),
   Template = require('../core/models/template'),
   Report = require('../models/report-cli');
+const { DowloadOnlineCsvFilesError } = require('../core/models/errors');
 
 module.exports = async function (options) {
   let config = new Config();
@@ -90,10 +91,14 @@ module.exports = async function (options) {
       const tempDir = tmpdir();
       nodesPath = path.join(tempDir, 'cosma-nodes.csv');
       linksPath = path.join(tempDir, 'cosma-links.csv');
-      await downloadFile(nodesUrl, nodesPath);
-      console.log('- Nodes file downloaded');
-      await downloadFile(linksUrl, linksPath);
-      console.log('- Links file downloaded');
+      try {
+        await downloadFile(nodesUrl, nodesPath);
+        console.log('- Nodes file downloaded');
+        await downloadFile(linksUrl, linksPath);
+        console.log('- Links file downloaded');
+      } catch (error) {
+        throw new DowloadOnlineCsvFilesError(error);
+      }
     case 'csv':
       let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
       const links = Link.formatedDatasetToLinks(formatedLinks);

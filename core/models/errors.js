@@ -46,4 +46,14 @@ module.exports = {
       super('Can not generate more fake timestamp today.', '', 'record-max-out-daily-id', true);
     }
   },
+  DowloadOnlineCsvFilesError: class extends CoreError {
+    constructor(cause) {
+      super(
+        `Can not download csv files: ${cause.message}`,
+        JSON.stringify(cause.message),
+        'dowload-csv',
+        false,
+      );
+    }
+  },
 };
