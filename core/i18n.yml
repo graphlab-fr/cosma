@@ -154,8 +154,8 @@ right_panel:
       en: Help
 
     documentation_link_href:
-      fr: https://cosma.graphlab.fr/docs/
-      en: https://cosma.graphlab.fr/en/docs/
+      fr: https://cosma.arthurperret.fr/
+      en: https://cosma.arthurperret.fr/
     documentation_link_placeholder:
       fr: Cliquez ici pour accéder à la documentation de Cosma
       en: Click here to access Cosma's documentation
