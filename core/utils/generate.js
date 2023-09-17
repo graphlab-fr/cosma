@@ -180,9 +180,73 @@ function cosmocopeTimeline() {
   });
 }
 
+function cosmocopeTitleId() {
+  const Cosmoscope = require('../models/cosmoscope'),
+    Template = require('../models/template');
+
+  const { config: fakeConfig } = require('./fake');
+
+  const files = [
+    {
+      path: undefined,
+      name: 'toto.md',
+      content: 'Record to [[Tata]]',
+      dates: {},
+      metas: {
+        title: 'Toto',
+        types: [],
+        tags: [],
+      },
+    },
+    {
+      path: undefined,
+      name: 'tata.md',
+      content: 'This is "tata"',
+      dates: {},
+      metas: {
+        title: 'tata',
+        types: [],
+        tags: [],
+      },
+    },
+    {
+      path: undefined,
+      name: 'tutu.md',
+      content: 'Record to [[tata]]',
+      dates: {},
+      metas: {
+        title: 'tutu',
+        types: [],
+        tags: [],
+      },
+    },
+  ];
+
+  const records = Cosmoscope.getRecordsFromFiles(files, fakeConfig.opts);
+
+  return new Promise(async (resolve, reject) => {
+    const graph = new Cosmoscope(records, fakeConfig.opts),
+      { html } = new Template(graph, ['publish', 'dev']);
+
+    const savePath = path.join(tempDirPath, 'cosmocopeTitleId.html');
+
+    fs.writeFile(savePath, html, (err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve({
+        nbRecords: graph.records.length,
+        graph,
+        savePath,
+      });
+    });
+  });
+}
+
 module.exports = {
   cosmocope,
   cosmocopeTimeline,
+  cosmocopeTitleId,
   fetchBibliographyFiles,
   fetchFakeImages,
   fetchFakeThumbnails,
