@@ -67,7 +67,8 @@ module.exports = class Link {
 
     let match;
     while ((match = Link.regexWikilink.exec(fileContent))) {
-      const { type, id: targetId, text } = match.groups;
+      const { type, text } = match.groups;
+      const targetId = match.groups.id.toLowerCase();
       links[targetId] = { type, targetId, text, context: new Set() };
     }
 
@@ -76,7 +77,8 @@ module.exports = class Link {
     for (const paraph of paraphs) {
       let match;
       while ((match = Link.regexWikilink.exec(paraph))) {
-        const { id: targetId } = match.groups;
+        // const { id: targetId } = match.groups;
+        const targetId = match.groups.id.toLowerCase();
         links[targetId].context.add(paraph);
       }
     }

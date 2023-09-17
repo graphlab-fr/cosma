@@ -134,14 +134,14 @@ module.exports = class Cosmoscope extends Graph {
         file.dates = { created: ctime };
 
         const idAsNumber = Number(file.metas.id);
-        if (file.metas.id.length === 14 && isNaN(idAsNumber) === false) {
+        if (isNaN(idAsNumber) === false && file.metas.id.length === 14) {
           file.dates.timestamp = Record.getDateFromId(idAsNumber);
         }
 
         return file;
       })
       .filter(({ name, metas }) => {
-        if (metas.id === undefined) {
+        if (metas.id === undefined && metas.title === undefined) {
           new Report(name, '', 'error').aboutNoId(name);
           return false;
         }
@@ -168,9 +168,8 @@ module.exports = class Cosmoscope extends Graph {
       metas,
     };
 
-    file.metas.id = String(file.metas['id']);
-    file.metas.title = String(file.metas['title']);
-    file.metas.thumbnail = file.metas['thumbnail'];
+    file.metas.id = file.metas['id'] && String(file.metas['id']);
+    file.metas.title = file.metas['title'] && String(file.metas['title']);
 
     file.metas.types = file.metas['types'] || file.metas['type'] || [];
     delete file.metas['type'];
@@ -295,21 +294,24 @@ module.exports = class Cosmoscope extends Graph {
    */
 
   static getRecordsFromFiles(files, opts = {}) {
-    const links = files
-      .map((file) => {
-        const { id } = file.metas;
-        const { content } = file;
-        return Link.getWikiLinksFromFileContent(id, content);
-      })
-      .flat();
+    /** @type {Link[]} */
+    const links = [];
+    /** @type {Node[]} */
+    const nodes = [];
 
-    const nodes = files.map((file) => {
-      let { id, title, types } = file.metas;
-      return new Node(id, title, types[0]);
-    });
+    for (const file of files) {
+      const id = file.metas['id'] || file.metas['title'].toLowerCase();
+      const { content } = file;
+      links.push(...Link.getWikiLinksFromFileContent(id, content));
+
+      let { title, types, tags, thumbnail, references, ...rest } = file.metas;
+      nodes.push(new Node(id, title, types[0]));
+    }
 
     const records = files.map((file) => {
-      const { id, title, types, tags, thumbnail, references, ...rest } = file.metas;
+      const id = file.metas['id'] || file.metas['title'].toLowerCase();
+
+      const { title, types, tags, thumbnail, references, ...rest } = file.metas;
       let { begin: manualBegin, end: manualEnd, ...metas } = rest;
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,

@@ -51,7 +51,9 @@ module.exports = class Template {
 
   static convertLinks(record, content, linkSymbol) {
     return content.replace(Link.regexWikilink, function (match, _, type, targetId, __, text) {
-      const associatedMetas = record.links.find((i) => i.target.id == targetId);
+      const associatedMetas = record.links.find(
+        (i) => i.target.id === String(targetId).toLowerCase(),
+      );
 
       // link is not registred into record metas
       if (associatedMetas === undefined) {
@@ -83,10 +85,10 @@ module.exports = class Template {
       link.context = link.context.replace(
         Link.regexWikilink,
         (match, _, type, targetId, __, text) => {
-          const matchAsNumber = targetId;
+          const id = targetId.toLowerCase();
           const mark = text || linkSymbol || `&#91;&#91;${targetId}&#93;&#93;`;
-          if (matchAsNumber == link.target.id) {
-            return `*${mark}*{.id-context data-target-id=${matchAsNumber}}`;
+          if (id == link.target.id) {
+            return `*${mark}*{.id-context data-target-id=${id}}`;
           }
 
           return mark;
