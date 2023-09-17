@@ -6,13 +6,13 @@ const Graph = require('../core/models/graph'),
   Cosmoscope = require('../core/models/cosmoscope'),
   Link = require('../core/models/link'),
   Record = require('../core/models/record'),
-  Config = require('../models/config-cli'),
+  Config = require('../core/models/config'),
   Template = require('../core/models/template'),
   Report = require('../models/report-cli');
 const { DowloadOnlineCsvFilesError } = require('../core/models/errors');
 
 module.exports = async function (options) {
-  let config = new Config();
+  let config = Config.get(Config.configFilePath);
 
   options['publish'] = true;
   options['citeproc'] = !!options['citeproc'] && config.canCiteproc();
@@ -125,8 +125,9 @@ module.exports = async function (options) {
   });
 
   if (history) {
-    const [projectName] = Config.currentUsedConfigFileName.split('.', 2);
-    const projectScope = Config.currentScope;
+    const projectScope = Config.configFilePath.includes(Config.configDirPath) ? 'global' : 'local';
+    const projectName = path.parse(Config.configFilePath).name;
+
     getHistorySavePath(projectName, projectScope).then((filePath) => {
       fs.writeFile(filePath, html, (err) => {
         if (err) {

@@ -56,4 +56,34 @@ module.exports = {
       );
     }
   },
+  GetConfigFilePathByProjectNameError: class extends CoreError {
+    constructor(cause) {
+      super(
+        'Can not find config file by this project name: ',
+        cause,
+        'get-config-file-path-by-project-name',
+        false,
+      );
+    }
+  },
+  FindUserDataDirError: class extends CoreError {
+    constructor(cause) {
+      super(
+        'Cosma user data directory does not exist. Use "cosma --create-user-data-dir"',
+        undefined,
+        'user-data-dir-not-exists',
+        true,
+      );
+    }
+  },
+  ReadUserDataDirError: class extends CoreError {
+    constructor(cause, path) {
+      super(
+        `Can not get files from user data directory: ${cause}`,
+        { path },
+        'user-data-dir-not-exists',
+        true,
+      );
+    }
+  },
 };

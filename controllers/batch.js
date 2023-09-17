@@ -10,10 +10,10 @@ const fs = require('fs'),
 
 const Cosmoscope = require('../core/models/cosmoscope'),
   Record = require('../core/models/record'),
-  Config = require('../models/config-cli');
+  Config = require('../core/models/config');
 
 module.exports = function (filePath) {
-  const config = new Config();
+  const config = Config.get(Config.configFilePath);
   console.log(config.getConfigConsolMessage());
 
   if (fs.existsSync(filePath) === false) {

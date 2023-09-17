@@ -316,8 +316,6 @@ module.exports = class Template {
 
       focusIsActive: !(focusMax <= 0),
 
-      guiContext: Config.getContext() === 'electron' && this.params.has('publish') === false,
-
       faviconPath: path.join(__dirname, '../static/icons/cosmafavicon.png'),
 
       // stats
