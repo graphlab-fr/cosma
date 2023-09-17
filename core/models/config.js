@@ -380,7 +380,6 @@ module.exports = class Config {
           break;
       }
     } catch (error) {
-      // throw "The config file cannot be parsed.\n\n" + error
       throw new ErrorConfig('The config file cannot be parsed.');
     }
 

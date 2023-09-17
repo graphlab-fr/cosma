@@ -81,7 +81,7 @@ module.exports = {
       super(
         `Can not get files from user data directory: ${cause}`,
         { path },
-        'user-data-dir-not-exists',
+        'read-user-data-dir-files',
         true,
       );
     }
