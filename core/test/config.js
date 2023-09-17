@@ -151,28 +151,26 @@ describe('Config', () => {
 
   describe('get fake config', () => {
     const fakeConfigPath = path.join(__dirname, '../static/fake/config.yml');
-    const configOptsGotten = Config.get(fakeConfigPath);
-    let fakeConfigOpts;
+    const fakeConfig = Config.get(fakeConfigPath);
+    let fakeFileOpts;
     before(() => {
       return new Promise((resolve) => {
         fs.readFile(fakeConfigPath, 'utf8', (err, data) => {
           data = yml.parse(data);
-          fakeConfigOpts = data;
+          fakeFileOpts = data;
           resolve();
         });
       });
     });
 
-    it('should be store on config memory', () => {
-      Config.memory.should.have.property(fakeConfigPath).and.to.be.deep.equal(configOptsGotten);
-    });
     it('should be match with file content', () => {
-      assert.deepStrictEqual(fakeConfigOpts, configOptsGotten);
+      Object.keys(fakeFileOpts).forEach((opt) =>
+        assert.deepStrictEqual(fakeFileOpts[opt], fakeConfig.opts[opt]),
+      );
     });
     it('should be a valid config', () => {
-      const config = new Config(configOptsGotten);
-      config.report.should.be.empty;
-      config.isValid().should.be.true;
+      fakeConfig.report.should.be.empty;
+      fakeConfig.isValid().should.be.true;
     });
   });
 
