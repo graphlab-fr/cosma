@@ -71,13 +71,13 @@ Ut dapibus consectetur libero, quis tempor ligula [[${ids[4]}]] bibendum vitae. 
     it('should links have the wikilink id as target', () => {
       for (let i = 0; i < links.length; i++) {
         const link = links[i];
-        link.should.have.property('target').and.be.equal(ids[i]);
+        link.should.have.property('target').and.be.equal(ids[i].toLowerCase());
       }
     });
 
     it('should find all links from fake text', () => {
       let linksId = links.map((link) => link.target);
-      linksId.should.be.deep.equal(ids);
+      linksId.should.be.deep.equal(ids.map((id) => id.toLowerCase()));
     });
   });
 });
