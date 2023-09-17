@@ -5,6 +5,9 @@ import hotkeys from 'hotkeys-js';
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
   const form = document.getElementById('tags-form');
+
+  if (!form) return;
+
   /** @type {HTMLSelectElement} */
   const sortSelect = document.querySelector('.menu-tags .sorting-select');
 
