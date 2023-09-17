@@ -89,6 +89,8 @@ simulation.on('tick', function () {
   elts.nodes.attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
 
   d3.select('#load-bar-value').style('flex-basis', simulation.alpha() * 100 + '%');
+
+  translate();
 });
 
 /** Elements
@@ -507,9 +509,16 @@ window.labelUnlightAll = function () {
 };
 
 function translate() {
+  const minX = d3.min(data.nodes, (d) => d.x);
+  const maxX = d3.max(data.nodes, (d) => d.x);
+  const minY = d3.min(data.nodes, (d) => d.y);
+  const maxY = d3.max(data.nodes, (d) => d.y);
+
   const { x, y, zoom } = View.position;
-  const viewBox = [-x, -y, width / zoom, height / zoom].join(' ');
-  svgSub.attr('viewBox', viewBox);
+
+  svgSub
+    .attr('viewBox', [minX - x, minY - y, maxX - minX / zoom, maxY - minY / zoom])
+    .attr('preserveAspectRatio', 'xMinYMin meet');
 }
 
 const nodes = elts.nodes.data();
