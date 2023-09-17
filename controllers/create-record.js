@@ -16,9 +16,20 @@ const Record = require('../core/models/record'),
  * @param {string} type
  * @param {string} tags
  * @param {Config} config
+ * @param {boolean} saveIdOnYmlFrontMatter
  */
 
-module.exports = function (title = '', type = 'undefined', tags = '', config) {
+module.exports = function (
+  title = '',
+  type = 'undefined',
+  tags = '',
+  config,
+  saveIdOnYmlFrontMatter = true,
+) {
+  if (config instanceof Config === false) {
+    throw new Error('Need instance of Config to create record');
+  }
+
   type = type.split(',').map((t) => t.trim());
   tags = tags.split(',').map((t) => t.trim());
 
@@ -60,6 +71,10 @@ module.exports = function (title = '', type = 'undefined', tags = '', config) {
     undefined,
     config.opts,
   );
+  if (saveIdOnYmlFrontMatter === false) {
+    record.id = undefined;
+    record.ymlFrontMatter = record.getYamlFrontMatter();
+  }
   record
     .saveAsFile()
     .then(() => {

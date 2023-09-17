@@ -111,10 +111,14 @@ program
   .argument('[type]', 'Record type (default value if skipped: undefined).')
   .argument('[tags]', 'List of comma-separated tags.')
   .option(
+    '-id, --generate-id',
+    'If config option generate_id = ask, get record with timestamp as id.',
+  )
+  .option(
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action((title, type, tags, { project: projectName }) => {
+  .action((title, type, tags, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
     if (projectName) {
       try {
         Config.setConfigFilePathByProjectName(projectName);
@@ -122,7 +126,7 @@ program
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
     }
-    require('./controllers/autorecord')(title, type, tags);
+    require('./controllers/autorecord')(title, type, tags, saveIdOnYmlFrontMatter);
   })
   .showHelpAfterError('("autorecord --help" for additional information)');
 

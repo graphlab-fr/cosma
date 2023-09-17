@@ -57,6 +57,7 @@ module.exports = class Config {
     views: {},
     chronological_record_meta: 'created',
     record_metas: [],
+    generate_id: 'always',
     title: '',
     author: '',
     description: '',
@@ -548,6 +549,10 @@ module.exports = class Config {
       ? null
       : 'chronological_record_meta';
 
+    const generate_id = new Set(['always', 'never', 'ask']).has(this.opts.generate_id)
+      ? null
+      : 'generate_id';
+
     const node_size_method = new Set(['unique', 'degree']).has(this.opts.node_size_method)
       ? null
       : 'node_size_method';
@@ -569,6 +574,7 @@ module.exports = class Config {
       chronological_record_meta,
       node_size_method,
       record_filters,
+      generate_id,
     ].filter((invalidOption) => invalidOption !== null);
   }
 

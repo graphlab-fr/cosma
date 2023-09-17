@@ -15,7 +15,7 @@ const createRecord = require('./create-record');
  * @param {string} tags
  */
 
-module.exports = function (title = '', type = 'undefined', tags = '') {
+module.exports = function (title = '', type = 'undefined', tags = '', saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
 
   console.log(config.getConfigConsolMessage());
@@ -28,5 +28,11 @@ module.exports = function (title = '', type = 'undefined', tags = '') {
     return;
   }
 
-  createRecord(title, type, tags, config);
+  if (config.opts['generate_id'] === 'never') {
+    saveIdOnYmlFrontMatter = false;
+  } else {
+    saveIdOnYmlFrontMatter = config.opts['generate_id'] === 'always' || !!saveIdOnYmlFrontMatter;
+  }
+
+  createRecord(title, type, tags, config, saveIdOnYmlFrontMatter);
 };
