@@ -40,19 +40,6 @@
     <aside class="menu list-content-container">
 
         <header role="banner">
-            {% if guiContext === true %}
-            <div id="menu-electron" hidden>
-                {% if canSaveRecords === true %}
-                <button id="electron-record-new" title="Nouvelle fiche">{% include "icons/add.svg" %}</button>
-                {% endif %}
-                <button id="electron-back" title="Précédent" class="icon-chevron">{% include "icons/back.svg" %}</button>
-                <button id="electron-forward" title="Suivant" class="icon-chevron">{% include "icons/forward.svg" %}</button>
-                <button id="electron-page-reload" title="Recharger la page">{% include "icons/reload.svg" %}</button>
-                <button id="electron-share" title="Partager">{% include "icons/share.svg" %}</button>
-                <button id="electron-cosmoscope-new" title="Nouveau cosmoscope">{% include "icons/cosmoscope.svg" %}</button>
-            </div>
-            {% endif %}
-
             {% if publishMode and metadata.title %}
             <h1 class="title">{{ metadata.title }}</h1>
             {% endif %}

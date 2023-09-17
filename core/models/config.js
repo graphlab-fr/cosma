@@ -7,7 +7,15 @@
 const path = require('path'),
   fs = require('fs');
 
+const envPaths = require('env-paths');
+const { data: envPathDataDir } = envPaths('cosma-cli', { suffix: '' });
+
 const Link = require('./link');
+const {
+  GetConfigFilePathByProjectNameError,
+  FindUserDataDirError,
+  ReadUserDataDirError,
+} = require('./errors');
 
 /**
  * Class to manage the user config
@@ -68,33 +76,6 @@ module.exports = class Config {
 
   static getOptionsList() {
     return new Set(Object.keys(Config.base));
-  }
-
-  /**
-   * Contains all options gotten with Config.get() from config files.
-   * For each config file, memory get a property with the config file path and a value as the options contained.
-   * @static
-   * @exemple
-   * ```
-   * Config.get('/home/user/doc/config.yml')
-   * Config.memory // { '/home/user/doc/config.yml': { 'select_origin': '...', ... } }
-   * ```
-   */
-
-  static memory = {};
-
-  /**
-   * Get the context of the process
-   * @returns {'electron', 'other'} - 'electron' or 'other'
-   * @static
-   */
-
-  static getContext() {
-    if (process.versions['electron'] !== undefined) {
-      return 'electron';
-    }
-
-    return 'other';
   }
 
   /**
@@ -304,10 +285,72 @@ module.exports = class Config {
     return true;
   }
 
+  /** directory contains global user projects options */
+  static configDirPath = envPathDataDir;
+  /** config file contains global user default options */
+  static defaultConfigPath = path.join(Config.configDirPath, 'defaults.yml');
+  /** config file contains global developer default options */
+  static installationConfigPath = path.join(__dirname, '../', 'defaults.yml');
+  /** config file contains local user options */
+  static executionConfigPath = path.join(process.cwd(), 'config.yml');
+
+  /**
+   * Get config files from user data directory
+   * @returns {{name: string, filePath: string}[]}
+   * @throws {UserDataDirNotExists}
+   */
+
+  static getConfigFilesListFromConfigDir() {
+    if (fs.existsSync(Config.configDirPath) === false) {
+      throw new FindUserDataDirError();
+    }
+
+    let files;
+
+    try {
+      files = fs.readdirSync(Config.configDirPath, 'utf-8');
+    } catch (error) {
+      throw new ReadUserDataDirError('try to get config files', Config.configDirPath);
+    }
+    return files
+      .filter((fileName) => path.extname(fileName) === '.yml')
+      .map((fileName) => {
+        const filePath = path.join(Config.configDirPath, fileName);
+        const { name } = path.parse(filePath);
+        return { name, filePath };
+      });
+  }
+
+  /**
+   * Default path to find config for current execution
+   * @type {string}
+   */
+  static configFilePath = Config.executionConfigPath;
+
+  /**
+   * @param {string} projectName
+   * @throws {GetConfigFilePathByProjectName} If invalid string in parameter or nowhere config file
+   */
+
+  static setConfigFilePathByProjectName(projectName) {
+    if (!projectName || typeof projectName !== 'string') {
+      throw new GetConfigFilePathByProjectNameError('Project name is invalid.');
+    }
+    const list = Config.getConfigFilesListFromConfigDir();
+    const target = list.find(({ name }) => name === projectName);
+    if (target) {
+      Config.configFilePath = target.filePath;
+    } else {
+      throw new GetConfigFilePathByProjectNameError(
+        `Project name "${projectName}" does not exists.`,
+      );
+    }
+  }
+
   /**
    * Get config options from the (config file) path
    * @param {string} configFilePath Path to a config file
-   * @return {object} Config option or base config (Config.base) if errors
+   * @return {Config}
    * @throws {ErrorConfig} Will throw an error if config file can not be read or parse
    */
 
@@ -316,37 +359,35 @@ module.exports = class Config {
       throw new ErrorConfig('No valid config file path to get config');
     }
 
-    let opts;
+    let opts, fileContent;
 
-    if (Config.memory[configFilePath] === undefined) {
-      let fileContent;
-      try {
-        fileContent = fs.readFileSync(configFilePath, 'utf8');
-      } catch (error) {
-        // throw "The config file cannot be read.\n\n" + error
-        throw new ErrorConfig('The config file cannot be read.');
-      }
-
-      try {
-        switch (path.extname(configFilePath)) {
-          case '.json':
-            opts = JSON.parse(fileContent);
-            break;
-
-          case '.yml':
-            const yml = require('yaml');
-            opts = yml.parse(fileContent);
-            break;
-        }
-      } catch (error) {
-        // throw "The config file cannot be parsed.\n\n" + error
-        throw new ErrorConfig('The config file cannot be parsed.');
-      }
-      Config.memory[configFilePath] = opts;
-    } else {
-      opts = Config.memory[configFilePath];
+    try {
+      fileContent = fs.readFileSync(configFilePath, 'utf8');
+    } catch (error) {
+      // throw "The config file cannot be read.\n\n" + error
+      throw new ErrorConfig('The config file cannot be read.');
     }
-    return opts;
+
+    try {
+      switch (path.extname(configFilePath)) {
+        case '.json':
+          opts = JSON.parse(fileContent);
+          break;
+
+        case '.yml':
+          const yml = require('yaml');
+          opts = yml.parse(fileContent);
+          break;
+      }
+    } catch (error) {
+      // throw "The config file cannot be parsed.\n\n" + error
+      throw new ErrorConfig('The config file cannot be parsed.');
+    }
+
+    const config = new Config(opts);
+    config.path = configFilePath;
+
+    return config;
   }
 
   /**
@@ -376,11 +417,9 @@ module.exports = class Config {
   /**
    * Create a user config.
    * @param {object} opts - Options to change from current config or the base config
-   * @param {string} configFilePath - Path to config file (JSON or YAML)
    */
 
-  constructor(opts = {}, configFilePath) {
-    this.path = configFilePath;
+  constructor(opts = {}) {
     /** List of invalid fields */
     this.report = [];
     /**
@@ -420,7 +459,6 @@ module.exports = class Config {
       throw new ErrorConfig('The config file cannot be save.');
     }
 
-    Config.memory[this.path] = this.opts;
     return true;
   }
 
@@ -735,6 +773,32 @@ module.exports = class Config {
       return 'image';
     }
     return 'color';
+  }
+
+  getConfigConsolMessage() {
+    const { version } = require('../../package.json');
+    let name = this.opts['title'] || null;
+    if (this.path === Config.defaultConfigPath) {
+      name = 'Default';
+    }
+    const messageSections = [
+      `[Cosma v.${version}]`,
+      ['\x1b[4m', name, '\x1b[0m'].join(''),
+      ['\x1b[2m', this.path, '\x1b[0m'].join(''),
+    ];
+
+    if (this.report.length > 0) {
+      messageSections.push(
+        [
+          '\n',
+          ['\x1b[31m', 'Config errors', '\x1b[0m'].join(''),
+          ' for options: ',
+          this.report.join(', '),
+        ].join(''),
+      );
+    }
+
+    return messageSections.join(' ');
   }
 };
 

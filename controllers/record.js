@@ -4,11 +4,11 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-const Config = require('../models/config-cli');
+const Config = require('../core/models/config');
 const readline = require('readline');
 
 (async () => {
-  const config = new Config();
+  const config = Config.get(Config.configFilePath);
   if (config.canSaveRecords() === false) {
     console.error(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),

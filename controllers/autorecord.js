@@ -8,10 +8,10 @@ const readline = require('readline'),
   path = require('path');
 
 const Record = require('../core/models/record'),
-  Config = require('../models/config-cli');
+  Config = require('../core/models/config');
 
 module.exports = function (title = '', type = 'undefined', tags = '') {
-  const config = new Config();
+  const config = Config.get(Config.configFilePath);
   if (config.canSaveRecords() === false) {
     console.error(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),

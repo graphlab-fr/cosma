@@ -10,7 +10,7 @@ const commander = require('commander'),
   program = new commander.Command(),
   { version, description } = require('./package.json');
 
-const Config = require('./models/config-cli');
+const Config = require('./core/models/config');
 
 program.version(version);
 
@@ -28,7 +28,7 @@ program
       require('./controllers/user-data-dir')();
     } else if (listProjects) {
       try {
-        const list = Config.getConfigFileListFromConfigDir().map(({ fileName }) => fileName);
+        const list = Config.getConfigFilesListFromConfigDir().map(({ name }) => name);
         console.log(list.join('\n'));
       } catch (err) {
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
@@ -71,10 +71,10 @@ program
   .option('--custom-css', 'Apply custom CSS.')
   .option('--sample', 'Create a sample cosmoscope.')
   .option('--fake', 'Create a fake cosmoscope for testing purposes.')
-  .action(({ project: configFileName, ...rest }) => {
-    if (configFileName) {
+  .action(({ project: projectName, ...rest }) => {
+    if (projectName) {
       try {
-        Config.setCurrentUsedConfigFileName(configFileName);
+        Config.setConfigFilePathByProjectName(projectName);
       } catch (err) {
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
@@ -92,10 +92,10 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action(({ project: configFileName }) => {
-    if (configFileName) {
+  .action(({ project: projectName }) => {
+    if (projectName) {
       try {
-        Config.setCurrentUsedConfigFileName(configFileName);
+        Config.setConfigFilePathByProjectName(projectName);
       } catch (err) {
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
@@ -115,10 +115,10 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action((title, type, tags, { project: configFileName }) => {
-    if (configFileName) {
+  .action((title, type, tags, { project: projectName }) => {
+    if (projectName) {
       try {
-        Config.setCurrentUsedConfigFileName(configFileName);
+        Config.setConfigFilePathByProjectName(projectName);
       } catch (err) {
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
@@ -137,10 +137,10 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action((filePath, { project: configFileName }) => {
-    if (configFileName) {
+  .action((filePath, { project: projectName }) => {
+    if (projectName) {
       try {
-        Config.setCurrentUsedConfigFileName(configFileName);
+        Config.setConfigFilePathByProjectName(projectName);
       } catch (err) {
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
