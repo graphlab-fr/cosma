@@ -129,13 +129,9 @@ module.exports = class Cosmoscope extends Graph {
         /** @type {File} */
         const file = Cosmoscope.getDataFromYamlFrontMatter(fileContain, filePath);
 
-        const { atime, mtime, birthtime } = fs.statSync(filePath);
+        const { ctime } = fs.statSync(filePath);
 
-        file.dates = {
-          created: atime,
-          lastOpen: birthtime,
-          lastEdit: mtime,
-        };
+        file.dates = { created: ctime };
 
         const idAsNumber = Number(file.metas.id);
         if (file.metas.id.length === 14 && isNaN(idAsNumber) === false) {
@@ -328,8 +324,6 @@ module.exports = class Cosmoscope extends Graph {
       let begin, end;
 
       switch (opts.chronological_record_meta) {
-        case 'lastOpen':
-        case 'lastEdit':
         case 'created':
         case 'timestamp':
           begin = file.dates[opts.chronological_record_meta];
