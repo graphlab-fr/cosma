@@ -1,5 +1,5 @@
 /**
- * @file Terminal form to ask user about record title, type & tags to create the formated Markdown file.
+ * @file Prompt config and questions to create record
  * @author Guillaume Brioudes
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
@@ -7,8 +7,13 @@
 const Config = require('../core/models/config');
 const readline = require('readline');
 
+const createRecord = require('./create-record');
+
 (async () => {
   const config = Config.get(Config.configFilePath);
+
+  console.log(config.getConfigConsolMessage());
+
   if (config.canSaveRecords() === false) {
     console.error(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
@@ -61,7 +66,7 @@ const readline = require('readline');
 
     rl.close();
 
-    require('./autorecord')(metas.title, metas.type, metas.tags);
+    createRecord(metas.title, metas.type, metas.tags, config);
   } catch (err) {
     console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err);
     rl.close();

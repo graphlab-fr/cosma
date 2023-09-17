@@ -100,7 +100,6 @@ program
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
     }
-    console.log(new Config().getConfigConsolMessage());
     require('./controllers/record');
   });
 
@@ -123,7 +122,6 @@ program
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
     }
-    console.log(new Config().getConfigConsolMessage());
     require('./controllers/autorecord')(title, type, tags);
   })
   .showHelpAfterError('("autorecord --help" for additional information)');
