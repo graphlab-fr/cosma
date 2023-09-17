@@ -4,18 +4,12 @@ import View from './view';
 import { svg, translate } from './graph';
 import hotkeys from 'hotkeys-js';
 
-const { width, height } = svg.node().getBoundingClientRect();
-
 const zoomMax = 10,
   zoomMin = 1,
-  zoomInterval = 0.2;
+  zoomInterval = 1;
 
 const zoom = d3
   .zoom()
-  .extent([
-    [0, 0],
-    [width, height],
-  ])
   .scaleExtent([zoomMin, zoomMax])
   .on('zoom', () => {
     const { x, y, k } = d3.event.transform;

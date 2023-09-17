@@ -363,8 +363,10 @@ window.zoomToNode = function (nodeId) {
 
 hotkeys('c', (e) => {
   e.preventDefault();
-  if (View.openedRecordId) {
-    zoomToNode(Number(View.openedRecordId));
+  const { hash } = new URL(window.location);
+  if (hash) {
+    const recordId = decodeURI(hash.substring(1));
+    zoomToNode(recordId);
   }
 });
 
@@ -516,9 +518,24 @@ function translate() {
 
   const { x, y, zoom } = View.position;
 
-  svgSub
-    .attr('viewBox', [minX - x, minY - y, maxX - minX / zoom, maxY - minY / zoom])
-    .attr('preserveAspectRatio', 'xMinYMin meet');
+  const centerX = (minX + maxX) / 2;
+  const centerY = (minY + maxY) / 2;
+
+  const screenMin = 1200;
+
+  let viewBoxWidth = maxX - minX;
+  if (viewBoxWidth < screenMin) viewBoxWidth = screenMin;
+  let viewBoxHeight = maxY - minY;
+  if (viewBoxHeight < screenMin) viewBoxHeight = screenMin;
+
+  const viewBox = [
+    centerX - viewBoxWidth / 2 - x,
+    centerY - viewBoxHeight / 2 - y,
+    viewBoxWidth / zoom,
+    viewBoxHeight / zoom,
+  ];
+
+  svgSub.attr('viewBox', viewBox).attr('preserveAspectRatio');
 }
 
 const nodes = elts.nodes.data();
