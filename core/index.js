@@ -1,4 +1,4 @@
-const { cosmocope, cosmocopeTimeline, tempDirPath } = require('./utils/generate');
+const { cosmocope, cosmocopeTimeline, cosmocopeTitleId, tempDirPath } = require('./utils/generate');
 
 const { startServer: webpackServer } = require('./utils/webpack');
 
@@ -7,6 +7,7 @@ const { startServer: webpackServer } = require('./utils/webpack');
     console.log('Download some files...');
     await cosmocope(tempDirPath);
     await cosmocopeTimeline();
+    await cosmocopeTitleId();
     console.log('Start devserver...');
     await webpackServer('development');
   } catch (err) {
