@@ -34,7 +34,6 @@ for (let i = 0; i < 5; i++) {
 }
 
 let config = Config.get(path.join(__dirname, '../static/fake/config.yml'));
-config = new Config(config);
 const { record_types: recordTypes } = config.opts;
 config.opts['images_origin'] = tempDirPath;
 config.opts['csl'] = path.join(tempDirPath, 'iso690.csl');
@@ -96,14 +95,6 @@ function getRecords(nb, opts = config.opts) {
         created: faker.datatype.datetime({
           min: new Date('2000-01-01'),
           max: new Date('2010-01-01'),
-        }),
-        lastEdit: faker.datatype.datetime({
-          min: new Date('2010-01-01'),
-          max: new Date('2020-01-01'),
-        }),
-        lastOpen: faker.datatype.datetime({
-          min: new Date('2020-01-01'),
-          max: new Date('2030-01-01'),
         }),
       },
       metas: {
