@@ -34,6 +34,16 @@ id: 2012-05-12
         );
         assert.strictEqual(result.metas.id, '2012-05-12');
       });
+
+      it('should get undefined', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+title: toto
+---`,
+          'path',
+        );
+        assert.strictEqual(result.metas.id, undefined);
+      });
     });
 
     describe('content', () => {
@@ -99,6 +109,16 @@ title: ['title', 'as', 'array']
           'path',
         );
         assert.strictEqual(result.metas.title, 'title,as,array');
+      });
+
+      it('should get undefined', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+id: toto
+---`,
+          'path',
+        );
+        assert.strictEqual(result.metas.title, undefined);
       });
     });
 
