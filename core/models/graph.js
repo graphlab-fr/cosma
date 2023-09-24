@@ -78,6 +78,8 @@ module.exports = class Graph {
   }
 
   /**
+   * Get timestamps begin and end for timeline,
+   * based on most recent and oldest node
    * @returns {Timeline}
    */
 
@@ -89,7 +91,8 @@ module.exports = class Graph {
     const [begin, end] = extent(dates);
     return {
       begin,
-      end,
+      // Add margin of one second to display oldest node at end of timeline
+      end: end + 1,
     };
   }
 
