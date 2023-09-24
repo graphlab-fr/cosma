@@ -529,8 +529,8 @@ function translate() {
   if (viewBoxHeight < screenMin) viewBoxHeight = screenMin;
 
   const viewBox = [
-    centerX - viewBoxWidth / 2 - x,
-    centerY - viewBoxHeight / 2 - y,
+    (centerX - viewBoxWidth / 2 - x) / zoom,
+    (centerY - viewBoxHeight / 2 - y) / zoom,
     viewBoxWidth / zoom,
     viewBoxHeight / zoom,
   ];

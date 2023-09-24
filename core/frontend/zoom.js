@@ -6,15 +6,15 @@ import hotkeys from 'hotkeys-js';
 
 const zoomMax = 10,
   zoomMin = 1,
-  zoomInterval = 1;
+  zoomInterval = 0.2;
 
 const zoom = d3
   .zoom()
   .scaleExtent([zoomMin, zoomMax])
   .on('zoom', () => {
     const { x, y, k } = d3.event.transform;
-    View.position.x = x / k || 0;
-    View.position.y = y / k || 0;
+    View.position.x = x || 0;
+    View.position.y = y || 0;
     View.position.zoom = k || 1;
     translate();
   });
