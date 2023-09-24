@@ -41,9 +41,12 @@ window.openRecord = function (id) {
 
 window.closeRecord = function () {
   recordContainer.classList.remove('active');
-  document.getElementById(View.openedRecordId).classList.remove('active');
+  const selectedNode = document.getElementById(View.openedRecordId);
   View.openedRecordId = undefined;
   unlightNodes();
+  if (selectedNode) {
+    selectedNode.classList.remove('active');
+  }
 };
 
 hotkeys('escape', (e) => {
