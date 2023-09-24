@@ -72,7 +72,7 @@ describe('Graph verif', () => {
     it('should get begin and end timestamps from graph records', () => {
       assert.deepStrictEqual(graph.getTimelineFromRecords(), {
         begin: new Date('1701-01-01').getTime() / 1000,
-        end: new Date('2020-01-01').getTime() / 1000,
+        end: (new Date('2020-01-01').getTime() / 1000) + 1,
       });
     });
   });
