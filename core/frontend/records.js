@@ -1,24 +1,23 @@
-import View from './view';
 import { nodes, highlightNodes, unlightNodes } from './graph';
 import hotkeys from 'hotkeys-js';
 import filterPriority from './filterPriority';
 
 const recordContainer = document.getElementById('record-container');
 
-window.openRecord = function (id) {
+function openRecord(id) {
   const recordContent = document.getElementById(id);
 
   if (!recordContent) {
     return;
   }
 
-  const lastActivatedRecord = document.querySelector('.record.active');
-  if (lastActivatedRecord) {
-    lastActivatedRecord.classList.remove('active');
-  }
+  closeLastOpenedRecord();
 
   // open records container
   recordContainer.classList.add('active');
+
+  closeLastOpenedRecord();
+
   // adjust record view
   recordContainer.scrollTo({ top: 0 });
 
@@ -31,23 +30,21 @@ window.openRecord = function (id) {
 
   const recordTitle = recordContent.querySelector('h1').textContent;
   document.title = recordTitle;
-};
+}
+
+function closeLastOpenedRecord() {
+  const lastOpenedRecord = document.querySelector('.record.active');
+  lastOpenedRecord && lastOpenedRecord.classList.remove('active');
+}
 
 /**
  * Close the record reading panel & the opended one
  */
 
 window.closeRecord = function () {
-  const recordId = getRecordIdFromHash();
-
   recordContainer.classList.remove('active');
 
-  if (recordId === undefined) return;
-
-  const selectedNode = document.getElementById(recordId);
-  if (selectedNode) {
-    selectedNode.classList.remove('active');
-  }
+  closeLastOpenedRecord();
 
   // remove hash from URL
   history.pushState('', document.title, window.location.pathname);

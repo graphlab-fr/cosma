@@ -2,7 +2,6 @@ import GraphEngine from 'graphology';
 import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs';
 import hotkeys from 'hotkeys-js';
 import { displayNodesAll, setNodesDisplaying } from './graph';
-import View from './view';
 import filterPriority from './filterPriority';
 import { getRecordIdFromHash } from './records';
 

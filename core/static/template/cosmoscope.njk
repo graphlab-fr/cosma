@@ -226,23 +226,22 @@
 
         <footer class="menu-footer">
             {% if references.length > 0 %}
-            <button onclick="openRecord('citation-references', false)"
-                class="bibliography-open" title="Données bibliographiques">
+            <a href="#citation-references">
                 {{ translation.left_panel.footer.btn_data[lang] }}
-            </button>
+            </a>
             {% endif %}
 
-            <button class="btn-help" onclick="openRecord('help', false)">
+            <a href="#help">
                 {{ translation.left_panel.footer.btn_help[lang] }}
-            </button>
+            </a>
 
-            <button class="btn-about" onclick="openRecord('credits', false)">
+            <a href="#credits">
                 {% if publishMode %}
                     {{ translation.left_panel.footer.publish_mark[lang] + " " + translation.left_panel.footer.btn_about[lang] }}
                 {% else %}
                     {{ translation.left_panel.footer.btn_about[lang] }}
                 {% endif %}
-            </button>
+            </a>
         </footer>
     </aside>
 

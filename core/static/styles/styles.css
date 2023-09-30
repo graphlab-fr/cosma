@@ -387,6 +387,8 @@ aside.menu {
 --- */
 
 aside.menu footer {
+  display: flex;
+  justify-content: space-evenly;
   position: fixed;
   bottom: 0px;
   left: 0px;
