@@ -11,17 +11,9 @@ const fs = require('fs'),
     html: true,
     linkify: true,
     breaks: true,
-  }),
-  mdItAttr = require('markdown-it-attrs');
+  });
 
 const app = require('../package.json');
-
-// markdown-it plugin
-mdIt.use(mdItAttr, {
-  leftDelimiter: '{',
-  rightDelimiter: '}',
-  allowedAttributes: [],
-});
 
 const Link = require('./link'),
   Config = require('./config'),
@@ -88,7 +80,7 @@ module.exports = class Template {
           const id = targetId.toLowerCase();
           const mark = text || linkSymbol || `&#91;&#91;${targetId}&#93;&#93;`;
           if (id == link.target.id) {
-            return `*${mark}*{.id-context data-target-id=${id}}`;
+            return `<span class="id-context" data-target-id="${id}">${mark}</span>`;
           }
 
           return mark;
