@@ -54,7 +54,16 @@ module.exports = class Template {
 
       const link = associatedMetas;
 
-      const linkContent = text || linkSymbol || match;
+      const isNumbers = !isNaN(Number(targetId));
+
+      let linkContent;
+      if (text) {
+        linkContent = text;
+      } else if (linkSymbol) {
+        linkContent = linkSymbol;
+      } else {
+        linkContent = isNumbers ? match : targetId;
+      }
 
       return `<a href="#${link.target.id}" title="${link.target.title}" class="record-link">${linkContent}</a>`;
     });
@@ -78,12 +87,22 @@ module.exports = class Template {
         Link.regexWikilink,
         (match, _, type, targetId, __, text) => {
           const id = targetId.toLowerCase();
-          const mark = text || linkSymbol || `&#91;&#91;${targetId}&#93;&#93;`;
-          if (id == link.target.id) {
-            return `<span class="id-context" data-target-id="${id}">${mark}</span>`;
+          const isNumbers = !isNaN(Number(id));
+
+          let linkContent;
+          if (text) {
+            linkContent = text;
+          } else if (linkSymbol) {
+            linkContent = linkSymbol;
+          } else {
+            linkContent = isNumbers ? match : targetId;
           }
 
-          return mark;
+          if (id == link.target.id) {
+            return `<span class="id-context" data-target-id="${id}">${linkContent}</span>`;
+          }
+
+          return linkContent;
         },
       );
       return link;
