@@ -510,6 +510,10 @@ To prevent generating duplicate identifiers, the batch creation mode generates i
 Because of this operation, it is possible to create up to 913,599 records per day and per directory in batch mode before running out of identifiers.
 :::
 
+::: important
+In v2.1, `batch` generates buggy identifiers, with extra digits (more than the expected 14). This doesn't affect projects with `generate_id: never`, for which `batch` correctly generates records without identifiers.
+:::
+
 # Creating content: tabular data (CSV)
 
 Cosma can interpret tabular data contained in local or online CSV files. This is an alternative to using Markdown files.
