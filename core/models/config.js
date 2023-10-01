@@ -55,7 +55,6 @@ module.exports = class Config {
     attraction_vertical: 0,
     attraction_horizontal: 0,
     views: {},
-    chronological_record_meta: 'created',
     record_metas: [],
     generate_id: 'always',
     title: '',
@@ -540,16 +539,6 @@ module.exports = class Config {
 
     const views = Config.isValidViews(this.opts['views']) ? null : 'views';
 
-    const chronological_record_meta = new Set([
-      'lastOpen',
-      'lastEdit',
-      'created',
-      'timestamp',
-      'manual',
-    ]).has(this.opts.chronological_record_meta)
-      ? null
-      : 'chronological_record_meta';
-
     const generate_id = new Set(['always', 'never', 'ask']).has(this.opts.generate_id)
       ? null
       : 'generate_id';
@@ -572,7 +561,6 @@ module.exports = class Config {
       link_types,
       lang,
       views,
-      chronological_record_meta,
       node_size_method,
       record_filters,
       generate_id,

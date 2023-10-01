@@ -87,16 +87,6 @@ function getRecords(nb, opts = config.opts) {
       name: faker.system.commonFileName('md'),
       lastEditDate: faker.date.past(),
       content,
-      dates: {
-        timestamp: faker.datatype.datetime({
-          min: new Date('1990-01-01'),
-          max: new Date('2000-01-01'),
-        }),
-        created: faker.datatype.datetime({
-          min: new Date('2000-01-01'),
-          max: new Date('2010-01-01'),
-        }),
-      },
       metas: {
         id: fileId,
         title: faker.name.jobTitle(),
