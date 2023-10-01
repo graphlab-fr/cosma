@@ -11,7 +11,6 @@
  * @property {string} name
  * @property {string} content
  * @property {FileMetas} metas
- * @property {FileDates} dates
  */
 
 /**
@@ -25,15 +24,6 @@
  * @property {string | undefined} thumbnail
  * @property {number} begin
  * @property {number} end
- */
-
-/**
- * @typedef FileDates
- * @type {object}
- * @property {Date} lastOpen
- * @property {Date} lastEdit
- * @property {Date} created
- * @property {Date} timestamp
  */
 
 /**
@@ -128,15 +118,6 @@ module.exports = class Cosmoscope extends Graph {
 
         /** @type {File} */
         const file = Cosmoscope.getDataFromYamlFrontMatter(fileContain, filePath);
-
-        const { ctime } = fs.statSync(filePath);
-
-        file.dates = { created: ctime };
-
-        const idAsNumber = Number(file.metas.id);
-        if (isNaN(idAsNumber) === false && file.metas.id.length === 14) {
-          file.dates.timestamp = Record.getDateFromId(idAsNumber);
-        }
 
         return file;
       })
@@ -312,7 +293,7 @@ module.exports = class Cosmoscope extends Graph {
       let { id, title, types, tags, thumbnail, references, ...rest } = file.metas;
       id = id || file.metas['title'].toLowerCase();
 
-      let { begin: manualBegin, end: manualEnd, ...metas } = rest;
+      let { begin, end, ...metas } = rest;
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
         links,
@@ -322,19 +303,6 @@ module.exports = class Cosmoscope extends Graph {
         ...Bibliography.getBibliographicRecordsFromText(file.content),
         ...Bibliography.getBibliographicRecordsFromList(references),
       ];
-
-      let begin, end;
-
-      switch (opts.chronological_record_meta) {
-        case 'created':
-        case 'timestamp':
-          begin = file.dates[opts.chronological_record_meta];
-          break;
-        case 'manual':
-          begin = manualBegin;
-          end = manualEnd;
-          break;
-      }
 
       return new Record(
         id,
