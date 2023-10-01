@@ -1,7 +1,7 @@
 ---
 title: Cosma's User manual
 author: Arthur Perret
-date: 2023-07-29
+date: 2023-10-01
 ---
 
 # Description
