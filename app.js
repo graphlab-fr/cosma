@@ -12,6 +12,26 @@ const commander = require('commander'),
 
 const Config = require('./core/models/config');
 
+(() => {
+  const fs = require('fs');
+
+  if (fs.existsSync(Config.executionConfigPath)) {
+    Config.configFilePath = Config.executionConfigPath;
+    return;
+  }
+
+  Config.configFilePath = Config.defaultConfigPath;
+
+  if (!fs.existsSync(Config.defaultConfigPath)) {
+    console.log(
+      ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
+      'No default or local config file to use.',
+      'Cosma runs with factory config.',
+      'Use "cosma config --help" for more info about create config file.',
+    );
+  }
+})();
+
 program.version(version);
 
 program
@@ -136,10 +156,14 @@ program
   .description('Create records (batch mode).')
   .argument('<file>', 'Path to a JSON file containing a list of records to be created.')
   .option(
+    '-id, --generate-id',
+    'If config option generate_id = ask, get record with timestamp as id.',
+  )
+  .option(
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action((filePath, { project: projectName }) => {
+  .action((filePath, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
     if (projectName) {
       try {
         Config.setConfigFilePathByProjectName(projectName);
@@ -147,7 +171,7 @@ program
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
     }
-    require('./controllers/batch')(filePath);
+    require('./controllers/batch')(filePath, saveIdOnYmlFrontMatter);
   })
   .showHelpAfterError('("batch --help" for additional information)');
 

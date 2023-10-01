@@ -357,7 +357,8 @@ module.exports = class Config {
 
   static get(configFilePath) {
     if (configFilePath === undefined || fs.existsSync(configFilePath) === false) {
-      throw new ErrorConfig('No valid config file path to get config');
+      const config = new Config();
+      return config;
     }
 
     let opts, fileContent;
