@@ -9,7 +9,7 @@ describe('Link', () => {
     const ids = [
       '20210613084440',
       'simpleString',
-      'string with white spaces',
+      'string with white-spaces',
       '20210619085713',
       '20210613173849',
     ];
