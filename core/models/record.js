@@ -283,6 +283,7 @@ module.exports = class Record {
    * @param {FormatedRecordData[]} data
    * @param {number} index
    * @param {Config.opts} configOpts
+   * @param {boolean} saveIdOnYmlFrontMatter
    * @return {number[]|true} Invalid items key or true
    * @example
    * Record.massSave([
@@ -291,7 +292,7 @@ module.exports = class Record {
    * ])
    */
 
-  static massSave(data, index, configOpts) {
+  static massSave(data, index, configOpts, saveIdOnYmlFrontMatter) {
     return new Promise((resolve, reject) => {
       try {
         if (!index || typeof index !== 'number') {
@@ -301,7 +302,7 @@ module.exports = class Record {
         const records = data.map(
           ({ title, type, tags, metas, content, begin, end, references = [], thumbnail }) => {
             index++;
-            return new Record(
+            const record = new Record(
               Record.generateOutDailyId() + index,
               title,
               type,
@@ -316,6 +317,13 @@ module.exports = class Record {
               thumbnail,
               configOpts,
             );
+
+            if (saveIdOnYmlFrontMatter === false) {
+              record.id = undefined;
+              record.ymlFrontMatter = record.getYamlFrontMatter();
+            }
+
+            return record;
           },
         );
 
@@ -703,10 +711,6 @@ module.exports = class Record {
   verif() {
     if (!this.title) {
       this.report.push('title');
-    }
-
-    if (isNaN(this.id)) {
-      this.report.push('id');
     }
 
     // if (this.links !== undefined && Record.verifReferenceArray(this.links) === false) {

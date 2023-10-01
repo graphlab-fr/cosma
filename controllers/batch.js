@@ -12,9 +12,15 @@ const Cosmoscope = require('../core/models/cosmoscope'),
   Record = require('../core/models/record'),
   Config = require('../core/models/config');
 
-module.exports = function (filePath) {
+module.exports = function (filePath, saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
   console.log(config.getConfigConsolMessage());
+
+  if (config.opts['generate_id'] === 'never') {
+    saveIdOnYmlFrontMatter = false;
+  } else {
+    saveIdOnYmlFrontMatter = config.opts['generate_id'] === 'always' || !!saveIdOnYmlFrontMatter;
+  }
 
   if (fs.existsSync(filePath) === false) {
     return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Data file does not exist.');
@@ -60,7 +66,7 @@ module.exports = function (filePath) {
 
     const { files_origin } = config.opts;
     const index = Cosmoscope.getIndexToMassSave(files_origin);
-    Record.massSave(data, index, config.opts)
+    Record.massSave(data, index, config.opts, saveIdOnYmlFrontMatter)
       .then(() => {
         return console.log(
           ['\x1b[32m', 'Records created', '\x1b[0m'].join(''),
