@@ -36,6 +36,10 @@ Chronological mode now works in only one way: by using the values for `begin` an
 - Fixed the warning displayed by Cosma when attempting to create a duplicate record
 - Automatically terminate `modelize` when the task has been completed but the process keeps running (issue encountered on macOS)
 
+## Known bugs
+
+- `batch` generates identifiers with extra digits (more than the expected 14), which can mess up writing setups. This doesn't affect projects with `generate_id: never`, for which `batch` correctly generates records without identifiers
+
 # v2.0.3
 
 ## Additions
