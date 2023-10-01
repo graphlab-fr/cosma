@@ -163,8 +163,9 @@ metadata filter | Entities for which this metadata is present will be excluded w
 `attraction_vertical` | Additional attraction towards the vertical axis | Number between 0 (disabled) and 1 | 0
 `attraction_horizontal` | Additional attraction towards the horizontal axis | Number between 0 (disabled) and 1 | 0
 `views` | List of registered views (which can only be created with the GUI version) | list 
-`chronological_record_meta` | Metadata to be used for chronological mode | `created` (OS date of file creation), `last_edit` (OS date of last modification), `last_open` (OS date of last opening), `timestamp` (use the 14-digit identifier, if it exists), `manual` (use `begin` and `end` metadata that have been manually entered in records, if they exist) | `created`
+`chronological_record_meta` | *deprecated* |  | 
 `record_metas` | List of metadata (present in the data source) to be included in the cosmoscope | list
+`generate_id` | Set `cosma record` to always automatically create identifiers, never create them, or ask for each record | `always`, `never` or `ask` | `always`
 `title` | Cosmoscope title | string |
 `author` | Cosmoscope author | string | 
 `description` | Cosmoscope description | string |
@@ -222,8 +223,8 @@ attraction_distance_max: 250
 attraction_vertical: 0
 attraction_horizontal: 0
 views: {}
-chronological_record_meta: last_edit
 record_metas: []
+generate_id: always
 title: ''
 author: ''
 description: ''
@@ -299,15 +300,15 @@ Using a YAML header allows writers to declare different metadata explicitly and 
 
 ### Predefined metadata
 
-Cosma recognises and uses the following four fields:
+Cosma recognises and uses the following fields:
 
 `title`
 : Mandatory.
 : Title of the record.
 
 `id`
-: Mandatory.
-: Unique identifier of the record. Must be a unique number. By default, Cosma generates 14-digit identifiers in the form of a timestamp (year, month, day, hours, minutes and seconds). This is inspired by Zettelkasten note-taking applications such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com).
+: Optional.
+: Unique identifier of the record. Must be a unique string. By default, Cosma generates 14-digit identifiers in the form of a timestamp (year, month, day, hours, minutes and seconds). This is inspired by Zettelkasten note-taking applications such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com).
 
 `type` or `types`
 : Optional.
@@ -323,11 +324,11 @@ Cosma recognises and uses the following four fields:
 
 `begin`
 : Optional.
-: Time metadata used for chronological mode, when `chronological_record_meta` is set to `manual` in the config.
+: Time metadata used for chronological mode.
 
 `end`
 : Optional.
-: Time metadata used for chronological mode, when `chronological_record_meta` is set to `manual` in the config.
+: Time metadata used for chronological mode.
 
 ### User-defined metadata
 
@@ -371,48 +372,58 @@ To reduce the size of the cosmoscope, use images hosted on the web and included 
 
 ## Links
 
-Within a record, you link to another record by writing its identifier between double brackets.
+Within a record, you link to another record by writing either the title or identifier between double brackets.
 
-Example:
+::: important
+The `id` field is optional. But if a record has one, trying to link to tis record based on its `title` field will fail, as the `id` takes precedence.
+:::
+
+Example of title-based link:
+
+```
+A link to [[record B]].
+```
+
+For title-based links, text case is ignored when parsing but preserved when rendering. So you can write `[[Record B]]`, `[[record B]]` or even `[[rEcOrD b]]`: the link will work regardless, and the text will be rendered the way you wrote it.
+
+Example of identifier-based link:
 
 ```
 A link to [[20201209111625]] record B.
 ```
 
-From v2 onwards, you can also include link text within the brackets.
+For identifier-based links, you can also include link text within the brackets. Example:
+
+```
+A link to [[20201209111625|record B]].
+```
+
+Cosma also allows you to define **link types**. Each link type is defined by a name, a colour and a stroke pattern. To apply a type to a link, add the name of the type followed by a colon before the identifier.
 
 Example:
 
 ```
-A link to [[20201209111625|record B]]
-```
+Concept B is derived from [[generic:concept A]].
 
-Cosma allows you to define link types. Each link type is defined by a name, a colour and a stroke pattern. To apply a type to a link, add the name of the type followed by a colon before the identifier.
-
-Example:
-
-```
-Concept B is derived from [[generic:20201209111625]] concept A.
-
-Person D wrote against [[opponent:20201209111625]] person C.
+Person D wrote against [[opponent:person C]].
 ```
 
 ::: astuce
-If you do not use the alternative syntax, you can still improve the readability of records in the cosmoscope by using the `link_symbol` parameter. It accepts as value an arbitrary Unicode string, which will replace the identifier and square brackets in the HTML rendering of the records. This visually lightens the text by replacing numeric identifiers with a shorter, personal convention. This can be, for example, a single symbol such as a manicle ☞, an arrow →, a star ⟡, etc.
+If you use identifier-based links without link text, perhaps coming from software such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com), you can still improve the readability of records in the cosmoscope by using the `link_symbol` parameter. It accepts as value an arbitrary Unicode string, which will replace the identifier and square brackets in the HTML rendering of the records. This visually lightens the text by replacing numeric identifiers with a shorter, personal convention. This can be, for example, a single symbol such as a manicle ☞, an arrow →, a star ⟡, etc.
 :::
 
 ## Unique identifiers
 
-To be correctly interpreted by Cosma, each record must have a unique identifier. This identifier serves as a target for links between records.
+Each record can have an optional unique identifier. If present, this identifier is used instead of the title as a target for links between records.
 
 **The identifier must be a unique string.**
 
-By default, Cosma generates 14-digit identifiers in the form of a timestamp (year, month, day, hours, minutes and seconds). This is inspired by Zettelkasten note-taking applications such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com).
+By default, when you create a record with `cosma record`, Cosma generates a 14-digit identifier in the form of a timestamp (year, month, day, hours, minutes and seconds). This is inspired by Zettelkasten note-taking applications such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com).
 
-We plan to eventually allow the user to define an identifier pattern of their choice, like in Zettlr.
+For each project, you can choose to generate identifiers always, never or on a case-by-case basis by setting the `generate_id` parameter in the project's configuration.
 
 ::: note
-Many interrelated note-taking applications use file names as targets for links between files. They maintain links automatically when file names are changed. By choosing to use unique identifiers instead, we have designed Cosma with a more traditional, stricter, WWW-like approach. We believe this is the easiest way to avoid [link rot](https://en.wikipedia.org/wiki/Link_rot) in a sustainable way. Avoiding the reliance on automatic link maintenance is especially important if you wish to make your data less dependent on specific applications.
+We support title-based links but encourage the use of unique identifiers instead. We believe this is the easiest way to avoid [link rot](https://en.wikipedia.org/wiki/Link_rot) in a sustainable way, avoiding the reliance on a program to automatically maintain links. This is especially important if you wish to make your data less dependent on specific applications.
 :::
 
 ## Creating records with Cosma
@@ -444,6 +455,8 @@ cosma autorecord <title> <type> <keywords> --project <name>
 ```
 
 This command allows you to create a record with a single input. Only the title is required. If you enter multiple types or multiple keywords, separate them with commas (spaces after the comma are ignored). Example: `type A, type B`, `keyword1, keyword2`.
+
+If `generate_id` is set to `ask`, use the `-id/--generated-id` flag to automatically generate an identifier when using `autorecord`.
 
 ## `batch` : create a batch of records
 
