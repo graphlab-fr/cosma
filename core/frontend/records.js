@@ -3,6 +3,7 @@ import hotkeys from 'hotkeys-js';
 import filterPriority from './filterPriority';
 
 const recordContainer = document.getElementById('record-container');
+const closeRightSideButton = document.getElementById('close-right-side');
 
 function openRecord(id) {
   const recordContent = document.getElementById(id);
@@ -14,12 +15,12 @@ function openRecord(id) {
   closeLastOpenedRecord();
 
   // open records container
+  closeRightSideButton.classList.add('active');
   recordContainer.classList.add('active');
-
-  closeLastOpenedRecord();
-
   // adjust record view
   recordContainer.scrollTo({ top: 0 });
+
+  closeLastOpenedRecord();
 
   // show record
   recordContent.classList.add('active');
@@ -36,31 +37,6 @@ function closeLastOpenedRecord() {
   const lastOpenedRecord = document.querySelector('.record.active');
   lastOpenedRecord && lastOpenedRecord.classList.remove('active');
 }
-
-/**
- * Close the record reading panel & the opended one
- */
-
-window.closeRecord = function () {
-  recordContainer.classList.remove('active');
-
-  closeLastOpenedRecord();
-
-  // remove hash from URL
-  history.pushState('', document.title, window.location.pathname);
-
-  unlightNodes();
-};
-
-hotkeys('escape', (e) => {
-  e.preventDefault();
-  closeRecord();
-});
-
-/**
- * Get record id from URL hash
- * @returns {string|undefined}
- */
 
 function getRecordIdFromHash() {
   const { hash } = new URL(window.location);
@@ -83,7 +59,19 @@ function hashRecord() {
 
 window.addEventListener('hashchange', hashRecord);
 
-window.addEventListener('DOMContentLoaded', hashRecord);
+window.addEventListener('DOMContentLoaded', () => {
+  hashRecord();
+
+  closeRightSideButton.addEventListener('click', () => {
+    closeRightSideButton.classList.toggle('active');
+    recordContainer.classList.toggle('active');
+  });
+});
+
+hotkeys('escape', () => {
+  closeRightSideButton.classList.remove('active');
+  recordContainer.classList.remove('active');
+});
 
 const indexContainer = document.getElementById('index');
 

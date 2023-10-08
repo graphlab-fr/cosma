@@ -33,12 +33,14 @@
 
 <body>
 
+    <button id="close-left-side" class="close-button left">❯</button>
+    <button id="close-right-side" class="close-button right">❮</button>
+
     {# ========================================
     left side menu board
     ========================================= #}
 
     <aside class="menu list-content-container">
-
         <header role="banner">
             {% if publishMode and metadata.title %}
             <h1 class="title">{{ metadata.title }}</h1>
@@ -250,10 +252,10 @@
     ========================================= #}
 
     <main id="record-container" class="record-container">
-        <button class="record-btn-close" onclick="closeRecord()">
-            {{ translation.right_panel.record.header.btn_close[lang] }}
-        </button>
-
+        <article class="record active empty-record">
+            <p>Cliquez sur un nœud du graphe ou dans un élément de l'index pour ouvrir une fiche.</p>
+        </article>
+    
         {% for record in records %}
         <article id="{{ record.id }}" class="record">
             <header>
