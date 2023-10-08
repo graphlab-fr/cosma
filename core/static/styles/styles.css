@@ -421,13 +421,18 @@ main.record-container {
   background-color: var(--offwhite);
   color: var(--offblack);
   box-shadow: var(--shadow);
-  transition: transform 0.6s;
-  transition-timing-function: cubic-bezier(0.02, 1.18, 0, 0.98);
 }
 
 main.record-container:not(.active) {
-  /* hide on right when class 'active' removed */
-  transform: translate(100%);
+  display: none;
+}
+
+.empty-record {
+  margin-top: 4rem;
+}
+
+.empty-record p {
+  font-size: 1.8rem;
 }
 
 .record:not(.active) {
@@ -908,4 +913,23 @@ article#credits h1.metas-title {
   overflow: scroll;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  z-index: 200;
+}
+
+.close-button.active {
+  transform: rotate(180deg);
+}
+
+.close-button.right {
+  right: 10px;
+  text-orientation: upright;
+}
+
+.close-button.left {
+  left: 10px;
 }
