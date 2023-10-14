@@ -290,10 +290,9 @@ module.exports = class Cosmoscope extends Graph {
     }
 
     const records = files.map((file) => {
-      let { id, title, types, tags, thumbnail, references, ...rest } = file.metas;
+      let { id, title, types, tags, thumbnail, references, begin, end, ...metas } = file.metas;
       id = id || file.metas['title'].toLowerCase();
 
-      let { begin, end, ...metas } = rest;
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
         links,

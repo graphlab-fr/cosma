@@ -284,6 +284,20 @@
                 </div>
                 {% endif %}
 
+                {% if record.begin %}
+                <div class="record-begin">
+                    <span>{{ translation.right_panel.record.metadata.begin[lang] }} :</span>
+                    <span>{{ record.begin | timestampToLocal }}</span>
+                </div>
+                {% endif %}
+
+                {% if record.end %}
+                <div class="record-end">
+                    <span>{{ translation.right_panel.record.metadata.end[lang] }} :</span>
+                    <span>{{ record.end | timestampToLocal }}</span>
+                </div>
+                {% endif %}
+
                 {% for meta, value in record.metas %}
                 <div class="record-{{meta}}">
                     <span>{{ meta }} :</span>
