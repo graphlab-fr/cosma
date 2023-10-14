@@ -275,7 +275,7 @@
                     <span>{{ record.types | join(", ") }}</span>
                 </div>
 
-                {% if record.tags %}
+                {% if record.tags.length > 0 %}
                 <div class="record-tags">
                     <span>{{ translation.right_panel.record.metadata.keywords[lang] }} :</span>
                     {% for tag in record.tags %}

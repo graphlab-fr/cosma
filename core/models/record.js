@@ -553,7 +553,7 @@ module.exports = class Record {
         return false;
       })
       .filter(([key, value]) => {
-        if (value !== null) {
+        if (value !== null && value !== undefined) {
           return true;
         }
         new Report(this.id, this.title, 'warning').aboutNullRecordMeta(this.title, key);
