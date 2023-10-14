@@ -135,6 +135,12 @@ right_panel:
       keywords:
         fr: mots-clés
         en: keywords
+      begin:
+        fr: Début
+        en: Begin
+      end:
+        fr: Fin
+        en: End
 
     bibliography:
       fr: Bibliographie
