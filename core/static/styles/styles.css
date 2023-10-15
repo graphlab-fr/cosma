@@ -611,23 +611,21 @@ h6 {
 }
 
 .record footer li .record-links-context {
-  display: none;
   background: white;
-  border: 1px black solid;
   padding: 0.8rem;
   border-radius: 2px;
   margin-top: 0.8rem;
-  position: absolute;
   bottom: calc(100% + 10px);
   box-shadow: var(--shadow);
   text-indent: 0;
 }
 
-.record footer li .record-links-context li {
-  display: block;
+.record footer li .record-links-context.hover {
+  position: absolute;
+  display: none;
 }
 
-.record footer li:hover .record-links-context {
+.record footer li:hover .record-links-context.hover {
   display: block;
 }
 
