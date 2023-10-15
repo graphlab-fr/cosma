@@ -1,5 +1,7 @@
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. <span class="red">Molestiae architecto quisquam ducimus</span>. Lorem ipsum dolor sit amet, consectetur adipisicing elit. [[g:{{ids | random }}]] Molestiae architecto quisquam ducimus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. [[{{ids | random }}]] Molestiae architecto quisquam ducimus.
 
+# First title
+
 <table>
     <thead>
         <tr>
@@ -23,7 +25,13 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. <span class="red">Mole
     </tbody>
 </table>
 
+- item 1
+- item 2
+- item 3
+
 {% set doubleQuote = bibKeys | random %}
+
+## Second title
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus [@{{ doubleQuote }}, 2]. Lorem ipsum dolor sit amet [@{{ doubleQuote }}, 2], consectetur adipisicing elit. [[{{ids | random }}|texte d’remplacement]].
 
@@ -32,3 +40,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto q
 > Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus eum nisi iusto ducimus eos ad debitis vitae aliquid excepturi architecto. [@{{bibKeys | random }}, 46-52 ; @{{bibKeys | random }}, 12]
 
 ![]({{imgSrc}} "Image for fake generation")
+
+### Third title
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus. Lorem ipsum dolor sit amet, consectetur adipisicing elit.

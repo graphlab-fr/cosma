@@ -57,6 +57,7 @@ module.exports = class Config {
     views: {},
     record_metas: [],
     generate_id: 'always',
+    link_context: 'tooltip',
     title: '',
     author: '',
     description: '',
@@ -543,6 +544,10 @@ module.exports = class Config {
       ? null
       : 'generate_id';
 
+    const link_context = new Set(['tooltip', 'inline']).has(this.opts.link_context)
+      ? null
+      : 'link_context';
+
     const node_size_method = new Set(['unique', 'degree']).has(this.opts.node_size_method)
       ? null
       : 'node_size_method';
@@ -564,6 +569,7 @@ module.exports = class Config {
       node_size_method,
       record_filters,
       generate_id,
+      link_context,
     ].filter((invalidOption) => invalidOption !== null);
   }
 
