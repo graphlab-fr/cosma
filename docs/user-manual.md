@@ -308,7 +308,7 @@ Cosma recognises and uses the following fields:
 
 `id`
 : Optional.
-: Unique identifier of the record. Must be a unique string. By default, Cosma generates 14-digit identifiers in the form of a timestamp (year, month, day, hours, minutes and seconds). This is inspired by Zettelkasten note-taking applications such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com).
+: Unique identifier of the record. Must be a unique string. Cannot contain `|` or `]]` (these character sequences are reserved for the link syntax; see next section). By default, Cosma generates 14-digit identifiers in the form of a timestamp (year, month, day, hours, minutes and seconds). This is inspired by Zettelkasten note-taking applications such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com).
 
 `type` or `types`
 : Optional.
@@ -392,24 +392,24 @@ Example of identifier-based link:
 A link to [[20201209111625]] record B.
 ```
 
-For identifier-based links, you can also include link text within the brackets. Example:
+For identifier-based links, you can also include link text within the brackets. It can be any string except `]]` (the ending delimiter of the link). Example:
 
 ```
 A link to [[20201209111625|record B]].
 ```
 
-Cosma also allows you to define **link types**. Each link type is defined by a name, a colour and a stroke pattern. To apply a type to a link, add the name of the type followed by a colon before the identifier.
+Cosma also allows you to define **link types**. Each link type must be defined in the configuration by a name, a colour and a stroke pattern. To apply a type to a link, add the name of the type followed by a colon before the identifier. The name can be any string except `:`, `|` and `]]` (characters reserved for the link syntax).
 
 Example:
 
 ```
 Concept B is derived from [[generic:concept A]].
 
-Person D wrote against [[opponent:person C]].
+Person D wrote against [[opponent:20201209111626|person C]].
 ```
 
 ::: astuce
-If you use identifier-based links without link text, perhaps coming from software such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com), you can still improve the readability of records in the cosmoscope by using the `link_symbol` parameter. It accepts as value an arbitrary Unicode string, which will replace the identifier and square brackets in the HTML rendering of the records. This visually lightens the text by replacing numeric identifiers with a shorter, personal convention. This can be, for example, a single symbol such as a manicle ☞, an arrow →, a star ⟡, etc.
+If you use identifier-based links without link text, perhaps coming from software such as [The Archive](https://zettelkasten.de/the-archive/) and [Zettlr](https://www.zettlr.com), you can improve the readability of records in the cosmoscope by using the `link_symbol` parameter. It accepts as value an arbitrary Unicode string, which will replace the identifier and square brackets in the HTML rendering of the records. This visually lightens the text by replacing numeric identifiers with a shorter, personal convention. This can be, for example, a single symbol such as a manicle ☞, an arrow →, a star ⟡, etc.
 :::
 
 ## Unique identifiers
