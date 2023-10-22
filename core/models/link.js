@@ -48,7 +48,7 @@ module.exports = class Link {
 
   /** @exemple `"[[a:20210424214230|link text]]"` */
   static regexWikilink = new RegExp(
-    /\[\[((?<type>[\w\s]+):)?(?<id>.+?)(\|(?<text>.+?))?\]\]/,
+    /\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+?))?\]\]/,
     'g',
   );
 
