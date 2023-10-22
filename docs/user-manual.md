@@ -166,6 +166,7 @@ metadata filter | Entities for which this metadata is present will be excluded w
 `chronological_record_meta` | *deprecated* |  | 
 `record_metas` | List of metadata (present in the data source) to be included in the cosmoscope | list
 `generate_id` | Set `cosma record` to always automatically create identifiers, never create them, or ask for each record | `always`, `never` or `ask` | `always`
+`link_context` | Display link context either inline or in a tooltip on hover | `inline`, `tooltip` | `inline`
 `title` | Cosmoscope title | string |
 `author` | Cosmoscope author | string | 
 `description` | Cosmoscope description | string |
@@ -225,6 +226,7 @@ attraction_horizontal: 0
 views: {}
 record_metas: []
 generate_id: always
+link_context: tooltip
 title: ''
 author: ''
 description: ''
@@ -773,10 +775,12 @@ Clicking on the “Close” button closes the right side panel and deselects the
 
 The links in the records are clickable. In a browser, you can open these links in a new tab via a right click. The title of the link (displayed in a tooltip after 1-2 seconds of hovering) is the title of the corresponding card.
 
-At the bottom of each record is a list of outgoing and incoming links (or backlinks). The links and backlinks are contextualised: when hovering over them, a tooltip is displayed, showing the paragraph that surrounds this link in the corresponding record.
+At the bottom of each record is a list of outgoing links (section titled “Links”) and incoming links (section titled “Backlinks”). Links and backlinks are contextualised: they are presented with the surrounding paragraph in the source record. You can set `link_context` to `tooltip` instead of `inline` if you want the link context to be displayed in a tooltip on hover, instead of inline.
+
+By default, the links section is collapsed, to make room for backlinks, which are often more useful. Click on the “Links” heading to expand the links section.
 
 ::: note
-This is one the most useful features in hypertext systems. It is famously absent from the Web. Many interrelated note-taking applications treat links as “first-class citizens”, and this includes contextualised backlinks. However, when these notes are shared on the Web, this feature is not always included, or it is only inclued in a paid plan. With Cosma, contextualised backlinks are part of the package, whether you're the author of a cosmoscope working locally, or someone exploring a cosmoscope on the Web.
+Contextualised backlinks are one the most useful features in hypertext systems. It is famously absent from the Web. Many interrelated note-taking applications treat links as “first-class citizens”, and this includes contextualised backlinks. However, when these notes are shared on the Web, this feature is not always included, or it is only included in a paid plan. With Cosma, contextualised backlinks are part of the package, whether you're the author of a cosmoscope working locally, or someone exploring a cosmoscope on the Web.
 :::
 
 ## Focus mode
