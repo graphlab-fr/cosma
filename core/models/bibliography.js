@@ -12,6 +12,7 @@
  * @property {object} quotesExtract.properties
  * @property {number} quotesExtract.properties.noteIndex
  * @property {string} text Quote string from plain text
+ * @property {string[]} contexts Paragraph contains quote
  * @property {Set} ids All quote ids from quotesExtract.citationItems
  */
 
@@ -28,29 +29,58 @@ const fs = require('fs'),
   Citr = require('@zettlr/citr');
 
 module.exports = class Bibliography {
+  static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
+
   /**
    * @param {string | Record.content} recordContent
    * @returns {BibliographicRecord[]}
    */
 
   static getBibliographicRecordsFromText(recordContent) {
-    const quotesAsText = Citr.util.extractCitations(recordContent);
-    return quotesAsText.map((quoteText, index) => {
+    /** @type {BibliographicRecord[]} */
+    let quotes = [];
+
+    Citr.util.extractCitations(recordContent).forEach((quoteText, index) => {
       let citationItems;
       try {
         citationItems = Citr.parseSingle(quoteText);
       } catch (error) {
         citationItems = [];
       }
-      return {
+
+      quotes.push({
         quotesExtract: {
           citationItems,
           properties: { noteIndex: index + 1 },
         },
         text: quoteText,
+        contexts: [],
         ids: new Set(citationItems.map(({ id }) => id)),
-      };
+      });
     });
+
+    const paraphs = recordContent.match(Bibliography.regexParagraph) || [];
+    /** @type {Map<string, Set<string>>} */
+    const contexts = new Map();
+
+    for (const paraph of paraphs) {
+      Citr.util.extractCitations(paraph).forEach((quoteText) => {
+        if (contexts.has(quoteText)) {
+          contexts.get(quoteText).add(paraph);
+        } else {
+          contexts.set(quoteText, new Set([paraph]));
+        }
+      });
+    }
+
+    quotes = quotes.map((quote) => {
+      if (contexts.has(quote.text)) {
+        quote.contexts = Array.from(contexts.get(quote.text));
+      }
+      return quote;
+    });
+
+    return quotes;
   }
 
   /**
@@ -75,6 +105,7 @@ module.exports = class Bibliography {
           properties: { noteIndex: index + 1 },
         },
         text: '',
+        contexts: [],
         ids: new Set([quoteId]),
       };
     });
