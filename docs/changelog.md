@@ -2,6 +2,47 @@
 title: Changelog
 ---
 
+# v2.1.0
+
+## Improvements
+
+### Links can now be based on titles
+
+If a record has e.g. `title: Evergreen notes` **and** no `id` parameter, then it can be linked to based on the title.
+
+Text case is ignored when parsing but preserved when rendering, so you can write `[[Evergreen notes]]`, `[[evergreen notes]]` or even `[[eVerGReeN NotEs]]`: the link will work regardless, with the text being rendered the way you wrote it.
+
+A new required parameter has been added to the configuration: `generate_id`. It modifies the behavior of `cosma record` according to three values:
+
+- when `generate_id: always`, `cosma record` automatically generates identifiers in new records;
+- when `generate_id: never`, `cosma record` doesn't add identifiers in new records;
+- when `generate_id: ask`, `cosma record` asks you to type `y` (yes) or `n` (no) for each new record to choose if you want an identifier to be automatically added or not
+
+### The graph is now displayed on an infinite canvas
+
+The graph is no longer constrained (and truncated) by the edges of the window. This makes it possible to view graphs that are larger than the screen, without having to “shrink” the graph so that it fits the window.
+
+We are still ironing the kinks (see Known issues below). Feedback is welcome as always.
+
+### Cosma no longer rewrites configuration files
+
+Cosma sometimes encounters a problem when reading a configuration file (e.g. a missing parameter such as the `undefined` record type). Instead of silently rewriting the configuration file, Cosma now tries to fall back on internal default configuration values and displays a warning message in the terminal, with the names of the problematic configuration parameters.
+
+### Chronological mode has been simplified
+
+Chronological mode now works in only one way: by using the values for `begin` and `end` metadata from the YAML header of records. (Future updates will provide the ability to customize chronological metadata.) The `chronological_record_meta` parameter is deprecated and removed from the configuration
+
+## Bug fixes
+
+- Fixed the visual indicator for suggestions that appear when typing into the search bar
+- Fixed the warning displayed by Cosma when attempting to create a duplicate record
+- Automatically terminate `modelize` when the task has been completed but the process keeps running (issue encountered on macOS)
+
+## Known issues
+
+- In the graph view, zooming doesn't center on the pointer's position
+- `batch` generates identifiers with extra digits (more than the expected 14), which can mess up writing setups. This doesn't affect projects with `generate_id: never`, for which `batch` correctly generates records without identifiers
+
 # v2.0.3
 
 ## Additions
