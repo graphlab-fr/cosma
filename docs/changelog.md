@@ -2,6 +2,20 @@
 title: Changelog
 ---
 
+# v2.1.1
+
+## Additions
+
+- Links and backlinks context is now shown inline by default. This is set by the new `link_context` parameter in the configuration. Set `link_context` to `tooltip` instead of `inline` to show link context in a tooltip on hover, as in previous versions of Cosma.
+
+## Improvements
+
+- `begin` and `end` metadata are now known by Cosma as default metadata and do not need to be declared in `record_metas`
+
+## Known bugs
+
+- Links in bibliographies are broken due to an extra `</div>` tag in the `href` attribute (issue [80](https://github.com/graphlab-fr/cosma/issues/80)).
+
 # v2.1.0
 
 ## Improvements
