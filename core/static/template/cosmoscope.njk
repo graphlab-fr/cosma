@@ -319,6 +319,9 @@
                         <li data-target-id="{{ link.target.id }}">
                             <a href="#{{ link.target.id }}">
                                 <span class="record-type-point" style="color: var(--n_{{ link.target.type | slugify }});">⬤</span>
+                                {% if link.type !== 'undefined' %}
+                                <span class="link-type">({{ link.type }})</span>
+                                {% endif %}
                                 <span>{{ link.target.title }}</span>
                                 <div class="record-links-context {{ "hover" if graph.config.link_context === 'tooltip' }}">
                                     {{ link.context | markdown | safe }}
@@ -342,6 +345,9 @@
                         <li data-target-id="{{ backlink.source.id }}">
                             <a href="#{{ backlink.source.id }}">
                                 <span class="record-type-point" style="color: var(--n_{{ backlink.source.type | slugify }});">⬤</span>
+                                {% if backlink.type !== 'undefined' %}
+                                <span class="link-type">({{ backlink.type }})</span>
+                                {% endif %}
                                 <span>{{ backlink.source.title }}</span>
                                 <div class="record-links-context {{ "hover" if graph.config.link_context === 'tooltip' }}">
                                     {{ backlink.context | markdown | safe }}
