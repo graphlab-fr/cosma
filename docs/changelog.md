@@ -22,6 +22,8 @@ A new required parameter has been added to the configuration: `generate_id`. It 
 
 The graph is no longer constrained (and truncated) by the edges of the window. This makes it possible to view graphs that are larger than the screen, without having to “shrink” the graph so that it fits the window.
 
+We are still ironing the kinks (see Known issues below). Feedback is welcome as always.
+
 ### Cosma no longer rewrites configuration files
 
 Cosma sometimes encounters a problem when reading a configuration file (e.g. a missing parameter such as the `undefined` record type). Instead of silently rewriting the configuration file, Cosma now tries to fall back on internal default configuration values and displays a warning message in the terminal, with the names of the problematic configuration parameters.
@@ -36,8 +38,9 @@ Chronological mode now works in only one way: by using the values for `begin` an
 - Fixed the warning displayed by Cosma when attempting to create a duplicate record
 - Automatically terminate `modelize` when the task has been completed but the process keeps running (issue encountered on macOS)
 
-## Known bugs
+## Known issues
 
+- In the graph view, zooming doesn't center on the pointer's position
 - `batch` generates identifiers with extra digits (more than the expected 14), which can mess up writing setups. This doesn't affect projects with `generate_id: never`, for which `batch` correctly generates records without identifiers
 
 # v2.0.3
