@@ -139,7 +139,13 @@ module.exports = class Cosmoscope extends Graph {
    */
 
   static getDataFromYamlFrontMatter(fileContain, filePath) {
-    const { head: metas, content } = readYmlFm(fileContain, { schema: 'failsafe' });
+    let fm ;
+    try {
+      fm = readYmlFm(fileContain, { schema: 'failsafe' });
+    } catch(e) {
+      console.error(filePath + " could not have its frontmatter parsed.")
+      throw new SyntaxError("YAML parse error on " + filePath);
+    }
 
     /** @type {File} */
     const file = {
