@@ -623,48 +623,24 @@ module.exports = class Record {
   }
 
   /**
-   * The keys like '[@Goody_1979, 12]' are remplace, as (Goody 1979 p. 12)
-   * and assign this.bibliography with HTML
+   * Assign this.bibliography with HTML
    * @param {Bibliography} bibliography
    */
 
-  replaceBibliographicText(bibliography) {
+  setBibliography(bibliography) {
     if (!bibliography || bibliography instanceof Bibliography === false) {
       throw new Error('Need instance of Bibliography to process');
     }
     const bibliographyHtml = new Set();
     for (const bibliographicRecord of this.bibliographicRecords) {
-      const { record, cluster, unknowedIds } = bibliography.get(bibliographicRecord);
+      const { record, unknowedIds } = bibliography.get(bibliographicRecord);
       for (const id of unknowedIds) {
         new Report(this.id, this.title, 'error').aboutUnknownBibliographicReference(this.title, id);
       }
-      bibliographyHtml.add(record);
-      const { text } = bibliographicRecord;
-      if (!text) {
-        continue;
-      }
-      this.content = this.content.replaceAll(text, cluster);
-      this.links = this.links.map((link) => {
-        link.context = link.context.map((paraph) => paraph.replace(text, cluster));
-        return link;
-      });
+      record.forEach((r) => bibliographyHtml.add(r));
     }
 
-    this.backlinks = this.backlinks.map((link) => {
-      link.context = link.context.map((paragraph) => {
-        const bibliographicRecords = Bibliography.getBibliographicRecordsFromText(paragraph);
-
-        for (const bibliographicRecord of bibliographicRecords) {
-          const { cluster } = bibliography.get(bibliographicRecord);
-          const { text } = bibliographicRecord;
-          paragraph = paragraph.replaceAll(text, cluster);
-        }
-        return paragraph;
-      });
-      return link;
-    });
-
-    this.bibliography = Array.from(bibliographyHtml).join('\n');
+    this.bibliography = Array.from(bibliographyHtml).join('');
   }
 
   /**
