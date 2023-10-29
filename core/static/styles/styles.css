@@ -526,6 +526,11 @@ h6 {
   color: #337ab7;
 }
 
+a.record-link.highlight {
+  font-style: normal;
+  background-color: rgba(255, 255, 182, 1);
+}
+
 .record main ul,
 .record main ol {
   padding: 0;
@@ -642,11 +647,6 @@ h6 {
 
 .record footer li .record-links-context p + p {
   margin-top: 0.8rem;
-}
-
-.id-context {
-  font-style: normal;
-  background-color: rgba(255, 255, 182, 1);
 }
 
 /** Graph
