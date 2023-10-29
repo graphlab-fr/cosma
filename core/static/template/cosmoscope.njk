@@ -309,11 +309,11 @@
             <main class="record-content">
                 {{ record.content | convertLinks(graph.config) | markdown | safe }}
 
-                {% if citeproc %}
+                {% if record.bibliography %}
                 <section class="bibliography">
                     <h1>{{ translation.right_panel.record.bibliography[lang] }}</h1>
 
-                    {{ record.content | bibliography | markdown | safe }}
+                    {{ record.bibliography | safe }}
                 </section>
                 {% endif %}
             </main>
