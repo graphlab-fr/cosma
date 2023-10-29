@@ -11,7 +11,8 @@ const fs = require('fs'),
     html: true,
     linkify: true,
     breaks: true,
-  });
+  }),
+  Citr = require('@zettlr/citr');
 
 const app = require('../package.json');
 
@@ -31,45 +32,6 @@ module.exports = class Template {
   static validParams = new Set(['publish', 'css_custom', 'citeproc', 'dev']);
 
   /**
-   * Convert valid wikilinks text to Markdown hyperlinks
-   * The content of the Markdown hyperlink is the link id or the linkSymbol if it is defined
-   * The link is valid if it can be found from one record
-   * For each link we get the type and the name from the targeted record
-   * @param {object} record - File object from Graph class.
-   * @param {string} linkSymbol - String from config option 'link_symbol'.
-   * @return {object} - File with an updated content
-   * @static
-   */
-
-  static convertLinks(record, content, linkSymbol) {
-    return content.replace(Link.regexWikilink, function (match, _, type, targetId, __, text) {
-      const associatedMetas = record.links.find(
-        (i) => i.target.id === String(targetId).toLowerCase(),
-      );
-
-      // link is not registred into record metas
-      if (associatedMetas === undefined) {
-        return match;
-      }
-
-      const link = associatedMetas;
-
-      const isNumbers = !isNaN(Number(targetId));
-
-      let linkContent;
-      if (text) {
-        linkContent = text;
-      } else if (linkSymbol) {
-        linkContent = linkSymbol;
-      } else {
-        linkContent = isNumbers ? match : targetId;
-      }
-
-      return `<a href="#${link.target.id}" title="${link.target.title}" class="record-link">${linkContent}</a>`;
-    });
-  }
-
-  /**
    * Match and transform links from context
    * @param {Array} recordLinks Array of link objets
    * @param {Function} fxToHighlight Function return a boolean
@@ -83,28 +45,6 @@ module.exports = class Template {
       } else {
         link.context = '';
       }
-      link.context = link.context.replace(
-        Link.regexWikilink,
-        (match, _, type, targetId, __, text) => {
-          const id = targetId.toLowerCase();
-          const isNumbers = !isNaN(Number(id));
-
-          let linkContent;
-          if (text) {
-            linkContent = text;
-          } else if (linkSymbol) {
-            linkContent = linkSymbol;
-          } else {
-            linkContent = isNumbers ? match : targetId;
-          }
-
-          if (id == link.target.id) {
-            return `<span class="id-context" data-target-id="${id}">${linkContent}</span>`;
-          }
-
-          return linkContent;
-        },
-      );
       return link;
     });
   }
@@ -189,7 +129,10 @@ module.exports = class Template {
       focus_max: focusMax,
       record_types: recordTypes,
     } = this.config.opts;
-    let references;
+    /** @type {string[]} */
+    const references = [];
+    /** @type {Bibliography} */
+    let bibliography;
 
     const filtersFromGraph = {};
     graph.getTypesFromRecords().forEach((nodes, name) => {
@@ -231,11 +174,14 @@ module.exports = class Template {
 
     if (this.params.has('citeproc')) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
-      const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+      bibliography = new Bibliography(bib, cslStyle, xmlLocal);
       for (const record of graph.records) {
-        record.replaceBibliographicText(bibliography);
+        record.links.forEach(({ target }) => {
+          if (bibliography.library[target.id]) {
+            references.push(bibliography.library[target.id]);
+          }
+        });
       }
-      references = Object.values(bibliography.library).filter(({ used }) => !!used);
     }
 
     const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
@@ -266,6 +212,121 @@ module.exports = class Template {
     templateEngine.addFilter('slugify', (input) => {
       return slugify(input);
     });
+    templateEngine.addFilter('convertLinks', (input, opts, idToHighlight) => {
+      input = input.replace(Link.regexWikilink, function (match, _, type, targetId, __, text) {
+        const record = graph.records.find(({ id }) => id === targetId.toLowerCase());
+
+        const isNumbers = !isNaN(Number(targetId));
+
+        let linkContent;
+        if (text) {
+          linkContent = text;
+        } else if (opts['link_symbol']) {
+          linkContent = opts['link_symbol'];
+        } else {
+          linkContent = isNumbers ? match : targetId;
+        }
+
+        return `<a href="#${record.id}" title="${escapeQuotes(record.title)}" class="record-link ${
+          record.id === idToHighlight ? 'highlight' : ''
+        }">${linkContent}</a>`.trim();
+      });
+
+      if (bibliography) {
+        Citr.util.extractCitations(input).forEach((quoteText, index) => {
+          let citationItems;
+          try {
+            citationItems = Citr.parseSingle(quoteText);
+          } catch (error) {
+            citationItems = [];
+          }
+
+          /**
+           * @type {Map<string, string>}
+           * Dictionnary contains record id for each cluster
+           * @example
+           * ```
+           * "[@Fowler_2003, 2]"
+           * { 'Fowler 2003' => 'Fowler_2003' }
+           * ```
+           */
+          const idsDictionnary = new Map(
+            citationItems.map((item) => {
+              item = { id: item.id };
+              return [
+                bibliography.citeproc
+                  .processCitationCluster(
+                    {
+                      citationItems: [item],
+                      properties: { noteIndex: index + 1 },
+                    },
+                    [],
+                    [],
+                  )[1][0][1]
+                  .slice(1, -1),
+                item.id,
+              ];
+            }),
+          );
+
+          /**
+           * Quoting marks to render on text
+           * @example
+           * ```
+           * "[@Fowler_2003, 2]" => "(Fowler 2003, p.2)"
+           * ```
+           */
+          let cluster = bibliography.get({
+            quotesExtract: {
+              citationItems,
+              properties: { noteIndex: index + 1 },
+            },
+            text: quoteText,
+            ids: new Set(citationItems.map(({ id }) => id)),
+          }).cluster;
+
+          // Replace "(Fowler 2003, p.2)" to "(<a>Fowler 2003</a>, p.2)"
+          idsDictionnary.forEach((recordId, key) => {
+            cluster = cluster.replace(key, () => {
+              const record = graph.records.find(({ id }) => id === recordId);
+              return `<a href="#${record.id}" title="${escapeQuotes(
+                record.title,
+              )}" class="record-link ${
+                record.id === idToHighlight ? 'highlight' : ''
+              }">${key}</a>`.trim();
+            });
+          });
+
+          input = input.replace(quoteText, cluster);
+        });
+      }
+
+      return input;
+    });
+    templateEngine.addFilter('bibliography', (input) => {
+      const bibliographyLines = new Set();
+      Citr.util.extractCitations(input).forEach((quoteText, index) => {
+        let citationItems;
+        try {
+          citationItems = Citr.parseSingle(quoteText);
+        } catch (error) {
+          citationItems = [];
+        }
+
+        bibliography
+          .get({
+            quotesExtract: {
+              citationItems,
+              properties: { noteIndex: index + 1 },
+            },
+            text: quoteText,
+            ids: new Set(citationItems.map(({ id }) => id)),
+          })
+          .record.forEach((r) => bibliographyLines.add(r));
+      });
+
+      return Array.from(bibliographyLines).join('');
+    });
     templateEngine.addFilter('markdown', (input) => {
       return mdIt.render(input);
     });
@@ -275,7 +336,6 @@ module.exports = class Template {
     templateEngine.addFilter('imgPathToBase64', Template.imagePathToBase64);
 
     graph.records = graph.records.map((record) => {
-      record.content = Template.convertLinks(record, record.content, linkSymbol || undefined);
       record.links = Template.markLinkContext(record.links, linkSymbol);
       record.backlinks = Template.markLinkContext(record.backlinks, linkSymbol);
 
@@ -288,6 +348,7 @@ module.exports = class Template {
     }
 
     this.html = templateEngine.render('template/cosmoscope.njk', {
+      citeproc: !!bibliography,
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
@@ -359,3 +420,7 @@ module.exports = class Template {
     });
   }
 };
+
+function escapeQuotes(text) {
+  return text.replace(/'/g, '&apos;').replace(/"/g, '&quot;');
+}
