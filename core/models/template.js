@@ -176,6 +176,7 @@ module.exports = class Template {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
       for (const record of graph.records) {
+        record.setBibliography(bibliography);
         record.links.forEach(({ target }) => {
           if (bibliography.library[target.id]) {
             references.push(bibliography.library[target.id]);
@@ -303,30 +304,6 @@ module.exports = class Template {
 
       return input;
     });
-    templateEngine.addFilter('bibliography', (input) => {
-      const bibliographyLines = new Set();
-      Citr.util.extractCitations(input).forEach((quoteText, index) => {
-        let citationItems;
-        try {
-          citationItems = Citr.parseSingle(quoteText);
-        } catch (error) {
-          citationItems = [];
-        }
-
-        bibliography
-          .get({
-            quotesExtract: {
-              citationItems,
-              properties: { noteIndex: index + 1 },
-            },
-            text: quoteText,
-            ids: new Set(citationItems.map(({ id }) => id)),
-          })
-          .record.forEach((r) => bibliographyLines.add(r));
-      });
-
-      return Array.from(bibliographyLines).join('');
-    });
     templateEngine.addFilter('markdown', (input) => {
       return mdIt.render(input);
     });
@@ -348,7 +325,6 @@ module.exports = class Template {
     }
 
     this.html = templateEngine.render('template/cosmoscope.njk', {
-      citeproc: !!bibliography,
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
