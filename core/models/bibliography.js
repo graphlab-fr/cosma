@@ -217,7 +217,7 @@ module.exports = class Bibliography {
     }
 
     this.citeproc.updateItems(ids);
-    let record = this.citeproc.makeBibliography()[1].join('\n');
+    let record = this.citeproc.makeBibliography()[1].map((t) => t.trim());
 
     bibliographicRecord.quotesExtract.citationItems = [
       ...bibliographicRecord.quotesExtract.citationItems.filter(({ id }) => this.ids.has(id)),

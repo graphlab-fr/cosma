@@ -226,7 +226,7 @@
         </details>
 
         <footer class="menu-footer">
-            {% if references %}
+            {% if references.length > 0 %}
             <button onclick="openRecord('citation-references', false)"
                 class="bibliography-open" title="Données bibliographiques">
                 {{ translation.left_panel.footer.btn_data[lang] }}
@@ -307,15 +307,13 @@
             </header>
 
             <main class="record-content">
-                {{ record.content | markdown | safe }}
+                {{ record.content | convertLinks(graph.config) | markdown | safe }}
 
-                {% if record.bibliography %}
+                {% if citeproc %}
                 <section class="bibliography">
-                    <hr/>
                     <h1>{{ translation.right_panel.record.bibliography[lang] }}</h1>
 
-                    {{ record.bibliography | urlize | safe }}
-
+                    {{ record.content | bibliography | markdown | safe }}
                 </section>
                 {% endif %}
             </main>
@@ -338,7 +336,7 @@
                                 {% endif %}
                                 <span>{{ link.target.title }}</span>
                                 <div class="record-links-context {{ "hover" if graph.config.link_context === 'tooltip' }}">
-                                    {{ link.context | markdown | safe }}
+                                    {{ link.context | convertLinks(graph.config, link.target.id) | markdown | safe }}
                                 </div>
                             </a>
                         </li>
@@ -364,7 +362,7 @@
                                 {% endif %}
                                 <span>{{ backlink.source.title }}</span>
                                 <div class="record-links-context {{ "hover" if graph.config.link_context === 'tooltip' }}">
-                                    {{ backlink.context | markdown | safe }}
+                                    {{ backlink.context | convertLinks(graph.config, record.id) | markdown | safe }}
                                 </div>
                             </a>
                         </li>
@@ -487,7 +485,7 @@
             </main>
         </article>
 
-        {% if references %}
+        {% if references.length > 0 %}
         <article id="citation-references" class="record">
             <main>
                 <h1>{{ translation.right_panel.bibliography_data.title[lang] }}</h1>

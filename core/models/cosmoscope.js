@@ -298,7 +298,7 @@ module.exports = class Cosmoscope extends Graph {
      * @typedef RecordReference
      * @type {object}
      * @property {Set<string>} targets
-     * @property {string[]} contexts
+     * @property {Map<string, string>} contexts
      */
 
     /** @type {Map<string, RecordReference>} */
@@ -314,10 +314,10 @@ module.exports = class Cosmoscope extends Graph {
         ids.forEach((id) => {
           if (biblioIds.has(id)) {
             biblioIds.get(id).targets.add(file.metas.id);
-            biblioIds.get(id).contexts.push(...contexts);
+            biblioIds.get(id).contexts.set(file.metas.id, contexts);
           } else {
             biblioIds.set(id, {
-              contexts,
+              contexts: new Map([[file.metas.id, contexts]]),
               targets: new Set([file.metas.id]),
             });
           }
@@ -331,7 +331,7 @@ module.exports = class Cosmoscope extends Graph {
         links.push(
           new Link(
             undefined,
-            Array.from(new Set(contexts)),
+            Array.from(new Set(contexts.get(id))),
             undefined,
             undefined,
             undefined,
