@@ -20,7 +20,7 @@
  * @typedef BibliographicOutput
  * @type {object}
  * @property {string} cluster Quoting string to insert in text
- * @property {string} record Bibliographic record in HTML
+ * @property {string[]} record Bibliographic record in HTML
  * @property {string[]} unknowedIds Ids out from library
  */
 
