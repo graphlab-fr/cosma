@@ -338,7 +338,7 @@ module.exports = class Cosmoscope extends Graph {
           new Link(
             undefined,
             Array.from(new Set(contexts.get(id))),
-            undefined,
+            'undefined',
             undefined,
             undefined,
             undefined,
