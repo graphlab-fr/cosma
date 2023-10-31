@@ -275,10 +275,9 @@ module.exports = class Cosmoscope extends Graph {
    */
 
   static getRecordsFromFiles(files, opts = {}) {
-    const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(
-      new Config(opts),
-    );
-    const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+    const config = new Config(opts);
+    /** @type {Bibliography} */
+    let bibliography;
 
     /** @type {Link[]} */
     const links = [];
@@ -295,38 +294,45 @@ module.exports = class Cosmoscope extends Graph {
     }
 
     /**
-     * @typedef RecordReference
+     * @typedef ReferenceRecord
      * @type {object}
      * @property {Set<string>} targets
      * @property {Map<string, string>} contexts
      */
 
-    /** @type {Map<string, RecordReference>} */
-    let biblioIds = new Map([]);
+    /** @type {Map<string, ReferenceRecord>} */
+    let referenceRecords = new Map([]);
 
-    for (const file of files) {
-      const bibliographicRecords = [
-        ...Bibliography.getBibliographicRecordsFromText(file.content),
-        ...Bibliography.getBibliographicRecordsFromList(file.metas.references),
-      ];
+    if (opts['references_as_nodes'] && config.canCiteproc()) {
+      const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
+      bibliography = new Bibliography(bib, cslStyle, xmlLocal);
 
-      bibliographicRecords.forEach(({ ids, contexts }) => {
-        ids.forEach((id) => {
-          if (biblioIds.has(id)) {
-            biblioIds.get(id).targets.add(file.metas.id);
-            biblioIds.get(id).contexts.set(file.metas.id, contexts);
-          } else {
-            biblioIds.set(id, {
-              contexts: new Map([[file.metas.id, contexts]]),
-              targets: new Set([file.metas.id]),
-            });
-          }
+      for (const file of files) {
+        const bibliographicRecords = [
+          ...Bibliography.getBibliographicRecordsFromText(file.content),
+          ...Bibliography.getBibliographicRecordsFromList(file.metas.references),
+        ];
+
+        bibliographicRecords.forEach(({ ids, contexts }) => {
+          ids.forEach((id) => {
+            if (referenceRecords.has(id)) {
+              referenceRecords.get(id).targets.add(file.metas.id);
+              referenceRecords.get(id).contexts.set(file.metas.id, contexts);
+            } else {
+              referenceRecords.set(id, {
+                contexts: new Map([[file.metas.id, contexts]]),
+                targets: new Set([file.metas.id]),
+              });
+            }
+          });
         });
-      });
+      }
     }
 
-    biblioIds.forEach(({ targets, contexts }, key) => {
-      nodes.push(new Node(key, bibliography.library[key]['title'] || '', 'citation'));
+    referenceRecords.forEach(({ targets, contexts }, key) => {
+      nodes.push(
+        new Node(key, bibliography.library[key]['title'] || '', opts['references_type_label']),
+      );
       Array.from(targets).forEach((id) =>
         links.push(
           new Link(
@@ -374,7 +380,7 @@ module.exports = class Cosmoscope extends Graph {
       );
     });
 
-    biblioIds.forEach((targets, key) => {
+    referenceRecords.forEach((targets, key) => {
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         key,
         links,
@@ -382,7 +388,7 @@ module.exports = class Cosmoscope extends Graph {
       );
 
       bibliography.citeproc.updateItems([key]);
-      let record = bibliography.citeproc.makeBibliography()[1].join('\n');
+      let content = bibliography.citeproc.makeBibliography()[1].join('\n');
 
       const title = bibliography.library[key]['title'] || '';
 
@@ -390,10 +396,10 @@ module.exports = class Cosmoscope extends Graph {
         new Record(
           key,
           title,
-          ['citation'],
+          [opts['references_type_label']],
           undefined,
           undefined,
-          record,
+          content,
           linksReferences,
           backlinksReferences,
           undefined,
