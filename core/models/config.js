@@ -40,6 +40,8 @@ module.exports = class Config {
     focus_max: 2,
     record_types: { undefined: { fill: '#858585', stroke: '#858585' } },
     link_types: { undefined: { stroke: 'simple', color: '#e1e1e1' } },
+    references_as_nodes: true,
+    references_type_label: 'references',
     record_filters: [],
     graph_background_color: '#ffffff',
     graph_highlight_color: '#ff6a6a',
@@ -522,9 +524,23 @@ module.exports = class Config {
         return invalidNumber;
       });
 
-    const bools = ['history', 'graph_highlight_on_hover', 'graph_arrows', 'devtools']
+    const bools = [
+      'history',
+      'graph_highlight_on_hover',
+      'graph_arrows',
+      'devtools',
+      'references_as_nodes',
+    ]
       .filter((option) => {
         return typeof this.opts[option] !== 'boolean';
+      })
+      .map((invalidBool) => {
+        return invalidBool;
+      });
+
+    const strings = ['references_type_label']
+      .filter((option) => {
+        return typeof this.opts[option] !== 'string';
       })
       .map((invalidBool) => {
         return invalidBool;
@@ -562,6 +578,7 @@ module.exports = class Config {
       ...urls,
       ...numbers,
       ...bools,
+      ...strings,
       record_types,
       link_types,
       lang,
