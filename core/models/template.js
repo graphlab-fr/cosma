@@ -129,6 +129,7 @@ module.exports = class Template {
       focus_max: focusMax,
       record_types: recordTypes,
     } = this.config.opts;
+
     /** @type {string[]} */
     const references = [];
     /** @type {Bibliography} */
@@ -172,7 +173,7 @@ module.exports = class Template {
       })
       .map(({ title }) => title);
 
-    if (this.params.has('citeproc')) {
+    if (this.params.has('citeproc') && this.config.canCiteproc()) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
       for (const record of graph.records) {
@@ -214,7 +215,8 @@ module.exports = class Template {
       return slugify(input);
     });
     templateEngine.addFilter('convertLinks', (input, opts, idToHighlight) => {
-      input = input.replace(Link.regexWikilink, function (match, _, type, targetId, __, text) {
+      // Replace wikilinks: "[[g:1234567890|toto]]" to "<a>toto</a>"
+      input = input.replace(Link.regexWikilink, (match, _, type, targetId, __, text) => {
         const record = graph.records.find(({ id }) => id === targetId.toLowerCase());
 
         const isNumbers = !isNaN(Number(targetId));
@@ -233,7 +235,7 @@ module.exports = class Template {
         }">${linkContent}</a>`.trim();
       });
 
-      if (bibliography) {
+      if (opts['references_as_nodes'] && bibliography) {
         Citr.util.extractCitations(input).forEach((quoteText, index) => {
           let citationItems;
           try {
@@ -253,9 +255,11 @@ module.exports = class Template {
            */
           const idsDictionnary = new Map(
             citationItems.map((item) => {
+              // remove page or chapter anotations: only keep id
               item = { id: item.id };
               return [
                 bibliography.citeproc
+                  // get "(Fowler 2003)"
                   .processCitationCluster(
                     {
                       citationItems: [item],
@@ -264,6 +268,7 @@ module.exports = class Template {
                     [],
                     [],
                   )[1][0][1]
+                  // get "Fowler 2003"
                   .slice(1, -1),
                 item.id,
               ];
