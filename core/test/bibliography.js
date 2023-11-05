@@ -27,7 +27,7 @@ describe('Bibliography', () => {
     const [recordGoody, recordAkrichChun] = bibliographicRecords;
     const { record, cluster } = bibliography.get(recordGoody);
     cluster.should.to.include('Goody').and.include('12');
-    record.should.to.include('La Raison graphique: la domestication de la pensée sauvage');
+    record[0].should.to.include('La Raison graphique: la domestication de la pensée sauvage');
   });
 
   it('should extract bibliographic records from list', () => {
@@ -37,7 +37,7 @@ describe('Bibliography', () => {
     const [recordGoody, recordChun] = bibliographicRecords;
     const { record, cluster } = bibliography.get(recordChun);
     cluster.should.to.include('Chun');
-    record.should.to.include('Code as Fetish');
+    record[0].should.to.include('Code as Fetish');
   });
 
   it('should extract ignore unknowned authors records from text', () => {
@@ -47,6 +47,6 @@ describe('Bibliography', () => {
     const [recordUnknownedGoody] = bibliographicRecords;
     const { record, cluster } = bibliography.get(recordUnknownedGoody);
     cluster.should.to.include('Goody');
-    record.should.to.include('La Raison graphique: la domestication de la pensée sauvage');
+    record[0].should.to.include('La Raison graphique: la domestication de la pensée sauvage');
   });
 });
