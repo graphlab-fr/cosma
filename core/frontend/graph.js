@@ -34,7 +34,7 @@ const svgSub = svg.append('svg');
 
 const { width, height } = svg.node().getBoundingClientRect();
 
-svgSub.attr('viewBox', [0, 0, width, height]).attr('preserveAspectRatio', 'xMinYMin meet');
+svgSub.attr('viewBox', [0, 0, width, height]);
 
 /** Force simulation
 ------------------------------------------------------------*/
@@ -635,26 +635,30 @@ function translate() {
   const minY = d3.min(data.nodes, (d) => d.y);
   const maxY = d3.max(data.nodes, (d) => d.y);
 
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
   const { x, y, zoom } = View.position;
 
-  const centerX = (minX + maxX) / 2;
-  const centerY = (minY + maxY) / 2;
-
-  const screenMin = 1200;
+  const screenMin = d3.min([screenHeight, screenWidth]);
 
   let viewBoxWidth = maxX - minX;
   if (viewBoxWidth < screenMin) viewBoxWidth = screenMin;
   let viewBoxHeight = maxY - minY;
   if (viewBoxHeight < screenMin) viewBoxHeight = screenMin;
 
-  const viewBox = [
-    (centerX - viewBoxWidth / 2 - x) / zoom,
-    (centerY - viewBoxHeight / 2 - y) / zoom,
-    viewBoxWidth / zoom,
-    viewBoxHeight / zoom,
-  ];
-
-  svgSub.attr('viewBox', viewBox).attr('preserveAspectRatio');
+  if (0 > minX || 0 > minY) {
+    const viewBox = [
+      (minX - x) / zoom,
+      (minY - y) / zoom,
+      viewBoxWidth / zoom,
+      viewBoxHeight / zoom,
+    ];
+    svgSub.attr('viewBox', viewBox).attr('preserveAspectRatio', null);
+  } else {
+    const viewBox = [(0 - x) / zoom, (0 - y) / zoom, viewBoxWidth / zoom, viewBoxHeight / zoom];
+    svgSub.attr('viewBox', viewBox).attr('preserveAspectRatio', 'xMinYMin meet');
+  }
 }
 
 const nodes = elts.nodes.data();
