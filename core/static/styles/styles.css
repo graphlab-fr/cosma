@@ -280,7 +280,8 @@ code {
 ------------------------------------------------------------*/
 
 aside.menu {
-  position: relative;
+  position: absolute;
+  box-shadow: var(--shadow);
   z-index: 100;
   overflow: auto;
   height: 100vh;
@@ -289,7 +290,10 @@ aside.menu {
   padding: 0 20px 50px 20px;
   background-color: var(--background-gray);
   color: var(--offblack);
-  box-shadow: var(--shadow);
+}
+
+aside.menu:not(.active) {
+  display: none;
 }
 
 /* ---
@@ -656,7 +660,7 @@ a.record-link.highlight {
   top: 0;
   right: 0;
   height: 100vh;
-  width: calc(100vw - 30rem);
+  width: 100vw;
 }
 
 #graph-canvas {
@@ -701,7 +705,7 @@ marker {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  left: 30px;
+  left: 300px;
   bottom: 85px;
   flex-wrap: wrap;
   width: 20rem;

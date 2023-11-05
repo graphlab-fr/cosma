@@ -7,3 +7,4 @@ import './timeline';
 import './filter';
 import './tags';
 import './focus';
+import './leftPanel';
