@@ -317,8 +317,8 @@ module.exports = class Cosmoscope extends Graph {
         bibliographicRecords.forEach(({ ids, contexts }) => {
           ids.forEach((id) => {
             if (referenceRecords.has(id)) {
-              referenceRecords.get(id).targets.add(file.metas.id);
               referenceRecords.get(id).contexts.set(file.metas.id, contexts);
+              referenceRecords.get(id).targets.add(file.metas.id);
             } else {
               referenceRecords.set(id, {
                 contexts: new Map([[file.metas.id, contexts]]),
