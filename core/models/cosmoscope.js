@@ -270,11 +270,12 @@ module.exports = class Cosmoscope extends Graph {
 
   /**
    * @param {File[]} files
+   * @param {boolean} citeproc
    * @param {Config.opts} opts
    * @returns {Record[]}
    */
 
-  static getRecordsFromFiles(files, opts = {}) {
+  static getRecordsFromFiles(files, citeproc, opts = {}) {
     const config = new Config(opts);
     /** @type {Bibliography} */
     let bibliography;
@@ -303,7 +304,7 @@ module.exports = class Cosmoscope extends Graph {
     /** @type {Map<string, ReferenceRecord>} */
     let referenceRecords = new Map([]);
 
-    if (opts['references_as_nodes'] && config.canCiteproc()) {
+    if (citeproc && opts['references_as_nodes'] && config.canCiteproc()) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
 
