@@ -518,7 +518,7 @@
     </main>
 
     {# ========================================
-    Cosma graph
+    Graph
     ========================================= #}
 
     <div class="graph-wrapper" style="background-color: {{ graph.config.graph_background_color }}">
@@ -538,32 +538,36 @@
                 {% endfor %}
             </defs>
         </svg>
+    </div>
 
-        <div class="graph-controls">
-            <div class="graph-controls-zoom">
-                <button onclick="zoomLess()">-</button>
-                <button onclick="zoomReset()">{{ translation.graph.btn_zoom_reset[lang] }} (R)</button>
-                <button onclick="zoomMore()">+</button>
-            </div>
+    {# ========================================
+    Graph controls
+    ========================================= #}
 
-            {% if focusIsActive %}
-            <div class="graph-controls-focus">
-                <label>
-                    <input id="focus-check" type="checkbox" name="checkbox">
-                    {{ translation.graph.btn_focus[lang] }} (F)
-                </label>
-
-                <input id="focus-input" type="range" min="1" max="{{ graph.config.focus_max }}" value="1" name="focus_range" step="1" />
-            </div>
-            {% endif %}
+    <div class="graph-controls" id="graph-controls">
+        <div class="graph-controls-section graph-controls-zoom">
+            <button onclick="zoomLess()">-</button>
+            <button onclick="zoomReset()">{{ translation.graph.btn_zoom_reset[lang] }} (R)</button>
+            <button onclick="zoomMore()">+</button>
         </div>
 
+        {% if focusIsActive %}
+        <div class="graph-controls-section graph-controls-focus">
+            <span class="graph-control-label">
+                <input id="focus-check" type="checkbox" name="checkbox">
+                <label for="focus-check">{{ translation.graph.btn_focus[lang] }} (F)</label>
+            </span>
+
+            <input id="focus-input" type="range" min="1" max="{{ graph.config.focus_max }}" value="1" name="focus_range" step="1" />
+        </div>
+        {% endif %}
+
         {% if timeline.begin or timeline.end %}
-        <div class="graph-timeline">
-            <label>
+        <div class="graph-controls-section graph-timeline">
+            <span class="graph-control-label">
                 <input id="timeline-checkbox" type="checkbox" name="checkbox">
-                Mode chronologique
-            </label>
+                <label for="timeline-checkbox">Mode chronologique</label>
+            </span>
 
             <form id="timeline-form">
                 <output name="timeline_output">{{ timeline.begin | timestampToLocal }}</output>

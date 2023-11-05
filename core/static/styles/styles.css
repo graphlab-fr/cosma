@@ -700,24 +700,25 @@ marker {
 - Buttons
 --- */
 
+.graph-controls-section + .graph-controls-section {
+  margin-top: 10px;
+}
+
+.graph-control-label {
+  margin-bottom: 5px;
+}
+
 .graph-controls {
-  position: absolute;
+  position: fixed;
+  left: 340px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  left: 300px;
-  bottom: 85px;
-  flex-wrap: wrap;
-  width: 20rem;
+  bottom: 55px;
 }
 
-.graph-controls::before {
-  content: '';
-  position: absolute;
-  backdrop-filter: blur(7px);
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
+.graph-controls.move {
+  left: 40px;
 }
 
 .graph-timeline {
@@ -725,13 +726,6 @@ marker {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  left: 30px;
-  bottom: 15px;
-  width: 20rem;
-}
-
-.graph-controls button {
-  margin: 2px, 0;
 }
 
 .graph-controls div {
@@ -750,13 +744,8 @@ marker {
   flex-flow: row wrap;
 }
 
-.graph-controls-focus label {
-  display: inline-block;
-  margin: 0.8rem 0 0.8rem 0.4rem;
-}
-
 .graph-controls-focus input[type='range']:not(.active) {
-  visibility: hidden;
+  display: none;
 }
 
 .graph-controls #reset-isolate {
@@ -767,17 +756,13 @@ marker {
   display: none;
 }
 
-.graph-timeline {
-  width: calc(100% - 60px);
-}
-
 #timeline-form {
-  width: 100%;
+  width: calc(100vw - 850px);
   backdrop-filter: blur(7px);
 }
 
 #timeline-form:not(.active) {
-  visibility: hidden;
+  display: none;
 }
 
 #timeline-form input[type='range'] {
