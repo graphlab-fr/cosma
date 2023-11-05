@@ -33,14 +33,14 @@
 
 <body>
 
-    <button id="close-left-side" class="close-button left">❯</button>
+    <button id="close-left-side" class="close-button left">❮</button>
     <button id="close-right-side" class="close-button right">❮</button>
 
     {# ========================================
     left side menu board
     ========================================= #}
 
-    <aside class="menu list-content-container">
+    <aside id="menu-container" class="menu active list-content-container">
         <header role="banner">
             {% if publishMode and metadata.title %}
             <h1 class="title">{{ metadata.title }}</h1>
