@@ -155,20 +155,20 @@ module.exports = class Link {
           );
           return undefined;
         }
-        const { label: targetLabel, type: targetType } = nodeTarget;
-        const { label: sourceLabel, type: sourceType } = nodeSource;
+        const { label: targetLabel, types: targetTypes } = nodeTarget;
+        const { label: sourceLabel, types: sourceTypes } = nodeSource;
         return {
           context,
           type,
           source: {
             id: sourceId,
             title: sourceLabel,
-            type: sourceType,
+            types: sourceTypes,
           },
           target: {
             id: targetId,
             title: targetLabel,
-            type: targetType,
+            types: targetTypes,
           },
         };
       })
@@ -181,20 +181,20 @@ module.exports = class Link {
         if (!nodeTarget || !nodeSource) {
           return undefined;
         }
-        const { label: targetLabel, type: targetType } = nodeTarget;
-        const { label: sourceLabel, type: sourceType } = nodeSource;
+        const { label: targetLabel, types: targetTypes } = nodeTarget;
+        const { label: sourceLabel, types: sourceTypes } = nodeSource;
         return {
           context,
           type,
           source: {
             id: sourceId,
             title: sourceLabel,
-            type: sourceType,
+            types: sourceTypes,
           },
           target: {
             id: targetId,
             title: targetLabel,
-            type: targetType,
+            types: targetTypes,
           },
         };
       })

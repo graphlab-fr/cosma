@@ -6,9 +6,9 @@ const { startServer: webpackServer } = require('./utils/webpack');
   try {
     console.log('Download some files...');
     await cosmocope(tempDirPath);
-    await cosmocopeTimeline();
-    await cosmocopeTitleId();
-    console.log('Start devserver...');
+    // await cosmocopeTimeline();
+    // await cosmocopeTitleId();
+    // console.log('Start devserver...');
     await webpackServer('development');
   } catch (err) {
     console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err);

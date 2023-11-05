@@ -31,17 +31,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
       for (let i = 0; i < Math.min(maxResultNb, resultList.length); i++) {
         let {
-          item: { id, label, type },
+          item: { id, label, types },
         } = resultList[i];
 
         const resultElement = document.createElement('li');
         resultElement.classList.add('search-result-item');
         resultElement.innerHTML = `
         <a href="#${id}">
-          <span
-            class="record-type-point"
-            style="color:var(--n_${type})"
-          >⬤</span>
+          <span class="record-type-points">
+              ${types.map((type) => `<span style="color:var(--n_${type})">⬤</span>`).join(' ')}
+          </span>
           <span class="record-title">${label}</span>
         </a>`;
 
