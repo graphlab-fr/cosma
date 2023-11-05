@@ -291,7 +291,7 @@ module.exports = class Cosmoscope extends Graph {
       links.push(...Link.getWikiLinksFromFileContent(id, content));
 
       let { title, types } = file.metas;
-      nodes.push(new Node(id, title, types[0]));
+      nodes.push(new Node(id, title, types));
     }
 
     /**
@@ -342,7 +342,7 @@ module.exports = class Cosmoscope extends Graph {
 
     referenceRecords.forEach(({ targets, contexts }, key) => {
       nodes.push(
-        new Node(key, bibliography.library[key]['title'] || '', opts['references_type_label']),
+        new Node(key, bibliography.library[key]['title'] || '', [opts['references_type_label']]),
       );
       Array.from(targets).forEach((id) =>
         links.push(

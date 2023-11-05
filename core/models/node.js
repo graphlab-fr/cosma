@@ -98,7 +98,7 @@ module.exports = class Node {
           );
           break;
       }
-      return new Node(id, title, types[0], fill, colorStroke, highlight, size, 2, begin, end);
+      return new Node(id, title, types, fill, colorStroke, highlight, size, 2, begin, end);
     });
   }
 
@@ -119,7 +119,7 @@ module.exports = class Node {
   constructor(
     id,
     label,
-    type = 'undefined',
+    types = ['undefined'],
     fill,
     colorStroke,
     highlight,
@@ -130,7 +130,7 @@ module.exports = class Node {
   ) {
     this.id = id;
     this.label = label;
-    this.type = type;
+    this.types = types;
     this.fill = fill;
     this.colorStroke = colorStroke;
     this.highlight = highlight;

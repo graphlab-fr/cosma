@@ -248,7 +248,7 @@ module.exports = class Record {
       throw new Error('Need instance of Config to process');
     }
 
-    const nodes = data.map(({ id, title, types }) => new Node(id, title, types[0]));
+    const nodes = data.map(({ id, title, types }) => new Node(id, title, types));
 
     return data.map((line) => {
       const { id, title, content, types, metas, tags, references, begin, end, thumbnail } = line;

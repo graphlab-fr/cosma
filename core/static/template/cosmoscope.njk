@@ -116,7 +116,11 @@
                 {% for record in records %}
                 <li data-index="{{ record.id }}" style="order: {{ loop.index }}">
                     <a href="#{{ record.id }}">
-                        <span class="record-type-point" style="color: var(--n_{{ record.types[0] | slugify }});">⬤</span>
+                        <span class="record-type-points">
+                            {% for type in record.types %}
+                            <span style="color: var(--n_{{ type | slugify }});">⬤</span>
+                            {% endfor %}
+                        </span>
                         <span>{{ record.title }}</span>
                     </a>
                 </li>
@@ -330,7 +334,11 @@
                         {% for link in record.links %}
                         <li data-target-id="{{ link.target.id }}">
                             <a href="#{{ link.target.id }}">
-                                <span class="record-type-point" style="color: var(--n_{{ link.target.type | slugify }});">⬤</span>
+                                <span class="record-type-points">
+                                    {% for type in link.target.types %}
+                                    <span style="color: var(--n_{{ type | slugify }});">⬤</span>
+                                    {% endfor %}
+                                </span>
                                 {% if link.type !== 'undefined' %}
                                 <span class="link-type">({{ link.type }})</span>
                                 {% endif %}
@@ -358,7 +366,11 @@
                         {% for backlink in record.backlinks %}
                         <li data-target-id="{{ backlink.source.id }}">
                             <a href="#{{ backlink.source.id }}">
-                                <span class="record-type-point" style="color: var(--n_{{ backlink.source.type | slugify }});">⬤</span>
+                                <span class="record-type-points">
+                                    {% for type in backlink.source.types %}
+                                    <span style="color: var(--n_{{ type | slugify }});">⬤</span>
+                                    {% endfor %}
+                                </span>
                                 {% if backlink.type !== 'undefined' %}
                                 <span class="link-type">({{ backlink.type }})</span>
                                 {% endif %}
