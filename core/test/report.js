@@ -280,7 +280,7 @@ describe('Report', () => {
       undefined,
       undefined,
       bibliographicRecords,
-    ).replaceBibliographicText(bibliography);
+    ).setBibliography(bibliography);
     Report.listErrors.size.should.be.equal(1);
     Report.listErrors.has(1).should.be.true;
     const report = Report.listErrors.get(1);
