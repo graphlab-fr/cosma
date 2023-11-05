@@ -35,6 +35,9 @@ for (let i = 0; i < 5; i++) {
 
 let config = Config.get(path.join(__dirname, '../static/fake/config.yml'));
 const { record_types: recordTypes } = config.opts;
+const recordTypesWithoutReferences = Object.keys(recordTypes).filter(
+  (type) => type !== config.opts['references_type_label'],
+);
 config.opts['images_origin'] = tempDirPath;
 config.opts['csl'] = path.join(tempDirPath, 'iso690.csl');
 config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml');
@@ -90,7 +93,7 @@ function getRecords(nb, opts = config.opts) {
       metas: {
         id: fileId,
         title: faker.name.jobTitle(),
-        types: faker.helpers.arrayElements(Object.keys(recordTypes), 2),
+        types: faker.helpers.arrayElements(recordTypesWithoutReferences, 2),
         tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
         thumbnail: undefined,
         references: ['Masure_2014'],
@@ -124,7 +127,7 @@ function fakeView({ withFilters, withTags, withFocus, withThisRecordId }) {
   if (withFilters) {
     url.searchParams.set(
       'filters',
-      faker.helpers.arrayElements(Object.keys(recordTypes), withFilters).join('-'),
+      faker.helpers.arrayElements(recordTypesWithoutReferences, withFilters).join('-'),
     );
   }
   if (withTags) {
