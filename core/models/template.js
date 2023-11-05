@@ -38,7 +38,7 @@ module.exports = class Template {
    * @returns {String}
    */
 
-  static markLinkContext(recordLinks, linkSymbol) {
+  static markLinkContext(recordLinks) {
     return recordLinks.map((link) => {
       if (link.context.length > 0) {
         link.context = link.context.join('\n\n');

@@ -335,9 +335,11 @@
                                 <span class="link-type">({{ link.type }})</span>
                                 {% endif %}
                                 <span>{{ link.target.title }}</span>
+                                {% if link.context !== '' %}
                                 <div class="record-links-context {{ "hover" if graph.config.link_context === 'tooltip' }}">
                                     {{ link.context | convertLinks(graph.config, link.target.id) | markdown | safe }}
                                 </div>
+                                {% endif %}
                             </a>
                         </li>
                         {% endfor %}
@@ -361,9 +363,11 @@
                                 <span class="link-type">({{ backlink.type }})</span>
                                 {% endif %}
                                 <span>{{ backlink.source.title }}</span>
+                                {% if backlink.context !== '' %}
                                 <div class="record-links-context {{ "hover" if graph.config.link_context === 'tooltip' }}">
                                     {{ backlink.context | convertLinks(graph.config, record.id) | markdown | safe }}
                                 </div>
+                                {% endif %}
                             </a>
                         </li>
                         {% endfor %}
