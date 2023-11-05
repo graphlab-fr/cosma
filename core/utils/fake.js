@@ -104,7 +104,7 @@ function getRecords(nb, opts = config.opts) {
     });
   }
 
-  return Cosmoscope.getRecordsFromFiles(files, opts);
+  return Cosmoscope.getRecordsFromFiles(files, true, opts);
 }
 
 module.exports = {

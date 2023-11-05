@@ -38,7 +38,7 @@ module.exports = class Graph {
    * ```
    * const { files_origin: filesPath } = Config.get();
    * const files = Cosmoscope.getFromPathFiles(filesPath);
-   * const records = Cosmoscope.getRecordsFromFiles(files, config.opts);
+   * const records = Cosmoscope.getRecordsFromFiles(files, true, config.opts);
    * const graph = new Cosmocope(records, config.opts, ['sample']);
    * ```
    */

@@ -484,7 +484,7 @@ isDead: false
         filePath.should.be.a.file();
 
         const files = Cosmocope.getFromPathFiles(tempFolderPath);
-        const record = Cosmocope.getRecordsFromFiles(files, opts).find(
+        const record = Cosmocope.getRecordsFromFiles(files, false, opts).find(
           ({ title }) => title === fileName,
         );
         assert.deepEqual(record, {
