@@ -542,8 +542,8 @@ module.exports = class Config {
       .filter((option) => {
         return typeof this.opts[option] !== 'string';
       })
-      .map((invalidBool) => {
-        return invalidBool;
+      .map((invalidString) => {
+        return invalidString;
       });
 
     const record_types = Config.isValidRecordTypes(this.opts['record_types'])
