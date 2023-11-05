@@ -222,7 +222,7 @@ function cosmocopeTitleId() {
     },
   ];
 
-  const records = Cosmoscope.getRecordsFromFiles(files, fakeConfig.opts);
+  const records = Cosmoscope.getRecordsFromFiles(files, true, fakeConfig.opts);
 
   return new Promise(async (resolve, reject) => {
     const graph = new Cosmoscope(records, fakeConfig.opts),
