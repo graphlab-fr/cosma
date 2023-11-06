@@ -314,15 +314,17 @@ module.exports = class Cosmoscope extends Graph {
           ...Bibliography.getBibliographicRecordsFromList(file.metas.references),
         ];
 
+        const fileId = file.metas['id'] || file.metas['title'].toLowerCase();
+
         bibliographicRecords.forEach(({ ids, contexts }) => {
           ids.forEach((id) => {
             if (referenceRecords.has(id)) {
-              referenceRecords.get(id).contexts.set(file.metas.id, contexts);
-              referenceRecords.get(id).targets.add(file.metas.id);
+              referenceRecords.get(id).contexts.set(fileId, contexts);
+              referenceRecords.get(id).targets.add(fileId);
             } else {
               referenceRecords.set(id, {
-                contexts: new Map([[file.metas.id, contexts]]),
-                targets: new Set([file.metas.id]),
+                contexts: new Map([[fileId, contexts]]),
+                targets: new Set([fileId]),
               });
             }
           });
