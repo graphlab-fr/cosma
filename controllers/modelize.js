@@ -83,7 +83,11 @@ module.exports = async function (options) {
   switch (originType) {
     case 'directory':
       const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
-      records = Cosmoscope.getRecordsFromFiles(files, options['citeproc'], config.opts);
+      records = Cosmoscope.getRecordsFromFiles(
+        files,
+        optionsTemplate.includes('citeproc'),
+        config.opts,
+      );
       break;
     case 'online':
       const { downloadFile } = require('../core/utils/misc');
