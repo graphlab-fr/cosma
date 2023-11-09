@@ -2,6 +2,10 @@
 title: Changelog
 ---
 
+# v2.1.2
+
+- Reverted a change from v2.1.1: the Links section in the record panel of the cosmoscope is now uncollapsed again.
+
 # v2.1.1
 
 ## Additions
