@@ -317,7 +317,9 @@ module.exports = class Cosmoscope extends Graph {
         const fileId = file.metas['id'] || file.metas['title'].toLowerCase();
 
         bibliographicRecords.forEach(({ ids, contexts }) => {
-          ids.forEach((id) => {
+          for (const id of ids) {
+            if (!bibliography.library[id]) continue;
+
             if (referenceRecords.has(id)) {
               referenceRecords.get(id).contexts.set(fileId, contexts);
               referenceRecords.get(id).targets.add(fileId);
@@ -327,7 +329,7 @@ module.exports = class Cosmoscope extends Graph {
                 targets: new Set([fileId]),
               });
             }
-          });
+          }
         });
       }
     }
