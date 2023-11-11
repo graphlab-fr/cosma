@@ -637,7 +637,9 @@ module.exports = class Record {
       for (const id of unknowedIds) {
         new Report(this.id, this.title, 'error').aboutUnknownBibliographicReference(this.title, id);
       }
-      record.forEach((r) => bibliographyHtml.add(r));
+      if (record) {
+        record.forEach((r) => bibliographyHtml.add(r));
+      }
     }
 
     this.bibliography = Array.from(bibliographyHtml).join('');
