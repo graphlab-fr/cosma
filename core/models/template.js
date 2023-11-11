@@ -219,6 +219,8 @@ module.exports = class Template {
       input = input.replace(Link.regexWikilink, (match, _, type, targetId, __, text) => {
         const record = graph.records.find(({ id }) => id === targetId.toLowerCase());
 
+        if (!record) return match;
+
         const isNumbers = !isNaN(Number(targetId));
 
         let linkContent;
@@ -253,27 +255,26 @@ module.exports = class Template {
            * { 'Fowler 2003' => 'Fowler_2003' }
            * ```
            */
-          const idsDictionnary = new Map(
-            citationItems.map((item) => {
-              // remove page or chapter anotations: only keep id
-              item = { id: item.id };
-              return [
-                bibliography.citeproc
-                  // get "(Fowler 2003)"
-                  .processCitationCluster(
-                    {
-                      citationItems: [item],
-                      properties: { noteIndex: index + 1 },
-                    },
-                    [],
-                    [],
-                  )[1][0][1]
-                  // get "Fowler 2003"
-                  .slice(1, -1),
-                item.id,
-              ];
-            }),
-          );
+          const idsDictionnary = new Map();
+          for (const item of citationItems) {
+            const { id } = item;
+            if (!bibliography.library[id]) continue;
+
+            const idAsTextQuote = bibliography.citeproc
+              // get "(Fowler 2003)"
+              .processCitationCluster(
+                {
+                  citationItems: [item],
+                  properties: { noteIndex: index + 1 },
+                },
+                [],
+                [],
+              )[1][0][1]
+              // get "Fowler 2003"
+              .slice(1, -1);
+
+            idsDictionnary.set(idAsTextQuote, item.id);
+          }
 
           /**
            * Quoting marks to render on text
@@ -303,7 +304,9 @@ module.exports = class Template {
             });
           });
 
-          input = input.replace(quoteText, cluster);
+          if (cluster) {
+            input = input.replace(quoteText, cluster);
+          }
         });
       }
 
