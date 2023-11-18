@@ -40,7 +40,7 @@ module.exports = class Config {
     focus_max: 2,
     record_types: { undefined: { fill: '#858585', stroke: '#858585' } },
     link_types: { undefined: { stroke: 'simple', color: '#e1e1e1' } },
-    references_as_nodes: true,
+    references_as_nodes: false,
     references_type_label: 'references',
     record_filters: [],
     graph_background_color: '#ffffff',
