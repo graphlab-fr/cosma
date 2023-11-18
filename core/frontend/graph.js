@@ -135,15 +135,7 @@ elts.nodes = svgSub
   .append('g')
   .attr('data-node', (d) => d.id)
   .append('a')
-  .attr('href', (d) => '#' + d.id);
-
-/** @type {d3.Selection<SVGCircleElement, any, SVGElement, any>} */
-elts.circles = elts.nodes
-  .append('circle')
-  .attr('r', (d) => d.size)
-  .attr('fill', (d) => d.fill)
-  .attr('stroke', (d) => d.colorStroke)
-  .attr('stroke-width', (d) => d.strokeWidth)
+  .attr('href', (d) => '#' + d.id)
   .call(
     d3
       .drag()
@@ -162,11 +154,7 @@ elts.circles = elts.nodes
         d.fy = null;
       }),
   )
-  .on('mouseenter', function (nodeMetas) {
-    if (!graphProperties.graph_highlight_on_hover) {
-      return;
-    }
-
+  .on('mouseenter', (nodeMetas) => {
     let nodesIdsHovered = [nodeMetas.id];
 
     const linksToModif = elts.links.filter(function (link) {
@@ -198,21 +186,56 @@ elts.circles = elts.nodes
       return true;
     });
 
-    nodesHovered.selectAll('circle').attr('stroke', (d) => d.highlight);
-    linksHovered.attr('stroke', (d) => d.colorHighlight);
+    nodesHovered.selectAll('circle').style('stroke', 'var(--highlight)');
+    linksHovered.style('stroke', 'var(--highlight)');
     nodesToModif.attr('opacity', 0.5);
     linksToModif.attr('stroke-opacity', 0.5);
   })
-  .on('mouseout', function () {
-    if (!graphProperties.graph_highlight_on_hover) {
-      return;
+  .on('mouseout', () => {
+    const { hash } = new URL(window.location);
+    let selectedNodeId;
+    if (hash) {
+      selectedNodeId = decodeURI(hash.substring(1));
     }
 
-    elts.nodes.selectAll('circle').attr('stroke', (d) => d.colorStroke);
-    elts.links.attr('stroke', (d) => d.color);
-    elts.nodes.attr('opacity', 1);
-    elts.links.attr('stroke-opacity', 1);
+    elts.nodes
+      .filter(({ id }) => {
+        if (selectedNodeId) {
+          return id !== selectedNodeId;
+        }
+        return true;
+      })
+      .selectAll('circle')
+      .style('stroke', null);
+    elts.links
+      .filter((link) => {
+        if (selectedNodeId) {
+          return link.source.id !== selectedNodeId && link.target.id !== selectedNodeId;
+        }
+        return true;
+      })
+      .style('stroke', null);
+    elts.nodes.attr('opacity', null);
+    elts.links.attr('stroke-opacity', null);
   });
+
+elts.nodes.append('g').each(function (d) {
+  const node = d3.select(this);
+
+  if (d.types.length === 1) {
+    node
+      .append('circle')
+      .attr('r', (d) => d.size)
+      .attr('fill', (d) => graphProperties['record_types'][d.types[0]].fill);
+  } else {
+    generateDividedCircle(d.types.length, d.size).forEach((coords, i) => {
+      node
+        .append('path')
+        .attr('d', coords)
+        .attr('fill', (d) => graphProperties['record_types'][d.types[i]].fill);
+    });
+  }
+});
 
 /** @type {d3.Selection<SVGTextElement, Node, SVGGElement, any>} */
 elts.labels = elts.nodes
@@ -536,6 +559,29 @@ function translate() {
   ];
 
   svgSub.attr('viewBox', viewBox).attr('preserveAspectRatio');
+}
+
+/**
+ * @param {number} nbParts
+ * @param {number} diameter
+ * @returns {string[]}
+ */
+
+function generateDividedCircle(nbParts, diameter) {
+  const coords = [];
+
+  const angle = 360 / nbParts;
+
+  for (let i = 0; i < nbParts; i++) {
+    const startX = diameter * Math.cos((i * angle * Math.PI) / 180);
+    const startY = diameter * Math.sin((i * angle * Math.PI) / 180);
+    const endX = diameter * Math.cos(((i + 1) * angle * Math.PI) / 180);
+    const endY = diameter * Math.sin(((i + 1) * angle * Math.PI) / 180);
+
+    coords.push(`M0,0 L${startX},${startY} A${diameter},${diameter} 0 0,1 ${endX},${endY} Z`);
+  }
+
+  return coords;
 }
 
 const nodes = elts.nodes.data();

@@ -80,7 +80,7 @@ module.exports = class Node {
   static getNodesFromRecords(records, { linksExtent, backlinksExtent }) {
     return records.map((record) => {
       const { id, title, types, links, backlinks, begin, end, thumbnail, config } = record;
-      const { fill, colorStroke, highlight } = Node.getNodeStyle(config, types[0], thumbnail);
+      // const { fill, colorStroke, highlight } = Node.getNodeStyle(config, types[0], thumbnail);
       const { node_size_method, node_size, node_size_min, node_size_max } = config.opts;
       let size;
       switch (node_size_method) {
@@ -98,7 +98,7 @@ module.exports = class Node {
           );
           break;
       }
-      return new Node(id, title, types, fill, colorStroke, highlight, size, 2, begin, end);
+      return new Node(id, title, types, undefined, undefined, undefined, size, 2, begin, end);
     });
   }
 
