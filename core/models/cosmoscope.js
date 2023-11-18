@@ -321,11 +321,14 @@ module.exports = class Cosmoscope extends Graph {
             if (!bibliography.library[id]) continue;
 
             if (referenceRecords.has(id)) {
-              referenceRecords
-                .get(id)
-                .contexts.get(fileId)
-                .push(...contexts);
-              referenceRecords.get(id).targets.add(fileId);
+              const ref = referenceRecords.get(id);
+              ref.targets.add(fileId);
+
+              if (ref.contexts.has(fileId)) {
+                ref.contexts.get(fileId).push(...contexts);
+              } else {
+                ref.contexts.set(fileId, contexts);
+              }
             } else {
               referenceRecords.set(id, {
                 contexts: new Map([[fileId, contexts]]),
