@@ -1,0 +1,43 @@
+Cosma is made primarily by Arthur Perret and Guillaume Brioudes. Arthur is in charge of the design and documentation of Cosma. Guillaume authors most of the source code and maintains the software.
+
+Contributors:
+
+Cosma was developed initially as part of the HyperOtlet research programme. Olivier Le Deuff suggested the name and Clément Borel created the logo; both of them worked on the design of the software in the early stages.
+
+Cosma 2.0 was developed with support from the Hyperhum@in research programme, with design suggestions by David Pucheu.
+
+Updates to version 2.0 were developed with support from the AlgoJ research programme, with design suggestions by Olivier Le Deuff and Rayya Roumanos.
+
+Dependencies:
+
+Cosma uses the following libraries:
+
+- Axios : 0.27.2
+- Babel-loader : 9.1.0
+- Babel/core : 7.20.5
+- Babel/preset-env : 7.20.2
+- Chai : 4.3.6
+- Chai-fs : 2.0.0
+- Citeproc : 2.4.62
+- Csv-parse : 5.3.0
+- Cypress : 10.9.0
+- D3 : 4.13.0
+- D3-array : 2.12.1
+- D3-scale : 3.3.0
+- Faker-js/faker : 7.5.0
+- Fuse.js : 6.6.2
+- Glob : 7.2.0
+- Graphology : 0.25.1
+- Graphology-traversal : 0.3.1
+- Hotkeys-js : 3.10.0
+- Markdown-it : 13.0.1
+- Markdown-it-attrs : 4.1.4
+- Mocha : 10.0.0
+- Nunjucks : 3.2.3
+- Prettier : 2.8.0
+- Slugify : 1.6.5
+- Webpack : 5.74.0
+- Webpack-cli : 4.10.0
+- Webpack-dev-server : 4.11.1
+- Yaml : 2.2.1
+- Zettlr/citr : 1.2.2
