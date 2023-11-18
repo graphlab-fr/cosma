@@ -147,6 +147,8 @@ entity type | | string |
 link type | | string | 
 `stroke` | Link type stroke style | `single` (solid line), `dash` (dashed line), `dash` (dotted line), `double` (two parallel lines)
 `color` | Link type color | HTML color | 
+`references_as_nodes` | Treat references as graph nodes when using `cosma modelize --citeproc` |`true` or `false` | `false` |
+`references_type_label` | Name of the record type for bibliographic references when `references_as_nodes: true` | string | |
 `record_filters` | List of metadata filters | | 
 metadata filter | Entities for which this metadata is present will be excluded when creating a cosmoscope | type, keyword, metadata declared in `record_metas` | 
 `graph_background_color` | Color used in the background of the graph | HTML color |
@@ -209,6 +211,8 @@ link_types:
   undefined:
     stroke: simple
     color: '#e1e1e1'
+references_as_nodes: false
+references_type_label: references
 record_filters: []
 graph_background_color: '#ffffff'
 graph_highlight_color: '#ff6a6a'
@@ -725,6 +729,27 @@ GOODY, Jack, 1977. The Domestication of the Savage Mind.
 ```
 
 The CSL JSON data matching the cited references is embedded in the cosmoscope. You can view and download this data in the cosmoscope by clicking on the “Data” button at the bottom of the left-hand side menu. You can also access it from within the cosmoscope source code, under the `<article id="citation-references">` tag.
+
+## Treating references as graph nodes
+
+When configuration setting `citations_as_nodes` is set to `true`, it modifies the behavior of the `--citeproc` option of `cosma modelize`, making it so that bibliographic references become nodes in the graph: each cited reference is treated as a node and each citation is treated as a link; for each cited reference, a bibliographic record is automatically generated in the cosmoscope; each bibliographic record is presented with contextualized backlinks which correspond to citations of that bibliographic reference in other records.
+
+To use this feature, you must do three things:
+
+1. set `citations_as_nodes` to `true` in the project's configuration;
+2. define a value for `references_type_label` (this is a new setting introduced alongside `citations_as_nodes` in this release);
+3. create a record type with the same name as the value for `references_type_label`.
+
+For instance:
+
+```
+citations_as_nodes: true
+references_type_label: "référence"
+record_types:
+  référence:
+    stroke: "#6C6C6C"
+    fill: "#6C6C6C"
+```
 
 # Using the cosmoscope
 
