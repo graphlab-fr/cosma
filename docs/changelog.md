@@ -2,6 +2,12 @@
 title: Changelog
 ---
 
+# v2.2.1
+
+## Additions
+
+- Added an `AUTHORS` file.
+
 # v2.2.0
 
 ## Additions
