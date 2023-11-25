@@ -98,7 +98,19 @@ module.exports = class Node {
           );
           break;
       }
-      return new Node(id, title, types, undefined, undefined, undefined, size, 2, begin, end);
+      return new Node(
+        id,
+        title,
+        types,
+        undefined,
+        undefined,
+        undefined,
+        size,
+        2,
+        begin,
+        end,
+        thumbnail,
+      );
     });
   }
 
@@ -114,6 +126,7 @@ module.exports = class Node {
    * @param {array} focus
    * @param {number} begin
    * @param {number} end
+   * @param {string} thumbnail
    */
 
   constructor(
@@ -127,6 +140,7 @@ module.exports = class Node {
     strokeWidth,
     begin,
     end,
+    thumbnail,
   ) {
     this.id = id;
     this.label = label;
@@ -138,6 +152,7 @@ module.exports = class Node {
     this.strokeWidth = strokeWidth;
     this.begin = begin;
     this.end = end;
+    this.thumbnail = thumbnail;
   }
 };
 
