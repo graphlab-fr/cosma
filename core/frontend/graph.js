@@ -234,12 +234,21 @@ elts.nodes.append('g').each(function (d) {
     node
       .append('circle')
       .attr('r', (d) => d.size)
+      .attr('stroke-width', '2')
+      .attr('stroke', (d) => getFill(graphProperties['record_types'][d.types[i]].fill))
       .attr('fill', (d) => getFill(graphProperties['record_types'][d.types[0]].fill));
   } else {
-    generateDividedCircle(d.types.length, d.size).forEach((coords, i) => {
+    generateDividedCircle(d.types.length, d.size).forEach(([centerCoords, borderCoords], i) => {
       node
         .append('path')
-        .attr('d', coords)
+        .attr('d', borderCoords)
+        .attr('stroke-width', 2)
+        .attr('stroke-alignment', 'outer')
+        .attr('stroke', (d) => graphProperties['record_types'][d.types[i]].stroke)
+        .attr('fill', 'white');
+      node
+        .append('path')
+        .attr('d', centerCoords)
         .attr('fill', (d) => getFill(graphProperties['record_types'][d.types[i]].fill));
     });
   }
@@ -572,7 +581,7 @@ function translate() {
 /**
  * @param {number} nbParts
  * @param {number} diameter
- * @returns {string[]}
+ * @returns {[string, string][]}
  */
 
 function generateDividedCircle(nbParts, diameter) {
@@ -586,7 +595,10 @@ function generateDividedCircle(nbParts, diameter) {
     const endX = diameter * Math.cos(((i + 1) * angle * Math.PI) / 180);
     const endY = diameter * Math.sin(((i + 1) * angle * Math.PI) / 180);
 
-    coords.push(`M0,0 L${startX},${startY} A${diameter},${diameter} 0 0,1 ${endX},${endY} Z`);
+    coords.push([
+      `M0,0 L${startX},${startY} A${diameter},${diameter} 0 0,1 ${endX},${endY} Z`,
+      `M${startX},${startY} A${diameter},${diameter} 0 0,1 ${endX},${endY}`,
+    ]);
   }
 
   return coords;
