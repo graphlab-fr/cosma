@@ -113,17 +113,20 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
   const {
     config: fakeConfig,
     getRecords,
-    nodeThumbnails,
     images: recordImages,
+    typesThumbnails,
   } = require('./fake');
   return new Promise(async (resolve, reject) => {
     Promise.all([
       fetchBibliographyFiles(),
       fetchFakeImages(recordImages),
-      fetchFakeThumbnails(nodeThumbnails),
+      fetchFakeThumbnails(typesThumbnails),
     ])
-      .then(() => {
+      .then(async () => {
         const records = getRecords(20);
+
+        const nodeThumbnails = records.map(({ thumbnail }) => thumbnail).filter(Boolean);
+        await fetchFakeThumbnails(nodeThumbnails);
 
         const graph = new Cosmoscope(records, fakeConfig.opts, ['fake']),
           { html } = new Template(graph, templateOptions);
