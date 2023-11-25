@@ -222,6 +222,8 @@ elts.nodes = svgSub
     elts.links.attr('stroke-opacity', null);
   });
 
+/** Draw node content */
+
 elts.nodes.append('g').each(function (d) {
   const node = d3.select(this);
 
@@ -232,27 +234,47 @@ elts.nodes.append('g').each(function (d) {
     return fill;
   };
 
+  /**
+   * Append circle on node
+   * @param {string} stroke Stroke color
+   * @param {string} fill Fill color or image link
+   * @returns {void}
+   */
+
+  const drawSimpleCircle = (stroke, fill) =>
+    node
+      .append('circle')
+      .attr('r', d.size)
+      .attr('stroke-width', strokeWidth)
+      .attr('stroke', stroke)
+      .attr('fill', fill);
+
+  /**
+   * Append circle fragment on node.
+   * Use it as background of circle.
+   * @param {string} coords value of <path d="" />
+   * @param {string} fill Fill color or image link
+   * @returns {void}
+   */
+
+  const drawBorders = (coords, stroke) =>
+    node
+      .append('path')
+      .attr('d', coords)
+      .attr('stroke-width', strokeWidth)
+      .attr('stroke', stroke)
+      .style('fill', 'var(--background-gray)');
+
   if (d.thumbnail) {
     if (d.types.length === 1) {
       const type = graphProperties['record_types'][d.types[0]];
-
-      node
-        .append('circle')
-        .attr('r', d.size)
-        .attr('stroke-width', strokeWidth)
-        .attr('stroke', type.stroke)
-        .attr('fill', `url(#${d.thumbnail})`);
+      drawSimpleCircle(type.stroke, `url(#${d.thumbnail})`);
     } else {
-      generateDividedCircle(d.types.length, d.size).forEach(([, borderCoords], i) => {
+      getCicleFragmentsCoords(d.types.length, d.size).forEach(([, borderCoords], i) => {
         const type = graphProperties['record_types'][d.types[i]];
-
-        node
-          .append('path')
-          .attr('d', borderCoords)
-          .attr('stroke-width', strokeWidth)
-          .attr('stroke', type.stroke)
-          .attr('fill', 'white');
-
+        /** Background: borders with one color per type and neutral white background */
+        drawBorders(borderCoords, type.stroke);
+        /** Foreground: circle contains thumbnail */
         node.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
       });
     }
@@ -261,23 +283,13 @@ elts.nodes.append('g').each(function (d) {
 
   if (d.types.length === 1) {
     const type = graphProperties['record_types'][d.types[0]];
-
-    node
-      .append('circle')
-      .attr('r', d.size)
-      .attr('stroke-width', strokeWidth)
-      .attr('stroke', type.fill)
-      .attr('fill', getFill(type.fill));
+    drawSimpleCircle(type.fill, getFill(type.fill));
   } else {
-    generateDividedCircle(d.types.length, d.size).forEach(([centerCoords, borderCoords], i) => {
+    getCicleFragmentsCoords(d.types.length, d.size).forEach(([centerCoords, borderCoords], i) => {
       const type = graphProperties['record_types'][d.types[i]];
-
-      node
-        .append('path')
-        .attr('d', borderCoords)
-        .attr('stroke-width', strokeWidth)
-        .attr('stroke', type.stroke)
-        .attr('fill', 'white');
+      /** Background: borders with one color per type and neutral white background */
+      drawBorders(borderCoords, type.stroke);
+      /** Foreground: circle fragment per type with color or image */
       node.append('path').attr('d', centerCoords).attr('fill', getFill(type.fill));
     });
   }
@@ -608,17 +620,18 @@ function translate() {
 }
 
 /**
- * @param {number} nbParts
- * @param {number} diameter
+ * Get values for <path d="" />, for each fragment of same circle
+ * @param {number} nbFragment Minimum two, to get two fragments
+ * @param {number} diameter Node size
  * @returns {[string, string][]}
  */
 
-function generateDividedCircle(nbParts, diameter) {
+function getCicleFragmentsCoords(nbFragment, diameter) {
   const coords = [];
 
-  const angle = 360 / nbParts;
+  const angle = 360 / nbFragment;
 
-  for (let i = 0; i < nbParts; i++) {
+  for (let i = 0; i < nbFragment; i++) {
     const startX = diameter * Math.cos((i * angle * Math.PI) / 180);
     const startY = diameter * Math.sin((i * angle * Math.PI) / 180);
     const endX = diameter * Math.cos(((i + 1) * angle * Math.PI) / 180);
