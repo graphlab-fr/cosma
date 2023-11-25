@@ -97,6 +97,7 @@ simulation.on('tick', function () {
 ------------------------------------------------------------*/
 
 const elts = {};
+const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
 
 /** @type {d3.Selection<SVGLineElement, Link, SVGElement, any>} */
 elts.links = svgSub
@@ -222,17 +223,24 @@ elts.nodes = svgSub
 elts.nodes.append('g').each(function (d) {
   const node = d3.select(this);
 
+  const getFill = (fill) => {
+    if (imageFileValidExtnames.has(fill.split('.').at(-1))) {
+      return `url(#${fill})`;
+    }
+    return fill;
+  };
+
   if (d.types.length === 1) {
     node
       .append('circle')
       .attr('r', (d) => d.size)
-      .attr('fill', (d) => graphProperties['record_types'][d.types[0]].fill);
+      .attr('fill', (d) => getFill(graphProperties['record_types'][d.types[0]].fill));
   } else {
     generateDividedCircle(d.types.length, d.size).forEach((coords, i) => {
       node
         .append('path')
         .attr('d', coords)
-        .attr('fill', (d) => graphProperties['record_types'][d.types[i]].fill);
+        .attr('fill', (d) => getFill(graphProperties['record_types'][d.types[i]].fill));
     });
   }
 });

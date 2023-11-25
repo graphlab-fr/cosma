@@ -532,8 +532,8 @@
                     <feComposite in="SourceGraphic" in2="a" result="xx" operator="xor"></feComposite>
                 </filter>
                 {% for thumbnail in nodeThumbnails %}
-                <pattern id="{{ thumbnail.name }}" class="thumnail-pattern" x="0%" y="0%" height="100%" width="100%" viewBox="0 0 512 512">
-                    <image x="0%" y="0%" width="512" height="512" xlink:href="{{ thumbnail.path | imgPathToBase64 }}"></image>
+                <pattern id="{{ thumbnail.name }}" class="thumnail-pattern" x="0" y="0" height="100%" width="100%" viewBox="0 0 1 1">
+                    <image x="0" y="0" width="1" height="1" href="{{ thumbnail.path | imgPathToBase64 }}" preserveAspectRatio="xMinYMid slice"></image>
                 </pattern>
                 {% endfor %}
             </defs>
