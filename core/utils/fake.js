@@ -50,7 +50,7 @@ config.opts['views'] = {
   withTags: fakeView({ withTags: 1 }),
   withFocus: fakeView({ withFocus: 1 }),
 };
-const nodeThumbnails = Array.from(config.getTypesRecords())
+const typesThumbnails = Array.from(config.getTypesRecords())
   .filter((type) => config.getFormatOfTypeRecord(type) === 'image')
   .map((type) => recordTypes[type]['fill']);
 const images = ['exemple-image.jpeg'];
@@ -111,7 +111,7 @@ module.exports = {
   config,
   getRecords,
   bib,
-  nodeThumbnails,
+  typesThumbnails,
   images,
 };
 
