@@ -12,14 +12,12 @@ body:
         Please be as accurate as possible when describing the issue.
         If you have encountered several bugs, please create a new issue for each one.
 
-  - type: dropdown
+  - type: textarea
     id: cosma-version
     attributes:
       label: What version of Cosma are you using?
       description: >
-        Please select the version number on which you observed the bug.
-      options:
-        - CLI 2.0.0
+        Please indicate the version number on which you observed the bug.
     validations:
       required: true
 
