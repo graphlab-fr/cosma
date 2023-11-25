@@ -127,7 +127,7 @@ if (graphProperties.graph_arrows === true) {
   elts.links.attr('marker-end', 'url(#arrow)');
 }
 
-const strokeWidth = 4;
+const strokeWidth = 2;
 
 /** @type {d3.Selection<SVGGElement, Node, SVGElement, any>} */
 elts.nodes = svgSub
@@ -157,7 +157,7 @@ elts.nodes = svgSub
         d.fy = null;
       }),
   )
-  .on('mouseenter', (nodeMetas) => {
+  .on('mouseover', (nodeMetas) => {
     let nodesIdsHovered = [nodeMetas.id];
 
     const linksToModif = elts.links.filter(function (link) {
@@ -189,7 +189,7 @@ elts.nodes = svgSub
       return true;
     });
 
-    nodesHovered.selectAll('circle').style('stroke', 'var(--highlight)');
+    nodesHovered.selectAll('.border').style('fill', 'var(--highlight)');
     linksHovered.style('stroke', 'var(--highlight)');
     nodesToModif.attr('opacity', 0.5);
     linksToModif.attr('stroke-opacity', 0.5);
@@ -208,8 +208,8 @@ elts.nodes = svgSub
         }
         return true;
       })
-      .selectAll('circle')
-      .style('stroke', null);
+      .selectAll('.border')
+      .style('fill', null);
     elts.links
       .filter((link) => {
         if (selectedNodeId) {
@@ -224,7 +224,7 @@ elts.nodes = svgSub
 
 /** Draw node content */
 
-elts.nodes.append('g').each(function (d) {
+elts.nodes.each(function (d) {
   const node = d3.select(this);
 
   const getFill = (fill) => {
@@ -241,57 +241,52 @@ elts.nodes.append('g').each(function (d) {
    * @returns {void}
    */
 
-  const drawSimpleCircle = (stroke, fill) =>
+  const drawSimpleCircle = (stroke, fill) => {
+    /** Background: color of type */
     node
       .append('circle')
-      .attr('r', d.size)
-      .attr('stroke-width', strokeWidth)
-      .attr('stroke', stroke)
-      .attr('fill', fill);
-
-  /**
-   * Append circle fragment on node.
-   * Use it as background of circle.
-   * @param {string} coords value of <path d="" />
-   * @param {string} fill Fill color or image link
-   * @returns {void}
-   */
-
-  const drawBorders = (coords, stroke) =>
-    node
-      .append('path')
-      .attr('d', coords)
-      .attr('stroke-width', strokeWidth)
-      .attr('stroke', stroke)
-      .style('fill', 'var(--background-gray)');
+      .attr('class', 'border')
+      .attr('r', d.size + 2)
+      .attr('fill', stroke);
+    /** Foreground: circle contains color or image */
+    node.append('circle').attr('r', d.size).attr('fill', fill);
+  };
 
   if (d.thumbnail) {
     if (d.types.length === 1) {
       const type = graphProperties['record_types'][d.types[0]];
       drawSimpleCircle(type.stroke, `url(#${d.thumbnail})`);
     } else {
-      getCicleFragmentsCoords(d.types.length, d.size).forEach(([, borderCoords], i) => {
-        const type = graphProperties['record_types'][d.types[i]];
-        /** Background: borders with one color per type and neutral white background */
-        drawBorders(borderCoords, type.stroke);
-        /** Foreground: circle contains thumbnail */
-        node.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
-      });
+      generatePathCoordinatesWithBorder(d.types.length, d.size, strokeWidth).forEach(
+        ({ border }, i) => {
+          const type = graphProperties['record_types'][d.types[i]];
+          /** Background: borders with one color per type */
+          node.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+        },
+      );
+      /** Background: neutral white color */
+      node.append('circle').attr('r', d.size).attr('fill', `var(--background-gray)`);
+      /** Foreground: circle contains thumbnail */
+      node.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
     }
     return;
   }
 
   if (d.types.length === 1) {
     const type = graphProperties['record_types'][d.types[0]];
-    drawSimpleCircle(type.fill, getFill(type.fill));
+    drawSimpleCircle(type.stroke, getFill(type.fill));
   } else {
-    getCicleFragmentsCoords(d.types.length, d.size).forEach(([centerCoords, borderCoords], i) => {
-      const type = graphProperties['record_types'][d.types[i]];
-      /** Background: borders with one color per type and neutral white background */
-      drawBorders(borderCoords, type.stroke);
-      /** Foreground: circle fragment per type with color or image */
-      node.append('path').attr('d', centerCoords).attr('fill', getFill(type.fill));
-    });
+    generatePathCoordinatesWithBorder(d.types.length, d.size, strokeWidth).forEach(
+      ({ segment, border }, i) => {
+        const type = graphProperties['record_types'][d.types[i]];
+        /** Background: borders with one color per type */
+        node.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+        /** Background: neutral white color */
+        node.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
+        /** Foreground: circle fragment per type with color or image */
+        node.append('path').attr('d', segment).attr('fill', getFill(type.fill));
+      },
+    );
   }
 });
 
@@ -323,6 +318,53 @@ elts.labels = elts.nodes
   .attr('y', (d) => d.size)
   .attr('dominant-baseline', 'middle')
   .attr('text-anchor', 'middle');
+
+/**
+ * Get values for <path d="" />, for each fragment of same circle
+ * @param {number} numSegments Minimum two, to get two fragments
+ * @param {number} diameter Node size
+ * @param {number} borderSize
+ * @returns {[string, string][]}
+ */
+
+function generatePathCoordinatesWithBorder(numSegments, diameter, borderSize) {
+  const centerX = 0;
+  const centerY = 0;
+  const coordinatesData = [];
+  const anglePerSegment = (2 * Math.PI) / numSegments;
+
+  for (let i = 0; i < numSegments; i++) {
+    const startAngle = i * anglePerSegment;
+    const endAngle = (i + 1) * anglePerSegment;
+
+    const startX = centerX + diameter * Math.cos(startAngle);
+    const startY = centerY + diameter * Math.sin(startAngle);
+
+    const endX = centerX + diameter * Math.cos(endAngle);
+    const endY = centerY + diameter * Math.sin(endAngle);
+
+    const pathData = `M ${startX} ${startY} A ${diameter} ${diameter} 0 0 1 ${endX} ${endY} L ${centerX} ${centerY} Z`;
+
+    // generate second path, larger than segment to become its border
+
+    const borderStartX = centerX + (diameter + borderSize) * Math.cos(startAngle);
+    const borderStartY = centerY + (diameter + borderSize) * Math.sin(startAngle);
+
+    const borderEndX = centerX + (diameter + borderSize) * Math.cos(endAngle);
+    const borderEndY = centerY + (diameter + borderSize) * Math.sin(endAngle);
+
+    const borderPathData = `M ${borderStartX} ${borderStartY} A ${diameter + borderSize} ${
+      diameter + borderSize
+    } 0 0 1 ${borderEndX} ${borderEndY} L ${centerX} ${centerY} Z`;
+
+    coordinatesData.push({
+      segment: pathData,
+      border: borderPathData,
+    });
+  }
+
+  return coordinatesData;
+}
 
 /** Functions
 ------------------------------------------------------------*/
@@ -617,33 +659,6 @@ function translate() {
   ];
 
   svgSub.attr('viewBox', viewBox).attr('preserveAspectRatio');
-}
-
-/**
- * Get values for <path d="" />, for each fragment of same circle
- * @param {number} nbFragment Minimum two, to get two fragments
- * @param {number} diameter Node size
- * @returns {[string, string][]}
- */
-
-function getCicleFragmentsCoords(nbFragment, diameter) {
-  const coords = [];
-
-  const angle = 360 / nbFragment;
-
-  for (let i = 0; i < nbFragment; i++) {
-    const startX = diameter * Math.cos((i * angle * Math.PI) / 180);
-    const startY = diameter * Math.sin((i * angle * Math.PI) / 180);
-    const endX = diameter * Math.cos(((i + 1) * angle * Math.PI) / 180);
-    const endY = diameter * Math.sin(((i + 1) * angle * Math.PI) / 180);
-
-    coords.push([
-      `M0,0 L${startX},${startY} A${diameter},${diameter} 0 0,1 ${endX},${endY} Z`,
-      `M${startX},${startY} A${diameter},${diameter} 0 0,1 ${endX},${endY}`,
-    ]);
-  }
-
-  return coords;
 }
 
 const nodes = elts.nodes.data();
