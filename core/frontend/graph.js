@@ -127,6 +127,8 @@ if (graphProperties.graph_arrows === true) {
   elts.links.attr('marker-end', 'url(#arrow)');
 }
 
+const strokeWidth = 4;
+
 /** @type {d3.Selection<SVGGElement, Node, SVGElement, any>} */
 elts.nodes = svgSub
   .append('g')
@@ -230,26 +232,53 @@ elts.nodes.append('g').each(function (d) {
     return fill;
   };
 
+  if (d.thumbnail) {
+    if (d.types.length === 1) {
+      const type = graphProperties['record_types'][d.types[0]];
+
+      node
+        .append('circle')
+        .attr('r', d.size)
+        .attr('stroke-width', strokeWidth)
+        .attr('stroke', type.stroke)
+        .attr('fill', `url(#${d.thumbnail})`);
+    } else {
+      generateDividedCircle(d.types.length, d.size).forEach(([, borderCoords], i) => {
+        const type = graphProperties['record_types'][d.types[i]];
+
+        node
+          .append('path')
+          .attr('d', borderCoords)
+          .attr('stroke-width', strokeWidth)
+          .attr('stroke', type.stroke)
+          .attr('fill', 'white');
+
+        node.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
+      });
+    }
+    return;
+  }
+
   if (d.types.length === 1) {
+    const type = graphProperties['record_types'][d.types[0]];
+
     node
       .append('circle')
-      .attr('r', (d) => d.size)
-      .attr('stroke-width', '2')
-      .attr('stroke', (d) => getFill(graphProperties['record_types'][d.types[i]].fill))
-      .attr('fill', (d) => getFill(graphProperties['record_types'][d.types[0]].fill));
+      .attr('r', d.size)
+      .attr('stroke-width', strokeWidth)
+      .attr('stroke', type.fill)
+      .attr('fill', getFill(type.fill));
   } else {
     generateDividedCircle(d.types.length, d.size).forEach(([centerCoords, borderCoords], i) => {
+      const type = graphProperties['record_types'][d.types[i]];
+
       node
         .append('path')
         .attr('d', borderCoords)
-        .attr('stroke-width', 2)
-        .attr('stroke-alignment', 'outer')
-        .attr('stroke', (d) => graphProperties['record_types'][d.types[i]].stroke)
+        .attr('stroke-width', strokeWidth)
+        .attr('stroke', type.stroke)
         .attr('fill', 'white');
-      node
-        .append('path')
-        .attr('d', centerCoords)
-        .attr('fill', (d) => getFill(graphProperties['record_types'][d.types[i]].fill));
+      node.append('path').attr('d', centerCoords).attr('fill', getFill(type.fill));
     });
   }
 });
