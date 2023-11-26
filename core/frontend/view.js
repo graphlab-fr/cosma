@@ -3,10 +3,6 @@ export default class View {
 
   static focusMode = false;
 
-  /** @type {string|number|undefined} */
-
-  static openedRecordId = undefined;
-
   static position = { x: 0, y: 0, zoom: 1 };
 }
 

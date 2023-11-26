@@ -8,7 +8,7 @@
 import * as d3 from 'd3';
 
 import View from './view';
-import { hideFromIndex, displayFromIndex } from './records';
+import { hideFromIndex, displayFromIndex, getRecordIdFromHash } from './records';
 import { setCounters } from './counter';
 import hotkeys from 'hotkeys-js';
 import filterPriority from './filterPriority';
@@ -195,11 +195,7 @@ elts.nodes = svgSub
     linksToModif.attr('stroke-opacity', 0.5);
   })
   .on('mouseout', () => {
-    const { hash } = new URL(window.location);
-    let selectedNodeId;
-    if (hash) {
-      selectedNodeId = decodeURI(hash.substring(1));
-    }
+    const selectedNodeId = getRecordIdFromHash();
 
     elts.nodes
       .filter(({ id }) => {

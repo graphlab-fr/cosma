@@ -4,6 +4,7 @@ import hotkeys from 'hotkeys-js';
 import { displayNodesAll, setNodesDisplaying } from './graph';
 import View from './view';
 import filterPriority from './filterPriority';
+import { getRecordIdFromHash } from './records';
 
 let graph = getGraphEngine();
 
@@ -54,7 +55,8 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function active() {
-    if (View.openedRecordId === undefined) {
+    const openedRecordId = getRecordIdFromHash();
+    if (openedRecordId === undefined) {
       checkbox.checked = false;
       return;
     }
@@ -69,7 +71,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function display() {
-    const nodeIdOrigin = View.openedRecordId;
+    const nodeIdOrigin = getRecordIdFromHash();
     const neighborsNodeIds = [];
 
     neighborsExtend(
