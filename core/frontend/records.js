@@ -12,11 +12,9 @@ window.openRecord = function (id) {
     return;
   }
 
-  const recordId = getRecordIdFromHash();
-
-  if (recordId) {
-    // hide last record
-    document.getElementById(recordId).classList.remove('active');
+  const lastActivatedRecord = document.querySelector('.record.active');
+  if (lastActivatedRecord) {
+    lastActivatedRecord.classList.remove('active');
   }
 
   // open records container
