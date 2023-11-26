@@ -525,7 +525,7 @@ window.displayNodeNetwork = function (nodeIds) {
 function highlightNodes(nodeIds) {
   const { nodes, links } = getNodeNetwork(nodeIds);
 
-  nodes.selectAll('circle').style('stroke', 'var(--highlight)');
+  nodes.selectAll('.border').style('fill', 'var(--highlight)');
   links.style('stroke', 'var(--highlight)');
 
   View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
@@ -542,7 +542,7 @@ function unlightNodes() {
 
   const { nodes, links } = getNodeNetwork(View.highlightedNodes);
 
-  nodes.selectAll('circle').style('stroke', null);
+  nodes.selectAll('.border').style('fill', null);
   links.style('stroke', null);
 
   View.highlightedNodes = [];
