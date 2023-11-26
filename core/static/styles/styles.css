@@ -531,12 +531,6 @@ a.record-link.highlight {
 
 .record main ul,
 .record main ol {
-  padding: 0;
-  list-style-position: inside;
-}
-
-.record main ul ul,
-.record main ol ol {
   padding-left: 2rem;
 }
 
