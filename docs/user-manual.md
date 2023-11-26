@@ -164,7 +164,6 @@ metadata filter | Entities for which this metadata is present will be excluded w
 `attraction_distance_max` | Maximum distance between nodes | Number between 200 and 800 | 250
 `attraction_vertical` | Additional attraction towards the vertical axis | Number between 0 (disabled) and 1 | 0
 `attraction_horizontal` | Additional attraction towards the horizontal axis | Number between 0 (disabled) and 1 | 0
-`views` | List of registered views (which can only be created with the GUI version) | list 
 `chronological_record_meta` | *deprecated* |  | 
 `record_metas` | List of metadata (present in the data source) to be included in the cosmoscope | list
 `generate_id` | Set `cosma record` to always automatically create identifiers, never create them, or ask for each record | `always`, `never` or `ask` | `always`
@@ -846,9 +845,10 @@ The alphabetical index of records in the Menu allows you to select a record from
 Record type filters, keywords and Focus mode all modify the display of the index. A record hidden by either of these features will not be accessible via the search engine. You can reset all these effects by clicking on the “Reset current view” button under Views in the Menu (shortcut: `Alt` + `R`).
 :::
 
-## Views
+## View
 
-A View is a state of the graph (selected form, active filters, focus mode, etc.) which can be accessed via a specific URL. <!-- À COMPLÉTER -->
+The view is the state of the cosmoscope at any time (selected record, active filters, focus mode, etc.). The view can be reset by clicking the “Reset the view” button in the “View” section of the left panel. The view can also be saved by clicking “Set URL to current view” then copying the URL, which can be used as a bookmark to access that view directly.
+
 
 # Sharing and publishing a cosmoscope
 

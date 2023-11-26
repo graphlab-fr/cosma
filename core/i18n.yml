@@ -34,26 +34,25 @@ left_panel:
 
   menu_views:
     title:
-      fr: Vues
-      en: Views
+      fr: Vue
+      en: View
     btn_reset:
-      fr: Retour à la vue par défaut
-      en: Back to default view
+      fr: Réinitialiser la vue
+      en: Reset the view
     btn_save:
-      fr: Appliquer cette vue à l'URL
-      en: Set the view to URL
-    btn_save_gui:
-      fr: Enregistrer cette vue
-      en: Save this view
+      fr: Appliquer la vue actuelle à l'URL
+      en: Set URL to current view
     tooltip:
       fr: >
-        Enregistre l'état actuel de l'interface
-        (types et mots-clés actifs, mode focus)
-        et crée un raccourci vers cet état dans le menu Vues.
+        Applique l'état actuel de l'interface
+        (fiche sélectionnée, filtres, focus…)
+        à l'URL, qui peut alors être utilisée
+        pour retrouver la vue actuelle.
       en: >
-        Save the current state of the interface
-        (selected node, types and keywords, focus)
-        and creates a shortcut to this state in the Views section.
+        Apply the current state of the interface
+        (selected record, filters, focus…)
+        to the URL, which can then be used to
+        access the current view.
 
   menu_controls:
     title:

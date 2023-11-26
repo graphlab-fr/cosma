@@ -131,7 +131,6 @@
         <details class="menu-view" open="open">
             <summary class="menu-title">
                 {{ translation.left_panel.menu_views.title[lang] }}
-                <span class="badge">{{ views | length }}</span>
             </summary>
 
             <button onclick="window.location.replace(window.location.pathname)">
@@ -139,11 +138,7 @@
             </button>
 
             <button id="view-save">
-                {% if guiContext %}
-                {{ translation.left_panel.menu_views.btn_save_gui[lang] }}
-                {% else %}
                 {{ translation.left_panel.menu_views.btn_save[lang] }}
-                {% endif %}
             </button>
 
             <span class="tooltip">?
