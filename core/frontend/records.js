@@ -40,6 +40,9 @@ window.openRecord = function (id) {
  */
 
 window.closeRecord = function () {
+  // remove hash from URL
+  history.pushState('', document.title, window.location.pathname);
+
   recordContainer.classList.remove('active');
   const selectedNode = document.getElementById(View.openedRecordId);
   View.openedRecordId = undefined;
@@ -54,17 +57,20 @@ hotkeys('escape', (e) => {
   closeRecord();
 });
 
-window.hashRecord = function () {
+function hashRecord() {
   const { hash } = new URL(window.location);
   if (hash) {
     const recordId = decodeURI(hash.substring(1));
     openRecord(recordId);
+  } else {
+    recordContainer.classList.remove('active');
+    unlightNodes();
   }
-};
+}
 
-window.addEventListener('hashchange', window.hashRecord);
+window.addEventListener('hashchange', hashRecord);
 
-window.addEventListener('DOMContentLoaded', window.hashRecord);
+window.addEventListener('DOMContentLoaded', hashRecord);
 
 const indexContainer = document.getElementById('index');
 
