@@ -12,9 +12,11 @@ window.openRecord = function (id) {
     return;
   }
 
-  if (View.openedRecordId !== undefined) {
+  const recordId = getRecordIdFromHash();
+
+  if (recordId) {
     // hide last record
-    document.getElementById(View.openedRecordId).classList.remove('active');
+    document.getElementById(recordId).classList.remove('active');
   }
 
   // open records container
@@ -24,8 +26,6 @@ window.openRecord = function (id) {
 
   // show record
   recordContent.classList.add('active');
-
-  View.openedRecordId = id;
 
   // reset nodes highlighting
   unlightNodes();
@@ -40,16 +40,21 @@ window.openRecord = function (id) {
  */
 
 window.closeRecord = function () {
-  // remove hash from URL
-  history.pushState('', document.title, window.location.pathname);
+  const recordId = getRecordIdFromHash();
 
   recordContainer.classList.remove('active');
-  const selectedNode = document.getElementById(View.openedRecordId);
-  View.openedRecordId = undefined;
-  unlightNodes();
+
+  if (recordId === undefined) return;
+
+  const selectedNode = document.getElementById(recordId);
   if (selectedNode) {
     selectedNode.classList.remove('active');
   }
+
+  // remove hash from URL
+  history.pushState('', document.title, window.location.pathname);
+
+  unlightNodes();
 };
 
 hotkeys('escape', (e) => {
@@ -57,10 +62,23 @@ hotkeys('escape', (e) => {
   closeRecord();
 });
 
-function hashRecord() {
+/**
+ * Get record id from URL hash
+ * @returns {string|undefined}
+ */
+
+function getRecordIdFromHash() {
   const { hash } = new URL(window.location);
   if (hash) {
     const recordId = decodeURI(hash.substring(1));
+    return recordId;
+  }
+  return undefined;
+}
+
+function hashRecord() {
+  const recordId = getRecordIdFromHash();
+  if (recordId) {
     openRecord(recordId);
   } else {
     recordContainer.classList.remove('active');
@@ -157,4 +175,10 @@ function displayAllFromIndex() {
   });
 }
 
-export { hideFromIndex, hideAllFromIndex, displayFromIndex, displayAllFromIndex };
+export {
+  getRecordIdFromHash,
+  hideFromIndex,
+  hideAllFromIndex,
+  displayFromIndex,
+  displayAllFromIndex,
+};
