@@ -295,7 +295,7 @@ module.exports = class Record {
   static massSave(data, index, configOpts, saveIdOnYmlFrontMatter) {
     return new Promise((resolve, reject) => {
       try {
-        if (!index || typeof index !== 'number') {
+        if (typeof index !== 'number') {
           throw new Error('The index for record mass save is invalid');
         }
 
@@ -394,9 +394,19 @@ module.exports = class Record {
    * Test if an id is out of today common time
    * @param {number} idTest Id as number
    * @return {boolean}
+   * @example
+   * // today minimum timestamp = 20231127246060
+   * Record.isTodayOutDailyId(20231127246188) // true
+   *
+   * // tomorrow minimum timestamp = 20231128246060
+   * Record.isTodayOutDailyId(20231127246188) // false
    */
 
   static isTodayOutDailyId(idTest) {
+    if (!idTest) {
+      return false;
+    }
+
     let todayOutDailyId = Record.generateOutDailyId();
     // An id from common time or from another day will be negative
     if (idTest - todayOutDailyId >= 0) {

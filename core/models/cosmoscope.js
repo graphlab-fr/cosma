@@ -435,14 +435,17 @@ module.exports = class Cosmoscope extends Graph {
 
   static getIndexToMassSave(filesPath) {
     const todayMassSavedRecordIds = Cosmoscope.getFromPathFiles(filesPath) // get graph analyse
-      .map((file) => file.metas.id)
+      .map((file) => Number(file.metas.id))
       .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id
       .sort();
 
-    // 'todayMassSavedRecordIds' can be empty
-    let lastId = todayMassSavedRecordIds[todayMassSavedRecordIds.length - 1] || undefined;
-    // 20220115246695 - 20220115246060 = 635, the index for the next record is 635 + 1
-    return lastId - Record.generateOutDailyId() + 1 || 1;
+    const lastRecordId = todayMassSavedRecordIds.at(-1);
+
+    if (lastRecordId) {
+      // 20231127246188 - 20231127246060 = 128, the index for the next record is 128 + 1
+      return lastRecordId - Record.generateOutDailyId();
+    }
+    return 0;
   }
 
   constructor(records, opts, params) {
