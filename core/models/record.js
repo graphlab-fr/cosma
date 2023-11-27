@@ -303,7 +303,7 @@ module.exports = class Record {
           ({ title, type, tags, metas, content, begin, end, references = [], thumbnail }) => {
             index++;
             const record = new Record(
-              Record.generateOutDailyId() + index,
+              Record.generateOutDailyId(index),
               title,
               type,
               tags,
