@@ -289,10 +289,6 @@ reinsert them the next time you use the file.
   attraction_horizontal       Additional attraction       Number between 0  0
                               towards the horizontal axis (disabled) and 1  
 
-  views                       List of registered views    list              
-                              (which can only be created                    
-                              with the GUI version)                         
-
   chronological_record_meta   deprecated                                    
 
   record_metas                List of metadata (present   list              
@@ -1292,10 +1288,14 @@ the search engine.
 You can reset all these effects by clicking on the \[lq]Reset current
 view\[rq] button under Views in the Menu (shortcut: \f[CR]Alt\f[R] +
 \f[CR]R\f[R]).
-.SS Views
-A View is a state of the graph (selected form, active filters, focus
-mode, etc.)
-which can be accessed via a specific URL.
+.SS View
+The view is the state of the cosmoscope at any time (selected record,
+active filters, focus mode, etc.).
+The view can be reset by clicking the \[lq]Reset the view\[rq] button in
+the \[lq]View\[rq] section of the left panel.
+The view can also be saved by clicking \[lq]Set URL to current view\[rq]
+then copying the URL, which can be used as a bookmark to access that
+view directly.
 .SH SHARING AND PUBLISHING A COSMOSCOPE
 Cosmoscopes exported via the Share menu include metadata (title, author,
 description, keywords) if they are set in the configuration file.
