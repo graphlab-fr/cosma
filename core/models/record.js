@@ -295,7 +295,7 @@ module.exports = class Record {
   static massSave(data, index, configOpts, saveIdOnYmlFrontMatter) {
     return new Promise((resolve, reject) => {
       try {
-        if (!index || typeof index !== 'number') {
+        if (typeof index !== 'number') {
           throw new Error('The index for record mass save is invalid');
         }
 
@@ -303,7 +303,7 @@ module.exports = class Record {
           ({ title, type, tags, metas, content, begin, end, references = [], thumbnail }) => {
             index++;
             const record = new Record(
-              Record.generateOutDailyId() + index,
+              Record.generateOutDailyId(index),
               title,
               type,
               tags,
@@ -394,9 +394,19 @@ module.exports = class Record {
    * Test if an id is out of today common time
    * @param {number} idTest Id as number
    * @return {boolean}
+   * @example
+   * // today minimum timestamp = 20231127246060
+   * Record.isTodayOutDailyId(20231127246188) // true
+   *
+   * // tomorrow minimum timestamp = 20231128246060
+   * Record.isTodayOutDailyId(20231127246188) // false
    */
 
   static isTodayOutDailyId(idTest) {
+    if (!idTest) {
+      return false;
+    }
+
     let todayOutDailyId = Record.generateOutDailyId();
     // An id from common time or from another day will be negative
     if (idTest - todayOutDailyId >= 0) {
@@ -514,7 +524,8 @@ module.exports = class Record {
     this.tags = tags;
     this.content = content;
     this.bibliographicRecords = bibliographicRecords;
-    this.bibliography = '';
+    /** @type {string[]} */
+    this.bibliography = [];
     this.thumbnail = thumbnail;
 
     if (tags) {
@@ -642,7 +653,10 @@ module.exports = class Record {
       }
     }
 
-    this.bibliography = Array.from(bibliographyHtml).join('');
+    const rgxRemoveDivider = new RegExp(/<div class="csl-entry">|<\/div>/, 'g');
+    this.bibliography = Array.from(bibliographyHtml).map((entry) =>
+      entry.replace(rgxRemoveDivider, ''),
+    );
   }
 
   /**

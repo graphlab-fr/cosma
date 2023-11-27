@@ -308,11 +308,13 @@
             <main class="record-content">
                 {{ record.content | convertLinks(graph.config) | markdown | safe }}
 
-                {% if record.bibliography %}
+                {% if record.bibliography.length > 0 %}
                 <section class="bibliography">
                     <h1>{{ translation.right_panel.record.bibliography[lang] }}</h1>
 
-                    {{ record.bibliography | safe }}
+                    {% for entry in record.bibliography %}
+                        <div class="csl-entry">{{ entry | urlize | safe }}</div>
+                    {% endfor %}
                 </section>
                 {% endif %}
             </main>

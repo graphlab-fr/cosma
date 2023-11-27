@@ -65,7 +65,7 @@ module.exports = function (filePath, saveIdOnYmlFrontMatter) {
     }
 
     const { files_origin } = config.opts;
-    const index = Cosmoscope.getIndexToMassSave(files_origin);
+    const index = Cosmoscope.getIndexToMassSave(files_origin) + 1;
     Record.massSave(data, index, config.opts, saveIdOnYmlFrontMatter)
       .then(() => {
         return console.log(

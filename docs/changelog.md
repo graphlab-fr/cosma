@@ -2,6 +2,23 @@
 title: Changelog
 ---
 
+# v2.3.0
+
+## Additions
+
+- Multi-type nodes are now multi-colored in the graph, and have multiple type indicators in front of their name in the index as well as the Links and Backlinks section of records.
+
+## Bug fixes
+
+- Opening and closing records is no longer broken ([issue 91](https://github.com/graphlab-fr/cosma/issues/91)).
+- Lists in records are no longer flush with the margin but indented. This improves the rendering of multiline list items, line breaks inside list items, etc. ([issue 86](https://github.com/graphlab-fr/cosma/issues/86))
+
+# v2.2.1
+
+## Additions
+
+- Added an `AUTHORS` file.
+
 # v2.2.0
 
 ## Additions
@@ -42,6 +59,7 @@ Then run `cosma modelize --citeproc` as usual to generate the cosmoscope.
 ## Additions
 
 - Links and backlinks context is now shown inline by default. This is set by the new `link_context` parameter in the configuration. Set `link_context` to `tooltip` instead of `inline` to show link context in a tooltip on hover, as in previous versions of Cosma.
+- Link type now appears between parentheses before the name of a link or backlink at the bottom of the record. 
 
 ## Improvements
 
