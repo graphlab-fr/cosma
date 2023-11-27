@@ -2,6 +2,17 @@
 title: Changelog
 ---
 
+# v2.3.1
+
+## Improvements
+
+- Improved the wording (and documentation) of the “views” feature, which will be called the view (singular) until we re-implement the ability for users to save views in the cosmoscope.
+
+## Bug fixes
+
+- Links in bibliographies now work properly again ([issue 80](https://github.com/graphlab-fr/cosma/issues/80)).
+- `cosma batch` now generates identifiers properly again.
+
 # v2.3.0
 
 ## Additions
