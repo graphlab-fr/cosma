@@ -524,7 +524,8 @@ module.exports = class Record {
     this.tags = tags;
     this.content = content;
     this.bibliographicRecords = bibliographicRecords;
-    this.bibliography = '';
+    /** @type {string[]} */
+    this.bibliography = [];
     this.thumbnail = thumbnail;
 
     if (tags) {
@@ -652,7 +653,10 @@ module.exports = class Record {
       }
     }
 
-    this.bibliography = Array.from(bibliographyHtml).join('');
+    const rgxRemoveDivider = new RegExp(/<div class="csl-entry">|<\/div>/, 'g');
+    this.bibliography = Array.from(bibliographyHtml).map((entry) =>
+      entry.replace(rgxRemoveDivider, ''),
+    );
   }
 
   /**
