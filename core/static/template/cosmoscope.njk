@@ -264,10 +264,12 @@
                 <img class="record-img" src="{{ record.thumbnail | imgPathToBase64 }}" />
                 {% endif %}
 
+                {% if hideIdFromRecordHeader === false %}
                 <div class="record-id">
                     <span>{{ translation.right_panel.record.metadata.id[lang] }} :</span>
                     <span>{{ record.id }}</span>
                 </div>
+                {% endif %}
 
                 <div class="record-type">
                     <span>{{ translation.right_panel.record.metadata.type[lang] }} :</span>

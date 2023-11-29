@@ -60,6 +60,7 @@ module.exports = class Config {
     record_metas: [],
     generate_id: 'always',
     link_context: 'tooltip',
+    hide_id_from_record_header: false,
     title: '',
     author: '',
     description: '',
@@ -530,6 +531,7 @@ module.exports = class Config {
       'graph_arrows',
       'devtools',
       'references_as_nodes',
+      'hide_id_from_record_header',
     ]
       .filter((option) => {
         return typeof this.opts[option] !== 'boolean';
