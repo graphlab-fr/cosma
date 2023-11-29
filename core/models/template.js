@@ -128,6 +128,7 @@ module.exports = class Template {
       keywords,
       focus_max: focusMax,
       record_types: recordTypes,
+      hide_id_from_record_header: hideIdFromRecordHeader,
     } = this.config.opts;
 
     /** @type {string[]} */
@@ -337,6 +338,7 @@ module.exports = class Template {
       devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
 
+      hideIdFromRecordHeader,
       records: graph.records.map(({ thumbnail, ...rest }) => ({
         ...rest,
         thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,

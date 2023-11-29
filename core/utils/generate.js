@@ -188,6 +188,7 @@ function cosmocopeTitleId() {
     Template = require('../models/template');
 
   const { config: fakeConfig } = require('./fake');
+  fakeConfig.opts['hide_id_from_record_header'] = true;
 
   const files = [
     {
