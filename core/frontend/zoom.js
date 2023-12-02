@@ -48,7 +48,9 @@ function zoomReset() {
  */
 
 function zoomToNode(nodeId) {
-  const { x, y } = nodes.find(({ id }) => id === nodeId);
+  const node = nodes.find(({ id }) => id === nodeId);
+  if (!node) return;
+  const { x, y } = node;
 
   const meanX = d3.mean(nodes, (d) => d.x);
   const meanY = d3.mean(nodes, (d) => d.y);
