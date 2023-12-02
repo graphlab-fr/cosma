@@ -464,32 +464,6 @@ function hideNodesAll(priority = filterPriority.notFiltered) {
 }
 
 /**
- * Zoom to a node from its coordinates
- * @param {string|number} nodeId
- */
-
-window.zoomToNode = function (nodeId) {
-  let { x, y } = elts.nodes.filter((node) => node.id === nodeId).datum(),
-    zoom = 2;
-
-  x = -Math.abs(x - 200);
-  y = -Math.abs(y - 300);
-
-  View.position = { x, y, zoom };
-
-  translate();
-};
-
-hotkeys('c', (e) => {
-  e.preventDefault();
-  const { hash } = new URL(window.location);
-  if (hash) {
-    const recordId = decodeURI(hash.substring(1));
-    zoomToNode(recordId);
-  }
-});
-
-/**
  * Display none nodes and their link
  * @param {string[]|number[]} nodeIds - List of nodes ids
  */
