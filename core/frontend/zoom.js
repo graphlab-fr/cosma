@@ -14,7 +14,6 @@ const zoom = d3
   .scaleExtent([zoomMin, zoomMax])
   .on('zoom', () => {
     const { x, y, k } = d3.event.transform;
-    console.log(k);
     View.position.x = x || 0;
     View.position.y = y || 0;
     View.position.zoom = k || 1;

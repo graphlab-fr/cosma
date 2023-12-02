@@ -414,7 +414,6 @@ aside.menu footer span:not(:first-of-type)::before {
 ------------------------------------------------------------*/
 
 main.record-container {
-  /* position: absolute; */
   z-index: 100;
   top: 0;
   right: 0;
@@ -709,7 +708,7 @@ marker {
 
 .graph-controls {
   position: fixed;
-  left: 340px;
+  left: 34rem;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -717,7 +716,7 @@ marker {
 }
 
 .graph-controls.move {
-  left: 40px;
+  left: 4rem;
 }
 
 .graph-timeline {
