@@ -2,36 +2,72 @@ import { nodes, highlightNodes, unlightNodes } from './graph';
 import hotkeys from 'hotkeys-js';
 import filterPriority from './filterPriority';
 
-const recordContainer = document.getElementById('record-container');
-const closeRightSideButton = document.getElementById('close-right-side');
+window.addEventListener('DOMContentLoaded', () => {
+  const recordContainer = document.getElementById('record-container');
+  const closeRightSideButton = document.getElementById('close-right-side');
 
-function openRecord(id) {
-  const recordContent = document.getElementById(id);
+  hashRecord();
 
-  if (!recordContent) {
-    return;
+  let hasRightSideClosedByClick = false;
+  closeRightSideButton.addEventListener('click', () => {
+    closeRightSideButton.classList.toggle('active');
+    recordContainer.classList.toggle('active');
+
+    hasRightSideClosedByClick = !hasRightSideClosedByClick;
+  });
+
+  hotkeys('escape', () => {
+    closeRightSideButton.classList.remove('active');
+    recordContainer.classList.remove('active');
+
+    // remove hash from URL
+    history.pushState('', document.title, window.location.pathname);
+
+    unlightNodes();
+  });
+
+  window.addEventListener('hashchange', hashRecord);
+
+  function hashRecord() {
+    const recordId = getRecordIdFromHash();
+    if (recordId) {
+      openRecord(recordId);
+    } else {
+      recordContainer.classList.remove('active');
+      unlightNodes();
+    }
   }
 
-  closeLastOpenedRecord();
+  function openRecord(id) {
+    const recordContent = document.getElementById(id);
 
-  // open records container
-  closeRightSideButton.classList.add('active');
-  recordContainer.classList.add('active');
-  // adjust record view
-  recordContainer.scrollTo({ top: 0 });
+    if (!recordContent) {
+      return;
+    }
 
-  closeLastOpenedRecord();
+    closeLastOpenedRecord();
 
-  // show record
-  recordContent.classList.add('active');
+    // open records container
+    if (!hasRightSideClosedByClick) {
+      closeRightSideButton.classList.add('active');
+      recordContainer.classList.add('active');
+    }
+    // adjust record view
+    recordContainer.scrollTo({ top: 0 });
 
-  // reset nodes highlighting
-  unlightNodes();
-  highlightNodes([id]);
+    closeLastOpenedRecord();
 
-  const recordTitle = recordContent.querySelector('h1').textContent;
-  document.title = recordTitle;
-}
+    // show record
+    recordContent.classList.add('active');
+
+    // reset nodes highlighting
+    unlightNodes();
+    highlightNodes([id]);
+
+    const recordTitle = recordContent.querySelector('h1').textContent;
+    document.title = recordTitle;
+  }
+});
 
 function closeLastOpenedRecord() {
   const lastOpenedRecord = document.querySelector('.record.active');
@@ -46,32 +82,6 @@ function getRecordIdFromHash() {
   }
   return undefined;
 }
-
-function hashRecord() {
-  const recordId = getRecordIdFromHash();
-  if (recordId) {
-    openRecord(recordId);
-  } else {
-    recordContainer.classList.remove('active');
-    unlightNodes();
-  }
-}
-
-window.addEventListener('hashchange', hashRecord);
-
-window.addEventListener('DOMContentLoaded', () => {
-  hashRecord();
-
-  closeRightSideButton.addEventListener('click', () => {
-    closeRightSideButton.classList.toggle('active');
-    recordContainer.classList.toggle('active');
-  });
-});
-
-hotkeys('escape', () => {
-  closeRightSideButton.classList.remove('active');
-  recordContainer.classList.remove('active');
-});
 
 const indexContainer = document.getElementById('index');
 
