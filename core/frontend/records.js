@@ -1,4 +1,5 @@
 import { nodes, highlightNodes, unlightNodes } from './graph';
+import { zoomToNode } from './zoom';
 import hotkeys from 'hotkeys-js';
 import filterPriority from './filterPriority';
 
@@ -6,7 +7,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const recordContainer = document.getElementById('record-container');
   const closeRightSideButton = document.getElementById('close-right-side');
 
-  hashRecord();
+  const recordId = getRecordIdFromHash();
+  if (recordId) openRecord(recordId);
 
   let hasRightSideClosedByClick = false;
   closeRightSideButton.addEventListener('click', () => {
@@ -26,17 +28,16 @@ window.addEventListener('DOMContentLoaded', () => {
     unlightNodes();
   });
 
-  window.addEventListener('hashchange', hashRecord);
-
-  function hashRecord() {
+  window.addEventListener('hashchange', () => {
     const recordId = getRecordIdFromHash();
     if (recordId) {
       openRecord(recordId);
+      zoomToNode(recordId);
     } else {
       recordContainer.classList.remove('active');
       unlightNodes();
     }
-  }
+  });
 
   function openRecord(id) {
     const recordContent = document.getElementById(id);
