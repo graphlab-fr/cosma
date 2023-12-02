@@ -35,6 +35,7 @@
 ------------------------------------------------------------*/
 
 body {
+  display: flex;
   overflow: hidden;
   width: 100%;
   margin: 0;
@@ -280,12 +281,11 @@ code {
 ------------------------------------------------------------*/
 
 aside.menu {
-  position: absolute;
   box-shadow: var(--shadow);
   z-index: 100;
   overflow: auto;
   height: 100vh;
-  width: 30rem;
+  flex: 0 0 30rem;
   margin: 0;
   padding: 0 20px 50px 20px;
   background-color: var(--background-gray);
@@ -396,7 +396,7 @@ aside.menu footer {
   position: fixed;
   bottom: 0px;
   left: 0px;
-  width: inherit;
+  width: 30rem;
   margin-top: 1.8rem;
   background-color: inherit;
   padding: 0.8rem 0 0.8rem 0.8rem;
@@ -414,12 +414,12 @@ aside.menu footer span:not(:first-of-type)::before {
 ------------------------------------------------------------*/
 
 main.record-container {
-  position: absolute;
+  /* position: absolute; */
   z-index: 100;
   top: 0;
   right: 0;
   padding: 1rem 2rem;
-  width: 50rem;
+  flex: 0 0 50rem;
   height: 100vh;
   overflow: auto;
   background-color: var(--offwhite);
@@ -656,11 +656,10 @@ a.record-link.highlight {
 ------------------------------------------------------------*/
 
 .graph-wrapper {
-  position: absolute;
   top: 0;
   right: 0;
   height: 100vh;
-  width: 100vw;
+  flex: 1;
 }
 
 #graph-canvas {

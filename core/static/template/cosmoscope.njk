@@ -248,6 +248,74 @@
     </aside>
 
     {# ========================================
+    Graph
+    ========================================= #}
+
+    <div class="graph-wrapper" style="background-color: {{ graph.config.graph_background_color }}">
+        <svg id="graph-canvas">
+            <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                </marker>
+                <filter id="double">
+                    <feMorphology in="SourceGraphic" result="a" operator="dilate" radius="0.2"></feMorphology>
+                    <feComposite in="SourceGraphic" in2="a" result="xx" operator="xor"></feComposite>
+                </filter>
+                {% for thumbnail in nodeThumbnails %}
+                <pattern id="{{ thumbnail.name }}" class="thumnail-pattern" x="0" y="0" height="100%" width="100%" viewBox="0 0 1 1">
+                    <image x="0" y="0" width="1" height="1" href="{{ thumbnail.path | imgPathToBase64 }}" preserveAspectRatio="xMinYMid slice"></image>
+                </pattern>
+                {% endfor %}
+            </defs>
+        </svg>
+    </div>
+
+    {# ========================================
+    Graph controls
+    ========================================= #}
+
+    <div class="graph-controls" id="graph-controls">
+        <div class="graph-controls-section graph-controls-zoom">
+            <button onclick="zoomLess()">-</button>
+            <button onclick="zoomReset()">{{ translation.graph.btn_zoom_reset[lang] }} (R)</button>
+            <button onclick="zoomMore()">+</button>
+        </div>
+
+        {% if focusIsActive %}
+        <div class="graph-controls-section graph-controls-focus">
+            <span class="graph-control-label">
+                <input id="focus-check" type="checkbox" name="checkbox">
+                <label for="focus-check">{{ translation.graph.btn_focus[lang] }} (F)</label>
+            </span>
+
+            <input id="focus-input" type="range" min="1" max="{{ graph.config.focus_max }}" value="1" name="focus_range" step="1" />
+        </div>
+        {% endif %}
+
+        {% if timeline.begin or timeline.end %}
+        <div class="graph-controls-section graph-timeline">
+            <span class="graph-control-label">
+                <input id="timeline-checkbox" type="checkbox" name="checkbox">
+                <label for="timeline-checkbox">Mode chronologique</label>
+            </span>
+
+            <form id="timeline-form">
+                <output name="timeline_output">{{ timeline.begin | timestampToLocal }}</output>
+                <input
+                    type="range"
+                    name="timeline_range"
+                    min="{{ timeline.begin }}"
+                    max="{{ timeline.end }}"
+                    value="{{ timeline.begin }}"
+                    list="timeline-ticks"
+                >
+                <datalist id="timeline-ticks"></datalist>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    {# ========================================
     right side records container
     ========================================= #}
 
@@ -514,76 +582,7 @@
             </main>
         </article>
         {% endif %}
-
     </main>
-
-    {# ========================================
-    Graph
-    ========================================= #}
-
-    <div class="graph-wrapper" style="background-color: {{ graph.config.graph_background_color }}">
-        <svg id="graph-canvas">
-            <defs>
-                <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z"></path>
-                </marker>
-                <filter id="double">
-                    <feMorphology in="SourceGraphic" result="a" operator="dilate" radius="0.2"></feMorphology>
-                    <feComposite in="SourceGraphic" in2="a" result="xx" operator="xor"></feComposite>
-                </filter>
-                {% for thumbnail in nodeThumbnails %}
-                <pattern id="{{ thumbnail.name }}" class="thumnail-pattern" x="0" y="0" height="100%" width="100%" viewBox="0 0 1 1">
-                    <image x="0" y="0" width="1" height="1" href="{{ thumbnail.path | imgPathToBase64 }}" preserveAspectRatio="xMinYMid slice"></image>
-                </pattern>
-                {% endfor %}
-            </defs>
-        </svg>
-    </div>
-
-    {# ========================================
-    Graph controls
-    ========================================= #}
-
-    <div class="graph-controls" id="graph-controls">
-        <div class="graph-controls-section graph-controls-zoom">
-            <button onclick="zoomLess()">-</button>
-            <button onclick="zoomReset()">{{ translation.graph.btn_zoom_reset[lang] }} (R)</button>
-            <button onclick="zoomMore()">+</button>
-        </div>
-
-        {% if focusIsActive %}
-        <div class="graph-controls-section graph-controls-focus">
-            <span class="graph-control-label">
-                <input id="focus-check" type="checkbox" name="checkbox">
-                <label for="focus-check">{{ translation.graph.btn_focus[lang] }} (F)</label>
-            </span>
-
-            <input id="focus-input" type="range" min="1" max="{{ graph.config.focus_max }}" value="1" name="focus_range" step="1" />
-        </div>
-        {% endif %}
-
-        {% if timeline.begin or timeline.end %}
-        <div class="graph-controls-section graph-timeline">
-            <span class="graph-control-label">
-                <input id="timeline-checkbox" type="checkbox" name="checkbox">
-                <label for="timeline-checkbox">Mode chronologique</label>
-            </span>
-
-            <form id="timeline-form">
-                <output name="timeline_output">{{ timeline.begin | timestampToLocal }}</output>
-                <input
-                    type="range"
-                    name="timeline_range"
-                    min="{{ timeline.begin }}"
-                    max="{{ timeline.end }}"
-                    value="{{ timeline.begin }}"
-                    list="timeline-ticks"
-                >
-                <datalist id="timeline-ticks"></datalist>
-            </form>
-        </div>
-        {% endif %}
-    </div>
 
     {# Cosma data #}
 
