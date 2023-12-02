@@ -906,10 +906,11 @@ article#credits h1.metas-title {
   position: absolute;
   top: 5px;
   z-index: 200;
+  padding: 1px 5px 4px 4px;
 }
 
 .close-button.active {
-  transform: rotate(180deg);
+  transform: scaleX(-1);
 }
 
 .close-button.right {
