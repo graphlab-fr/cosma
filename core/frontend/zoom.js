@@ -53,7 +53,7 @@ function zoomToNode(nodeId) {
   const meanX = d3.mean(nodes, (d) => d.x);
   const meanY = d3.mean(nodes, (d) => d.y);
 
-  const zoomScale = 2;
+  const zoomScale = 1.2;
 
   svg.call(
     zoom.transform,
@@ -77,3 +77,5 @@ hotkeys('e,alt+r', (e) => {
 window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
 window.zoomReset = zoomReset;
+
+export { zoomToNode };
