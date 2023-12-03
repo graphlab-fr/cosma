@@ -2,6 +2,29 @@
 title: Changelog
 ---
 
+# v2.4.0
+
+## Additions
+
+**Greater control over what is shown in the cosmoscope:**
+
+- The left and right panel can now be hidden or shown by clicking on toggle buttons (respectively at the top left and top right of the cosmoscope). Folding the right panel does not de-select the currently selected record.
+- New option: `hide_id_from_record_header` (default: `false`). When set to `true`, IDs are not shown in the record header in the cosmoscope.
+
+## Improvements
+
+**Improved navigation in the graph view:**
+
+- When the graph view loads, it shows the entire graph ([issue 38](https://github.com/graphlab-fr/cosma/issues/38)).
+- Upon selecting a record, the graph view automatically centers on the corresponding node ([issue 39](https://github.com/graphlab-fr/cosma/issues/39)).
+- If the zoom level has not been modified, the graph view automatically zooms in on the selected node. The effect scales with the graph size: bigger graphs mean a greater zoom-in effect when selecting nodes.
+- Pressing C centers the graph view on the selected node (this shortcut existed before v2.0 and had been broken since).
+
+Other improvements:
+
+- The cosmoscope no longer shows empty fields in record headers (e.g. when a record does not have tags, the tags field is hidden).
+- If `cosma modelize` encounters an error when parsing a YAML header, it stops and indicates the name of the file in which the error was found ([pull request 81](https://github.com/graphlab-fr/cosma/pull/81) from [Yann Trividic](https://github.com/yanntrividic)).
+
 # v2.3.1
 
 ## Improvements

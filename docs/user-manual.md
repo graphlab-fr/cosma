@@ -1,7 +1,7 @@
 ---
 title: Cosma's User manual
 author: Arthur Perret
-date: 2023-10-01
+date: 2023-12-03
 ---
 
 # Description
@@ -167,7 +167,8 @@ metadata filter | Entities for which this metadata is present will be excluded w
 `chronological_record_meta` | *deprecated* |  | 
 `record_metas` | List of metadata (present in the data source) to be included in the cosmoscope | list
 `generate_id` | Set `cosma record` to always automatically create identifiers, never create them, or ask for each record | `always`, `never` or `ask` | `always`
-`link_context` | Display link context either inline or in a tooltip on hover | `inline`, `tooltip` | `inline`
+`link_context` | Display link context either inline or in a tooltip on hover | `inline`, `tooltip` | `tooltip`
+`hide_id_from_record_header` | When set to `true`, IDs are not shown in the record header in the cosmoscope. | `true` or `false` | `false`
 `title` | Cosmoscope title | string |
 `author` | Cosmoscope author | string | 
 `description` | Cosmoscope description | string |
@@ -230,6 +231,7 @@ views: {}
 record_metas: []
 generate_id: always
 link_context: tooltip
+hide_id_from_record_header: false
 title: ''
 author: ''
 description: ''
@@ -765,13 +767,15 @@ Central area (Graph)
 Right side panel (Record)
 : Displays the records with a list of outgoing links (Links) and incoming links (Backlinks).
 
+The panels can be hidden or shown by clicking on toggle buttons (respectively at the top left and top right of the cosmoscope).
+
 ## Graph
 
 The central area of the cosmoscope is an interactive graph of labelled nodes. Each node corresponds to a record; the label corresponds to the title of the record. The links correspond to the links established between the records via their identifiers.
 
-Hovering over a node temporarily highlights it and its connections. Clicking on a node highlights it and its connections and opens the corresponding record.
+Hovering over a node temporarily highlights it and its connections. Clicking on a node highlights it and its connections and opens the corresponding record. It also centers the graph view on that node. Press `C` to manually center on the selected node.
 
-You can zoom in and out of the graph freely with a mouse or touchpad, by double-clicking on the graph background or with the dedicated buttons at the bottom left. Press `C` to zoom in on a selected node (whose record is open). The Reset button (shortcut: `R`) resets the zoom.
+You can zoom in and out of the graph freely with a mouse or touchpad, by double-clicking on the graph background or with the dedicated buttons at the bottom left. The Reset button (shortcut: `R`) resets the zoom.
 
 Nodes are organised in space by a force simulation algorithm. A coloured bar at the top of the Menu indicates the state of the drawing process (active or finished). Click on this bar (shortcut: `Space`) to start an additional simulation cycle. This does not reset the graph but re-runs the algorithm on the existing graph, improving its layout.
 
@@ -793,15 +797,13 @@ The graph can be displayed on all types of screens but is not optimised for mobi
 
 Records can be opened by clicking on a node, an index entry, a search engine suggestion, or a link in the body or footer of a record. Opening a record displays its contents in the right side panel.
 
-In Cosma, you can go forward or backward with the Previous / Next buttons located in the left side panel. In a web browser, you can do the same via the browser's Previous / Next functions. Opening a record adds the corresponding identifier at the end of the URL. This allows you to copy direct links to records.
+You can go forward or backward with the browser's Previous / Next functions. Opening a record adds the corresponding identifier at the end of the URL. This allows you to copy direct links to records.
 
-Clicking on the “Close” button closes the right side panel and deselects the corresponding node in the graph.
+To deselect a node, press the Esc key.
 
-The links in the records are clickable. In a browser, you can open these links in a new tab via a right click. The title of the link (displayed in a tooltip after 1-2 seconds of hovering) is the title of the corresponding card.
+The links in the records are clickable. In a browser, you can open these links in a new tab via a right click. The title of the link (displayed in a tooltip after 1-2 seconds of hovering) is the title of the corresponding record.
 
-At the bottom of each record is a list of outgoing links (section titled “Links”) and incoming links (section titled “Backlinks”). Links and backlinks are contextualised: they are presented with the surrounding paragraph in the source record. You can set `link_context` to `tooltip` instead of `inline` if you want the link context to be displayed in a tooltip on hover, instead of inline.
-
-By default, the links section is collapsed, to make room for backlinks, which are often more useful. Click on the “Links” heading to expand the links section.
+At the bottom of each record is a list of outgoing links (section titled “Links”) and incoming links (section titled “Backlinks”). Links and backlinks are contextualised: they are presented with the surrounding paragraph in the source record. You can set `link_context` to `inline` instead of `tooltip` if you want the link context to be displayed at all times, instead of in a tooltip on hover.
 
 ::: note
 Contextualised backlinks are one the most useful features in hypertext systems. It is famously absent from the Web. Many interrelated note-taking applications treat links as “first-class citizens”, and this includes contextualised backlinks. However, when these notes are shared on the Web, this feature is not always included, or it is only included in a paid plan. With Cosma, contextualised backlinks are part of the package, whether you're the author of a cosmoscope working locally, or someone exploring a cosmoscope on the Web.
@@ -849,14 +851,11 @@ Record type filters, keywords and Focus mode all modify the display of the index
 
 The view is the state of the cosmoscope at any time (selected record, active filters, focus mode, etc.). The view can be reset by clicking the “Reset the view” button in the “View” section of the left panel. The view can also be saved by clicking “Set URL to current view” then copying the URL, which can be used as a bookmark to access that view directly.
 
-
 # Sharing and publishing a cosmoscope
 
-Cosmoscopes exported via the Share menu include metadata (title, author, description, keywords) if they are set in the configuration file. These are displayed in the “About” panel. They are also included in the cosmoscope source code in the form of `meta` tags.
+A cosmoscope can be shared like any other computer file: email, file transfer, messaging, uploading to a server…
 
-The exported `cosmoscope.html` file can be shared like any other computer file: email, file transfer, messaging, uploading to a server…
-
-In the case of a cosmoscope published on the Web, it is possible to link directly to a record by adding its identifier preceded by a `#` pound sign at the end of the URL. Example:
+You can link directly to a record by adding its identifier preceded by a `#` pound sign at the end of the URL. Example:
 
 `https://domain.com/cosmoscope.html#20210427185546`
 
@@ -869,6 +868,8 @@ Cosma is designed by [Arthur Perret](https://www.arthurperret.fr/) and developed
 The program was developed initially as part of the HyperOtlet research programme led by Bertrand Müller. Olivier Le Deuff came up with the name and Clément Borel created the logo.
 
 Version 2.0 was funded through the Hyperhum@in research programme led by David Pucheu. 
+
+Updates to version 2.0 were developed with support from the AlgoJ research programme, with design suggestions by Olivier Le Deuff and Rayya Roumanos.
 
 ## Dependencies
 

@@ -1,14 +1,14 @@
 {
   "name": "cosma-core",
-  "version": "2.0.4",
+  "version": "2.4.0",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
-  "homepage": "https://cosma.graphlab.fr/",
+  "homepage": "https://cosma.arthurperret.fr/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/graphlab-fr/cosma-core.git"
+    "url": "git+https://github.com/graphlab-fr/cosma.git"
   },
   "bugs": {
-    "url": "https://github.com/graphlab-fr/cosma-core/issues"
+    "url": "https://github.com/graphlab-fr/cosma/issues"
   },
   "main": "index.js",
   "contributors": [
