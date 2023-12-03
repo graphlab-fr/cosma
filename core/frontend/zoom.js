@@ -6,8 +6,22 @@ import hotkeys from 'hotkeys-js';
 import { getRecordIdFromHash } from './records';
 
 const zoomMax = 10,
-  zoomMin = 1,
-  zoomInterval = 0.2;
+  zoomMin = 1;
+
+let zoomInterval = 0.2;
+
+/**
+ * Sum of nodes size
+ * @type {number}
+ */
+const nodeFactor = nodes.reduce((acc, { size }) => acc + size, 0);
+
+window.addEventListener('resize', () => {
+  let density = nodeFactor / (window.innerWidth * window.innerHeight);
+  density *= 1000;
+
+  zoomInterval = Math.log2(density);
+});
 
 const zoom = d3
   .zoom()
@@ -41,6 +55,11 @@ function zoomReset() {
   translate();
 }
 
+hotkeys('e,alt+r', (e) => {
+  e.preventDefault();
+  zoomReset();
+});
+
 /**
  * Zoom to a node from its coordinates
  * @param {string} nodeId
@@ -54,7 +73,8 @@ function zoomToNode(nodeId) {
   const meanX = d3.mean(nodes, (d) => d.x);
   const meanY = d3.mean(nodes, (d) => d.y);
 
-  const zoomScale = 1.2;
+  const zoomScale =
+    View.position.zoom === 1 ? View.position.zoom + zoomInterval * 2 : View.position.zoom;
 
   svg.call(
     zoom.transform,
@@ -68,11 +88,6 @@ hotkeys('c', (e) => {
   const recordId = getRecordIdFromHash();
 
   zoomToNode(recordId);
-});
-
-hotkeys('e,alt+r', (e) => {
-  e.preventDefault();
-  zoomReset();
 });
 
 window.zoomMore = zoomMore;
