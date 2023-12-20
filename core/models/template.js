@@ -161,6 +161,28 @@ class Template {
       return arr;
     });
 
+    const linkFiltersFromGraph = {};
+    const allLinkKeys = []; // Keep track of all link keys (Graphology IDs)
+
+    graph.forEachEdge((edgeKey, edgeAttributes, source, target, sourceAttributes, targetAttributes, undirected) => {
+      const type = edgeAttributes.type || 'undefined'; // Use 'undefined' if no type
+      allLinkKeys.push(edgeKey); // Store the Graphology key
+
+      if (!linkFiltersFromGraph[type]) {
+        linkFiltersFromGraph[type] = {
+          linkKeys: new Set(), // Store Set of Graphology edge keys
+          active: true,       // Default state
+          color: edgeAttributes?.color || '#e1e1e1'
+        };
+      }
+      linkFiltersFromGraph[type].linkKeys.add(edgeKey);
+    });
+
+    // Convert Sets to Arrays for JSON serialization
+    for (const type in linkFiltersFromGraph) {
+      linkFiltersFromGraph[type].linkKeys = Array.from(linkFiltersFromGraph[type].linkKeys);
+    }
+
     const tagsListAlphabetical = tagsDictAsArrays
       .map(([name]) => name)
       .sort((a, b) => a.localeCompare(b));
@@ -361,6 +383,8 @@ class Template {
       views: views || [],
       filters: Object.fromEntries(filtersDictAsArrays),
       tags: Object.fromEntries(tagsDictAsArrays),
+      linkFilters: linkFiltersFromGraph,
+      allLinkKeys: allLinkKeys,
 
       references: [...references.values()],
 
@@ -401,6 +425,21 @@ class Template {
       favicon,
       logo,
     });
+
+    let css = '';
+    // ... (existing CSS generation for record types)
+
+    // Add CSS variables for link colors
+    for (const [linkTypeName, linkTypeData] of Object.entries(linkFiltersFromGraph)) {
+      const slug = slugify(linkTypeName);
+      // Use the stored color or fallback
+      const color = linkTypeData.color;
+      css += `--l_${slug}: ${color};\n`;
+      // Add CSS for the filter label color (optional but nice)
+      css += `--n_${slug}: ${color};\n`;
+    }
+    // Prepend link type CSS
+    this.html = this.html.replace('<style>', `<style>\n:root {\n${css}\n}\n`);
   }
 }
 

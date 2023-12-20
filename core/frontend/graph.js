@@ -121,6 +121,7 @@ const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
 /** @type {d3.Selection<SVGLineElement, Link, SVGElement, any>} */
 elts.links = svgSub
   .append('g')
+  .attr('class', 'links-group')
   .selectAll('line')
   .data(data.edges)
   .enter()
@@ -395,23 +396,25 @@ function generatePathCoordinatesWithBorder(numSegments, diameter, borderSize) {
  */
 
 function getNodeNetwork(nodeId) {
-  const edges = graph.edges(nodeId);
-
   const node = elts.nodes.filter(({ key }) => key === nodeId);
-  const links = elts.links.filter(({ key }) => edges.includes(key));
-
-  return {
-    node,
-    links,
-  };
+  // Links related to this node will be handled by highlight/unlight functions
+  return { node };
 }
 
-function setNodesDisplaying(nodeIds) {
-  const toDisplay = nodeIds;
-  const toHide = Array.from(d3.difference(allNodeIds, toDisplay));
+function setNodesDisplaying(nodeIdsToShow) {
+  const nodesToShowSet = new Set(nodeIdsToShow);
+  allNodeIds.forEach(nodeId => {
+    const shouldShow = nodesToShowSet.has(nodeId);
+    // Use Graphology attribute for node state
+    graph.setNodeAttribute(nodeId, 'hidden', !shouldShow);
+  });
 
-  displayNodes(toDisplay);
-  hideNodes(toHide);
+  // Update the D3 node elements based on the Graphology attribute
+  elts.nodes.style('display', d => graph.getNodeAttribute(d.key, 'hidden') ? 'none' : null);
+  elts.labels.style('display', d => graph.getNodeAttribute(d.key, 'hidden') ? 'none' : null); // Also hide/show labels
+
+  updateLinkVisibilityBasedOnFiltersAndNodes();
+  setCounters(); // Update counters after nodes change
 }
 
 graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
@@ -419,10 +422,8 @@ graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
 
   if (attributes.hidden) {
     node.node().classList.add('hide');
-    links.nodes().forEach((elt) => elt.classList.add('hide'));
   } else {
     node.node().classList.remove('hide');
-    links.nodes().forEach((elt) => elt.classList.remove('hide'));
   }
 });
 
@@ -445,13 +446,56 @@ function displayNodes(nodeIds) {
 }
 
 function displayNodesAll() {
-  graph.updateEachNodeAttributes((node, attr) => ({
-    ...attr,
-    hidden: false,
-  }));
+  allNodeIds.forEach(nodeId => {
+    graph.setNodeAttribute(nodeId, 'hidden', false);
+  });
+  elts.nodes.style('display', null);
+  elts.labels.style('display', null); // Also show labels
 
-  elts.nodes.nodes().forEach((elt) => elt.classList.remove('hide'));
-  elts.links.nodes().forEach((elt) => elt.classList.remove('hide'));
+  // Update link visibility after showing all nodes
+  updateLinkVisibilityBasedOnFiltersAndNodes();
+  setCounters();
+}
+
+// --- Manage Link Visibility ---
+
+// Keep track of which link types are currently active based on checkboxes
+let activeLinkTypes = new Set(Object.keys(linkTypeList)); // Initially all active
+
+// Function called by filter.js when link checkboxes change
+function updateLinkVisibility(newActiveLinkTypes) {
+    activeLinkTypes = newActiveLinkTypes;
+    updateLinkVisibilityBasedOnFiltersAndNodes();
+}
+
+// Central function to update link visibility based on *both* filters and node visibility
+function updateLinkVisibilityBasedOnFiltersAndNodes() {
+  console.log("updating link visibility")
+  if (!linksDisplayToggle) { // Skip if links are globally toggled off
+    console.log("early return because links toggled off")
+    elts.links.style('display', 'none');
+    elts.linkLabels.style('display', 'none');
+    return;
+  }
+
+  elts.links.style('display', d => {
+    const typeIsActive = activeLinkTypes.has(d.attributes.type || 'undefined');
+    const sourceIsVisible = !graph.getNodeAttribute(d.source.key, 'hidden');
+    const targetIsVisible = !graph.getNodeAttribute(d.target.key, 'hidden');
+    return typeIsActive && sourceIsVisible && targetIsVisible ? null : 'none';
+  });
+
+  if (!linkLabelsDisplayToggle) { // Skip if labels are globally toggled off
+    elts.linkLabels.style('display', 'none');
+  } else {
+    elts.linkLabels.style('display', d => {
+      const typeIsActive = activeLinkTypes.has(d.attributes.type || 'undefined');
+      const sourceIsVisible = !graph.getNodeAttribute(d.source.key, 'hidden');
+      const targetIsVisible = !graph.getNodeAttribute(d.target.key, 'hidden');
+      return typeIsActive && sourceIsVisible && targetIsVisible ? null : 'none';
+    });
+  }
+    // Note: No need to update counters for links usually, unless you add a link counter UI element.
 }
 
 let highlightedNodes = [];
@@ -467,7 +511,7 @@ function highlightNodes(nodeIds) {
     .forEach((nodeId) => {
       const { links, node } = getNodeNetwork(nodeId);
       node.node().classList.add('highlight');
-      links.nodes().forEach((elt) => elt.classList.add('highlight'));
+      elts.links.nodes().forEach((elt) => elt.classList.add('highlight'));
     });
 
   highlightedNodes = highlightedNodes.concat(nodeIds);
@@ -487,7 +531,7 @@ function unlightNodes() {
     .forEach((nodeId) => {
       const { links, node } = getNodeNetwork(nodeId);
       node.node().classList.remove('highlight');
-      links.nodes().forEach((elt) => elt.classList.remove('highlight'));
+      elts.links.nodes().forEach((elt) => elt.classList.remove('highlight'));
     });
 
   highlightedNodes = [];
@@ -498,12 +542,10 @@ function unlightNodes() {
  * @param {boolean} isChecked - 'checked' value send by a checkbox input
  */
 
+let linksDisplayToggle = true; // Keep track of global link toggle state
 window.linksDisplayToggle = function (isChecked) {
-  if (isChecked) {
-    elts.links.nodes().forEach((elt) => elt.classList.remove('hide'));
-  } else {
-    elts.links.nodes().forEach((elt) => elt.classList.add('hide'));
-  }
+  linksDisplayToggle = isChecked;
+  updateLinkVisibilityBasedOnFiltersAndNodes(); // Update visibility when toggled
 };
 
 /**
@@ -519,12 +561,10 @@ window.labelDisplayToggle = function (isChecked) {
   }
 };
 
+let linkLabelsDisplayToggle = true; // Keep track of global label toggle state
 window.linkLabelDisplayToggle = function (isChecked) {
-  if (isChecked) {
-    elts.linkLabels.style('display', null);
-  } else {
-    elts.linkLabels.style('display', 'none');
-  }
+  linkLabelsDisplayToggle = isChecked;
+  updateLinkVisibilityBasedOnFiltersAndNodes(); // Update visibility when toggled
 };
 
 /**
@@ -660,10 +700,9 @@ hotkeys('c', (e) => {
 export {
   svg,
   svgSub,
-  hideNodes,
-  displayNodes,
   displayNodesAll,
   setNodesDisplaying,
+  updateLinkVisibility,
   highlightNodes,
   unlightNodes,
   translate,

@@ -74,6 +74,30 @@
             </form>
         </details>
 
+        {% if linkFilters | length > 0 %}
+        <details class="menu-link-types" open="open">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_link_types.title[lang] | default("Link Types") }}
+                {# Use a placeholder or calculate link count if needed, here using allLinkKeys #}
+                <span id="link-counter" class="badge">{{ allLinkKeys | length }}</span>
+            </summary>
+
+            <form id="link-types-form" class="menu-types-container">
+                {# Iterate over the linkFilters object passed from template.js #}
+                {% for filterName, filterMetas in linkFilters %}
+                <label class="filter">
+                    {# Checkbox uses filterName #}
+                    <input type="checkbox" name="{{ filterName }}" {% if filterMetas.active %}checked{% endif %}>
+                    {# Use the generated --n_typename CSS variable for color #}
+                    <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
+                    {# Show count of links for this type #}
+                    <span class="badge">{{ filterMetas.linkKeys | length }}</span>
+                </label>
+                {% endfor %}
+            </form>
+        </details>
+        {% endif %}
+
         {% if tags.length !== 0 %}
         <details class="menu-tags" data-sort="tag">
             <summary class="menu-title">
@@ -589,6 +613,8 @@
         const graphProperties = {{ graph.config | dump | safe }};
         const tagList = {{ tags | dump | safe }};
         const typeList = {{ filters | dump | safe }};
+        const linkTypeList = {{ linkFilters | dump | safe }};
+        const allLinkKeys = {{ allLinkKeys | dump | safe }};
         const timeline = {{ timeline | dump | safe }};
         const sorting = {{ sorting | dump | safe }};
 
