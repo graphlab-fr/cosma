@@ -118,6 +118,22 @@ module.exports = class Graph {
    * @returns {Map<string, Set<string>}
    */
 
+  getLinkTypesFromLinks() {
+    const typesList = new Map();
+    for (const { type, id } of this.data.links) {
+      if (typesList.has(type)) {
+        typesList.get(type).add(id);
+      } else {
+        typesList.set(type, new Set([id]));
+      }
+    }
+    return typesList;
+  }
+
+  /**
+   * @returns {Map<string, Set<string>}
+   */
+
   getTagsFromRecords() {
     const tagsList = new Map();
     for (const { tags, id } of this.records) {

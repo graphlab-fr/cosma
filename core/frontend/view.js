@@ -13,6 +13,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const activeFilters = Array.from(document.querySelectorAll('#types-form input:checked')).map(
       ({ name }) => name,
     );
+    const activeLinkFilters = Array.from(document.querySelectorAll('#link-types-form input:checked')).map(
+      ({ name }) => name,
+    );
     const activeTags = Array.from(document.querySelectorAll('#tags-form input:checked')).map(
       ({ name }) => name,
     );
@@ -20,6 +23,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (activeFilters.length > 0) {
       url.searchParams.set('filters', activeFilters.join('-'));
+    }
+    if (activeLinkFilters.length > 0) {
+      url.searchParams.set('link-filters', activeLinkFilters.join('-'));
     }
     if (activeTags.length > 0) {
       url.searchParams.set('tags', activeTags.join('-'));

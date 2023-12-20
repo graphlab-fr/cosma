@@ -19,8 +19,13 @@ left_panel:
 
   menu_types:
     title:
-      fr: Types
-      en: Types
+      fr: Types de Nœuds
+      en: Node Types
+
+  menu_link_types:
+    title:
+      fr: Types de liens
+      en: Link Types
 
   menu_keywords:
     title:
