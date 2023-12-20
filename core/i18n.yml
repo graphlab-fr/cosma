@@ -19,8 +19,13 @@ left_panel:
 
   menu_types:
     title:
-      fr: Types
-      en: Types
+      fr: Types de Nœuds
+      en: Node Types
+
+  menu_link_types:
+    title:
+      fr: Types de liens
+      en: Link Types
 
   menu_keywords:
     title:
@@ -64,6 +69,9 @@ left_panel:
     input_labels_show:
       fr: Afficher les étiquettes
       en: Display labels
+    input_link_labels_show:
+      fr: Afficher les étiquettes liens
+      en: Display link labels
     input_highlight_hover_node:
       fr: Surbrillance au survol
       en: Highlight on hover

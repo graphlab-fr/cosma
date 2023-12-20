@@ -61,7 +61,7 @@
         <details class="menu-types" open="open">
             <summary class="menu-title">
                 {{ translation.left_panel.menu_types.title[lang] }}
-                <span id="types-counter" class="badge">{{ types | length }}</span>
+                <span id="types-counter" class="badge">{{ records | length }}</span>
             </summary>
 
             <form id="types-form" class="menu-types-container">
@@ -70,6 +70,23 @@
                     <input type="checkbox" name="{{ filterName }}">
                     <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
                     <span class="badge">{{ filterMetas.nodes | length }}</span>
+                </label>
+                {% endfor %}
+            </form>
+        </details>
+
+        <details class="menu-link-types" open="open">
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_link_types.title[lang] }}
+                <span id="types-counter" class="badge">{{ nblinks }}</span>
+            </summary>
+
+            <form id="link-types-form" class="menu-types-container">
+                {% for filterName, filterMetas in linkFilters %}
+                <label class="filter">
+                    <input type="checkbox" name="{{ filterName }}">
+                    <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
+                    <span class="badge">{{ filterMetas.links | length }}</span>
                 </label>
                 {% endfor %}
             </form>
@@ -175,6 +192,12 @@
                     <label>
                         <input type="checkbox" checked onchange="labelDisplayToggle(this.checked)">
                         {{ translation.left_panel.menu_controls.input_labels_show[lang] }}
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" checked onchange="linkLabelDisplayToggle(this.checked)">
+                        {{ translation.left_panel.menu_controls.input_link_labels_show[lang] }}
                     </label>
                 </li>
                 <li>
@@ -591,6 +614,7 @@
         const graphProperties = {{ graph.config | dump | safe }};
         const tagList = {{ tags | dump | safe }};
         const typeList = {{ filters | dump | safe }};
+        const linkTypeList = {{ linkFilters | dump | safe }}
         const timeline = {{ timeline | dump | safe }};
         const sorting = {{ sorting | dump | safe }};
 

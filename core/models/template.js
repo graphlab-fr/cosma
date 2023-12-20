@@ -144,6 +144,14 @@ module.exports = class Template {
         active: true,
       };
     });
+    const linkFiltersFromGraph = {};
+    graph.getLinkTypesFromLinks().forEach((links, name) => {
+      links = Array.from(links);
+      linkFiltersFromGraph[name] = {
+        links,
+        active: true,
+      }
+    });
 
     /** @type {{name: string, nodes: string[]}[]} */
     const tagsFromGraph = [];
@@ -359,6 +367,7 @@ module.exports = class Template {
 
       views: views || [],
       filters: filtersFromGraph,
+      linkFilters: linkFiltersFromGraph,
       tags: tagsFromGraph,
 
       references,

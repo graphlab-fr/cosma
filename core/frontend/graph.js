@@ -26,6 +26,14 @@ data.nodes = data.nodes.map((node) => {
   return node;
 });
 
+const allLinkIds = [];
+
+data.links = data.links.map((link) => {
+  allLinkIds.push(link.id);
+  link.hidden = filterPriority.notFiltered;
+  return link;
+});
+
 /** Box sizing
 ------------------------------------------------------------*/
 
@@ -80,11 +88,29 @@ hotkeys('space', (e) => {
 });
 
 simulation.on('tick', function () {
+  console.log("tick");
   elts.links
     .attr('x1', (d) => d.source.x)
     .attr('y1', (d) => d.source.y)
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y);
+  
+  elts.linkLabels
+    .attr("x", (d) => (d.source.x + d.target.x) / 2)
+    .attr("y", (d) => (d.source.y + d.target.y) / 2)
+    .attr("text-anchor", "middle")
+    .attr("transform", d => {
+      var angle = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x) * 180 / Math.PI;
+
+      // Adjust angle to avoid upside-down text
+      if (angle > 90 || angle < -90) {
+        angle = (angle + 180) % 360;
+      }
+      
+      var x = (d.source.x + d.target.x) / 2;
+      var y = (d.source.y + d.target.y) / 2;
+      return `rotate(${angle},${x},${y})`;
+    });
 
   elts.nodes.attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
 
@@ -126,6 +152,15 @@ elts.links = svgSub
 if (graphProperties.graph_arrows === true) {
   elts.links.attr('marker-end', 'url(#arrow)');
 }
+
+elts.linkLabels = svgSub
+  .append('g')
+  .selectAll("text")
+  .data(data.links)
+  .enter()
+  .append("text")
+  .attr('font-size', graphProperties.graph_text_size)
+  .text(d => d.type); // Assuming each link has a label
 
 const strokeWidth = 2;
 
@@ -379,20 +414,29 @@ function getNodeNetwork(nodeIds) {
 
   const nodes = elts.nodes.filter((node) => nodeIds.includes(node.id));
 
+  // even if links should be displayed by linkIds, hide if source or target node doesn't exist
+  const linksShown = [];
   const links = elts.links.filter(function (link) {
+    // if link wasn't in show list, return
+    // if should be filtered, don't show here!
+    if (link.hidden !== filterPriority.notFiltered) { return false; }
+    // otherwise check if we should return based on if relevant
     if (!nodeIds.includes(link.source.id) && !nodeIds.includes(link.target.id)) {
       return false;
-    }
+    } // don't show if source or target id doesn't exist
     if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
       return false;
-    }
-
+    } // don't show if source or target node is hidden
+    linksShown.push(link.id);
     return true;
   });
+
+  const linkLabels = elts.linkLabels.filter((label) => linksShown.includes(label.id));
 
   return {
     nodes,
     links,
+    linkLabels,
   };
 }
 
@@ -410,6 +454,22 @@ function setNodesDisplaying(nodeIds, priority) {
 
   hideNodes(toHide, priority);
   displayNodes(toDisplay, priority);
+}
+
+function setLinksDisplaying(linkIds, priority) {
+  const toHide = [],
+    toDisplay = [];
+
+  allLinkIds.forEach((id) => {
+    if (linkIds.includes(id)) {
+      toDisplay.push(id);
+    } else {
+      toHide.push(id);
+    }
+  });
+
+  hideLinks(toHide, priority);
+  displayLinks(toDisplay, priority);
 }
 
 /**
@@ -464,27 +524,92 @@ function hideNodesAll(priority = filterPriority.notFiltered) {
 }
 
 /**
- * Display none nodes and their link
+ * Hide some nodes & their links, by their id
+ * @param {array} linkIds - List of nodes ids
+ */
+
+function hideLinks(linkIds, priority) {
+  if (priority === undefined) {
+    throw new Error('Need priority');
+  }
+
+  elts.links.data().map((link) => {
+    const { id, hidden } = link;
+    if (linkIds.includes(id) && hidden <= priority) {
+      link.hidden = priority;
+    }
+    return link;
+  });
+  // hide all links in LinkIds!
+  elts.links.filter((link) => linkIds.includes(link.id)).style('display', 'none');
+  elts.linkLabels.filter((label) => linkIds.includes(label.id)).style('display', 'none');
+}
+
+/**
+ * Display some links by their id
+ * @param {array} linkIds - List of link ids
+ */
+
+function displayLinks(linkIds, priority = filterPriority.notFiltered) {
+  if(!displayLinksToggle) { return; } // do nothing if links are disabled
+  const diplayedNodes = elts.nodes
+    .filter((item) => item.hidden === filterPriority.notFiltered)
+    .data()
+    .map((item) => item.id);
+  
+  elts.links.data().map((link) => {
+    const { id, hidden } = link;
+    if (linkIds.includes(id) && hidden <= priority) {
+      link.hidden = filterPriority.notFiltered;
+    }
+    return link;
+  });
+  const displayedLinks = [];
+  elts.links.filter((link) => {
+    if(!linkIds.includes(link.id)) { return false; }
+    if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
+      return false;
+    } // don't show if source or target node is hidden
+    displayedLinks.push(link.id);
+    return true;
+  }).style('display', null);
+  if (displayLinkLabelsToggle) {
+    elts.linkLabels.filter((label) => displayedLinks.includes(label.id)).style('display', null);
+  }
+}
+
+function displayLinksAll(priority = filterPriority.notFiltered) {
+  displayLinks(allLinkIds, priority);
+}
+
+function hideLinksAll(priority = filterPriority.notFiltered) {
+  hideLinks(allLinkIds, priority);
+}
+
+/**
+ * Hide given nodes and given links
  * @param {string[]|number[]} nodeIds - List of nodes ids
  */
 
 window.hideNodeNetwork = function (nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
+  const { nodes, links, linkLabels } = getNodeNetwork(nodeIds);
 
   nodes.style('display', 'none');
   links.style('display', 'none');
+  linkLabels.style('display', 'none');
 };
 
 /**
- * Reset display nodes and their link
+ * Reset display of given nodes and their links
  * @param {string[]|number[]} nodeIds - List of nodes ids
  */
 
 window.displayNodeNetwork = function (nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
+  const { nodes, links, linkLabels } = getNodeNetwork(nodeIds);
 
   nodes.style('display', null);
   links.style('display', null);
+  linkLabels.style('display', null);
 };
 
 /**
@@ -497,6 +622,7 @@ function highlightNodes(nodeIds) {
 
   nodes.selectAll('.border').style('fill', 'var(--highlight)');
   links.style('stroke', 'var(--highlight)');
+  // TODO: Should we highlight the link labels?
 
   View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
 }
@@ -523,11 +649,13 @@ function unlightNodes() {
  * @param {boolean} isChecked - 'checked' value send by a checkbox input
  */
 
+let displayLinksToggle = true;
 window.linksDisplayToggle = function (isChecked) {
+  displayLinksToggle = isChecked;
   if (isChecked) {
-    elts.links.style('display', null);
+    displayLinks(allLinkIds, filterPriority.filteredByType);
   } else {
-    elts.links.style('display', 'none');
+    hideLinks(allLinkIds, filterPriority.filteredByType);
   }
 };
 
@@ -541,6 +669,16 @@ window.labelDisplayToggle = function (isChecked) {
     elts.labels.style('display', null);
   } else {
     elts.labels.style('display', 'none');
+  }
+};
+
+let displayLinkLabelsToggle = true;
+window.linkLabelDisplayToggle = function (isChecked) {
+  displayLinkLabelsToggle = isChecked;
+  if (isChecked) {
+    displayLinks(allLinkIds, filterPriority.filteredByType);
+  } else {
+    elts.linkLabels.style('display', 'none');
   }
 };
 
@@ -646,6 +784,7 @@ export {
   displayNodes,
   displayNodesAll,
   setNodesDisplaying,
+  setLinksDisplaying,
   highlightNodes,
   unlightNodes,
   translate,
