@@ -179,6 +179,12 @@
                 </li>
                 <li>
                     <label>
+                        <input type="checkbox" checked onchange="linkLabelDisplayToggle(this.checked)">
+                        {{ translation.left_panel.menu_controls.input_link_labels_show[lang] }}
+                    </label>
+                </li>
+                <li>
+                    <label>
                         <input type="checkbox" {{ "checked" if graph.config.graph_highlight_on_hover }}
                             onchange="graphProperties.graph_highlight_on_hover = this.checked">
                         {{ translation.left_panel.menu_controls.input_highlight_hover_node[lang] }}

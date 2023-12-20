@@ -14,11 +14,15 @@
   "bin": {
     "cosma": "app.js"
   },
-  "man": ["./man/cosma.1"],
+  "man": [
+    "./man/cosma.1"
+  ],
   "scripts": {
+    "start": "node app.js",
     "test": "./node_modules/.bin/mocha",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
-    "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1"
+    "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1",
+    "build": "./node_modules/.bin/webpack-cli build --config ./core/utils/webpack.config.js"
   },
   "contributors": [
     "Arthur Perret",
@@ -48,9 +52,18 @@
   "keywords": [],
   "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@faker-js/faker": "^7.5.0",
+    "babel-loader": "^9.1.0",
     "chai": "^4.3.6",
+    "chai-fs": "^2.0.0",
+    "cypress": "^10.9.0",
     "mocha": "^10.0.0",
-    "prettier": "^3.0.0"
+    "prettier": "2.8.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
   },
   "prettier": {
     "printWidth": 100,

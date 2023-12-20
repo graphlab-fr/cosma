@@ -80,11 +80,29 @@ hotkeys('space', (e) => {
 });
 
 simulation.on('tick', function () {
+  console.log("tick");
   elts.links
     .attr('x1', (d) => d.source.x)
     .attr('y1', (d) => d.source.y)
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y);
+  
+  elts.linkLabels
+    .attr("x", (d) => (d.source.x + d.target.x) / 2)
+    .attr("y", (d) => (d.source.y + d.target.y) / 2)
+    .attr("text-anchor", "middle")
+    .attr("transform", d => {
+      var angle = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x) * 180 / Math.PI;
+
+      // Adjust angle to avoid upside-down text
+      if (angle > 90 || angle < -90) {
+        angle = (angle + 180) % 360;
+      }
+      
+      var x = (d.source.x + d.target.x) / 2;
+      var y = (d.source.y + d.target.y) / 2;
+      return `rotate(${angle},${x},${y})`;
+    });
 
   elts.nodes.attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
 
@@ -126,6 +144,15 @@ elts.links = svgSub
 if (graphProperties.graph_arrows === true) {
   elts.links.attr('marker-end', 'url(#arrow)');
 }
+
+elts.linkLabels = svgSub
+  .append('g')
+  .selectAll("text")
+  .data(data.links)
+  .enter()
+  .append("text")
+  .attr('font-size', graphProperties.graph_text_size)
+  .text(d => d.type); // Assuming each link has a label
 
 const strokeWidth = 2;
 
@@ -541,6 +568,14 @@ window.labelDisplayToggle = function (isChecked) {
     elts.labels.style('display', null);
   } else {
     elts.labels.style('display', 'none');
+  }
+};
+
+window.linkLabelDisplayToggle = function (isChecked) {
+  if (isChecked) {
+    elts.linkLabels.style('display', null);
+  } else {
+    elts.linkLabels.style('display', 'none');
   }
 };
 
