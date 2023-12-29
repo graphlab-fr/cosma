@@ -561,6 +561,7 @@ name | description
 `source` | Identifier of the record from which the link originates (required)
 `target` | Identifier of the record that the link targets (required)
 `label` | Description of the link (optional). This description is displayed in the context tooltips of the links.
+`type` | Type of the link (optional)
 
 # `modelize`: creating a cosmoscope
 
