@@ -25,6 +25,7 @@
  * @property {number} source
  * @property {number} target
  * @property {string} label
+ * @property {string} type
  */
 
 const Config = require('./config'),
@@ -241,8 +242,8 @@ module.exports = class Link {
    * @return {FormatedLinkData}
    */
 
-  static getFormatedDataFromCsvLine({ source, target, label }) {
-    return { source, target, label };
+  static getFormatedDataFromCsvLine({ source, target, label, type }) {
+    return { source, target, label, type: type || 'undefined' };
   }
 
   /**
@@ -251,12 +252,12 @@ module.exports = class Link {
    */
 
   static formatedDatasetToLinks(data) {
-    return data.map(({ label, source, target }, i) => {
+    return data.map(({ label, source, target, type }, i) => {
       if (label) {
         label = [label];
       }
 
-      const link = new Link(i, label, 'undefined', undefined, undefined, undefined, source, target);
+      const link = new Link(i, label, type, undefined, undefined, undefined, source, target);
 
       if (link.isValid()) {
         return link;
