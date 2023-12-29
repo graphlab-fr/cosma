@@ -98,6 +98,6 @@ describe('Modelize from csv files', () => {
 
     expect(lineDeweyToOtlet.source).to.equal('melvil-dewey');
     expect(lineDeweyToOtlet.target).to.equal('20210901132906');
-    expect(lineDeweyToOtlet.ignored).to.be.undefined;
+    expect(lineDeweyToOtlet.type).to.equal('associe');
   });
 });
