@@ -95,6 +95,7 @@ describe('Modelize from csv files', () => {
     expect(lineBrietToOtlet.source).to.equal('20220801238906');
     expect(lineBrietToOtlet.target).to.equal('20210901132906');
     expect(lineBrietToOtlet.label).to.equal('Elle qualifie Otlet de "mage"');
+    expect(lineBrietToOtlet.type).to.equal('undefined');
 
     expect(lineDeweyToOtlet.source).to.equal('melvil-dewey');
     expect(lineDeweyToOtlet.target).to.equal('20210901132906');
