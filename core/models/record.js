@@ -653,10 +653,7 @@ module.exports = class Record {
       }
     }
 
-    const rgxRemoveDivider = new RegExp(/<div class="csl-entry">|<\/div>/, 'g');
-    this.bibliography = Array.from(bibliographyHtml).map((entry) =>
-      entry.replace(rgxRemoveDivider, ''),
-    );
+    this.bibliography = Array.from(bibliographyHtml);
   }
 
   /**

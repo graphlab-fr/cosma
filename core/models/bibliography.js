@@ -140,6 +140,20 @@ module.exports = class Bibliography {
   }
 
   /**
+   * Remove `<div class="csl-entry">` and `</div>` from bibliographic record HTML
+   * @param {string} record HTML from `citeproc.makeBibliography`
+   * @example
+   * ```
+   * Input:  <div class="csl-entry">ENGELBART, Douglas C, 1962…</div>
+   * Output: ENGELBART, Douglas C, 1962…
+   * ```
+   */
+
+  static getFormatedHtmlBibliographicRecord(record) {
+    return record.trim().slice(23, -6);
+  }
+
+  /**
    * @param {object} library
    * @param {string} cslStyle
    * @param {string} xmlLocal
@@ -217,7 +231,9 @@ module.exports = class Bibliography {
     }
 
     this.citeproc.updateItems(ids);
-    let record = this.citeproc.makeBibliography()[1].map((t) => t.trim());
+    let record = this.citeproc
+      .makeBibliography()[1]
+      .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t));
 
     bibliographicRecord.quotesExtract.citationItems = [
       ...bibliographicRecord.quotesExtract.citationItems.filter(({ id }) => this.ids.has(id)),
