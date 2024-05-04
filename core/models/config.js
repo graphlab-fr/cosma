@@ -11,11 +11,7 @@ const envPaths = require('env-paths');
 const { data: envPathDataDir } = envPaths('cosma-cli', { suffix: '' });
 
 const Link = require('./link');
-const {
-  GetConfigFilePathByProjectNameError,
-  FindUserDataDirError,
-  ReadUserDataDirError,
-} = require('./errors');
+const { FindUserDataDirError, ReadUserDataDirError } = require('./errors');
 
 /**
  * Class to manage the user config
@@ -330,26 +326,6 @@ module.exports = class Config {
    * @type {string}
    */
   static configFilePath = Config.executionConfigPath;
-
-  /**
-   * @param {string} projectName
-   * @throws {GetConfigFilePathByProjectName} If invalid string in parameter or nowhere config file
-   */
-
-  static setConfigFilePathByProjectName(projectName) {
-    if (!projectName || typeof projectName !== 'string') {
-      throw new GetConfigFilePathByProjectNameError('Project name is invalid.');
-    }
-    const list = Config.getConfigFilesListFromConfigDir();
-    const target = list.find(({ name }) => name === projectName);
-    if (target) {
-      Config.configFilePath = target.filePath;
-    } else {
-      throw new GetConfigFilePathByProjectNameError(
-        `Project name "${projectName}" does not exists.`,
-      );
-    }
-  }
 
   /**
    * Get config options from the (config file) path
