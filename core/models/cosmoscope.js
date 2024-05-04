@@ -410,8 +410,7 @@ module.exports = class Cosmoscope extends Graph {
       bibliography.citeproc.updateItems([key]);
       let content = bibliography.citeproc
         .makeBibliography()[1]
-        .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t))
-        .join('\n');
+        .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t))[0];
 
       const title = bibliography.library[key]['title'] || '';
 
