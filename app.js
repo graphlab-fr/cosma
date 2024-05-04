@@ -12,26 +12,6 @@ const commander = require('commander'),
 
 const Config = require('./core/models/config');
 
-(() => {
-  const fs = require('fs');
-
-  if (fs.existsSync(Config.executionConfigPath)) {
-    Config.configFilePath = Config.executionConfigPath;
-    return;
-  }
-
-  Config.configFilePath = Config.defaultConfigPath;
-
-  if (!fs.existsSync(Config.defaultConfigPath)) {
-    console.log(
-      ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
-      'No default or local config file to use.',
-      'Cosma runs with factory config.',
-      'Use "cosma config --help" for more info about create config file.',
-    );
-  }
-})();
-
 program.version(version);
 
 program
@@ -49,7 +29,14 @@ program
     } else if (listProjects) {
       try {
         const list = Config.getConfigFilesListFromConfigDir().map(({ name }) => name);
-        console.log(list.join('\n'));
+        if (list.length > 0) {
+          console.log(list.join('\n'));
+        } else {
+          console.log(
+            'No projects found from global directory.',
+            'Use "cosma config --global <name>" to create project.',
+          );
+        }
       } catch (err) {
         console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
       }
@@ -92,13 +79,8 @@ program
   .option('--sample', 'Create a sample cosmoscope.')
   .option('--fake', 'Create a fake cosmoscope for testing purposes.')
   .action(({ project: projectName, ...rest }) => {
-    if (projectName) {
-      try {
-        Config.setConfigFilePathByProjectName(projectName);
-      } catch (err) {
-        console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-      }
-    }
+    setConfigFileToRun(projectName);
+
     require('./controllers/modelize')(rest);
   });
 
@@ -113,13 +95,8 @@ program
     'Use the configuration file for project <name> from the user data directory.',
   )
   .action(({ project: projectName }) => {
-    if (projectName) {
-      try {
-        Config.setConfigFilePathByProjectName(projectName);
-      } catch (err) {
-        console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-      }
-    }
+    setConfigFileToRun(projectName);
+
     require('./controllers/record');
   });
 
@@ -139,13 +116,8 @@ program
     'Use the configuration file for project <name> from the user data directory.',
   )
   .action((title, type, tags, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
-    if (projectName) {
-      try {
-        Config.setConfigFilePathByProjectName(projectName);
-      } catch (err) {
-        console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-      }
-    }
+    setConfigFileToRun(projectName);
+
     require('./controllers/autorecord')(title, type, tags, saveIdOnYmlFrontMatter);
   })
   .showHelpAfterError('("autorecord --help" for additional information)');
@@ -164,16 +136,57 @@ program
     'Use the configuration file for project <name> from the user data directory.',
   )
   .action((filePath, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
-    if (projectName) {
-      try {
-        Config.setConfigFilePathByProjectName(projectName);
-      } catch (err) {
-        console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-      }
-    }
+    setConfigFileToRun(projectName);
+
     require('./controllers/batch')(filePath, saveIdOnYmlFrontMatter);
   })
   .showHelpAfterError('("batch --help" for additional information)');
 
 program.showSuggestionAfterError();
 program.parse();
+
+/**
+ * Set config file for current execution,
+ * if unset or unknown project name, Cosma use execution path config file,
+ * if does not exist, Cosma use defaut config file,
+ * if does not exist, Cosma can not run.
+ *
+ * @param {string} projectName Global config file name to use
+ */
+
+function setConfigFileToRun(projectName) {
+  if (projectName) {
+    const list = Config.getConfigFilesListFromConfigDir();
+    const target = list.find(({ name }) => name === projectName);
+    if (target) {
+      Config.configFilePath = target.filePath;
+    } else {
+      console.log(
+        ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
+        `Project name "${projectName}" does not exists.`,
+        'Check projects list with "cosma --list-projects"',
+      );
+
+      process.exit();
+    }
+
+    return;
+  }
+
+  const fs = require('fs');
+
+  if (!fs.existsSync(Config.executionConfigPath)) {
+    if (!fs.existsSync(Config.defaultConfigPath)) {
+      console.log(
+        ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
+        'No default or local config file to use to run.',
+        'Use "cosma config --help" for more info about create config file.',
+      );
+
+      process.exit();
+    }
+
+    // if no config file for current execution path, switch to default config file
+    Config.configFilePath = Config.defaultConfigPath;
+  }
+}

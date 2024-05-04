@@ -56,16 +56,6 @@ module.exports = {
       );
     }
   },
-  GetConfigFilePathByProjectNameError: class extends CoreError {
-    constructor(cause) {
-      super(
-        'Can not find config file by this project name: ',
-        cause,
-        'get-config-file-path-by-project-name',
-        false,
-      );
-    }
-  },
   FindUserDataDirError: class extends CoreError {
     constructor(cause) {
       super(
