@@ -238,7 +238,7 @@ module.exports = class Template {
         }">${linkContent}</a>`.trim();
       });
 
-      if (opts['references_as_nodes'] && bibliography) {
+      if (bibliography) {
         Citr.util.extractCitations(input).forEach((quoteText, index) => {
           let citationItems;
           try {
@@ -297,6 +297,7 @@ module.exports = class Template {
           idsDictionnary.forEach((recordId, key) => {
             cluster = cluster.replace(key, () => {
               const record = graph.records.find(({ id }) => id === recordId);
+              if (!record) return key;
               return `<a href="#${record.id}" title="${escapeQuotes(
                 record.title,
               )}" class="record-link ${
