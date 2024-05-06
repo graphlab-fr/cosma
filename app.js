@@ -163,7 +163,7 @@ function setConfigFileToRun(projectName) {
     } else {
       console.log(
         ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
-        `Project name "${projectName}" does not exists.`,
+        `Project name "${projectName}" does not exist.`,
         'Check projects list with "cosma --list-projects"',
       );
 
@@ -179,7 +179,7 @@ function setConfigFileToRun(projectName) {
     if (!fs.existsSync(Config.defaultConfigPath)) {
       console.log(
         ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
-        'No default or local config file to use to run.',
+        'No default or local config file to use.',
         'Use "cosma config --help" for more info about create config file.',
       );
 
