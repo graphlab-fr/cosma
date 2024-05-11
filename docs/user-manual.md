@@ -876,7 +876,6 @@ Updates to version 2.0 were developed with support from the AlgoJ research progr
 To improve the maintainability and readability of the source code, the development team uses the following libraries:
 
 - Zettlr/citr : 1.2.2
-- Axios : 0.27.2
 - Citeproc : 2.4.62
 - Csv-parse : 5.3.0
 - D3 : 4.13.0
