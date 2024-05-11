@@ -1,25 +1,19 @@
 const fs = require('fs'),
-  path = require('path');
+  path = require('path'),
+  { Readable } = require('stream'),
+  { finished } = require('stream/promises');
 
 module.exports = {
   /**
-   * @param {string} url
-   * @param {string} pathTarget
+   * @param {string} url To file
+   * @param {string} pathTarget To save file
    * @returns {Promise}
    */
 
-  downloadFile: function (url, pathTarget) {
-    return new Promise((resolve, reject) => {
-      const axios = require('axios');
-      axios({
-        url,
-        responseType: 'stream',
-      })
-        .then(({ data }) => {
-          data.pipe(fs.createWriteStream(pathTarget)).on('finish', resolve).on('error', reject);
-        })
-        .catch(reject);
-    });
+  downloadFile: async function (url, pathTarget) {
+    const fileStream = fs.createWriteStream(pathTarget);
+    const res = await fetch(url);
+    await finished(Readable.fromWeb(res.body).pipe(fileStream));
   },
 
   /**
