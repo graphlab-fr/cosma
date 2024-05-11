@@ -14,11 +14,16 @@
   "bin": {
     "cosma": "app.js"
   },
-  "man": ["./man/cosma.1"],
+  "man": [
+    "./man/cosma.1"
+  ],
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
+    "test:unit": "./node_modules/.bin/mocha --timeout 30000",
+    "test:e2e": "./node_modules/.bin/cypress open --config-file ./utils/cypress.config.js",
+    "fake": "node ./core/index.js",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
-    "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1"
+    "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1",
+    "build": "./node_modules/.bin/webpack-cli build --config ./core/utils/webpack.config.js"
   },
   "contributors": [
     "Arthur Perret",
@@ -26,6 +31,7 @@
     "Olivier Le Deuff",
     "Clément Borel"
   ],
+  "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
@@ -33,25 +39,38 @@
     "citeproc": "^2.4.62",
     "commander": "^8.3.0",
     "csv-parse": "^5.3.0",
+    "d3": "^4.13.0",
     "d3-array": "^2.12.1",
     "d3-scale": "^3.3.0",
     "env-paths": "^2.2.1",
+    "fuse.js": "^6.6.2",
     "glob": "^7.2.0",
+    "graphology-traversal": "^0.3.1",
+    "graphology": "^0.25.1",
+    "hotkeys-js": "^3.10.0",
     "markdown-it": "^13.0.1",
     "nunjucks": "^3.2.3",
     "slugify": "^1.6.5",
     "yaml": "^2.2.1"
   },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@faker-js/faker": "^7.5.0",
+    "babel-loader": "^9.1.0",
+    "chai": "^4.3.6",
+    "chai-fs": "^2.0.0",
+    "cypress": "^10.9.0",
+    "mocha": "^10.0.0",
+    "prettier": "2.8.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  },
   "directories": {
     "doc": "docs"
   },
   "keywords": [],
-  "author": "Guillaume Brioudes (https://myllaume.fr/)",
-  "devDependencies": {
-    "chai": "^4.3.6",
-    "mocha": "^10.0.0",
-    "prettier": "^3.0.0"
-  },
   "prettier": {
     "printWidth": 100,
     "tabWidth": 2,
@@ -59,6 +78,7 @@
     "semi": true,
     "singleQuote": true,
     "quoteProps": "as-needed",
+    "trailingComma":"all",
     "bracketSpacing": true,
     "arrowParens": "always"
   }
