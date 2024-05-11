@@ -14,7 +14,7 @@ const fs = require('fs'),
   }),
   Citr = require('@zettlr/citr');
 
-const app = require('../package.json');
+const app = require('../../package.json');
 
 const Link = require('./link'),
   Config = require('./config'),
