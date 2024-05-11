@@ -29,7 +29,6 @@ module.exports = {
   resolve: {
     extensions: ['.js'],
   },
-  watch: true,
   devServer: {
     static: {
       directory: path.join(__dirname, '../temp'),
