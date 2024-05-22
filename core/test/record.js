@@ -576,7 +576,7 @@ isDead: false
         const errorIncrement = maxIncrement + 1;
         (function () {
           Record.generateOutDailyId(errorIncrement);
-        }.should.throw(Error));
+        }).should.throw(Error);
       });
     });
   });
