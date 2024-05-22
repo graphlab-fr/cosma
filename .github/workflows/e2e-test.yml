@@ -29,8 +29,8 @@ jobs:
       - name: Install Cosma
         run: npm install . --global
 
-      - name: Run server
-        run: node ./e2e/exec-modelize.js
+      - name: Build cosmoscopes
+        run: sh ./e2e/exec-modelize.sh
 
       - name: Run E2E tests
         run: npm run test:e2e
