@@ -26,8 +26,11 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Install Cosma
+        run: npm install . --global
+
       - name: Run server
-        run: npm run fake &
+        run: node ./e2e/exec-modelize.js
 
       - name: Run E2E tests
         run: npm run test:e2e
