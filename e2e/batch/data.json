@@ -1,7 +1,27 @@
 [
   {
-    "title": "Texte générique",
+    "title": "Concept",
     "type": ["concept"],
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida nulla id aliquet commodo."
+  },
+  {
+    "title": "Note",
+    "type": ["note"],
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida nulla id aliquet commodo."
+  },
+  {
+    "title": "Personne",
+    "type": ["personne"],
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida nulla id aliquet commodo."
+  },
+  {
+    "title": "Objet",
+    "type": ["objet"],
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida nulla id aliquet commodo."
+  },
+  {
+    "title": "Idée",
+    "type": ["idée"],
     "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris gravida nulla id aliquet commodo."
   }
 ]
