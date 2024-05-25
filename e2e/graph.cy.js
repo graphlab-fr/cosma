@@ -1,11 +1,12 @@
 describe('graph', () => {
   beforeEach(() => {
-    cy.visit('e2e/citeproc/cosmoscope.html');
+    cy.visit('temp/citeproc.html');
   });
 
   it('should get one node per record', () => {
     const numberOfRecord = 6;
-    cy.get('[data-node]').should('have.length', numberOfRecord);
+    const numberOfBibliographicRecord = 2;
+    cy.get('[data-node]').should('have.length', numberOfRecord + numberOfBibliographicRecord);
   });
 
   it('should open record on click on node', () => {

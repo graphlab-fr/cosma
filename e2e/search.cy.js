@@ -1,6 +1,6 @@
 describe('Search', () => {
   beforeEach(() => {
-    cy.visit('e2e/citeproc/cosmoscope.html');
+    cy.visit('temp/citeproc.html');
   });
 
   it('should get search result after type record name', () => {

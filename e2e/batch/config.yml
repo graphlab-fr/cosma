@@ -1,5 +1,5 @@
 select_origin: directory
-files_origin: ../records
+files_origin: ../../temp/
 nodes_origin: ""
 links_origin: ""
 nodes_online: ""
@@ -15,12 +15,6 @@ record_types:
   concept:
     stroke: "#984ea3"
     fill: "#984ea3"
-  insight:
-    stroke: "#ff7f00"
-    fill: "#ff7f00"
-  reference:
-    stroke: "#6C6C6C"
-    fill: "#6C6C6C"
 link_types:
   undefined:
     stroke: simple
@@ -28,8 +22,7 @@ link_types:
   adjacent concept:
     stroke: dotted
     color: "#e1e1e1"
-references_as_nodes: true
-references_type_label: "reference"
+references_as_nodes: false
 record_filters: []
 graph_background_color: "#ffffff"
 graph_highlight_color: "#ff6a6a"
@@ -44,19 +37,15 @@ attraction_force: 600
 attraction_distance_max: 600
 attraction_vertical: 0
 attraction_horizontal: 0
-hide_id_from_record_header: true
+hide_id_from_record_header: false
 views: {}
 record_metas: []
-title: "Cosma demo: Evergreen notes"
-author: "Notes by Andy Matuschak; presentation by Arthur Perret"
+title: "Cosma demo: batch"
+author: ""
 description: ""
 keywords: []
 link_symbol: ""
 link_context: inline
-csl: ./iso690-author-date-fr.csl
-bibliography: ./references.json
-csl_locale: ./locales.xml
-css_custom: ../styles.css
 devtools: false
 lang: fr
 name: ""
