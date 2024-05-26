@@ -4,8 +4,8 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-import { setNodesDisplaying } from './graph';
-import filterPriority from './filterPriority';
+import { setNodesDisplaying } from './graph.js';
+import filterPriority from './filterPriority.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */

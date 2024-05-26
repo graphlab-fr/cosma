@@ -1,6 +1,6 @@
-import Fuse from 'fuse.js/dist/fuse.basic';
+import Fuse from 'fuse.js';
 import hotkeys from 'hotkeys-js';
-import { nodes } from './graph';
+import { nodes } from './graph.js';
 
 const fuse = new Fuse([], {
   includeScore: false,

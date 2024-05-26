@@ -1,12 +1,11 @@
-const assert = require('assert');
-
-const Cosmocope = require('../models/cosmoscope');
+import assert from 'assert';
+import Cosmoscope from '../models/cosmoscope.js';
 
 describe('Cosmoscope', () => {
   describe('data from Yaml FrontMatter', () => {
     describe('id', () => {
       it('should get string from number', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 id: 20210901132906
 ---`,
@@ -16,7 +15,7 @@ id: 20210901132906
       });
 
       it('should get string from string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 id: 'toto'
 ---`,
@@ -26,7 +25,7 @@ id: 'toto'
       });
 
       it('should get string from date', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 id: 2012-05-12
 ---`,
@@ -36,7 +35,7 @@ id: 2012-05-12
       });
 
       it('should get undefined', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: toto
 ---`,
@@ -48,7 +47,7 @@ title: toto
 
     describe('content', () => {
       it('should get string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: simple
 ---
@@ -62,7 +61,7 @@ toto et tata`,
 
     describe('title', () => {
       it('should get string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: simple
 ---`,
@@ -72,7 +71,7 @@ title: simple
       });
 
       it('should stringify date as YYYY-MM-DD', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: 2001-01-01
 ---`,
@@ -82,7 +81,7 @@ title: 2001-01-01
       });
 
       it('should stringify null', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: null
 ---`,
@@ -92,7 +91,7 @@ title: null
       });
 
       it('should stringify boolean', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: true
 ---`,
@@ -102,7 +101,7 @@ title: true
       });
 
       it('should stringify array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 title: ['title', 'as', 'array']
 ---`,
@@ -112,7 +111,7 @@ title: ['title', 'as', 'array']
       });
 
       it('should get undefined', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 id: toto
 ---`,
@@ -124,7 +123,7 @@ id: toto
 
     describe('type', () => {
       it('should keep array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 type: ['toto', 'tata']
 ---`,
@@ -134,7 +133,7 @@ type: ['toto', 'tata']
       });
 
       it('should get array from string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 type: toto
 ---`,
@@ -144,7 +143,7 @@ type: toto
       });
 
       it('should get array contains "undefined" from empty string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 type: 
 ---`,
@@ -154,7 +153,7 @@ type:
       });
 
       it('should get array contains "undefined" from empty array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 type: []
 ---`,
@@ -164,7 +163,7 @@ type: []
       });
 
       it('should skip falsy values from array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 type: [false]
 ---`,
@@ -176,7 +175,7 @@ type: [false]
 
     describe('tags', () => {
       it('should keep array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 tags: ['toto', 'tata']
 ---`,
@@ -186,7 +185,7 @@ tags: ['toto', 'tata']
       });
 
       it('should keep "keywords" key value', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 keywords: ['toto', 'tata']
 ---`,
@@ -198,7 +197,7 @@ keywords: ['toto', 'tata']
 
     describe('references', () => {
       it('should keep array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 references: ['toto', 'tata']
 ---`,
@@ -208,7 +207,7 @@ references: ['toto', 'tata']
       });
 
       it('should stringify falsy values from array', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 references: [false]
 ---`,
@@ -218,7 +217,7 @@ references: [false]
       });
 
       it('should get array from string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 references: tata
 ---`,
@@ -228,7 +227,7 @@ references: tata
       });
 
       it('should get empty array from empty string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 references:
 ---`,
@@ -240,7 +239,7 @@ references:
 
     describe('other metas', () => {
       it('should keep "toto" key and value', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 toto: tata
 ---`,
@@ -252,7 +251,7 @@ toto: tata
 
     describe('begin, end', () => {
       it('should keep get number from date', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 begin: 1999
 end: 2001
@@ -264,7 +263,7 @@ end: 2001
       });
 
       it('should get NaN for invalid date', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
+        const result = Cosmoscope.getDataFromYamlFrontMatter(
           `---
 end:
 ---`,

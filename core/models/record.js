@@ -21,6 +21,18 @@
  * @property {Direction} target
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import yml from 'yaml';
+import Config from './config.js';
+import Node from './node.js';
+import Link from './link.js';
+import Bibliography from './bibliography.js';
+import Report from './report.js';
+import lang from './lang.js';
+import { getTimestampTuple, getTimestamp, slugify } from '../utils/misc.js';
+import { RecordMaxOutDailyIdError } from './errors.js';
+
 /**
  * @typedef DeepFormatedRecordData
  * @type {object}
@@ -50,22 +62,7 @@
  * @property {string} thumbnail
  */
 
-const path = require('path'),
-  fs = require('fs'),
-  yml = require('yaml');
-
-const Config = require('./config'),
-  Bibliography = require('./bibliography'),
-  Node = require('./node'),
-  Link = require('./link'),
-  lang = require('./lang'),
-  Report = require('./report');
-
-const { getTimestampTuple, getTimestamp, slugify } = require('../utils/misc');
-
-const { RecordMaxOutDailyIdError } = require('./errors');
-
-module.exports = class Record {
+class Record {
   /**
    * Get data from a fromated CSV line
    * @param {object} line
@@ -748,7 +745,7 @@ module.exports = class Record {
 
     return false;
   }
-};
+}
 
 class ErrorRecord extends Error {
   /**
@@ -761,3 +758,5 @@ class ErrorRecord extends Error {
     this.type = type;
   }
 }
+
+export default Record;

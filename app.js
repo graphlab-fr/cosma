@@ -6,17 +6,26 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const commander = require('commander'),
-  program = new commander.Command(),
-  { version, description } = require('./package.json');
+import fs from 'node:fs';
+import { Command } from 'commander';
+import Config from './core/models/config.js';
+import app from './package.json';
+import makeUserDataDir from './controllers/user-data-dir.js';
+import makeConfigFile from './controllers/config.js';
+import modelize from './controllers/modelize.js';
+import makeRecord from './controllers/record.js';
+import autorecord from './controllers/autorecord.js';
+import batch from './controllers/batch.js';
 
-const Config = require('./core/models/config');
+process.title = app.name;
 
-program.version(version);
+const program = new Command();
+
+program.version(app.version);
 
 program
   .name('cosma')
-  .description(description)
+  .description(app.description)
   .usage('[command] [options]')
   .option('--create-user-data-dir', 'Create user data directory.')
   .option(
@@ -25,7 +34,7 @@ program
   )
   .action(({ createUserDataDir, listProjects }) => {
     if (createUserDataDir) {
-      require('./controllers/user-data-dir')();
+      makeUserDataDir();
     } else if (listProjects) {
       try {
         const list = Config.getConfigFilesListFromConfigDir().map(({ name }) => name);
@@ -63,7 +72,7 @@ program
   .argument('[name]', 'Configuration name.')
   .option('-g, --global', 'Create the file in the user data directory.')
   .action((title, options) => {
-    require('./controllers/config')(title, options);
+    makeConfigFile(title, options);
   });
 
 program
@@ -80,8 +89,7 @@ program
   .option('--fake', 'Create a fake cosmoscope for testing purposes.')
   .action(({ project: projectName, ...rest }) => {
     setConfigFileToRun(projectName);
-
-    require('./controllers/modelize')(rest);
+    modelize(rest);
   });
 
 program
@@ -96,8 +104,7 @@ program
   )
   .action(({ project: projectName }) => {
     setConfigFileToRun(projectName);
-
-    require('./controllers/record');
+    makeRecord();
   });
 
 program
@@ -117,8 +124,7 @@ program
   )
   .action((title, type, tags, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
     setConfigFileToRun(projectName);
-
-    require('./controllers/autorecord')(title, type, tags, saveIdOnYmlFrontMatter);
+    autorecord(title, type, tags, saveIdOnYmlFrontMatter);
   })
   .showHelpAfterError('("autorecord --help" for additional information)');
 
@@ -137,8 +143,7 @@ program
   )
   .action((filePath, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
     setConfigFileToRun(projectName);
-
-    require('./controllers/batch')(filePath, saveIdOnYmlFrontMatter);
+    batch(filePath, saveIdOnYmlFrontMatter);
   })
   .showHelpAfterError('("batch --help" for additional information)');
 
@@ -172,8 +177,6 @@ function setConfigFileToRun(projectName) {
 
     return;
   }
-
-  const fs = require('fs');
 
   if (!fs.existsSync(Config.executionConfigPath)) {
     if (!fs.existsSync(Config.defaultConfigPath)) {

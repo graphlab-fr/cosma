@@ -1,12 +1,10 @@
 const path = require('path');
 const { defineConfig } = require('cypress');
 
-const { devServer } = require('../core/utils/webpack.config');
-
 module.exports = defineConfig({
-  downloadsFolder: path.join(__dirname, './temp'),
-  screenshotsFolder: path.join(__dirname, './temp'),
-  videosFolder: path.join(__dirname, './temp'),
+  downloadsFolder: path.join(__dirname, '../temp'),
+  screenshotsFolder: path.join(__dirname, '../temp'),
+  videosFolder: path.join(__dirname, '../temp'),
   trashAssetsBeforeRuns: false,
   e2e: {
     specPattern: './**/*cy.js',

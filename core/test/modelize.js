@@ -1,7 +1,9 @@
-const path = require('path');
-const Cosmocope = require('../models/cosmoscope');
+import path from 'node:path';
+import Cosmocope from '../models/cosmoscope.js';
+import { expect } from 'chai';
+import { fileURLToPath } from 'url';
 
-const { expect } = require('chai');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const fixtureDirPath = path.join(__dirname, './fixture');
 

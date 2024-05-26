@@ -4,15 +4,14 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const path = require('path'),
-  fs = require('fs');
+import fs from 'node:fs';
+import path from 'node:path';
+import Report from '../core/models/report.js';
+import envPaths from 'env-paths';
 
-const Report = require('../core/models/report');
-
-const envPaths = require('env-paths');
 const { log: envPathLogDir } = envPaths('cosma-cli', { suffix: '' });
 
-module.exports = class ReportCli extends Report {
+class ReportCli extends Report {
   static pathDir = path.join(envPathLogDir, 'logs');
 
   /**
@@ -66,4 +65,6 @@ module.exports = class ReportCli extends Report {
     const idAsString = [year, month, day, hour, minute, second].join('');
     return idAsString;
   }
-};
+}
+
+export default ReportCli;

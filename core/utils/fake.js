@@ -4,6 +4,18 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import path from 'node:path';
+import Config from '../models/config.js';
+import Record from '../models/record.js';
+import Cosmoscope from '../models/cosmoscope.js';
+import { faker } from '@faker-js/faker';
+import nunjucks from 'nunjucks';
+import { getTimestampTuple } from './misc.js';
+import bib from '../static/fake/bib.json';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 /**
  * @typedef FakeView
  * @type {object}
@@ -13,17 +25,6 @@
  * @property {boolean} withRecord
  */
 
-const path = require('path');
-const { faker } = require('@faker-js/faker'),
-  nunjucks = require('nunjucks');
-
-const Config = require('../models/config'),
-  Cosmoscope = require('../models/cosmoscope'),
-  Record = require('../models/record');
-
-const { getTimestampTuple } = require('./misc');
-
-const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
 
 const tags = [];
@@ -107,14 +108,6 @@ function getRecords(nb, opts = config.opts) {
   return Cosmoscope.getRecordsFromFiles(files, true, opts);
 }
 
-module.exports = {
-  config,
-  getRecords,
-  bib,
-  typesThumbnails,
-  images,
-};
-
 /**
  * @param {FakeView} params
  * @returns {string}
@@ -171,3 +164,5 @@ function fakeExtremeDates() {
     end: [endYear, endMonth, endDay].join('-'),
   };
 }
+
+export { config, getRecords, bib, typesThumbnails, images };

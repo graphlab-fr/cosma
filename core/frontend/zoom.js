@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 
-import View from './view';
-import { svg, translate, nodes } from './graph';
+import View from './view.js';
+import { svg, translate, nodes } from './graph.js';
 import hotkeys from 'hotkeys-js';
-import { getRecordIdFromHash } from './records';
+import { getRecordIdFromHash } from './records.js';
 
 const zoomMax = 10,
   zoomMin = 1;

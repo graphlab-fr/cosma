@@ -1,8 +1,7 @@
-const fs = require('fs');
+import fs from 'node:fs';
+import Config from '../core/models/config.js';
 
-const Config = require('../core/models/config');
-
-module.exports = function () {
+function makeUserDataDir() {
   if (fs.existsSync(Config.configDirPath)) {
     console.log(
       'User data directory already exists at',
@@ -22,4 +21,6 @@ module.exports = function () {
       );
     });
   }
-};
+}
+
+export default makeUserDataDir;

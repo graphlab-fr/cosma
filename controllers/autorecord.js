@@ -4,9 +4,8 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const Config = require('../core/models/config');
-
-const createRecord = require('./create-record');
+import Config from '../core/models/config.js';
+import makeRecord from './record.js';
 
 /**
  * Prompt config and pass record data
@@ -15,7 +14,7 @@ const createRecord = require('./create-record');
  * @param {string} tags
  */
 
-module.exports = function (title = '', type = 'undefined', tags = '', saveIdOnYmlFrontMatter) {
+function autorecord(title = '', type = 'undefined', tags = '', saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
 
   console.log(config.getConfigConsolMessage());
@@ -34,5 +33,7 @@ module.exports = function (title = '', type = 'undefined', tags = '', saveIdOnYm
     saveIdOnYmlFrontMatter = config.opts['generate_id'] === 'always' || !!saveIdOnYmlFrontMatter;
   }
 
-  createRecord(title, type, tags, config, saveIdOnYmlFrontMatter);
-};
+  makeRecord(title, type, tags, config, saveIdOnYmlFrontMatter);
+}
+
+export default autorecord;

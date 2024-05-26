@@ -1,24 +1,23 @@
-const fs = require('fs'),
-  path = require('path'),
-  { parse } = require('csv-parse/sync');
+import fs from 'node:fs';
+import path from 'node:path';
+import { parse } from 'csv-parse/sync';
+import assert from 'assert';
+import chai from 'chai';
+import chaiFs from 'chai-fs';
+import { fileURLToPath } from 'url';
+import Config from '../models/config.js';
+import Link from '../models/link.js';
+import Record from '../models/record.js';
+import Bibliography from '../models/bibliography.js';
+import Cosmoscope from '../models/cosmoscope.js';
+import { config as configFake, getRecords } from '../utils/fake.js';
+import { fetchBibliographyFiles } from '../utils/generate.js';
+import { getTimestampTuple } from '../utils/misc.js';
 
-const assert = require('assert'),
-  chai = require('chai'),
-  chaiFs = require('chai-fs');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 chai.use(chaiFs);
 const should = chai.should();
-
-const Record = require('../models/record'),
-  Cosmocope = require('../models/cosmoscope'),
-  Link = require('../models/link'),
-  Config = require('../models/config'),
-  Bibliography = require('../models/bibliography');
-
-const { getTimestampTuple } = require('../utils/misc');
-
-const { fetchBibliographyFiles } = require('../utils/generate'),
-  { config: configFake, getRecords } = require('../utils/fake');
 
 const tempFolderPath = path.join(__dirname, '../temp');
 
@@ -478,13 +477,13 @@ isDead: false
           { columns: true, trim: true, rtrim: true, skip_empty_lines: true },
         );
         const data = csv.map((line) => Record.getFormatedDataFromCsvLine(line));
-        const index = Cosmocope.getIndexToMassSave(tempFolderPath);
+        const index = Cosmoscope.getIndexToMassSave(tempFolderPath);
         await Record.massSave(data, index, opts);
 
         filePath.should.be.a.file();
 
-        const files = Cosmocope.getFromPathFiles(tempFolderPath);
-        const record = Cosmocope.getRecordsFromFiles(files, false, opts).find(
+        const files = Cosmoscope.getFromPathFiles(tempFolderPath);
+        const record = Cosmoscope.getRecordsFromFiles(files, false, opts).find(
           ({ title }) => title === fileName,
         );
         assert.deepEqual(record, {
@@ -503,7 +502,7 @@ isDead: false
             title: 'Paul Otlet',
           },
         ];
-        const index = Cosmocope.getIndexToMassSave(tempFolderPath);
+        const index = Cosmoscope.getIndexToMassSave(tempFolderPath);
         await Record.massSave(minimalData, index, { files_origin: tempFolderPath });
 
         filePath.should.be.a.file();
@@ -526,7 +525,7 @@ isDead: false
             references: ['otlet1934'],
           },
         ];
-        const index = Cosmocope.getIndexToMassSave(tempFolderPath);
+        const index = Cosmoscope.getIndexToMassSave(tempFolderPath);
         await Record.massSave(data, index, { files_origin: tempFolderPath });
 
         filePath.should.be.a.file();

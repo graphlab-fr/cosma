@@ -4,6 +4,9 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import Config from './config.js';
+import Report from './report.js';
+
 /**
  * @typedef Shape
  * @type {object}
@@ -27,10 +30,7 @@
  * @property {string} label
  */
 
-const Config = require('./config'),
-  Report = require('./report');
-
-module.exports = class Link {
+class Link {
   /**
    * List of valid values for the links stroke
    * Apply to config form
@@ -320,4 +320,6 @@ module.exports = class Link {
   isValid() {
     return this.report.length === 0;
   }
-};
+}
+
+export default Link;

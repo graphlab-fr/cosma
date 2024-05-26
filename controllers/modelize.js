@@ -1,17 +1,18 @@
-const fs = require('fs'),
-  path = require('path'),
-  getHistorySavePath = require('./history');
+import fs from 'node:fs';
+import path from 'node:path';
+import getHistorySavePath from './history.js';
+import Graph from '../core/models/graph.js';
+import Cosmoscope from '../core/models/cosmoscope.js';
+import Link from '../core/models/link.js';
+import Record from '../core/models/record.js';
+import Config from '../core/models/config.js';
+import Template from '../core/models/template.js';
+import Report from '../core/models/report.js';
+import { DowloadOnlineCsvFilesError } from '../core/models/errors.js';
+import { downloadFile } from '../core/utils/misc.js';
+import { tmpdir } from 'node:os';
 
-const Graph = require('../core/models/graph'),
-  Cosmoscope = require('../core/models/cosmoscope'),
-  Link = require('../core/models/link'),
-  Record = require('../core/models/record'),
-  Config = require('../core/models/config'),
-  Template = require('../core/models/template'),
-  Report = require('../models/report-cli');
-const { DowloadOnlineCsvFilesError } = require('../core/models/errors');
-
-module.exports = async function (options) {
+async function modelize(options) {
   let config = Config.get(Config.configFilePath);
 
   options['publish'] = true;
@@ -90,8 +91,6 @@ module.exports = async function (options) {
       );
       break;
     case 'online':
-      const { downloadFile } = require('../core/utils/misc');
-      const { tmpdir } = require('os');
       const tempDir = tmpdir();
       nodesPath = path.join(tempDir, 'cosma-nodes.csv');
       linksPath = path.join(tempDir, 'cosma-links.csv');
@@ -157,7 +156,7 @@ module.exports = async function (options) {
       );
     }
   }
-};
+}
 
 /**
  * @param {string[]} optionsGraph
@@ -172,3 +171,5 @@ function getModelizeMessage(optionsGraph, optionsTemplate, originType) {
     settings.length === 0 ? '' : `; settings: \x1b[1m${settings.join(', ')}\x1b[0m`;
   return `Building cosmoscope… (source type: \x1b[1m${originType}\x1b[0m${msgSetting})`;
 }
+
+export default modelize;

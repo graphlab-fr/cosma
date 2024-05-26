@@ -4,11 +4,10 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const readline = require('readline'),
-  path = require('path');
-
-const Record = require('../core/models/record'),
-  Config = require('../core/models/config');
+import path from 'node:path';
+import readline from 'node:readline';
+import Config from '../core/models/config.js';
+import Record from '../core/models/record.js';
 
 /**
  * Format data, prompt warnings and create record file
@@ -19,7 +18,7 @@ const Record = require('../core/models/record'),
  * @param {boolean} saveIdOnYmlFrontMatter
  */
 
-module.exports = function (
+function createRecord(
   title = '',
   type = 'undefined',
   tags = '',
@@ -113,4 +112,6 @@ module.exports = function (
       `: ${['\x1b[2m', fileDir, '/', '\x1b[0m', fileName].join('')}`,
     );
   }
-};
+}
+
+export default createRecord;

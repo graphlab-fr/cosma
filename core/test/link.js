@@ -1,7 +1,7 @@
-const assert = require('assert'),
-  should = require('chai').should();
+import assert from 'assert';
+import { should } from 'chai';
 
-const Link = require('../models/link');
+import Link from '../models/link.js';
 
 describe('Link', () => {
   describe('wikilinks from content', () => {

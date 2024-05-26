@@ -4,15 +4,14 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const fs = require('fs'),
-  path = require('path'),
-  { parse } = require('csv-parse/sync');
+import fs from 'node:fs';
+import path from 'node:path';
+import { parse } from 'csv-parse/sync';
+import Cosmoscope from '../core/models/cosmoscope.js';
+import Record from '../core/models/record.js';
+import Config from '../core/models/config.js';
 
-const Cosmoscope = require('../core/models/cosmoscope'),
-  Record = require('../core/models/record'),
-  Config = require('../core/models/config');
-
-module.exports = function (filePath, saveIdOnYmlFrontMatter) {
+function batch(filePath, saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
   console.log(config.getConfigConsolMessage());
 
@@ -78,4 +77,6 @@ module.exports = function (filePath, saveIdOnYmlFrontMatter) {
         return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err);
       });
   });
-};
+}
+
+export default batch;

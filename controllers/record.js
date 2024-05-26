@@ -4,13 +4,11 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const Config = require('../core/models/config'),
-  Record = require('../core/models/record');
-const readline = require('readline');
+import readline from 'node:readline';
+import Config from '../core/models/config.js';
+import createRecord from './create-record.js';
 
-const createRecord = require('./create-record');
-
-(async () => {
+async function makeRecord() {
   const config = Config.get(Config.configFilePath);
 
   console.log(config.getConfigConsolMessage());
@@ -85,4 +83,6 @@ const createRecord = require('./create-record');
     console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err);
     rl.close();
   }
-})();
+}
+
+export default makeRecord;

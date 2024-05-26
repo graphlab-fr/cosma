@@ -1,8 +1,7 @@
-const assert = require('assert');
-
-const Graph = require('../models/graph'),
-  Config = require('../models/config'),
-  Record = require('../models/record');
+import assert from 'assert';
+import Graph from '../models/graph.js';
+import Config from '../models/config.js';
+import Record from '../models/record.js';
 
 describe('Graph verif', () => {
   describe('params', () => {
