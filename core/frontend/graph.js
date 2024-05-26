@@ -142,22 +142,22 @@ elts.nodes = svgSub
   .call(
     d3
       .drag()
-      .on('start', function (d) {
-        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      .on('start', function (e, d) {
+        if (!e.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
       })
-      .on('drag', function (d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
+      .on('drag', function (e, d) {
+        d.fx = e.x;
+        d.fy = e.y;
       })
-      .on('end', function (d) {
-        if (!d3.event.active) simulation.alphaTarget(0.0001);
+      .on('end', function (e, d) {
+        if (!e.active) simulation.alphaTarget(0.0001);
         d.fx = null;
         d.fy = null;
       }),
   )
-  .on('mouseover', (nodeMetas) => {
+  .on('mouseover', (e, nodeMetas) => {
     let nodesIdsHovered = [nodeMetas.id];
 
     const linksToModif = elts.links.filter(function (link) {

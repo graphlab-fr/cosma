@@ -26,8 +26,8 @@ window.addEventListener('resize', () => {
 const zoom = d3
   .zoom()
   .scaleExtent([zoomMin, zoomMax])
-  .on('zoom', () => {
-    const { x, y, k } = d3.event.transform;
+  .on('zoom', (e) => {
+    const { x, y, k } = e.transform;
     View.position.x = x || 0;
     View.position.y = y || 0;
     View.position.zoom = k || 1;
