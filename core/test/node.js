@@ -1,8 +1,7 @@
-const assert = require('assert'),
-  { expect } = require('chai');
-
-const Node = require('../models/node'),
-  Config = require('../models/config');
+import assert from 'assert';
+import { expect } from 'chai';
+import Node from '../models/node.js';
+import Config from '../models/config.js';
 
 describe('Node', () => {
   const config = new Config({

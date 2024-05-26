@@ -1,13 +1,14 @@
-const assert = require('assert'),
-  should = require('chai').should();
+import assert from 'assert';
+import { should } from 'chai';
 
-const Template = require('../models/template'),
-  Cosmocope = require('../models/cosmoscope');
+import Template from '../models/template.js';
+import Cosmocope from '../models/cosmoscope.js';
+import { getRecords } from '../utils/fake.js';
 
 describe.skip('Template', () => {
-  const { records } = require('../utils/fake');
-
   describe('link context', () => {
+    const records = getRecords(5);
+
     const symbol = '↠';
     const graph = new Cosmocope(records);
 

@@ -4,13 +4,12 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const fs = require('fs'),
-  path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import envPaths from 'env-paths';
+import { getTimestampTuple } from '../core/utils/misc.js';
 
-const envPaths = require('env-paths');
 const { data } = envPaths('cosma-cli', { suffix: '' });
-
-const { getTimestampTuple } = require('../core/utils/misc');
 
 /**
  * Get path to store cosmscope file in history
@@ -19,7 +18,7 @@ const { getTimestampTuple } = require('../core/utils/misc');
  * @returns {Promise<string>}
  */
 
-module.exports = async function (projectName, projectScope) {
+async function getHistorySavePath(projectName, projectScope) {
   let pathDir;
   switch (projectScope) {
     case 'global':
@@ -44,4 +43,6 @@ module.exports = async function (projectName, projectScope) {
     }
     resolve(pathFile);
   });
-};
+}
+
+export default getHistorySavePath;

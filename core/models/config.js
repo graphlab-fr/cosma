@@ -4,20 +4,26 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const path = require('path'),
-  fs = require('fs');
+import fs from 'node:fs';
+import path from 'node:path';
+import envPaths from 'env-paths';
+import yml from 'yaml';
+import Link from './link.js';
+import lang from './lang.js';
+import http from 'node:http';
+import { FindUserDataDirError, ReadUserDataDirError } from './errors.js';
+import app from '../../package.json';
+import { fileURLToPath } from 'url';
 
-const envPaths = require('env-paths');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const { data: envPathDataDir } = envPaths('cosma-cli', { suffix: '' });
-
-const Link = require('./link');
-const { FindUserDataDirError, ReadUserDataDirError } = require('./errors');
 
 /**
  * Class to manage the user config
  */
 
-module.exports = class Config {
+class Config {
   /**
    * Default configuration options : the source of truth of the config
    * @static
@@ -356,7 +362,6 @@ module.exports = class Config {
           break;
 
         case '.yml':
-          const yml = require('yaml');
           opts = yml.parse(fileContent);
           break;
       }
@@ -376,8 +381,6 @@ module.exports = class Config {
    */
 
   static getSampleConfig() {
-    const lang = require('./lang');
-
     return Object.assign({}, Config.base, {
       files_origin: path.join(__dirname, '../static/sample', lang.flag),
       record_types: {
@@ -431,7 +434,6 @@ module.exports = class Config {
           break;
 
         case '.yml':
-          const yml = require('yaml');
           fs.writeFileSync(this.path, yml.stringify(this.opts));
           break;
       }
@@ -609,8 +611,6 @@ module.exports = class Config {
    */
 
   writeReport() {
-    const lang = require('./lang');
-
     return this.report
       .map((invalidOption) => {
         if (Object.keys(Config.minValues).includes(invalidOption)) {
@@ -715,7 +715,6 @@ module.exports = class Config {
    */
 
   canModelizeFromOnline() {
-    const http = require('http');
     return new Promise((resolve, reject) => {
       for (const url of [this.opts['nodes_online'], this.opts['links_online']]) {
         if (Config.isValidUrl(url) === false) {
@@ -771,13 +770,12 @@ module.exports = class Config {
   }
 
   getConfigConsolMessage() {
-    const { version } = require('../../package.json');
     let name = this.opts['title'] || null;
     if (this.path === Config.defaultConfigPath) {
       name = 'Default';
     }
     const messageSections = [
-      `[Cosma v.${version}]`,
+      `[Cosma v.${app.version}]`,
       ['\x1b[4m', name, '\x1b[0m'].join(''),
       ['\x1b[2m', this.path, '\x1b[0m'].join(''),
     ];
@@ -795,7 +793,7 @@ module.exports = class Config {
 
     return messageSections.join(' ');
   }
-};
+}
 
 class ErrorConfig extends Error {
   constructor(message) {
@@ -803,3 +801,5 @@ class ErrorConfig extends Error {
     this.name = 'Error Config';
   }
 }
+
+export default Config;

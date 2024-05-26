@@ -1,6 +1,9 @@
-const path = require('path');
+import path from 'node:path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export default {
   entry: path.resolve(__dirname, '../frontend/index.js'),
   output: {
     path: path.resolve(__dirname, '../static'),

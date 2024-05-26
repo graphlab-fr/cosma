@@ -4,31 +4,33 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const fs = require('fs'),
-  path = require('path'),
-  nunjucks = require('nunjucks'),
-  mdIt = require('markdown-it')({
-    html: true,
-    linkify: true,
-    breaks: true,
-  }),
-  Citr = require('@zettlr/citr');
+import fs from 'node:fs';
+import path from 'node:path';
+import Graph from './graph.js';
+import Config from './config.js';
+import Link from './link.js';
+import Bibliography from './bibliography.js';
+import nunjucks from 'nunjucks';
+import mdIt from 'markdown-it';
+import * as Citr from '@zettlr/citr';
+import app from '../../package.json';
+import { isAnImagePath, slugify } from '../utils/misc.js';
+import langPck from './lang.js';
+import { fileURLToPath } from 'url';
 
-const app = require('../../package.json');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const Link = require('./link'),
-  Config = require('./config'),
-  Bibliography = require('./bibliography'),
-  Graph = require('./graph');
-
-const { isAnImagePath, slugify } = require('../utils/misc');
-const translation = require('./lang').i;
+const md = new mdIt({
+  html: true,
+  linkify: true,
+  breaks: true,
+});
 
 /**
  * Class to get the Cosmoscope source code
  */
 
-module.exports = class Template {
+class Template {
   static validParams = new Set(['publish', 'css_custom', 'citeproc', 'dev']);
 
   /**
@@ -72,7 +74,7 @@ module.exports = class Template {
    * @returns {String}
    * @exemple
    * ```
-   * mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(imagesPath, state));
+   * md.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(imagesPath, state));
    * ```
    */
 
@@ -208,7 +210,7 @@ module.exports = class Template {
       new nunjucks.FileSystemLoader(path.join(__dirname, '../static')),
     );
 
-    mdIt.inline.ruler2.push('image_to_base64', (state) =>
+    md.inline.ruler2.push('image_to_base64', (state) =>
       Template.mdItImageToBase64(imagesPath, state),
     );
 
@@ -315,7 +317,7 @@ module.exports = class Template {
       return input;
     });
     templateEngine.addFilter('markdown', (input) => {
-      return mdIt.render(input);
+      return md.render(input);
     });
     templateEngine.addFilter('timestampToLocal', (input) => {
       return new Date(input * 1000).toLocaleDateString(lang);
@@ -353,7 +355,7 @@ module.exports = class Template {
 
       timeline: graph.getTimelineFromRecords(),
 
-      translation: translation,
+      translation: langPck.i,
       lang: lang,
 
       customCss: this.custom_css,
@@ -406,8 +408,10 @@ module.exports = class Template {
       app: app, // app version, description, license…
     });
   }
-};
+}
 
 function escapeQuotes(text) {
   return text.replace(/'/g, '&apos;').replace(/"/g, '&quot;');
 }
+
+export default Template;

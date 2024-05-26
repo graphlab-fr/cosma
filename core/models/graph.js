@@ -4,6 +4,13 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import Config from './config.js';
+import Node from './node.js';
+import Link from './link.js';
+import Record from './record.js';
+import Report from './report.js';
+import { extent } from 'd3';
+
 /**
  * @typedef Timeline
  * @type {object}
@@ -18,15 +25,7 @@
  * @property {object} metas
  */
 
-const { extent } = require('d3-array');
-
-const Config = require('./config'),
-  Record = require('./record'),
-  Link = require('./link'),
-  Node = require('./node'),
-  Report = require('./report');
-
-module.exports = class Graph {
+class Graph {
   static validParams = new Set(['sample', 'fake', 'empty']);
 
   /**
@@ -164,4 +163,6 @@ module.exports = class Graph {
     );
     return JSON.parse(folksonomy);
   }
-};
+}
+
+export default Graph;

@@ -4,6 +4,10 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import fs from 'node:fs';
+import CSL from 'citeproc';
+import * as Citr from '@zettlr/citr';
+
 /**
  * @typedef BibliographicRecord
  * @type {object}
@@ -24,11 +28,7 @@
  * @property {string[]} unknowedIds Ids out from library
  */
 
-const fs = require('fs'),
-  CSL = require('citeproc'),
-  Citr = require('@zettlr/citr');
-
-module.exports = class Bibliography {
+class Bibliography {
   static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
 
   /**
@@ -270,4 +270,6 @@ module.exports = class Bibliography {
       this.cslStyle,
     );
   }
-};
+}
+
+export default Bibliography;

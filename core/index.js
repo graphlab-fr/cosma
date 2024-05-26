@@ -1,6 +1,5 @@
-const { cosmocope, cosmocopeTimeline, cosmocopeTitleId, tempDirPath } = require('./utils/generate');
-
-const { startServer: webpackServer } = require('./utils/webpack');
+import { cosmocope, cosmocopeTimeline, cosmocopeTitleId, tempDirPath } from './utils/generate.js';
+import { startServer as webpackServer } from './utils/webpack.js';
 
 (async () => {
   try {

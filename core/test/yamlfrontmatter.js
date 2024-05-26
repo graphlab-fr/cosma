@@ -1,10 +1,11 @@
-const fs = require('fs/promises'),
-  path = require('path');
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
+import { expect } from 'chai';
+import assert from 'assert';
+import { fileURLToPath } from 'url';
 
-const { read: readYmlFm } = require('../utils/yamlfrontmatter');
-
-const { expect } = require('chai');
-const assert = require('assert');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('YAML Front Matter parser', () => {
   it('should find all properties from YAML file head', async () => {

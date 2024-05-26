@@ -1,5 +1,5 @@
-import { displayNodesAll, setNodesDisplaying } from './graph';
-import filterPriority from './filterPriority';
+import { displayNodesAll, setNodesDisplaying } from './graph.js';
+import filterPriority from './filterPriority.js';
 import hotkeys from 'hotkeys-js';
 
 window.addEventListener('DOMContentLoaded', () => {

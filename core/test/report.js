@@ -1,18 +1,16 @@
-const assert = require('assert'),
-  should = require('chai').should();
-
-const Report = require('../models/report'),
-  Config = require('../models/config'),
-  Bibliography = require('../models/bibliography'),
-  Graph = require('../models/graph'),
-  Record = require('../models/record'),
-  Link = require('../models/link'),
-  Node = require('../models/node');
+import assert from 'assert';
+import { should } from 'chai';
+import Report from '../models/report.js';
+import Config from '../models/config.js';
+import Bibliography from '../models/bibliography.js';
+import Graph from '../models/graph.js';
+import Record from '../models/record.js';
+import Link from '../models/link.js';
+import Node from '../models/node.js';
+import { fetchBibliographyFiles } from '../utils/generate.js';
+import { config as configFake, bib } from '../utils/fake.js';
 
 describe('Report', () => {
-  const { fetchBibliographyFiles } = require('../utils/generate'),
-    { config: configFake, bib } = require('../utils/fake');
-
   before('reset report list', () => {
     Report.listErrors.clear();
     Report.listWarnings.clear();

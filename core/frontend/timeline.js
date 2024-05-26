@@ -1,6 +1,6 @@
-import { setCounters } from './counter';
-import { setNodesDisplaying, displayNodesAll } from './graph';
-import filterPriority from './filterPriority';
+import { setCounters } from './counter.js';
+import { setNodesDisplaying, displayNodesAll } from './graph.js';
+import filterPriority from './filterPriority.js';
 
 const { begin, end } = timeline;
 

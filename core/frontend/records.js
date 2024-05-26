@@ -1,7 +1,7 @@
-import { nodes, highlightNodes, unlightNodes } from './graph';
-import { zoomToNode } from './zoom';
+import { nodes, highlightNodes, unlightNodes } from './graph.js';
+import { zoomToNode } from './zoom.js';
 import hotkeys from 'hotkeys-js';
-import filterPriority from './filterPriority';
+import filterPriority from './filterPriority.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const recordContainer = document.getElementById('record-container');

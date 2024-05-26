@@ -1,7 +1,18 @@
-const fs = require('fs'),
-  path = require('path'),
-  { faker } = require('@faker-js/faker');
-const { downloadFile, getTimestamp } = require('./misc');
+import fs from 'node:fs';
+import path from 'node:path';
+import { faker } from '@faker-js/faker';
+import { downloadFile, getTimestamp } from './misc.js';
+import Cosmoscope from '../models/cosmoscope.js';
+import Template from '../models/template.js';
+import {
+  config as fakeConfig,
+  getRecords,
+  images as recordImages,
+  typesThumbnails,
+} from './fake.js';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const tempDirPath = path.join(__dirname, '../temp');
 if (fs.existsSync(tempDirPath) === false) {
@@ -108,14 +119,6 @@ function fetchFakeThumbnails(thumbnailNames) {
 }
 
 function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc', 'dev']) {
-  const Cosmoscope = require('../models/cosmoscope'),
-    Template = require('../models/template');
-  const {
-    config: fakeConfig,
-    getRecords,
-    images: recordImages,
-    typesThumbnails,
-  } = require('./fake');
   return new Promise(async (resolve, reject) => {
     Promise.all([
       fetchBibliographyFiles(),
@@ -149,11 +152,6 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
 }
 
 function cosmocopeTimeline() {
-  const Cosmoscope = require('../models/cosmoscope'),
-    Template = require('../models/template');
-
-  const { config: fakeConfig, getRecords } = require('./fake');
-
   const fakeRecords = getRecords(5);
 
   const records = [
@@ -184,10 +182,6 @@ function cosmocopeTimeline() {
 }
 
 function cosmocopeTitleId() {
-  const Cosmoscope = require('../models/cosmoscope'),
-    Template = require('../models/template');
-
-  const { config: fakeConfig } = require('./fake');
   fakeConfig.opts['hide_id_from_record_header'] = true;
 
   const files = [
@@ -247,7 +241,7 @@ function cosmocopeTitleId() {
   });
 }
 
-module.exports = {
+export {
   cosmocope,
   cosmocopeTimeline,
   cosmocopeTitleId,

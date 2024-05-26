@@ -7,11 +7,11 @@
 
 import * as d3 from 'd3';
 
-import View from './view';
-import { hideFromIndex, displayFromIndex, getRecordIdFromHash } from './records';
-import { setCounters } from './counter';
+import View from './view.js';
+import { hideFromIndex, displayFromIndex, getRecordIdFromHash } from './records.js';
+import { setCounters } from './counter.js';
 import hotkeys from 'hotkeys-js';
-import filterPriority from './filterPriority';
+import filterPriority from './filterPriority.js';
 
 /** Data serialization
 ------------------------------------------------------------*/

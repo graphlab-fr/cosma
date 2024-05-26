@@ -1,11 +1,13 @@
-const assert = require('assert'),
-  should = require('chai').should();
+import assert from 'assert';
+import { should } from 'chai';
 
-const path = require('path'),
-  fs = require('fs'),
-  yml = require('yaml');
+import fs from 'node:fs';
+import path from 'node:path';
+import yml from 'yaml';
+import Config from '../models/config.js';
+import { fileURLToPath } from 'url';
 
-const Config = require('../models/config');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @todo Add test for check if each translation contains each Config.validLangages

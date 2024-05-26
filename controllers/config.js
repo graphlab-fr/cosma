@@ -1,12 +1,17 @@
-const fs = require('fs'),
-  path = require('path'),
-  readline = require('readline');
+import fs from 'node:fs';
+import path from 'node:path';
+import readline from 'node:readline';
+import Config from '../core/models/config.js';
+import { slugify } from '../core/utils/misc.js';
 
-const Config = require('../core/models/config');
+/**
+ * Make config file on execution dir or global dir
+ * @param {string} title Config name
+ * @param {{ global: boolean }} options
+ * @returns {void}
+ */
 
-const { slugify } = require('../core/utils/misc');
-
-module.exports = function (title, { global: isGlobal }) {
+function makeConfigFile(title, { global: isGlobal }) {
   isGlobal = !!isGlobal;
 
   if (isGlobal && fs.existsSync(Config.configDirPath) === false) {
@@ -67,4 +72,6 @@ module.exports = function (title, { global: isGlobal }) {
       console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'could not save configuration file');
     }
   }
-};
+}
+
+export default makeConfigFile;

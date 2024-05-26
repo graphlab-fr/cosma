@@ -1,12 +1,14 @@
-const path = require('path');
+import path from 'node:path';
+import { isAnImagePath } from '../utils/misc.js';
+import { fetchFakeImages } from '../utils/generate.js';
+import { fileURLToPath } from 'url';
 
-const assert = require('assert'),
-  should = require('chai').should();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+import assert from 'assert';
+import { should } from 'chai';
 
 describe('misc', () => {
-  const { isAnImagePath } = require('../utils/misc');
-  const { fetchFakeImages } = require('../utils/generate');
-
   const tempFolderPath = path.join(__dirname, '../temp');
 
   describe('image test', () => {

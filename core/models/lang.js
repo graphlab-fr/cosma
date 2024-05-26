@@ -4,66 +4,68 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const path = require('path'),
-  fs = require('fs'),
-  yml = require('yaml');
+import fs from 'node:fs';
+import path from 'node:path';
+import Config from './config.js';
+import yml from 'yaml';
+import { fileURLToPath } from 'url';
 
-const Config = require('./config');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const config = new Config();
+// const config = new Config();
 const file = fs.readFileSync(path.join(__dirname, '../i18n.yml'), 'utf-8');
 const content = yml.parse(file);
 
-module.exports = {
-  i: content,
+const i = content;
 
-  /**
-   * Get the current used langage flag
-   * @type string
-   */
+/**
+ * Get the current used langage flag
+ * @type string
+ */
 
-  flag: config.opts.lang,
+const flag = 'fr';
 
-  /**
-   * Get the translate for a multilingual object
-   * @param {object} i - Object with lang flag, as 'fr'
-   * @returns {string} - The string that corresponds to the optional language
-   * @example
-   * lang.getFor({
-   *    fr: 'En français'
-   *    en: 'In English'
-   * })
-   *
-   * lang.getFor(lang.i.windows.record)
-   */
+/**
+ * Get the translate for a multilingual object
+ * @param {object} i - Object with lang flag, as 'fr'
+ * @returns {string} - The string that corresponds to the optional language
+ * @example
+ * lang.getFor({
+ *    fr: 'En français'
+ *    en: 'In English'
+ * })
+ *
+ * lang.getFor(lang.i.windows.record)
+ */
 
-  getFor(i) {
-    return i[config.opts.lang];
-  },
+function getFor(i) {
+  return i['fr'];
+}
 
-  /**
-   * Get the translate for a object and replace $ vars
-   * @param {object} i - Object with lang flag, as 'fr'
-   * @param {array} substitutes - Array of replacement : key 0 corresponds to the $1
-   * @returns {string} - The string that corresponds to the optional language
-   * @example
-   * lang.getFor({
-   *    fr: 'Pour le fichier $1'
-   *    en: 'For the $1 file'
-   * }, [fileName])
-   */
+/**
+ * Get the translate for a object and replace $ vars
+ * @param {object} i - Object with lang flag, as 'fr'
+ * @param {array} substitutes - Array of replacement : key 0 corresponds to the $1
+ * @returns {string} - The string that corresponds to the optional language
+ * @example
+ * lang.getFor({
+ *    fr: 'Pour le fichier $1'
+ *    en: 'For the $1 file'
+ * }, [fileName])
+ */
 
-  getWith(i, substitutes) {
-    let str = i[config.opts.lang];
+function getWith(i, substitutes) {
+  let str = i['fr'];
 
-    for (let y = 0; y < substitutes.length; y++) {
-      const subst = substitutes[y];
+  for (let y = 0; y < substitutes.length; y++) {
+    const subst = substitutes[y];
 
-      const I = y + 1;
+    const I = y + 1;
 
-      str = str.replace('$' + I, subst);
-    }
+    str = str.replace('$' + I, subst);
+  }
 
-    return str;
-  },
-};
+  return str;
+}
+
+export default { i, flag, getFor, getWith };

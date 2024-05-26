@@ -1,9 +1,9 @@
 import GraphEngine from 'graphology';
-import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs';
+import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs.js';
 import hotkeys from 'hotkeys-js';
-import { displayNodesAll, setNodesDisplaying } from './graph';
-import filterPriority from './filterPriority';
-import { getRecordIdFromHash } from './records';
+import { displayNodesAll, setNodesDisplaying } from './graph.js';
+import filterPriority from './filterPriority.js';
+import { getRecordIdFromHash } from './records.js';
 
 let graph = getGraphEngine();
 

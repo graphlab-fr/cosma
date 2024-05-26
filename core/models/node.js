@@ -4,11 +4,10 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const { scaleLinear } = require('d3-scale');
+import Config from './config.js';
+import { scaleLinear } from 'd3';
 
-const Config = require('./config');
-
-module.exports = class Node {
+class Node {
   /**
    * @param {number} linksNb
    * @param {number} backlinksNb
@@ -154,7 +153,7 @@ module.exports = class Node {
     this.end = end;
     this.thumbnail = thumbnail;
   }
-};
+}
 
 /**
  * Delete duplicated elements from an array
@@ -171,3 +170,5 @@ function deleteDupicates(array) {
     return array.indexOf(item) === index;
   });
 }
+
+export default Node;

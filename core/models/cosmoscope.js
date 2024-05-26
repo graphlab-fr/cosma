@@ -4,6 +4,20 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { glob } from 'glob';
+import { parse } from 'csv-parse';
+import Graph from './graph.js';
+import Config from './config.js';
+import Node from './node.js';
+import Link from './link.js';
+import Record from './record.js';
+import Bibliography from './bibliography.js';
+import Report from './report.js';
+import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
+import { ReadCsvFileNodesError, ReadCsvFileLinksError, ReadCsvLinesLinksError } from './errors.js';
+
 /**
  * @typedef File
  * @type {object}
@@ -34,27 +48,7 @@
  * @property {number} target.id
  */
 
-const fs = require('fs'),
-  path = require('path'),
-  glob = require('glob'),
-  { parse } = require('csv-parse'),
-  { read: readYmlFm } = require('../utils/yamlfrontmatter');
-
-const {
-  ReadCsvFileNodesError,
-  ReadCsvFileLinksError,
-  ReadCsvLinesLinksError,
-} = require('./errors');
-
-const Graph = require('./graph'),
-  Config = require('./config'),
-  Node = require('./node'),
-  Link = require('./link'),
-  Record = require('./record'),
-  Bibliography = require('./bibliography'),
-  Report = require('./report');
-
-module.exports = class Cosmoscope extends Graph {
+class Cosmoscope extends Graph {
   /**
    * @param {fs.PathLike} pathToFiles
    * @returns {File[]}
@@ -462,4 +456,6 @@ module.exports = class Cosmoscope extends Graph {
   constructor(records, opts, params) {
     super(records, opts, params);
   }
-};
+}
+
+export default Cosmoscope;

@@ -4,10 +4,14 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-const path = require('path'),
-  nunjucks = require('nunjucks');
+import path from 'node:path';
+import nunjucks from 'nunjucks';
+import lang from './lang.js';
+import { fileURLToPath } from 'url';
 
-module.exports = class Report {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+class Report {
   static listWarnings = new Map();
   static listErrors = new Map();
 
@@ -17,7 +21,6 @@ module.exports = class Report {
    */
 
   static getAsHtmlFile(projectTitle) {
-    const lang = require('./lang');
     const templateEngine = new nunjucks.Environment(
       new nunjucks.FileSystemLoader(path.join(__dirname, '../static/template/')),
     );
@@ -262,4 +265,6 @@ module.exports = class Report {
     this.about = 'ignored_csv_line';
     this.args = { filePath, type, lineNb, missing: missingCols.join(', ') };
   }
-};
+}
+
+export default Report;

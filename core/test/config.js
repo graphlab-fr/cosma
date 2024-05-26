@@ -1,12 +1,13 @@
-const assert = require('assert'),
-  should = require('chai').should();
+import assert from 'assert';
+import { should } from 'chai';
+import fs from 'node:fs';
+import path from 'node:path';
+import yml from 'yaml';
+import Config from '../models/config.js';
+import { fetchBibliographyFiles } from '../utils/generate.js';
+import { fileURLToPath } from 'url';
 
-const fs = require('fs'),
-  path = require('path'),
-  yml = require('yaml');
-
-const Config = require('../models/config'),
-  { fetchBibliographyFiles } = require('../utils/generate');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('Config', () => {
   const tempFolderPath = path.join(__dirname, '../temp');
