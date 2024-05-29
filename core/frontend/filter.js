@@ -1,7 +1,7 @@
 /**
  * @file Select filters elts and activate them by the ids them contain.
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 import { setNodesDisplaying } from './graph';

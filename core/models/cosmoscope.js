@@ -1,7 +1,7 @@
 /**
  * @file Manage the file directory and its data to generate a graph
  * @author Guillaume Brioudes <https://myllaume.fr/>
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 /**

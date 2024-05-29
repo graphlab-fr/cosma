@@ -1,7 +1,7 @@
 /**
  * @file Define node pattern
  * @author Guillaume Brioudes <https://myllaume.fr/>
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const { scaleLinear } = require('d3-scale');

@@ -1,7 +1,7 @@
 /**
  * @file Generate the Cosmoscope's source code
  * @author Guillaume Brioudes <https://myllaume.fr/>
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const fs = require('fs'),

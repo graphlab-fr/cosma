@@ -3,7 +3,7 @@
 /**
  * @file Addressing of terminal commands.
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const commander = require('commander'),

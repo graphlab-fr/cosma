@@ -1,7 +1,7 @@
 /**
  * @file Create record Mardown file from fields
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const readline = require('readline'),
