@@ -1,7 +1,7 @@
 const yml = require('yaml');
 
 // Thanks to https://github.com/dworthen/js-yaml-front-matter/blob/master/src/index.js
-const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)-{3})?([\w\W]*)*/;
+const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|\.]{3})?([\w\W]*)*/;
 
 module.exports = {
   /**
