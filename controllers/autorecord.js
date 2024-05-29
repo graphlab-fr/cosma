@@ -1,7 +1,7 @@
 /**
  * @file Prompt config to create record
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const Config = require('../core/models/config');

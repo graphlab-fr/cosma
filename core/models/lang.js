@@ -1,7 +1,7 @@
 /**
  * @file Reading this file of the interface messages in several langagues
  * @author Guillaume Brioudes <https://myllaume.fr/>
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const path = require('path'),

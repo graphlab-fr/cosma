@@ -1,7 +1,7 @@
 /**
  * @file Register error in recoding processs
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const path = require('path'),

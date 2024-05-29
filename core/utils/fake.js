@@ -1,7 +1,7 @@
 /**
  * @file Generate a fake cosmoscope.
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 /**

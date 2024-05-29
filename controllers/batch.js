@@ -1,7 +1,7 @@
 /**
  * @file Create several records from a JSON data file
  * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
+ * @copyright GNU GPL 3.0 Cosma's authors
  */
 
 const fs = require('fs'),
