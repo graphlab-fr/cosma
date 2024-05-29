@@ -82,7 +82,7 @@ function fetchFakeImages(imageNames) {
     try {
       for (const imageName of imageNames) {
         const imagePath = path.join(tempDirPath, imageName);
-        const url = faker.image.city();
+        const url = faker.image.urlLoremFlickr({ category: 'city' });
         if (fs.existsSync(imagePath)) {
           continue;
         }
