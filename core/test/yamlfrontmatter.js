@@ -41,4 +41,19 @@ describe('YAML Front Matter parser', () => {
     assert.deepEqual(head, {});
     expect(content).to.be.undefined;
   });
+
+  it('should parse with three points ending', () => {
+    const id = '20220105142308';
+
+    const fileContent = `---
+id: ${id}
+...
+
+content
+    `;
+
+    const { head, content } = readYmlFm(fileContent);
+    assert.deepEqual(head, { id });
+    expect(content).contain('\n\ncontent');
+  });
 });
