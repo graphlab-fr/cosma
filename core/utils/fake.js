@@ -4,6 +4,7 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import Config from '../models/config.js';
 import Record from '../models/record.js';
