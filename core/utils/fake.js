@@ -32,7 +32,7 @@ const tags = [];
 const bibKeys = Object.values(bib).map(({ id }) => `${id}`);
 
 for (let i = 0; i < 5; i++) {
-  tags.push(faker.random.word());
+  tags.push(faker.lorem.word());
 }
 
 let config = Config.get(path.join(__dirname, '../static/fake/config.yml'));
@@ -94,12 +94,11 @@ function getRecords(nb, opts = config.opts) {
       content,
       metas: {
         id: fileId,
-        title: faker.name.jobTitle(),
+        title: faker.person.jobTitle(),
         types: faker.helpers.arrayElements(recordTypesWithoutReferences, 2),
         tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
         thumbnail: undefined,
         references: ['Masure_2014'],
-        ['phone number']: faker.phone.number('06 ## ## ## ##'),
         begin,
         end,
       },
@@ -148,15 +147,15 @@ function fakeView({ withFilters, withTags, withFocus, withThisRecordId }) {
  */
 
 function fakeExtremeDates() {
-  const beginDate = faker.datatype.datetime({
-    min: new Date('2000-01-01'),
-    max: new Date('2010-01-01'),
+  const beginDate = faker.date.between({
+    from: new Date('2000-01-01'),
+    to: new Date('2010-01-01'),
   });
   const [beginYear, beginMonth, beginDay] = getTimestampTuple(beginDate);
 
-  const endDate = faker.datatype.datetime({
-    min: new Date('2010-01-01'),
-    max: new Date('2020-01-01'),
+  const endDate = faker.date.between({
+    from: new Date('2010-01-01'),
+    to: new Date('2020-01-01'),
   });
   const [endYear, endMonth, endDay] = getTimestampTuple(endDate);
 
