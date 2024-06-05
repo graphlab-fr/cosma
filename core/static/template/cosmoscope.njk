@@ -85,8 +85,8 @@
             <select class="sorting-select" name="index_sorting">
                 <option value="alphabetical">A-Z</option>
                 <option value="alphabetical:reverse">Z-A</option>
-                <option value="digital">Croissant</option>
-                <option value="digital:reverse">Décroissant</option>
+                <option value="digital">{{ translation.left_panel.menu_keywords.sort.digital[lang] }}</option>
+                <option value="digital:reverse">{{ translation.left_panel.menu_keywords.sort.digital_reverse[lang] }}</option>
             </select>
 
             <form id="tags-form" class="menu-tags-container menu-tags-container-prim sort-box active">
@@ -110,8 +110,8 @@
             <select class="sorting-select" name="index_sorting">
                 <option value="alphabetical">A-Z</option>
                 <option value="alphabetical:reverse">Z-A</option>
-                <option value="chronological">Chronologique</option>
-                <option value="chronological:reverse">Antéchronologique</option>
+                <option value="chronological">{{ translation.left_panel.menu_index.sort.chronological[lang] }}</option>
+                <option value="chronological:reverse">{{ translation.left_panel.menu_index.sort.chronological_reverse[lang] }}</option>
             </select>
 
             <ul class="menu-index-list">
@@ -216,11 +216,11 @@
 
             {% if focusIsActive %}
             <article class="menu-controls-container">
-                <p class="menu-controls-title">Mode de focus</p>
+                <p class="menu-controls-title">{{ translation.left_panel.menu_controls.focus_type.title[lang] }}</p>
                 <select name="focus_mode" id="focus-mode-select">
-                    <option value="directed">Tous</option>
-                    <option value="inbound">Entrant</option>
-                    <option value="outbound">Sortant</option>
+                    <option value="directed">{{ translation.left_panel.menu_controls.focus_type.focus_type_select.directed[lang] }}</option>
+                    <option value="inbound">{{ translation.left_panel.menu_controls.focus_type.focus_type_select.inbound[lang] }}</option>
+                    <option value="outbound">{{ translation.left_panel.menu_controls.focus_type.focus_type_select.outbound[lang] }}</option>
                 </select>
             </article>
             {% endif %}
@@ -296,7 +296,7 @@
         <div class="graph-controls-section graph-timeline">
             <span class="graph-control-label">
                 <input id="timeline-checkbox" type="checkbox" name="checkbox">
-                <label for="timeline-checkbox">Mode chronologique</label>
+                <label for="timeline-checkbox">{{ translation.graph.btn_chrono[lang] }}</label>
             </span>
 
             <form id="timeline-form">
@@ -321,7 +321,7 @@
 
     <main id="record-container" class="record-container">
         <article class="record active empty-record">
-            <p>Cliquez sur un nœud du graphe ou dans un élément de l'index pour ouvrir une fiche.</p>
+            <p>{{ translation.right_panel.record.empty[lang] }}</p>
         </article>
     
         {% for record in records %}

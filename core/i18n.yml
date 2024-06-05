@@ -5,6 +5,9 @@ graph:
   btn_focus:
     fr: Focus
     en: Focus
+  btn_chrono:
+    fr: Mode chronologique
+    en: Chronological mode
 
 left_panel:
   header:
@@ -26,11 +29,25 @@ left_panel:
     title:
       fr: Mots-clés
       en: Keywords
+    sort:
+      digital:
+        fr: Croissant
+        en: Ascending
+      digital_reverse:
+        fr: Décroissant
+        en: Descending
 
   menu_index:
     title:
       fr: Index
       en: Index
+    sort:
+      chronological:
+        fr: Chronologique
+        en: Chronological
+      chronological_reverse:
+        fr: Antéchronologique
+        en: Antechronological
 
   menu_views:
     title:
@@ -99,6 +116,21 @@ left_panel:
       input_size:
         fr: taille du texte
         en: font size
+    
+    focus_type:
+      title:
+        fr: Type de focus
+        en: Focus type
+      focus_type_select:
+        directed:
+          fr: Tous les liens
+          en: All links
+        inbound:
+          fr: Liens entrants
+          en: Inbound links
+        outbound:
+          fr: Liens sortants
+          en: Outbound links
 
   footer:
     btn_data:
@@ -120,6 +152,9 @@ right_panel:
       btn_close:
         fr: Fermer (Echap)
         en: Close (Escape)
+    empty:
+      fr: Cliquez sur un nœud du graphe ou dans un élément de l'index pour ouvrir une fiche.
+      en: To open a record, select a node in the graph or a title in the index.
 
     metadata:
       id:
