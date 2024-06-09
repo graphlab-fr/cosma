@@ -18,7 +18,7 @@
     "./man/cosma.1"
   ],
   "scripts": {
-    "test:unit": "./node_modules/.bin/mocha --timeout 30000",
+    "test:unit": "./node_modules/.bin/mocha 'core/test/**.js' --timeout 30000",
     "test:e2e": "./node_modules/.bin/cypress open --config-file ./core/utils/cypress.config.js",
     "fake": "node ./core/index.js",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
