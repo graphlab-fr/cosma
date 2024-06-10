@@ -9,6 +9,12 @@ cd ..
 
 mv ../temp/cosmoscope.html ../temp/citeproc.html
 
+cd timeline
+cosma modelize
+cd ..
+
+mv ../temp/cosmoscope.html ../temp/timeline.html
+
 cd batch
 cosma batch ./data.json
 cosma modelize
