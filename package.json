@@ -14,9 +14,6 @@
   "bin": {
     "cosma": "app.js"
   },
-  "man": [
-    "./man/cosma.1"
-  ],
   "scripts": {
     "test:unit": "./node_modules/.bin/mocha 'core/test/**.js' --timeout 30000",
     "test:e2e": "./node_modules/.bin/cypress open --config-file ./core/utils/cypress.config.js",
@@ -67,7 +64,8 @@
     "webpack-dev-server": "^5.0.4"
   },
   "directories": {
-    "doc": "docs"
+    "doc": "docs",
+    "man": "man"
   },
   "keywords": [],
   "prettier": {
