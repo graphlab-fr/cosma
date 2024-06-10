@@ -2,6 +2,19 @@
 title: Changelog
 ---
 
+# v2.4.1
+
+## Improvements
+
+- YAML headers can be closed by three dots (`...`) instead of three dashes ([issue 107](https://github.com/graphlab-fr/cosma/issues/107)).
+- Added missing English translations for some elements in the cosmoscope ([issue 116](https://github.com/graphlab-fr/cosma/issues/116)).
+- URLs in the bibliographies of records created with `reference_as_nodes` are now clickable.
+
+## Bug fixes
+
+- Citation processing with `cosma modelize --citeproc` no longer fails when `references_as_nodes` is set to `false` in the configuration ([issue 101](https://github.com/graphlab-fr/cosma/issues/101)).
+- Creating the user data directory with `cosma --create-user-data-dir` no longer fails ([issue 106](https://github.com/graphlab-fr/cosma/issues/106)).
+
 # v2.4.0
 
 ## Additions

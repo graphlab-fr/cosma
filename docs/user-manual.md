@@ -279,7 +279,9 @@ tags:
 ---
 ```
 
-The YAML header is delimited by two sets of three single dashes on a line (`---`). In YAML, a field consists of a name and a value separated by a colon.
+The YAML header is delimited at the top by three single dashes on a line (`---`) and at the bottom by either three single dashes on a line again (`---`) or by three single dots on a ligne (`...`).
+
+In YAML, a field consists of a name and a value separated by a colon.
 
 In accordance with the YAML specification, the list of keywords can be written in *block* mode:
 
