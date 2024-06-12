@@ -49,8 +49,8 @@ views: {}
 record_metas:
   - see
 title: "Cosma demo: Evergreen notes"
-author: "Notes by Andy Matuschak; presentation by Arthur Perret"
-description: ""
+author: "Arthur Perret"
+description: "Notes by Andy Matuschak; presentation by Arthur Perret"
 keywords: []
 link_symbol: ""
 link_context: inline
