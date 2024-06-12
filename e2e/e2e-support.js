@@ -1,5 +1,11 @@
-Cypress.Commands.add('shouldGraphHasNodes', (nb) =>
-  cy.get('[data-node]').filter(':visible').its('length').should('equal', nb),
+Cypress.Commands.add('shouldGraphHasNodes', (labels) =>
+  cy
+    .get('[data-node]')
+    .filter(':visible')
+    .should('have.length', labels.length)
+    .each((elt) => {
+      expect(elt.text()).to.be.oneOf(labels);
+    }),
 );
 
 Cypress.Commands.add('openARecord', () => {
