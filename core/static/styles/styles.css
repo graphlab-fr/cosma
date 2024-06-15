@@ -283,11 +283,12 @@ code {
 aside.menu {
   box-shadow: var(--shadow);
   z-index: 100;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   height: 100vh;
   flex: 0 0 30rem;
   margin: 0;
-  padding: 0 20px 50px 20px;
+  padding: 30px 20px;
   background-color: var(--background-gray);
   color: var(--offblack);
 }

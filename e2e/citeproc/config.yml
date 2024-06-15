@@ -1,0 +1,64 @@
+select_origin: directory
+files_origin: ../records
+nodes_origin: ""
+links_origin: ""
+nodes_online: ""
+links_online: ""
+images_origin: ""
+export_target: ../../temp/
+history: false
+focus_max: 2
+record_types:
+  undefined:
+    stroke: "#eeeeee"
+    fill: "#eeeeee"
+  concept:
+    stroke: "#984ea3"
+    fill: "#984ea3"
+  insight:
+    stroke: "#ff7f00"
+    fill: "#ff7f00"
+  reference:
+    stroke: "#6C6C6C"
+    fill: "#6C6C6C"
+link_types:
+  undefined:
+    stroke: simple
+    color: "#e1e1e1"
+  adjacent concept:
+    stroke: dotted
+    color: "#e1e1e1"
+references_as_nodes: true
+references_type_label: "reference"
+record_filters: []
+graph_background_color: "#ffffff"
+graph_highlight_color: "#ff6a6a"
+graph_highlight_on_hover: true
+graph_text_size: 7
+graph_arrows: true
+node_size_method: degree
+node_size: 10
+node_size_max: 20
+node_size_min: 10
+attraction_force: 600
+attraction_distance_max: 600
+attraction_vertical: 0
+attraction_horizontal: 0
+hide_id_from_record_header: true
+views: {}
+record_metas:
+  - see
+title: "Cosma demo: Evergreen notes"
+author: "Arthur Perret"
+description: "Notes by Andy Matuschak; presentation by Arthur Perret"
+keywords: []
+link_symbol: ""
+link_context: inline
+csl: ./iso690-author-date-fr.csl
+bibliography: ./references.json
+csl_locale: ./locales.xml
+css_custom: ../styles.css
+devtools: false
+lang: fr
+name: ""
+generate_id: never

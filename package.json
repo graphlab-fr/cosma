@@ -16,7 +16,8 @@
   },
   "scripts": {
     "test:unit": "./node_modules/.bin/mocha 'core/test/**.js' --timeout 30000",
-    "test:e2e": "./node_modules/.bin/cypress open --config-file ./core/utils/cypress.config.js",
+    "test:e2e": "./node_modules/.bin/cypress run --config-file ./e2e/cypress.config.js",
+    "test:e2e:gui": "./node_modules/.bin/cypress open --config-file ./e2e/cypress.config.js",
     "fake": "node ./core/index.js",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
     "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1",

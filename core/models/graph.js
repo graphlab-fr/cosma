@@ -91,8 +91,7 @@ module.exports = class Graph {
     const [begin, end] = extent(dates);
     return {
       begin,
-      // Add margin of one second to display oldest node at end of timeline
-      end: end + 1,
+      end: end,
     };
   }
 

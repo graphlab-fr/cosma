@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Paul Otlet",
+    "type": ["otlet", "personne"],
+    "titre": "Fondateur du Mundaneum",
+    "begin": "1868",
+    "end": "1944",
+    "pays": "Belgique",
+    "content": "Paul Otlet est la tête pensante du Mundaneum, ce lieu de rassemblement de la connaissance qui héberge notamment le Répertoire Bibliographique Universel. Il a consacré toute sa vie à développer cet organisme et le réseau de personnalités et d'institutions qui l'entourent.\n",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Paul_Otlet"
+  },
+  {
+    "title": "Edouard Otlet",
+    "type": ["personne"],
+    "titre": "Père de Paul Otlet",
+    "begin": "1842",
+    "end": "1907",
+    "pays": "Belgique",
+    "content": "Père de Paul Otlet. Entrepreneur investi dans les technologies des transports, il fait fortune grâce au tramway et à travers différentes entreprises qu'il exploite, notamment au Congo belge. Sa mauvaise gestion et une crise économique en 1900 auront raison de son entreprise.",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/%C3%89douard_Otlet"
+  },
+  {
+    "title": "Robert Pagès",
+    "type": ["personne"],
+    "titre": "Intellectuel français, théoricien du document",
+    "begin": "1919",
+    "end": "2007",
+    "pays": "France",
+    "content": "Robert Pagès est connu comme homme de science, psychologue social au CNRS, et ancien résistant. Depuis 2017, il est redécouvert par les sciences de l’information et de la communication du fait de ses écrits contemporains de ceux de Suzanne Briet, notamment son concept d'auto-document.",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Robert_Pag%C3%A8s"
+  },
+  {
+    "title": "Henri La Fontaine",
+    "type": ["personne"],
+    "titre": "Homme politique, co-fondateur du Mundaneum",
+    "begin": "1854",
+    "end": "1943",
+    "pays": "Belgique",
+    "content": "Henri La Fontaine est un homme politique socialiste. En 1913, il obtient le Prix Nobel de la Paix. Avec Paul Otlet, il collabore à un vaste réseau intellectuel en faveur de la connaissance et milite autour d'associations internationales pour la paix et pour les droits des femmes.",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Henri_La_Fontaine"
+  },
+  {
+    "title": "Melvil Dewey",
+    "type": ["personne"],
+    "titre": "Bibliothécaire, auteur de la Classification décimale",
+    "begin": "1851",
+    "end": "1931",
+    "pays": "Etats-Unis",
+    "content": "Mevil Dewey est un bibliothécaire américain. Avec la classification décimale, il révolutionne l'organisation des bibliothèques aux Etats-Unis et crée des structures professionnelles d'apprentissage pour les bibliothécaires. Il crée notamment l'ALA (American Library Association) ainsi que le Library Journal",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Melvil_Dewey"
+  },
+  {
+    "title": "Le Corbusier",
+    "type": ["personne"],
+    "titre": "Architecte",
+    "begin": "1887",
+    "end": "1965",
+    "pays": "France, Suisse",
+    "content": "Charles-Edouard Jeanneret, dit le Corbusier, est un architecte représentatif du mouvement moderne. Son style est largement dominé par le fonctionnalisme. Il échange avec Otlet au sujet des projets de cité mondiale. Le projet est d'ailleurs un temps envisagé du côté de Genève.",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Le_Corbusier"
+  },
+  {
+    "title": "CDU",
+    "type": ["œuvre"],
+    "titre": "Classification décimale universelle",
+    "begin": "1895",
+    "end": null,
+    "pays": "Belgique",
+    "content": "La classification décimale universelle (CDU) est un système de classification de bibliothèque développé par Paul Otlet et Henri La Fontaine à l’Institut international de bibliographie en 1895, à partir de la classification décimale de Dewey (CDD), et avec l’autorisation de Melvil Dewey. Elle a connu plusieurs éditions depuis 1905. Elle a été traduite en 40 langues.",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Classification_d%C3%A9cimale_universelle"
+  },
+  {
+    "title": "Mundaneum",
+    "type": ["institution"],
+    "titre": "Le projet phare de Paul Otlet",
+    "begin": "1920",
+    "end": null,
+    "pays": "Belgique",
+    "content": "Le Mundaneum est le centre intellectuel créé en 1920 au Palais du Cinquantenaire (Bruxelles). Ses activités de coopération internationale sont marquées par l'université internationale et l'encyclopédie didactique d'un nouveau genre.",
+    "lien_wikipedia": "https://fr.wikipedia.org/wiki/Mundaneum"
+  }
+]
