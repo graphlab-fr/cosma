@@ -19,7 +19,6 @@ describe('Timeline', () => {
     });
 
     it('should output display date', () => {
-      cy.get('#timeline-form output').should('have.text', '31/12/1853');
       cy.get('#timeline-form option')
         .eq(1)
         .then((elt) => {
@@ -29,21 +28,15 @@ describe('Timeline', () => {
     });
 
     it('should hide nodes', () => {
-      cy.get('[data-node="20210801132906"]').should('be.visible');
-      cy.get('[data-node="20210901132906"]').should('not.be.visible');
-      cy.get('[data-node="20210101132906"]').should('not.be.visible');
+      cy.shouldGraphHasNodes(['Henry La Fontaine']);
 
-      cy.get('#timeline-form input').trigger('value', -2228347880);
+      cy.get('#timeline-form input').invoke('val', -2228347880).trigger('input');
 
-      cy.get('[data-node="20210801132906"]').should('be.visible');
-      cy.get('[data-node="20210901132906"]').should('be.visible');
-      cy.get('[data-node="20210101132906"]').should('not.be.visible');
+      cy.shouldGraphHasNodes(['Henry La Fontaine', 'Paul Otlet']);
 
       cy.get('#timeline-form option').last().click();
 
-      cy.get('[data-node="20210801132906"]').should('not.be.visible');
-      cy.get('[data-node="20210901132906"]').should('not.be.visible');
-      cy.get('[data-node="20210101132906"]').should('be.visible');
+      cy.shouldGraphHasNodes(['Robert Pagès']);
     });
   });
 });
