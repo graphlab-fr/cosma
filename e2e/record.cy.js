@@ -40,6 +40,12 @@ describe('Record', () => {
     cy.hash().should('eq', '#' + encodeURI('evergreen notes should be concept-oriented'));
   }
 
+  it('should display record if id on on URL hash', () => {
+    cy.visit('temp/citeproc.html#evergreen notes should be concept-oriented');
+
+    assertRecordIsOpened();
+  });
+
   it('should display record container on click on node', () => {
     cy.get('[data-node="evergreen notes should be concept-oriented"]').click();
 
