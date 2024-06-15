@@ -1,7 +1,7 @@
 describe('tags', () => {
   beforeEach(() => {
     cy.visit('temp/citeproc.html');
-    cy.get('#tags-form').as('tagsContainer')
+    cy.get('#tags-form').as('tagsContainer');
   });
 
   /** @param {string[]} names */
@@ -36,10 +36,22 @@ describe('tags', () => {
   });
 
   it('should display tags from URL params', () => {
-    cy.visit('temp/citeproc.html?tags=quotes')
-    assertTagsAreChecked(['quotes'])
+    cy.visit('temp/citeproc.html?tags=quotes');
+    assertTagsAreChecked(['quotes']);
     cy.shouldGraphHasNodes(['Tools for thought']);
-  })
+  });
+
+  it('should apply tags as URL params on click on view action', () => {
+    cy.contains('Mots-clés').click();
+
+    cy.contains('wip').click();
+
+    cy.contains("Appliquer la vue actuelle à l'URL").click();
+
+    cy.location('search').should((loc) => {
+      expect(loc).to.equal('?filters=insight-concept-reference&tags=wip');
+    });
+  });
 
   it('should display nodes has selected tag from node', () => {
     cy.get('[data-node="tools for thought"]').click();

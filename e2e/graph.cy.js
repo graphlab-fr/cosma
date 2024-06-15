@@ -43,20 +43,20 @@ describe('graph', () => {
   });
 
   it('should hide all link', () => {
-    cy.get('line:visible').should('have.length', 7)
-    
-    cy.contains('Paramètres du graphe').click()
-    cy.contains('Afficher les liens').click()
+    cy.get('line:visible').should('have.length', 7);
 
-    cy.get('line:visible').should('have.length', 0)
-  })
+    cy.contains('Paramètres du graphe').click();
+    cy.contains('Afficher les liens').click();
+
+    cy.get('line:visible').should('have.length', 0);
+  });
 
   it('should hide all labels', () => {
-    cy.get('text:visible').should('have.length', 8)
-    
-    cy.contains('Paramètres du graphe').click()
-    cy.contains('Afficher les étiquettes').click()
+    cy.get('text:visible').should('have.length', 8);
 
-    cy.get('text:visible').should('have.length', 0)
-  })
+    cy.contains('Paramètres du graphe').click();
+    cy.contains('Afficher les étiquettes').click();
+
+    cy.get('text:visible').should('have.length', 0);
+  });
 });

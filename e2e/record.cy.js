@@ -129,4 +129,13 @@ describe('Record', () => {
       assertRecordPanelIsClosed();
     });
   });
+
+  it('should bibliographic record contains citeproc', () => {
+    cy.visit('temp/citeproc.html#matuschak2019');
+    assertRecordPanelIsOpened();
+    cy.get('.record-content:visible').should(
+      'contain.text',
+      'MATUSCHAK, Andy et NIELSEN, Michael, 2019',
+    );
+  });
 });

@@ -16,6 +16,11 @@ describe('Filters', () => {
       });
   }
 
+  /** @param {string} name */
+  function clickOnFilter(name) {
+    cy.get('@filtersContainer').contains(name).click();
+  }
+
   const filters = ['œuvre', 'personne', 'institution', 'otlet'];
 
   it('should display filter for each type', () => {
@@ -26,6 +31,18 @@ describe('Filters', () => {
 
   it('should check all filters if no URL params', () => {
     assertFiltersAreChecked(filters);
+  });
+
+  it('should apply filters as URL params on click on view action', () => {
+    clickOnFilter('œuvre');
+    clickOnFilter('personne');
+    clickOnFilter('institution');
+
+    cy.contains("Appliquer la vue actuelle à l'URL").click();
+
+    cy.location('search').should((loc) => {
+      expect(loc).to.equal('?filters=otlet');
+    });
   });
 
   it('should check only filters from URL params', () => {
@@ -41,11 +58,6 @@ describe('Filters', () => {
   });
 
   it('should toggle filter toggle node visibility', () => {
-    /** @param {string} name */
-    function clickOnFilter(name) {
-      cy.get('@filtersContainer').contains(name).click();
-    }
-
     const allTitles = data.map(({ title }) => title);
 
     cy.shouldGraphHasNodes(allTitles);
