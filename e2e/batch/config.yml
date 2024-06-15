@@ -12,19 +12,16 @@ record_types:
   undefined:
     stroke: "#eeeeee"
     fill: "#eeeeee"
-  concept:
+  personne:
     stroke: "#d7191c"
     fill: "#d7191c"
-  note:
+  œuvre:
     stroke: "#fdae61"
     fill: "#fdae61"
-  personne:
-    stroke: "#ffffbf"
-    fill: "#ffffbf"
-  objet:
+  institution:
     stroke: "#abd9e9"
     fill: "#abd9e9"
-  idée:
+  otlet:
     stroke: "#2c7bb6"
     fill: "#2c7bb6"
 link_types:

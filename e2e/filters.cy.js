@@ -1,70 +1,95 @@
+const data = require('./batch/data.json');
+
 describe('Filters', () => {
   beforeEach(() => {
     cy.visit('temp/batch.html');
+    cy.get('#types-form').as('filtersContainer');
   });
 
-  const filters = ['concept', 'note', 'personne', 'objet', 'idée'];
+  /** @param {string[]} names */
+  function assertFiltersAreChecked(names) {
+    cy.get('@filtersContainer')
+      .find('.filter input:checked')
+      .should('have.length', names.length)
+      .each((elt) => {
+        expect(elt.attr('name')).to.be.oneOf(names);
+      });
+  }
+
+  const filters = ['œuvre', 'personne', 'institution', 'otlet'];
 
   it('should display filter for each type', () => {
     filters.forEach((filterName) => {
-      cy.get('#types-form').contains(filterName).should('be.visible');
+      cy.get('@filtersContainer').contains(filterName).should('be.visible');
     });
   });
 
+  it('should check all filters if no URL params', () => {
+    assertFiltersAreChecked(filters);
+  });
+
+  it('should check only filters from URL params', () => {
+    cy.visit('temp/batch.html?filters=personne-otlet');
+    assertFiltersAreChecked(['personne', 'otlet']);
+  });
+
   it('should uncheck input on filter label click', () => {
-    cy.get('#types-form .filter').first().as('filter');
+    cy.get('@filtersContainer').find('.filter').first().as('filter');
     cy.get('@filter').find('input').should('be.checked');
     cy.get('@filter').click();
     cy.get('@filter').find('input').should('not.be.checked');
   });
 
   it('should toggle filter toggle node visibility', () => {
-    cy.get('[data-node="concept"]').should('be.visible');
-    cy.get('#types-form .filter')
-      .first()
-      .as('filter')
-      .find('.label')
-      .should('have.text', 'concept');
-    cy.get('@filter').click();
-    cy.get('[data-node="concept"]').should('not.be.visible');
-    cy.get('@filter').click();
-    cy.get('[data-node="concept"]').should('be.visible');
-  });
+    /** @param {string} name */
+    function clickOnFilter(name) {
+      cy.get('@filtersContainer').contains(name).click();
+    }
 
-  it.skip('should check only filter in search params if set', () => {
-    cy.visit('temp/batch.html?filters=concept,note');
+    const allTitles = data.map(({ title }) => title);
 
-    cy.get('#types-form input:checked').should('have.length', 2);
-    ['concept', 'note'].forEach((filterName) => {
-      cy.get(`#types-form .filter:contains("${filterName}") input`).should('is.checked');
-    });
+    cy.shouldGraphHasNodes(allTitles);
+
+    clickOnFilter('œuvre');
+    assertFiltersAreChecked(['personne', 'institution', 'otlet']);
+
+    cy.shouldGraphHasNodes(allTitles.filter((title) => title !== 'CDU'));
+
+    clickOnFilter('œuvre');
+    assertFiltersAreChecked(['personne', 'œuvre', 'institution', 'otlet']);
+
+    cy.shouldGraphHasNodes(allTitles);
+
+    clickOnFilter('personne');
+    assertFiltersAreChecked(['œuvre', 'institution', 'otlet']);
+
+    cy.shouldGraphHasNodes(['Mundaneum', 'CDU', 'Paul Otlet']);
+
+    clickOnFilter('otlet');
+    assertFiltersAreChecked(['œuvre', 'institution']);
+
+    cy.shouldGraphHasNodes(['Mundaneum', 'CDU']);
   });
 
   describe('with alt key', () => {
     it('should uncheck all inputs but not clicked one if alt key is pressed', () => {
-      let clickedFilterName;
+      assertFiltersAreChecked(filters);
 
-      cy.get('#types-form .filter input:checked').should('have.length', filters.length);
+      cy.get('@filtersContainer').contains('personne').click({ altKey: true });
 
-      const itemToClick = cy.get('#types-form .filter').first();
-      itemToClick
-        .find('.label')
-        .click({ altKey: true })
-        .then((elt) => {
-          const name = elt.find('input').attr('name');
-          clickedFilterName = name;
-        });
-
-      cy.get('#types-form .filter input:checked').should('have.length', 1);
+      assertFiltersAreChecked(['personne']);
     });
 
     it('should check all inputs if alt key is pressed on a second click on same filter', () => {
-      const itemToClick = cy.get('#types-form .filter').first();
-      itemToClick.find('.label').click({ altKey: true }).click({ altKey: true });
-      cy.get('#types-form .filter').each((elt) => {
-        const input = elt.find('input');
-        expect(input.is(':checked')).to.be.true;
-      });
+      assertFiltersAreChecked(filters);
+
+      cy.get('@filtersContainer').contains('personne').click({ altKey: true });
+
+      assertFiltersAreChecked(['personne']);
+
+      cy.get('@filtersContainer').contains('personne').click({ altKey: true });
+
+      assertFiltersAreChecked(filters);
     });
   });
 });
