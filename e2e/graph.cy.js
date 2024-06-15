@@ -1,12 +1,28 @@
+const data = require('./batch/data.json');
+
 describe('graph', () => {
   beforeEach(() => {
     cy.visit('temp/citeproc.html');
   });
 
   it('should get one node per record', () => {
-    const numberOfRecord = 6;
-    const numberOfBibliographicRecord = 2;
-    cy.get('[data-node]').should('have.length', numberOfRecord + numberOfBibliographicRecord);
+    cy.visit('temp/batch.html');
+
+    const allTitles = data.map(({ title }) => title);
+    cy.shouldGraphHasNodes(allTitles);
+  });
+
+  it('should get bibliographic nodes with citeproc', () => {
+    cy.shouldGraphHasNodes([
+      'Evergreen note titles arelike APIs',
+      'Evergreen notes should beatomic',
+      'Evergreen notes should beconcept-oriented',
+      'Evergreen notes should bedensely linked',
+      'Evergreen notes',
+      'Tools for thought',
+      'Augmenting Human Intellect:A Conceptual Framework',
+      'How can we develop transformativetools for thought?',
+    ]);
   });
 
   it('should open record on click on node', () => {
