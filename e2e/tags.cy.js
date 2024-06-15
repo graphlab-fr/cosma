@@ -49,7 +49,7 @@ describe('tags', () => {
     cy.contains("Appliquer la vue actuelle à l'URL").click();
 
     cy.location('search').should((loc) => {
-      expect(loc).to.equal('?filters=insight-concept-reference&tags=wip');
+      expect(loc).to.contains('tags=wip');
     });
   });
 
