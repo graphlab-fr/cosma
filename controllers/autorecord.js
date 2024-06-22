@@ -5,7 +5,7 @@
  */
 
 import Config from '../core/models/config.js';
-import makeRecord from './record.js';
+import createRecord from './create-record.js';
 
 /**
  * Prompt config and pass record data
@@ -33,7 +33,7 @@ function autorecord(title = '', type = 'undefined', tags = '', saveIdOnYmlFrontM
     saveIdOnYmlFrontMatter = config.opts['generate_id'] === 'always' || !!saveIdOnYmlFrontMatter;
   }
 
-  makeRecord(title, type, tags, config, saveIdOnYmlFrontMatter);
+  createRecord(title, type, tags, config, saveIdOnYmlFrontMatter);
 }
 
 export default autorecord;
