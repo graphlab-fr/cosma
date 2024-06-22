@@ -22,8 +22,8 @@
             {% endfor %}
             --highlight: {{ graph.config.graph_highlight_color }};
         }
-        {% include "styles/styles.css" %}
-        {% include "styles/print.css" %}
+        {% include "core/static/styles/styles.css" %}
+        {% include "core/static/styles/print.css" %}
 
         {% if customCss %}
         {{ customCss | safe }}
@@ -537,7 +537,7 @@
 
                 {% if publishMode and metadata %}
                 <div class="logo">
-                    {% include "icons/cosmalogo.svg" %}
+                    {% include "core/static/icons/cosmalogo.svg" %}
                 </div>
                 {% else %}
                 <h1>Cosma</h1>
@@ -604,10 +604,10 @@
     {# Cosma functions #}
 
     {% if devMode %}
-    <script src="bundle.js"></script>
+    <script src="dist/front.js"></script>
     {% else %}
     <script>
-        {% include "bundle.js" %}
+        {% include "dist/front.js" %}
     </script>
     {% endif %}
 

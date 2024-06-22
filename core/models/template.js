@@ -207,7 +207,7 @@ class Template {
       });
 
     const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../static')),
+      new nunjucks.FileSystemLoader(path.join(__dirname, '../../')),
     );
 
     md.inline.ruler2.push('image_to_base64', (state) =>
@@ -336,7 +336,7 @@ class Template {
       this.custom_css = fs.readFileSync(cssCustomPath, 'utf-8');
     }
 
-    this.html = templateEngine.render('template/cosmoscope.njk', {
+    this.html = templateEngine.render('core/static/template/cosmoscope.njk', {
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
