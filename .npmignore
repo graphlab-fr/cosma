@@ -1,0 +1,8 @@
+**/temp
+**/cosmoscope.html
+.github
+/controllers
+/core
+/e2e
+/models
+app.js
