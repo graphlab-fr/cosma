@@ -24,8 +24,8 @@ mv ../temp/cosmoscope.html ../temp/batch.html
 rm ../temp/**.md
 
 cd batch
-cosma autorecord Toto concept tag1,tag2
-cosma autorecord Tata concept
+cosma autorecord Toto personne tag1,tag2
+cosma autorecord Tata institution
 cosma autorecord Tutu
 cosma modelize
 cd ..
