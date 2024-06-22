@@ -11,9 +11,8 @@
     "url": "https://github.com/graphlab-fr/cosma/issues"
   },
   "main": "app.js",
-  "type": "module",
   "bin": {
-    "cosma": "app.js"
+    "cosma": "dist/back.cjs"
   },
   "scripts": {
     "test:unit": "./node_modules/.bin/mocha 'core/test/**.js' --timeout 30000",
@@ -22,7 +21,9 @@
     "fake": "node ./core/index.js",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
     "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1",
-    "build": "./node_modules/.bin/webpack-cli build --config ./core/utils/webpack.config.js"
+    "build:front": "./node_modules/.bin/webpack-cli build --config ./webpack-front.config.mjs --mode production",
+    "build:back": "./node_modules/.bin/webpack-cli build --config ./webpack-back.config.mjs --mode production",
+    "prepare": "npm run build:front && npm run build:back"
   },
   "contributors": [
     "Arthur Perret",
