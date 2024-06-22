@@ -22,8 +22,8 @@
             {% endfor %}
             --highlight: {{ graph.config.graph_highlight_color }};
         }
-        {% include "core/static/styles/styles.css" %}
-        {% include "core/static/styles/print.css" %}
+        {% include "static/styles/styles.css" %}
+        {% include "static/styles/print.css" %}
 
         {% if customCss %}
         {{ customCss | safe }}
@@ -537,7 +537,7 @@
 
                 {% if publishMode and metadata %}
                 <div class="logo">
-                    {% include "core/static/icons/cosmalogo.svg" %}
+                    {% include "static/icons/cosmalogo.svg" %}
                 </div>
                 {% else %}
                 <h1>Cosma</h1>

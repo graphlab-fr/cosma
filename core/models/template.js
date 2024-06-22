@@ -336,7 +336,7 @@ class Template {
       this.custom_css = fs.readFileSync(cssCustomPath, 'utf-8');
     }
 
-    this.html = templateEngine.render('core/static/template/cosmoscope.njk', {
+    this.html = templateEngine.render('static/template/cosmoscope.njk', {
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
