@@ -59,4 +59,12 @@ describe('graph', () => {
 
     cy.get('text:visible').should('have.length', 0);
   });
+
+  it('should on node hover change opacity of no connected nodes', () => {
+    cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+
+    ['matuschak2019', 'engelbart1962', 'evergreen notes should be densely linked'].forEach((name) =>
+      cy.get(`[data-node="${name}"]`).find('a').should('have.attr', 'opacity', '0.5'),
+    );
+  });
 });
