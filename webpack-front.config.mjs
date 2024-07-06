@@ -12,12 +12,6 @@ export default {
   module: {
     rules: [
       {
-        test: /\.mjs$/,
-        resolve: {
-          fullySpecified: false,
-        },
-      },
-      {
         test: /\.m?js$/,
         exclude: /(node_modules)/,
         use: {
