@@ -16,3 +16,17 @@ Visit <https://cosma.arthurperret.fr> to learn more about the software.
 - [Installing](https://cosma.arthurperret.fr/installing.html)
 - [Getting started](https://cosma.arthurperret.fr/getting-started.html)
 - [User manual](https://cosma.arthurperret.fr/user-manual.html)
+
+## Install
+
+```bash
+npm run i # install dependences + build JS files
+```
+
+## Development
+
+```bash
+npm run watch:front # build web browser script
+npm run watch:back # build NodeJs executable file
+nodemon --ext js,cjs --watch dist/ --exec "sh e2e/exec-modelize.sh" # make cosmoscope files for dev or E2E testing
+```
