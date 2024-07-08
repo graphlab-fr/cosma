@@ -158,6 +158,10 @@ elts.nodes = svgSub
       }),
   )
   .on('mouseover', (e, nodeMetas) => {
+    if (!graphProperties.graph_highlight_on_hover) {
+      return;
+    }
+
     let nodesIdsHovered = [nodeMetas.id];
 
     const linksToModif = elts.links.filter(function (link) {
@@ -195,6 +199,10 @@ elts.nodes = svgSub
     linksToModif.attr('stroke-opacity', 0.5);
   })
   .on('mouseout', () => {
+    if (!graphProperties.graph_highlight_on_hover) {
+      return;
+    }
+
     const selectedNodeId = getRecordIdFromHash();
 
     elts.nodes

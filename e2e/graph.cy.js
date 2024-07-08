@@ -60,11 +60,28 @@ describe('graph', () => {
     cy.get('text:visible').should('have.length', 0);
   });
 
-  it('should on node hover change opacity of no connected nodes', () => {
-    cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+  describe('change node opacity', () => {
+    it('should on no connected nodes to hovered node', () => {
+      cy.get('[data-node="evergreen notes"]').trigger('mouseover');
 
-    ['matuschak2019', 'engelbart1962', 'evergreen notes should be densely linked'].forEach((name) =>
-      cy.get(`[data-node="${name}"]`).find('a').should('have.attr', 'opacity', '0.5'),
-    );
+      ['matuschak2019', 'engelbart1962', 'evergreen notes should be densely linked'].forEach(
+        (name) => cy.get(`[data-node="${name}"]`).find('a').should('have.attr', 'opacity', '0.5'),
+      );
+    });
+
+    it.only('should not if option is unactivated', () => {
+      cy.contains('Paramètres du graphe').click();
+      cy.contains('Surbrillance au survol').as('option');
+
+      cy.get('@option').find('input').should('have.checked');
+      cy.get('@option').click();
+      cy.get('@option').find('input').should('not.have.checked');
+
+      cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+
+      ['matuschak2019', 'engelbart1962', 'evergreen notes should be densely linked'].forEach(
+        (name) => cy.get(`[data-node="${name}"]`).find('a').should('not.have.attr', 'opacity'),
+      );
+    });
   });
 });
