@@ -20,8 +20,20 @@ describe('graph', () => {
       'Evergreen notes should bedensely linked',
       'Evergreen notes',
       'Tools for thought',
+      // bibliographic nodes
       'Augmenting Human Intellect:A Conceptual Framework',
       'How can we develop transformativetools for thought?',
+    ]);
+
+    cy.visit('temp/no-citeproc.html');
+
+    cy.shouldGraphHasNodes([
+      'Evergreen note titles arelike APIs',
+      'Evergreen notes should beatomic',
+      'Evergreen notes should beconcept-oriented',
+      'Evergreen notes should bedensely linked',
+      'Evergreen notes',
+      'Tools for thought',
     ]);
   });
 
@@ -69,7 +81,7 @@ describe('graph', () => {
       );
     });
 
-    it.only('should not if option is unactivated', () => {
+    it('should not if option is unactivated', () => {
       cy.contains('Paramètres du graphe').click();
       cy.contains('Surbrillance au survol').as('option');
 

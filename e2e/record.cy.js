@@ -59,6 +59,22 @@ describe('Record', () => {
     assertRecordIsOpened();
   });
 
+  it('should click on record links redirect to record', () => {
+    cy.get('[data-node="evergreen notes should be densely linked"]').click();
+
+    cy.get('.record.active .record-content').find('a').should('have.length', 1).click();
+
+    assertRecordIsOpened();
+  });
+
+  it('should click on link from footer list redirect to record', () => {
+    cy.get('[data-node="evergreen notes should be densely linked"]').click();
+
+    cy.get('.record.active footer').contains('Evergreen notes should be concept-oriented').click();
+
+    assertRecordIsOpened();
+  });
+
   describe('Have click on node', () => {
     beforeEach(() => {
       cy.get('[data-node="evergreen notes should be concept-oriented"]').click();
@@ -137,5 +153,42 @@ describe('Record', () => {
       'contain.text',
       'MATUSCHAK, Andy et NIELSEN, Michael, 2019',
     );
+  });
+
+  describe('footer', () => {
+    beforeEach(() => {
+      cy.get('[data-node="tools for thought"]').click();
+      cy.get('.record.active footer').as('footer');
+
+      cy.get('@footer').find('.record-links-list li').should('have.length', 2).eq(0).as('link');
+
+      cy.get('@footer')
+        .find('.record-backlinks-list li')
+        .should('have.length', 1)
+        .eq(0)
+        .as('backlink');
+    });
+
+    it('should contains link to source/target node', () => {
+      cy.get('@link').should('have.attr', 'data-target-id', 'engelbart1962');
+      cy.get('@link').find('a').should('have.attr', 'href', '#engelbart1962');
+
+      cy.get('@backlink').should('have.attr', 'data-target-id', 'evergreen notes');
+      cy.get('@backlink').find('a').should('have.attr', 'href', '#evergreen notes');
+    });
+
+    it('should contains context and mark of relationship', () => {
+      cy.get('@link').should(
+        'contains.text',
+        '(Engelbart, 1962 ; quoted by Matuschak, Nielsen, 2019).',
+      );
+      cy.get('@link').find('.highlight').should('have.text', 'Engelbart, 1962');
+
+      cy.get('@backlink').should(
+        'contains.text',
+        'Evergreen notes can be created with tools for thought.',
+      );
+      cy.get('@backlink').find('.highlight').should('have.text', 'tools for thought');
+    });
   });
 });
