@@ -30,3 +30,10 @@ npm run watch:front # build web browser script
 npm run watch:back # build NodeJs executable file
 nodemon --ext js,cjs --watch dist/ --exec "sh e2e/exec-modelize.sh" # make cosmoscope files for dev or E2E testing
 ```
+
+## E2E testing
+
+```bash
+sh e2e/exec-modelize.sh
+npm run test:e2e
+```
