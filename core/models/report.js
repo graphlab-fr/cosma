@@ -22,7 +22,7 @@ class Report {
 
   static getAsHtmlFile(projectTitle) {
     const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../static/template/')),
+      new nunjucks.FileSystemLoader(path.join(__dirname, '../../')),
     );
     templateEngine.addFilter('translate', (input, args) => {
       if (args) {
@@ -38,7 +38,7 @@ class Report {
       minute: 'numeric',
       second: 'numeric',
     });
-    return templateEngine.render('report.njk', {
+    return templateEngine.render('static/template/report.njk', {
       lang: lang.flag,
       date,
       projectTitle,

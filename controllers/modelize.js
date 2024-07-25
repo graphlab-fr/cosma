@@ -7,7 +7,7 @@ import Link from '../core/models/link.js';
 import Record from '../core/models/record.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
-import Report from '../core/models/report.js';
+import Report from '../models/report-cli.js';
 import { DowloadOnlineCsvFilesError } from '../core/models/errors.js';
 import { downloadFile } from '../core/utils/misc.js';
 import { tmpdir } from 'node:os';
