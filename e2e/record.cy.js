@@ -190,5 +190,9 @@ describe('Record', () => {
       );
       cy.get('@backlink').find('.highlight').should('have.text', 'tools for thought');
     });
+
+    it('should link type', () => {
+      cy.get('@backlink').should('contain.text', 'adjacent concept');
+    });
   });
 });
