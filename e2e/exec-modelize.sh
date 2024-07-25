@@ -21,6 +21,12 @@ cd ..
 
 mv ../temp/cosmoscope.html ../temp/timeline.html
 
+cd csv
+cosma modelize
+cd ..
+
+mv ../temp/cosmoscope.html ../temp/csv.html
+
 cd batch
 cosma batch ./data.json
 cosma modelize

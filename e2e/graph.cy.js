@@ -10,6 +10,9 @@ describe('graph', () => {
 
     const allTitles = data.map(({ title }) => title);
     cy.shouldGraphHasNodes(allTitles);
+
+    cy.visit('temp/csv.html');
+    cy.get('[data-node]:visible').should('have.length', 128);
   });
 
   it('should get bibliographic nodes with citeproc', () => {
@@ -52,6 +55,12 @@ describe('graph', () => {
     cy.get('[data-target="evergreen notes"]')
       .should('have.length', 3)
       .each((elt) => expect(elt.attr('style')).to.contain('highlight'));
+  });
+
+  it('should apply link shape', () => {
+    cy.visit('temp/csv.html');
+    cy.get('line[data-source="24"][data-target="1"]').should('have.attr', 'filter', 'url(#double)');
+    cy.get('line[data-source="97"][data-target="1"]').should('have.attr', 'stroke-dasharray');
   });
 
   it('should hide all link', () => {

@@ -1,0 +1,73 @@
+select_origin: csv
+files_origin: ../../temp/
+nodes_origin: ./nodes.csv
+links_origin: ./links.csv
+nodes_online: ""
+links_online: ""
+images_origin: ""
+export_target: ../../temp/
+history: false
+focus_max: 2
+record_types:
+  undefined:
+    stroke: "#eeeeee"
+    fill: "#eeeeee"
+  Personne:
+    stroke: "#1b9e77"
+    fill: "#1b9e77"
+  Œuvre:
+    stroke: "#d95f02"
+    fill: "#d95f02"
+  Institution:
+    stroke: "#7570b3"
+    fill: "#7570b3"
+  Otlet:
+    stroke: "#e7298a"
+    fill: "#e7298a"
+  Évènement:
+    stroke: "#66a61e"
+    fill: "#66a61e"
+link_types:
+  undefined:
+    stroke: simple
+    color: "#e1e1e1"
+  proche:
+    stroke: double
+    color: "#000"
+  opposant:
+    stroke: dotted
+    color: "purple"
+references_as_nodes: false
+record_filters: []
+graph_background_color: "#ffffff"
+graph_highlight_color: "#ff6a6a"
+graph_highlight_on_hover: true
+graph_text_size: 7
+graph_arrows: true
+node_size_method: unique
+node_size: 5
+node_size_max: 20
+node_size_min: 10
+attraction_force: 600
+attraction_distance_max: 600
+attraction_vertical: 0
+attraction_horizontal: 0
+hide_id_from_record_header: false
+views: {}
+record_metas:
+  - prenom
+  - nom
+  - titre
+  - pays
+  - domaine
+  - lien wikipédia
+title: "Cosma demo: CSV"
+author: ""
+description: "Extraction de l'Otletoshpère"
+keywords: []
+link_symbol: ""
+link_context: inline
+devtools: false
+lang: fr
+name: ""
+generate_id: never
