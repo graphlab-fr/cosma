@@ -54,9 +54,9 @@ description: "Notes by Andy Matuschak; presentation by Arthur Perret"
 keywords: []
 link_symbol: ""
 link_context: inline
-csl: ./iso690-author-date-fr.csl
-bibliography: ./references.json
-csl_locale: ./locales.xml
+csl: iso690-author-date-fr.csl
+bibliography: references.json
+csl_locale: locales.xml
 css_custom: ../styles.css
 devtools: false
 lang: fr
