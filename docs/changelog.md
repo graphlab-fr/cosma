@@ -70,18 +70,18 @@ Other improvements:
 
 ## Additions
 
-- New configuration setting: `citations_as_nodes`. When set to `true`, this setting modifies the behavior of the `--citeproc` option of `cosma modelize`, making it so that bibliographic references become nodes in the graph: each cited reference is treated as a node and each citation is treated as a link; for each cited reference, a bibliographic record is automatically generated in the cosmoscope; each bibliographic record is presented with contextualized backlinks which correspond to citations of that bibliographic reference in other records.
+- New configuration setting: `references_as_nodes`. When set to `true`, this setting modifies the behavior of the `--citeproc` option of `cosma modelize`, making it so that bibliographic references become nodes in the graph: each cited reference is treated as a node and each citation is treated as a link; for each cited reference, a bibliographic record is automatically generated in the cosmoscope; each bibliographic record is presented with contextualized backlinks which correspond to citations of that bibliographic reference in other records.
 
 To use this new feature, you must do three things:
 
-1. set `citations_as_nodes` to `true` in the project's configuration;
-2. define a value for `references_type_label` (this is a new setting introduced alongside `citations_as_nodes` in this release);
+1. set `references_as_nodes` to `true` in the project's configuration;
+2. define a value for `references_type_label` (this is a new setting introduced alongside `references_as_nodes` in this release);
 3. create a record type with the same name as the value for `references_type_label`.
 
 For instance:
 
 ```
-citations_as_nodes: true
+references_as_nodes: true
 references_type_label: "référence"
 record_types:
   référence:
