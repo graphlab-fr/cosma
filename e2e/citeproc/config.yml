@@ -4,7 +4,7 @@ nodes_origin: ""
 links_origin: ""
 nodes_online: ""
 links_online: ""
-images_origin: ""
+images_origin: ../records
 export_target: ../../temp/
 history: false
 focus_max: 2

@@ -195,4 +195,22 @@ describe('Record', () => {
       cy.get('@backlink').should('contain.text', 'adjacent concept');
     });
   });
+
+  it('should display thumbnails on graph', () => {
+    cy.get('[data-node="evergreen notes"] circle')
+      .eq(1)
+      .should('have.attr', 'fill', 'url(#otlet.jpg)');
+
+    cy.get('[id="otlet.jpg"]').should('exist');
+  });
+
+  it('should display thumbnails on record', () => {
+    cy.get('[data-node="evergreen notes"]').click();
+    cy.get('.record.active .record-img').should('be.visible');
+  });
+
+  it('should render images record', () => {
+    cy.get('[data-node="tools for thought"]').click();
+    cy.get('.record.active .record-content img').should('have.length', 1);
+  });
 });
