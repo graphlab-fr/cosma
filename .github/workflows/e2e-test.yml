@@ -34,3 +34,10 @@ jobs:
 
       - name: Run E2E tests
         run: npm run test:e2e
+
+      - name: Upload /temp directory
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: temp
