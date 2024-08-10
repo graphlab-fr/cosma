@@ -9,16 +9,22 @@ import * as d3 from 'd3';
 import GraphEngine from 'graphology';
 
 import View from './view.js';
-import { hideFromIndex, displayFromIndex, getRecordIdFromHash } from './records.js';
+import { getRecordIdFromHash } from './records.js';
 import { setCounters } from './counter.js';
 import hotkeys from 'hotkeys-js';
-import filterPriority from './filterPriority.js';
 
 /** Data serialization
 ------------------------------------------------------------*/
 
 const graph = new GraphEngine({ multi: true });
 graph.import(data);
+
+graph.updateEachNodeAttributes((node, attr) => {
+  return {
+    ...attr,
+    hidden: false,
+  };
+});
 
 const allNodeIds = graph.nodes();
 
@@ -365,24 +371,9 @@ function generatePathCoordinatesWithBorder(numSegments, diameter, borderSize) {
 
 function getNodeNetwork(nodeId) {
   const edges = graph.edges(nodeId);
-  // const diplayedNodes = elts.nodes
-  //   .filter((item) => item.hidden === filterPriority.notFiltered)
-  //   .data()
-  //   .map((item) => item.id);
 
   const node = elts.nodes.filter(({ key }) => key === nodeId);
   const links = elts.links.filter(({ key }) => edges.includes(key));
-
-  // const links = elts.links.filter(function (link) {
-  //   if (!nodeIds.includes(link.source.id) && !nodeIds.includes(link.target.id)) {
-  //     return false;
-  //   }
-  //   if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
-  //     return false;
-  //   }
-
-  //   return true;
-  // });
 
   return {
     node,
@@ -390,45 +381,33 @@ function getNodeNetwork(nodeId) {
   };
 }
 
-function setNodesDisplaying(nodeIds, priority) {
-  // const toHide = [],
-  //   toDisplay = [];
-
+function setNodesDisplaying(nodeIds) {
   const toDisplay = nodeIds;
   const toHide = Array.from(d3.difference(allNodeIds, toDisplay));
 
-  // allNodeIds.forEach((id) => {
-  //   if (nodeIds.includes(id)) {
-  //     toDisplay.push(id);
-  //   } else {
-  //     toHide.push(id);
-  //   }
-  // });
-
-  displayNodes(toDisplay, priority);
-  hideNodes(toHide, priority);
+  displayNodes(toDisplay);
+  hideNodes(toHide);
 }
+
+graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
+  const { links, node } = getNodeNetwork(key);
+
+  if (attributes.hidden) {
+    node.style('display', 'none');
+    links.style('display', 'none');
+  } else {
+    node.style('display', null);
+    links.style('display', null);
+  }
+});
 
 /**
  * Hide some nodes & their links, by their id
  * @param {array} nodeIds - List of nodes ids
  */
 
-function hideNodes(nodeIds, priority) {
-  hideNodeNetwork(nodeIds);
-  hideFromIndex(nodeIds);
-
-  // if (priority === undefined) {
-  //   throw new Error('Need priority');
-  // }
-
-  // elts.nodes.data().map((node) => {
-  //   const { id, hidden } = node;
-  //   if (nodeIds.includes(id) && hidden <= priority) {
-  //     node.hidden = priority;
-  //   }
-  //   return node;
-  // });
+function hideNodes(nodeIds) {
+  nodeIds.forEach((nodeId) => graph.setNodeAttribute(nodeId, 'hidden', true));
 }
 
 /**
@@ -436,59 +415,23 @@ function hideNodes(nodeIds, priority) {
  * @param {array} nodeIds - List of nodes ids
  */
 
-function displayNodes(nodeIds, priority = filterPriority.notFiltered) {
-  // const nodesToDisplayIds = [];
-
-  // elts.nodes.data().map((node) => {
-  //   const { id, hidden } = node;
-  //   if (nodeIds.includes(id) && hidden <= priority) {
-  //     nodesToDisplayIds.push(id);
-  //     node.hidden = filterPriority.notFiltered;
-  //   }
-  //   return node;
-  // });
-
-  displayNodeNetwork(nodeIds);
-  displayFromIndex(nodeIds);
+function displayNodes(nodeIds) {
+  nodeIds.forEach((nodeId) => graph.setNodeAttribute(nodeId, 'hidden', false));
 }
 
-function displayNodesAll(priority = filterPriority.notFiltered) {
-  displayNodes(allNodeIds, priority);
+function displayNodesAll() {
+  graph.updateEachNodeAttributes((node, attr) => ({
+    ...attr,
+    hidden: false,
+  }));
 }
 
-function hideNodesAll(priority = filterPriority.notFiltered) {
-  hideNodes(allNodeIds, priority);
+function hideNodesAll() {
+  graph.updateEachNodeAttributes((node, attr) => ({
+    ...attr,
+    hidden: true,
+  }));
 }
-
-/**
- * Display none nodes and their link
- * @param {string[]|number[]} nodeIds - List of nodes ids
- */
-
-window.hideNodeNetwork = function (nodeIds) {
-  nodeIds
-    .filter((nodeId) => graph.hasNode(nodeId))
-    .forEach((nodeId) => {
-      const { links, node } = getNodeNetwork(nodeId);
-      node.node().classList.add('hide');
-      links.nodes().forEach((elt) => elt.classList.add('hide'));
-    });
-};
-
-/**
- * Reset display nodes and their link
- * @param {string[]|number[]} nodeIds - List of nodes ids
- */
-
-window.displayNodeNetwork = function (nodeIds) {
-  nodeIds
-    .filter((nodeId) => graph.hasNode(nodeId))
-    .forEach((nodeId) => {
-      const { links, node } = getNodeNetwork(nodeId);
-      node.node().classList.remove('hide');
-      links.nodes().forEach((elt) => elt.classList.remove('hide'));
-    });
-};
 
 /**
  * Apply highlightColor (from config) to somes nodes and their links

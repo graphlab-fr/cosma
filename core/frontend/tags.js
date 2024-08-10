@@ -1,5 +1,4 @@
 import { displayNodesAll, setNodesDisplaying } from './graph.js';
-import filterPriority from './filterPriority.js';
 import hotkeys from 'hotkeys-js';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -76,11 +75,11 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
     if (nodeIdsToDisplay.size === 0) {
-      displayNodesAll(filterPriority.filteredByTag);
+      displayNodesAll();
       return;
     }
 
-    setNodesDisplaying(Array.from(nodeIdsToDisplay), filterPriority.filteredByTag);
+    setNodesDisplaying(Array.from(nodeIdsToDisplay));
   }
 
   hotkeys('alt+r', (e) => {

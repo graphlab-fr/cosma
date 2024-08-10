@@ -5,7 +5,6 @@
  */
 
 import { setNodesDisplaying } from './graph.js';
-import filterPriority from './filterPriority.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
@@ -57,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
         nodes.forEach((id) => nodeIdsToDisplay.add(id));
       });
 
-    setNodesDisplaying(Array.from(nodeIdsToDisplay), filterPriority.filteredByType);
+    setNodesDisplaying(Array.from(nodeIdsToDisplay));
   }
 
   let filterNameAltMode;

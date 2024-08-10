@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js';
 import hotkeys from 'hotkeys-js';
+import { graph } from './graph';
 
 const fuse = new Fuse([], {
   includeScore: false,
@@ -15,7 +16,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const resultContainer = document.getElementById('search-result-list');
 
   input.addEventListener('focus', () => {
-    fuse.setCollection(data.nodes);
+    const visibleNodes = graph
+      .filterNodes((node, attr) => attr.hidden === false)
+      .map((key) => ({
+        key,
+        attributes: graph.getNodeAttributes(key),
+      }));
+
+    fuse.setCollection(visibleNodes);
 
     input.addEventListener('input', () => {
       resultContainer.innerHTML = '';

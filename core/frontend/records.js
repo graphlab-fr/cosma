@@ -1,7 +1,6 @@
-import { nodes, highlightNodes, unlightNodes } from './graph.js';
+import { graph, highlightNodes, unlightNodes } from './graph.js';
 import { zoomToNode } from './zoom.js';
 import hotkeys from 'hotkeys-js';
-import filterPriority from './filterPriority.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const recordContainer = document.getElementById('record-container');
@@ -112,66 +111,15 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/**
- * Hide items from the index list that correspond to the nodes ids
- * @param {array} nodeIds - List of nodes ids
- */
+graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
+  const elt = indexContainer.querySelector(`[data-index="${key}"]`);
+  elt.style.display = attributes.hidden ? 'none' : null;
+});
 
-function hideFromIndex(nodesIds) {
-  for (const indexItem of nodesIds) {
-    const indexItems = indexContainer.querySelectorAll('[data-index="' + indexItem + '"]');
-    indexItems.forEach((elt) => {
-      elt.style.display = 'none';
-    });
-  }
-}
+graph.on('toto', function () {
+  // const elt = indexContainer.querySelector(`[data-index="${key}"]`);
+  // elt.style.display = attributes.hidden ? 'none' : null;
+  console.log('tt');
+});
 
-/**
- * Hide all items from the index list
- */
-
-function hideAllFromIndex() {
-  indexContainer.querySelectorAll('[data-index]').forEach((elt) => {
-    elt.style.display = 'none';
-  });
-}
-
-/**
- * Display items from the index list that correspond to the nodes ids
- * @param {array} nodeIds - List of nodes ids
- */
-
-function displayFromIndex(nodesIds) {
-  // nodesIds = nodesIds.filter(function (nodeId) {
-  //   // hidden nodes can not be displayed
-  //   const nodeIsHidden = nodes.find((i) => i.id === nodeId).hidden;
-  //   if (nodeIsHidden === filterPriority.notFiltered) {
-  //     return true;
-  //   }
-  // });
-  // for (const indexItem of nodesIds) {
-  //   const indexItems = indexContainer.querySelectorAll('[data-index="' + indexItem + '"]');
-  //   indexItems.forEach((elt) => {
-  //     elt.style.display = null;
-  //   });
-  // }
-}
-
-/**
- * Display all items from the index list
- */
-
-function displayAllFromIndex() {
-  const indexItems = indexContainer.querySelectorAll('[data-index]');
-  indexItems.forEach((elt) => {
-    elt.style.display = null;
-  });
-}
-
-export {
-  getRecordIdFromHash,
-  hideFromIndex,
-  hideAllFromIndex,
-  displayFromIndex,
-  displayAllFromIndex,
-};
+export { getRecordIdFromHash };
