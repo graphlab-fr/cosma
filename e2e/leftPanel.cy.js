@@ -24,6 +24,7 @@ describe('left panel', () => {
 
     beforeEach(() => {
       cy.contains('Index').click();
+      cy.get('#menu-container').scrollTo('bottom');
     });
 
     it('should display each record with alphabetical order', () => {
