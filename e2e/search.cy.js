@@ -57,4 +57,25 @@ describe('Search', () => {
       cy.get('.record.active .record-title').should('have.text', recordName);
     });
   });
+
+  /** @type {string[]} */
+  function shouldSearchHasRecords(labels) {
+    cy.get('.search-result-item span:nth-child(2)')
+      .should('have.length', labels.length)
+      .each((elt, i) => {
+        expect(elt.text()).to.equal(labels[i]);
+      });
+  }
+
+  it('should search only from unfiltered records', () => {
+    cy.get('#search').type('atomic');
+    shouldSearchHasRecords(['Evergreen notes should be atomic']);
+
+    cy.get('#search').type('{selectAll}{backspace}');
+
+    cy.get('#types-form').contains('insight').click();
+
+    cy.get('#search').type('atomic');
+    shouldSearchHasRecords([]);
+  });
 });
