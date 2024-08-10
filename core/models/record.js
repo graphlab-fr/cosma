@@ -62,7 +62,24 @@ import { RecordMaxOutDailyIdError } from './errors.js';
  * @property {string} thumbnail
  */
 
+/**
+ * @typedef Wikilink
+ * @type {object}
+ * @property {string} type
+ * @property {string} target
+ * @property {string} text
+ * @property {string[]} contexts
+ */
+
 class Record {
+  static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
+
+  /** @exemple `"[[a:20210424214230|link text]]"` */
+  static regexWikilink = new RegExp(
+    /\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+?))?\]\]/,
+    'g',
+  );
+
   /**
    * Get data from a fromated CSV line
    * @param {object} line
@@ -245,33 +262,43 @@ class Record {
       throw new Error('Need instance of Config to process');
     }
 
-    const nodes = data.map(({ id, title, types }) => new Node(id, title, types));
+    // const nodes = data.map(({ id, title, types }) => new Node(id, title, types));
 
     return data.map((line) => {
       const { id, title, content, types, metas, tags, references, begin, end, thumbnail } = line;
 
-      const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
-        id,
-        links,
-        nodes,
-      );
+      // const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
+      //   id,
+      //   links,
+      //   nodes,
+      // );
       const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
 
-      return new Record(
+      const record = new Record(
         id,
         title,
         types,
         tags,
         metas,
         content,
-        linksReferences,
-        backlinksReferences,
+        [], // linksReferences
+        [], // backlinksReferences
         begin,
         end,
         bibliographicRecords,
         thumbnail,
         config.opts,
       );
+
+      record.wikilinks = links
+        .filter(({ source }) => source === record.id)
+        .map(({ type, target, context }) => ({
+          type,
+          target,
+          contexts: [context],
+        }));
+
+      return record;
     });
   }
 
@@ -525,6 +552,9 @@ class Record {
     this.bibliography = [];
     this.thumbnail = thumbnail;
 
+    /** @type {Wikilink[]} */
+    this.wikilinks = [];
+
     if (tags) {
       if (Array.isArray(tags)) {
         tags = tags.filter((tag) => !!tag);
@@ -651,6 +681,43 @@ class Record {
     }
 
     this.bibliography = Array.from(bibliographyHtml);
+  }
+
+  /**
+   * @returns {Wikilink[]}/*
+   */
+
+  setWikiLinksFromContent() {
+    const links = {};
+
+    let match;
+    while ((match = Record.regexWikilink.exec(this.content))) {
+      const originalText = match[0];
+
+      const { type, text } = match.groups;
+      const targetId = match.groups.id.toLowerCase();
+      links[targetId] = { type, targetId, text, context: new Set(), originalText };
+    }
+
+    let paraphs = this.content.match(Link.regexParagraph) || [];
+
+    for (const paraph of paraphs) {
+      let match;
+      while ((match = Record.regexWikilink.exec(paraph))) {
+        // const { id: targetId } = match.groups;
+        const targetId = match.groups.id.toLowerCase();
+        links[targetId].context.add(paraph);
+      }
+    }
+
+    this.wikilinks = Object.values(links).map(({ type, targetId, text, context, originalText }) => {
+      return {
+        contexts: Array.from(context),
+        target: targetId,
+        text: originalText,
+        type: type || 'undefined',
+      };
+    });
   }
 
   /**

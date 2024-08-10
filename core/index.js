@@ -5,8 +5,8 @@ import { startServer as webpackServer } from './utils/webpack.js';
   try {
     console.log('Download some files...');
     await cosmocope(tempDirPath);
-    await cosmocopeTimeline();
-    await cosmocopeTitleId();
+    // await cosmocopeTimeline();
+    // await cosmocopeTitleId();
     console.log('Start devserver...');
     await webpackServer('development');
   } catch (err) {

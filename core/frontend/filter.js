@@ -13,12 +13,15 @@ window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement[]} */
   const inputs = form.querySelectorAll('input');
 
+  /** @type {[string, string[]][]} */
+  const types = Object.entries(typeList);
+
   /**
    * Default state
    */
 
-  for (const [name, { active }] of Object.entries(typeList)) {
-    form.querySelector(`[name="${name}"]`).checked = active;
+  for (const [name] of types) {
+    form.querySelector(`[name="${name}"]`).checked = true;
   }
   changeTypesState();
 
@@ -30,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const filtersFromSearch = searchParams.get('filters')?.split('-');
 
   if (filtersFromSearch?.length) {
-    for (const [name] of Object.entries(typeList)) {
+    for (const [name] of types) {
       form.querySelector(`[name="${name}"]`).checked = filtersFromSearch.includes(name);
     }
     changeTypesState();
@@ -48,9 +51,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const nodeIdsToDisplay = new Set();
 
-    formState = Object.entries(typeList)
+    types
       .filter(([name]) => !!formState[name])
-      .forEach(([, { nodes }]) => {
+      .forEach(([, nodes]) => {
         nodes.forEach((id) => nodeIdsToDisplay.add(id));
       });
 

@@ -1,11 +1,12 @@
 /**
  * @typedef NodeNetwork
  * @type {object}
- * @property {d3.Selection<SVGGElement, Node, SVGElement>} nodes
+ * @property {d3.Selection<SVGGElement, Node, SVGElement>} node
  * @property {d3.Selection<SVGLineElement, Link, SVGElement>} links
  */
 
 import * as d3 from 'd3';
+import GraphEngine from 'graphology';
 
 import View from './view.js';
 import { hideFromIndex, displayFromIndex, getRecordIdFromHash } from './records.js';
@@ -16,15 +17,10 @@ import filterPriority from './filterPriority.js';
 /** Data serialization
 ------------------------------------------------------------*/
 
-const allNodeIds = [];
+const graph = new GraphEngine({ multi: true });
+graph.import(data);
 
-data.nodes = data.nodes.map((node) => {
-  allNodeIds.push(node.id);
-  node.hidden = filterPriority.notFiltered;
-  node.isolated = false;
-  node.highlighted = false;
-  return node;
-});
+const allNodeIds = graph.nodes();
 
 /** Box sizing
 ------------------------------------------------------------*/
@@ -43,7 +39,7 @@ const simulation = d3
   .forceSimulation(data.nodes)
   .force(
     'link',
-    d3.forceLink(data.links).id((d) => d.id),
+    d3.forceLink(data.edges).id((d) => d.key),
   )
   .force('charge', d3.forceManyBody())
   .force('center', d3.forceCenter())
@@ -103,22 +99,22 @@ const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
 elts.links = svgSub
   .append('g')
   .selectAll('line')
-  .data(data.links)
+  .data(data.edges)
   .enter()
   .append('line')
-  .attr('stroke', (d) => d.color)
-  .attr('title', (d) => d.title)
-  .attr('data-link', (d) => d.id)
-  .attr('data-source', (d) => d.source.id)
-  .attr('data-target', (d) => d.target.id)
+  .attr('stroke', (d) => `var(--l_${d.attributes.type})`)
+  .attr('title', (d) => d.attributes.title)
+  .attr('data-link', (d) => d.key)
+  .attr('data-source', (d) => d.source.key)
+  .attr('data-target', (d) => d.target.key)
   .attr('stroke-dasharray', function (d) {
-    if (d.shape.stroke === 'dash' || d.shape.stroke === 'dotted') {
-      return d.shape.dashInterval;
+    if (d.attributes.shape.stroke === 'dash' || d.attributes.shape.stroke === 'dotted') {
+      return d.attributes.shape.dashInterval;
     }
     return false;
   })
   .attr('filter', function (d) {
-    if (d.shape.stroke === 'double') {
+    if (d.attributes.shape.stroke === 'double') {
       return 'url(#double)';
     }
     return false;
@@ -137,7 +133,7 @@ elts.nodes = svgSub
   .data(data.nodes)
   .enter()
   .append('g')
-  .attr('data-node', (d) => d.id)
+  .attr('data-node', (d) => d.key)
   .call(
     d3
       .drag()
@@ -156,48 +152,26 @@ elts.nodes = svgSub
         d.fy = null;
       }),
   )
-  .on('mouseover', (e, nodeMetas) => {
+  .on('mouseover', (e, { key: nodeId }) => {
     if (!graphProperties.graph_highlight_on_hover) {
       return;
     }
 
-    let nodesIdsHovered = [nodeMetas.id];
+    const links = graph.edges(nodeId);
+    const nodes = graph.neighbors(nodeId);
+    nodes.push(nodeId);
 
-    const linksToModif = elts.links.filter(function (link) {
-      if (link.source.id === nodeMetas.id || link.target.id === nodeMetas.id) {
-        nodesIdsHovered.push(link.source.id, link.target.id);
-        return false;
-      }
-      return true;
-    });
-
-    const nodesToModif = elts.nodes.filter(function (node) {
-      if (nodesIdsHovered.includes(node.id)) {
-        return false;
-      }
-      return true;
-    });
-
-    const linksHovered = elts.links.filter(function (link) {
-      if (link.source.id !== nodeMetas.id && link.target.id !== nodeMetas.id) {
-        return false;
-      }
-      return true;
-    });
-
-    const nodesHovered = elts.nodes.filter(function (node) {
-      if (!nodesIdsHovered.includes(node.id)) {
-        return false;
-      }
-      return true;
-    });
+    const linksTransparent = elts.links.filter(({ key }) => !links.includes(key));
+    const nodesTransparent = elts.nodes.filter(({ key }) => !nodes.includes(key));
+    const linksHovered = elts.links.filter(({ key }) => links.includes(key));
+    const nodesHovered = elts.nodes.filter(({ key }) => nodes.includes(key));
 
     nodesHovered.nodes().forEach((elt) => elt.classList.add('highlight'));
     linksHovered.nodes().forEach((elt) => elt.classList.add('highlight'));
-    nodesToModif.nodes().forEach((elt) => elt.classList.add('translucent'));
-    linksToModif.nodes().forEach((elt) => elt.classList.add('translucent'));
+    nodesTransparent.nodes().forEach((elt) => elt.classList.add('translucent'));
+    linksTransparent.nodes().forEach((elt) => elt.classList.add('translucent'));
   })
-  .on('mouseout', () => {
+  .on('mouseout', (e, { key: nodeId }) => {
     if (!graphProperties.graph_highlight_on_hover) {
       return;
     }
@@ -251,47 +225,54 @@ elts.nodes.each(function (d) {
     link
       .append('circle')
       .attr('class', 'border')
-      .attr('r', d.size + 2)
+      .attr('r', d.attributes.size + 2)
       .attr('fill', stroke);
     /** Foreground: circle contains color or image */
-    link.append('circle').attr('r', d.size).attr('fill', fill);
+    link.append('circle').attr('r', d.attributes.size).attr('fill', fill);
   };
 
-  if (d.thumbnail) {
-    if (d.types.length === 1) {
-      const type = graphProperties['record_types'][d.types[0]];
-      drawSimpleCircle(type.stroke, `url(#${d.thumbnail})`);
+  if (d.attributes.thumbnail) {
+    if (d.attributes.types.length === 1) {
+      const type = graphProperties['record_types'][d.attributes.types[0]];
+      drawSimpleCircle(type.stroke, `url(#${d.attributes.thumbnail})`);
     } else {
-      generatePathCoordinatesWithBorder(d.types.length, d.size, strokeWidth).forEach(
-        ({ border }, i) => {
-          const type = graphProperties['record_types'][d.types[i]];
-          /** Background: borders with one color per type */
-          link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
-        },
-      );
+      generatePathCoordinatesWithBorder(
+        d.attributes.types.length,
+        d.attributes.size,
+        strokeWidth,
+      ).forEach(({ border }, i) => {
+        const type = graphProperties['record_types'][d.attributes.types[i]];
+        /** Background: borders with one color per type */
+        link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+      });
       /** Background: neutral white color */
-      link.append('circle').attr('r', d.size).attr('fill', `var(--background-gray)`);
+      link.append('circle').attr('r', d.attributes.size).attr('fill', `var(--background-gray)`);
       /** Foreground: circle contains thumbnail */
-      link.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
+      link
+        .append('circle')
+        .attr('r', d.attributes.size)
+        .attr('fill', `url(#${d.attributes.thumbnail})`);
     }
     return;
   }
 
-  if (d.types.length === 1) {
-    const type = graphProperties['record_types'][d.types[0]];
+  if (d.attributes.types.length === 1) {
+    const type = graphProperties['record_types'][d.attributes.types[0]];
     drawSimpleCircle(type.stroke, getFill(type.fill));
   } else {
-    generatePathCoordinatesWithBorder(d.types.length, d.size, strokeWidth).forEach(
-      ({ segment, border }, i) => {
-        const type = graphProperties['record_types'][d.types[i]];
-        /** Background: borders with one color per type */
-        link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
-        /** Background: neutral white color */
-        link.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
-        /** Foreground: circle fragment per type with color or image */
-        link.append('path').attr('d', segment).attr('fill', getFill(type.fill));
-      },
-    );
+    generatePathCoordinatesWithBorder(
+      d.attributes.types.length,
+      d.attributes.size,
+      strokeWidth,
+    ).forEach(({ segment, border }, i) => {
+      const type = graphProperties['record_types'][d.attributes.types[i]];
+      /** Background: borders with one color per type */
+      link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+      /** Background: neutral white color */
+      link.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
+      /** Foreground: circle fragment per type with color or image */
+      link.append('path').attr('d', segment).attr('fill', getFill(type.fill));
+    });
   }
 });
 
@@ -301,7 +282,7 @@ elts.labels = elts.nodes
   .append('text')
   .attr('class', 'label')
   .each(function (d) {
-    const words = d.label.split(' '),
+    const words = d.attributes.label.split(' '),
       max = 25,
       text = d3.select(this);
     let label = '';
@@ -322,7 +303,7 @@ elts.labels = elts.nodes
   })
   .attr('font-size', graphProperties.graph_text_size)
   .attr('x', 0)
-  .attr('y', (d) => d.size)
+  .attr('y', (d) => d.attributes.size)
   .attr('dominant-baseline', 'middle')
   .attr('text-anchor', 'middle');
 
@@ -378,49 +359,54 @@ function generatePathCoordinatesWithBorder(numSegments, diameter, borderSize) {
 
 /**
  * Get nodes and their links
- * @param {array} nodeIds - List of nodes ids
+ * @param {string} nodeIds - List of nodes ids
  * @returns {NodeNetwork} - DOM elts : nodes and their links
  */
 
-function getNodeNetwork(nodeIds) {
-  const diplayedNodes = elts.nodes
-    .filter((item) => item.hidden === filterPriority.notFiltered)
-    .data()
-    .map((item) => item.id);
+function getNodeNetwork(nodeId) {
+  const edges = graph.edges(nodeId);
+  // const diplayedNodes = elts.nodes
+  //   .filter((item) => item.hidden === filterPriority.notFiltered)
+  //   .data()
+  //   .map((item) => item.id);
 
-  const nodes = elts.nodes.filter((node) => nodeIds.includes(node.id));
+  const node = elts.nodes.filter(({ key }) => key === nodeId);
+  const links = elts.links.filter(({ key }) => edges.includes(key));
 
-  const links = elts.links.filter(function (link) {
-    if (!nodeIds.includes(link.source.id) && !nodeIds.includes(link.target.id)) {
-      return false;
-    }
-    if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
-      return false;
-    }
+  // const links = elts.links.filter(function (link) {
+  //   if (!nodeIds.includes(link.source.id) && !nodeIds.includes(link.target.id)) {
+  //     return false;
+  //   }
+  //   if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
+  //     return false;
+  //   }
 
-    return true;
-  });
+  //   return true;
+  // });
 
   return {
-    nodes,
+    node,
     links,
   };
 }
 
 function setNodesDisplaying(nodeIds, priority) {
-  const toHide = [],
-    toDisplay = [];
+  // const toHide = [],
+  //   toDisplay = [];
 
-  allNodeIds.forEach((id) => {
-    if (nodeIds.includes(id)) {
-      toDisplay.push(id);
-    } else {
-      toHide.push(id);
-    }
-  });
+  const toDisplay = nodeIds;
+  const toHide = Array.from(d3.difference(allNodeIds, toDisplay));
 
-  hideNodes(toHide, priority);
+  // allNodeIds.forEach((id) => {
+  //   if (nodeIds.includes(id)) {
+  //     toDisplay.push(id);
+  //   } else {
+  //     toHide.push(id);
+  //   }
+  // });
+
   displayNodes(toDisplay, priority);
+  hideNodes(toHide, priority);
 }
 
 /**
@@ -432,17 +418,17 @@ function hideNodes(nodeIds, priority) {
   hideNodeNetwork(nodeIds);
   hideFromIndex(nodeIds);
 
-  if (priority === undefined) {
-    throw new Error('Need priority');
-  }
+  // if (priority === undefined) {
+  //   throw new Error('Need priority');
+  // }
 
-  elts.nodes.data().map((node) => {
-    const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden <= priority) {
-      node.hidden = priority;
-    }
-    return node;
-  });
+  // elts.nodes.data().map((node) => {
+  //   const { id, hidden } = node;
+  //   if (nodeIds.includes(id) && hidden <= priority) {
+  //     node.hidden = priority;
+  //   }
+  //   return node;
+  // });
 }
 
 /**
@@ -451,19 +437,19 @@ function hideNodes(nodeIds, priority) {
  */
 
 function displayNodes(nodeIds, priority = filterPriority.notFiltered) {
-  const nodesToDisplayIds = [];
+  // const nodesToDisplayIds = [];
 
-  elts.nodes.data().map((node) => {
-    const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden <= priority) {
-      nodesToDisplayIds.push(id);
-      node.hidden = filterPriority.notFiltered;
-    }
-    return node;
-  });
+  // elts.nodes.data().map((node) => {
+  //   const { id, hidden } = node;
+  //   if (nodeIds.includes(id) && hidden <= priority) {
+  //     nodesToDisplayIds.push(id);
+  //     node.hidden = filterPriority.notFiltered;
+  //   }
+  //   return node;
+  // });
 
-  displayNodeNetwork(nodesToDisplayIds);
-  displayFromIndex(nodesToDisplayIds);
+  displayNodeNetwork(nodeIds);
+  displayFromIndex(nodeIds);
 }
 
 function displayNodesAll(priority = filterPriority.notFiltered) {
@@ -480,10 +466,13 @@ function hideNodesAll(priority = filterPriority.notFiltered) {
  */
 
 window.hideNodeNetwork = function (nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
-
-  nodes.nodes().forEach((elt) => elt.classList.add('hide'));
-  links.nodes().forEach((elt) => elt.classList.add('hide'));
+  nodeIds
+    .filter((nodeId) => graph.hasNode(nodeId))
+    .forEach((nodeId) => {
+      const { links, node } = getNodeNetwork(nodeId);
+      node.node().classList.add('hide');
+      links.nodes().forEach((elt) => elt.classList.add('hide'));
+    });
 };
 
 /**
@@ -492,10 +481,13 @@ window.hideNodeNetwork = function (nodeIds) {
  */
 
 window.displayNodeNetwork = function (nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
-
-  nodes.nodes().forEach((elt) => elt.classList.remove('hide'));
-  links.nodes().forEach((elt) => elt.classList.remove('hide'));
+  nodeIds
+    .filter((nodeId) => graph.hasNode(nodeId))
+    .forEach((nodeId) => {
+      const { links, node } = getNodeNetwork(nodeId);
+      node.node().classList.remove('hide');
+      links.nodes().forEach((elt) => elt.classList.remove('hide'));
+    });
 };
 
 /**
@@ -504,10 +496,13 @@ window.displayNodeNetwork = function (nodeIds) {
  */
 
 function highlightNodes(nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
-
-  nodes.nodes().forEach((elt) => elt.classList.add('highlight'));
-  links.nodes().forEach((elt) => elt.classList.add('highlight'));
+  nodeIds
+    .filter((nodeId) => graph.hasNode(nodeId))
+    .forEach((nodeId) => {
+      const { links, node } = getNodeNetwork(nodeId);
+      node.node().classList.add('highlight');
+      links.nodes().forEach((elt) => elt.classList.add('highlight'));
+    });
 
   View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
 }
@@ -521,10 +516,13 @@ function unlightNodes() {
     return;
   }
 
-  const { nodes, links } = getNodeNetwork(View.highlightedNodes);
-
-  nodes.nodes().forEach((elt) => elt.classList.remove('highlight'));
-  links.nodes().forEach((elt) => elt.classList.remove('highlight'));
+  View.highlightedNodes
+    .filter((nodeId) => graph.hasNode(nodeId))
+    .forEach((nodeId) => {
+      const { links, node } = getNodeNetwork(nodeId);
+      node.node().classList.remove('highlight');
+      links.nodes().forEach((elt) => elt.classList.remove('highlight'));
+    });
 
   View.highlightedNodes = [];
 }
@@ -595,8 +593,11 @@ function translate() {
   }
 }
 
-const nodes = elts.nodes.data();
-const links = elts.links.data();
+// const nodes = elts.nodes.data();
+// const links = elts.links.data();
+
+const nodes = [];
+const links = [];
 
 export {
   svg,
@@ -611,4 +612,5 @@ export {
   translate,
   nodes,
   links,
+  graph,
 };

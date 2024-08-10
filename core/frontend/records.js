@@ -142,20 +142,19 @@ function hideAllFromIndex() {
  */
 
 function displayFromIndex(nodesIds) {
-  nodesIds = nodesIds.filter(function (nodeId) {
-    // hidden nodes can not be displayed
-    const nodeIsHidden = nodes.find((i) => i.id === nodeId).hidden;
-    if (nodeIsHidden === filterPriority.notFiltered) {
-      return true;
-    }
-  });
-
-  for (const indexItem of nodesIds) {
-    const indexItems = indexContainer.querySelectorAll('[data-index="' + indexItem + '"]');
-    indexItems.forEach((elt) => {
-      elt.style.display = null;
-    });
-  }
+  // nodesIds = nodesIds.filter(function (nodeId) {
+  //   // hidden nodes can not be displayed
+  //   const nodeIsHidden = nodes.find((i) => i.id === nodeId).hidden;
+  //   if (nodeIsHidden === filterPriority.notFiltered) {
+  //     return true;
+  //   }
+  // });
+  // for (const indexItem of nodesIds) {
+  //   const indexItems = indexContainer.querySelectorAll('[data-index="' + indexItem + '"]');
+  //   indexItems.forEach((elt) => {
+  //     elt.style.display = null;
+  //   });
+  // }
 }
 
 /**

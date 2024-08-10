@@ -44,7 +44,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const toDisplay = [];
 
-    for (let { begin: nodeBegin, end: nodeEnd, id } of data.nodes) {
+    for (let {
+      attributes: { begin: nodeBegin, end: nodeEnd },
+      key,
+    } of data.nodes) {
       if (nodeEnd === undefined) {
         nodeEnd = end;
       }
@@ -53,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
 
       if (timestamp >= nodeBegin && timestamp <= nodeEnd) {
-        toDisplay.push(id);
+        toDisplay.push(key);
       }
     }
 

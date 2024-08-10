@@ -82,15 +82,22 @@ async function modelize(options) {
 
   let records;
   switch (originType) {
-    case 'directory':
+    case 'directory': {
       const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
-      records = Cosmoscope.getRecordsFromFiles(
-        files,
-        optionsTemplate.includes('citeproc'),
-        config.opts,
-      );
+
+      records = Cosmoscope._getRecordsFromFiles(files, config.opts);
+
+      if (
+        optionsTemplate.includes('citeproc') &&
+        config.opts['references_as_nodes'] &&
+        config.canCiteproc()
+      ) {
+        records = records.concat(Cosmoscope.getBibliographicRecords(records, config.opts));
+      }
+
       break;
-    case 'online':
+    }
+    case 'online': {
       const tempDir = tmpdir();
       nodesPath = path.join(tempDir, 'cosma-nodes.csv');
       linksPath = path.join(tempDir, 'cosma-links.csv');
@@ -102,16 +109,19 @@ async function modelize(options) {
       } catch (error) {
         throw new DowloadOnlineCsvFilesError(error);
       }
-    case 'csv':
+    }
+    case 'csv': {
       let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
       const links = Link.formatedDatasetToLinks(formatedLinks);
       records = Record.formatedDatasetToRecords(formatedRecords, links, config);
       break;
+    }
   }
 
-  const graph = new Cosmoscope(records, config.opts, []);
+  const graph = Cosmoscope.getGraph(records, config.opts);
+  // const graph = new Cosmoscope(records, config.opts, []);
 
-  const { html } = new Template(graph, optionsTemplate);
+  const { html } = new Template(records, graph, optionsTemplate);
 
   fs.writeFile(path.join(exportPath, 'cosmoscope.html'), html, (err) => {
     // Cosmoscope file for export folder
@@ -123,7 +133,7 @@ async function modelize(options) {
     }
     console.log(
       ['\x1b[34m', 'Cosmoscope generated', '\x1b[0m'].join(''),
-      `(${graph.records.length} records)`,
+      `(${records.length} records)`,
     );
   });
 

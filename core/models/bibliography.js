@@ -5,6 +5,7 @@
  */
 
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import CSL from 'citeproc';
 import extractCitations from '../utils/citeExtractor';
 import extractParaphs from '../utils/paraphExtractor';
@@ -12,6 +13,7 @@ import extractParaphs from '../utils/paraphExtractor';
 /**
  * @typedef BibliographicRecord
  * @type {object}
+ * @property {string} id
  * @property {object} quotesExtract
  * @property {Citation[]} quotesExtract.citationItems
  * @property {object} quotesExtract.properties

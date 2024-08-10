@@ -1,10 +1,9 @@
 import Fuse from 'fuse.js';
 import hotkeys from 'hotkeys-js';
-import { nodes } from './graph.js';
 
 const fuse = new Fuse([], {
   includeScore: false,
-  keys: ['label'],
+  keys: ['attributes.label'],
 });
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -16,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const resultContainer = document.getElementById('search-result-list');
 
   input.addEventListener('focus', () => {
-    fuse.setCollection(nodes.filter(({ hidden }) => hidden === 0));
+    fuse.setCollection(data.nodes);
 
     input.addEventListener('input', () => {
       resultContainer.innerHTML = '';
@@ -31,13 +30,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
       for (let i = 0; i < Math.min(maxResultNb, resultList.length); i++) {
         let {
-          item: { id, label, types },
+          item: {
+            key,
+            attributes: { label, types },
+          },
         } = resultList[i];
 
         const resultElement = document.createElement('li');
         resultElement.classList.add('search-result-item');
         resultElement.innerHTML = `
-        <a href="#${id}">
+        <a href="#${key}">
           <span class="record-type-points">
               ${types.map((type) => `<span style="color:var(--n_${type})">⬤</span>`).join(' ')}
           </span>
@@ -94,7 +96,7 @@ window.addEventListener('DOMContentLoaded', () => {
         break;
       case 'Enter':
         e.preventDefault();
-        window.location.hash = resultList[selectedResult].item.id;
+        window.location.hash = resultList[selectedResult].item.key;
         input.blur();
         break;
     }

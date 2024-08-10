@@ -11,6 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLSelectElement} */
   const sortSelect = document.querySelector('.menu-tags .sorting-select');
 
+  /** @type {[string, string[]][]} */
+  const tags = Object.entries(tagList);
+
   const tagsSorting = sorting.tags;
   let tagsState;
 
@@ -66,9 +69,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const nodeIdsToDisplay = new Set();
 
-    tagsState = tagList
-      .filter(({ name }) => !!formState[name])
-      .forEach(({ nodes }) => {
+    tagsState = tags
+      .filter(([name]) => !!formState[name])
+      .forEach(([, nodes]) => {
         nodes.forEach((id) => nodeIdsToDisplay.add(id));
       });
 

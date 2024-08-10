@@ -18,6 +18,8 @@ import Report from './report.js';
 import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
 import { ReadCsvFileNodesError, ReadCsvFileLinksError, ReadCsvLinesLinksError } from './errors.js';
 import quoteIdsWithContexts from '../utils/quoteIdsWithContexts.js';
+import GraphEngine from 'graphology';
+import { scaleLinear } from 'd3';
 
 /**
  * @typedef File
@@ -270,6 +272,223 @@ class Cosmoscope extends Graph {
     });
 
     return Promise.all([recordsPromise, linksPromise]);
+  }
+
+  /**
+   * @param {File[]} files
+   * @param {Config.opts} opts
+   * @returns {Record[]}
+   */
+
+  static _getRecordsFromFiles(files, opts = {}) {
+    return files.map((file) => {
+      let { id, title, types, tags, thumbnail, references, begin, end, ...metas } = file.metas;
+      id = id || file.metas['title'].toLowerCase();
+
+      const bibliographicRecords = [
+        ...Bibliography.getBibliographicRecordsFromText(file.content),
+        ...Bibliography.getBibliographicRecordsFromList(file.metas.references),
+      ];
+
+      const record = new Record(
+        id,
+        title,
+        types,
+        tags,
+        metas,
+        file.content,
+        [], // linksReferences
+        [], // backlinksReferences
+        begin,
+        end,
+        bibliographicRecords,
+        thumbnail,
+        opts,
+      );
+      record.setWikiLinksFromContent();
+
+      return record;
+    });
+  }
+
+  /**
+   * @param {Record[]} records
+   * @param {Config.opts} opts
+   * @returns {Record[]}
+   */
+
+  static getBibliographicRecords(records, opts = {}) {
+    const config = new Config(opts);
+
+    const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
+    const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+
+    let referenceRecords = new Map([]);
+
+    records.forEach(({ id: recordId, bibliographicRecords }) => {
+      bibliographicRecords.forEach(({ ids, contexts }) => {
+        for (const id of ids) {
+          if (!bibliography.library[id]) continue;
+
+          if (referenceRecords.has(id)) {
+            const ref = referenceRecords.get(id);
+            ref.targets.add(recordId);
+
+            if (ref.contexts.has(recordId)) {
+              ref.contexts.get(recordId).push(...contexts);
+            } else {
+              ref.contexts.set(recordId, contexts);
+            }
+          } else {
+            referenceRecords.set(id, {
+              contexts: new Map([[recordId, contexts]]),
+              targets: new Set([recordId]),
+            });
+          }
+        }
+      });
+    });
+
+    /** @type {Record[]} */
+    const bibliographicRecords = [];
+
+    referenceRecords.forEach((targets, key) => {
+      bibliography.citeproc.updateItems([key]);
+      let content = bibliography.citeproc
+        .makeBibliography()[1]
+        .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t))[0];
+
+      const title = bibliography.library[key]['title'] || '';
+
+      bibliographicRecords.push(
+        new Record(
+          key,
+          title,
+          [opts['references_type_label']],
+          undefined,
+          undefined,
+          content,
+          [], // linksReferences
+          [], // backlinksReferences
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          opts,
+        ),
+      );
+    });
+
+    return bibliographicRecords;
+  }
+
+  /**
+   * @param {Record[]} records
+   * @param {Config.opts} opts
+   */
+
+  static getGraph(records, opts) {
+    const graph = new GraphEngine({ multi: true }, opts);
+
+    let minDegree = Infinity,
+      maxDegree = 0;
+
+    /**
+     * @param {number} degree Node degree
+     * @returns {number}
+     */
+
+    function getNodeSize(degree) {
+      switch (opts['node_size_method']) {
+        case 'unique':
+          return opts['node_size'];
+        case 'degree':
+          // const [minLinks, maxLinks] = linksExtent;
+          // const [minBacklinks, maxBacklinks] = backlinksExtent;
+
+          const compute = scaleLinear()
+            .domain([minDegree, maxDegree])
+            .range([opts['node_size_min'], opts['node_size_max']]);
+
+          const size = compute(degree);
+          // round at most two decimals
+          return Math.round(size * 100) / 100;
+      }
+    }
+
+    function getLinkShape(linkType) {
+      const linkTypeConfig = opts.link_types[linkType];
+      let stroke, color;
+
+      if (linkTypeConfig) {
+        stroke = linkTypeConfig.stroke;
+      } else {
+        stroke = 'simple';
+      }
+
+      switch (stroke) {
+        case 'simple':
+          return { stroke: stroke, dashInterval: null };
+
+        case 'double':
+          return { stroke: stroke, dashInterval: null };
+
+        case 'dash':
+          return { stroke: stroke, dashInterval: '4, 5' };
+
+        case 'dotted':
+          return { stroke: stroke, dashInterval: '1, 3' };
+      }
+
+      // default return
+      return { stroke: 'simple', dashInterval: null };
+    }
+
+    records.forEach(({ id, title, types, thumbnail, begin, end }) => {
+      graph.addNode(id, {
+        label: title,
+        types,
+        thumbnail,
+        begin,
+        end,
+      });
+    });
+
+    records.forEach(({ id: nodeId, wikilinks, bibliographicRecords }) => {
+      wikilinks.forEach(({ target, type }) => {
+        graph.addEdge(nodeId, target, {
+          type: type,
+          shape: getLinkShape(type),
+        });
+      });
+
+      bibliographicRecords.forEach(({ id: linkId, ids }) => {
+        ids.forEach((target) => {
+          if (!graph.hasNode(nodeId) || !graph.hasNode(target)) {
+            return;
+          }
+
+          return graph.addEdge(nodeId, target, {
+            type: undefined,
+            shape: getLinkShape('undefined'),
+          });
+        });
+      });
+
+      const nodeDegree = graph.degree(nodeId);
+      if (nodeDegree < minDegree) minDegree = nodeDegree;
+      if (nodeDegree > maxDegree) maxDegree = nodeDegree;
+    });
+
+    graph.updateEachNodeAttributes((node, attr) => {
+      const size = getNodeSize(graph.degree(node));
+      return {
+        ...attr,
+        size,
+      };
+    });
+
+    return graph;
   }
 
   /**
