@@ -49,6 +49,19 @@ describe('left panel', () => {
         'How can we develop transformative tools for thought?',
         'Tools for thought',
       ]);
+
+      cy.get('#types-form').contains('insight').click();
+
+      shouldIndexHasRecords([
+        'Augmenting Human Intellect: A Conceptual Framework',
+        'Evergreen note titles are like APIs',
+        'Evergreen notes',
+        'Evergreen notes should be atomic',
+        'Evergreen notes should be concept-oriented',
+        'Evergreen notes should be densely linked',
+        'How can we develop transformative tools for thought?',
+        'Tools for thought',
+      ]);
     });
   });
 });
