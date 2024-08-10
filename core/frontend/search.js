@@ -23,11 +23,11 @@ window.addEventListener('DOMContentLoaded', () => {
       selectedResult = 0;
       resultList = [];
 
-      if (input.value === '') {
-        return;
-      }
+      if (input.value === '') return;
 
       resultList = fuse.search(input.value);
+
+      if (resultList.length === 0) return;
 
       for (let i = 0; i < Math.min(maxResultNb, resultList.length); i++) {
         let {
