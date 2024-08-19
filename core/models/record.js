@@ -32,6 +32,7 @@ import Report from './report.js';
 import lang from './lang.js';
 import { getTimestampTuple, getTimestamp, slugify } from '../utils/misc.js';
 import { RecordMaxOutDailyIdError } from './errors.js';
+import * as Citr from '@zettlr/citr';
 
 /**
  * @typedef DeepFormatedRecordData
@@ -522,7 +523,7 @@ class Record {
    * @param {Reference[]} backlinks - Backlinks, from others records.
    * @param {number} begin - Timestamp.
    * @param {number} end - Timestamp.
-   * @param {BibliographicRecord[]} bibliographicRecords
+   * @param {Wikilink[]} bibliographicRecords
    * @param {string} thumbnail - Image path
    * @param {object} opts
    */
@@ -646,7 +647,7 @@ class Record {
   }
 
   getYamlFrontMatter() {
-    const bibliographicIds = this.bibliographicRecords.map(({ ids }) => Array.from(ids)).flat();
+    const bibliographicIds = this.bibliographicRecords.map(({ target }) => target);
     const ymlContent = yml.stringify({
       title: this.title,
       id: this.id,
@@ -670,15 +671,25 @@ class Record {
       throw new Error('Need instance of Bibliography to process');
     }
     const bibliographyHtml = new Set();
-    for (const bibliographicRecord of this.bibliographicRecords) {
-      const { record, unknowedIds } = bibliography.get(bibliographicRecord);
-      for (const id of unknowedIds) {
-        new Report(this.id, this.title, 'error').aboutUnknownBibliographicReference(this.title, id);
+
+    Citr.util.extractCitations(this.content).forEach((quoteText, index) => {
+      let citationItems;
+      try {
+        citationItems = Citr.parseSingle(quoteText);
+      } catch (error) {
+        citationItems = [];
       }
-      if (record) {
-        record.forEach((r) => bibliographyHtml.add(r));
-      }
-    }
+
+      let ids = new Set(citationItems.map(({ id }) => id));
+
+      bibliography.citeproc.updateItems(Array.from(ids));
+
+      let record = bibliography.citeproc
+        .makeBibliography()[1]
+        .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t));
+
+      record.forEach((r) => bibliographyHtml.add(r));
+    });
 
     this.bibliography = Array.from(bibliographyHtml);
   }

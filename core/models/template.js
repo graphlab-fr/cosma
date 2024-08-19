@@ -220,8 +220,9 @@ class Template {
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
       for (const record of records) {
         record.setBibliography(bibliography);
-        record.bibliographicRecords.forEach(({ ids }) =>
-          ids.forEach((id) => references.push(bibliography.library[id])),
+
+        record.bibliographicRecords.forEach(({ target }) =>
+          references.push(bibliography.library[target]),
         );
       }
     }
@@ -306,35 +307,35 @@ class Template {
           };
         });
 
-        bibliographicRecords.forEach(({ ids, contexts }) => {
-          ids.forEach((id) => {
-            const target = recordDict.get(id);
+        bibliographicRecords.forEach(({ target, contexts }) => {
+          const recordTarget = recordDict.get(target);
 
-            if (!target) {
-              return;
-            }
+          if (!recordTarget) {
+            return;
+          }
 
-            _links.push({
-              context: contexts.join(''),
-              target: {
-                id: target.id,
-                title: target.title,
-                types: target.types,
-              },
-              type: 'undefined',
-            });
+          _links.push({
+            context: contexts.join(''),
+            target: {
+              id: recordTarget.id,
+              title: recordTarget.title,
+              types: recordTarget.types,
+            },
+            type: 'undefined',
           });
         });
 
-        const _backlinks = backNodes.flatMap((nodeId) => {
+        const _backlinks = [];
+
+        backNodes.forEach((nodeId) => {
           const record = recordDict.get(nodeId);
 
-          return record.wikilinks
+          record.wikilinks
             .filter((link) => {
               return link.target === rest.id;
             })
-            .map((link) => {
-              return {
+            .forEach((link) => {
+              _backlinks.push({
                 context: link.contexts.join(''),
                 source: {
                   id: record.id,
@@ -342,15 +343,14 @@ class Template {
                   types: record.types,
                 },
                 type: link.type,
-              };
+              });
             });
-        });
 
-        backNodes.forEach((nodeId) => {
-          const record = recordDict.get(nodeId);
-
-          record.bibliographicRecords.forEach(({ ids, contexts }) => {
-            ids.forEach(() => {
+          record.bibliographicRecords
+            .filter(({ target }) => {
+              return target === rest.id;
+            })
+            .forEach(({ contexts }) => {
               _backlinks.push({
                 context: contexts.join(''),
                 source: {
@@ -361,7 +361,6 @@ class Template {
                 type: 'undefined',
               });
             });
-          });
         });
 
         return {

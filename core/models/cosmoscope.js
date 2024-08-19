@@ -326,25 +326,23 @@ class Cosmoscope extends Graph {
     let referenceRecords = new Map([]);
 
     records.forEach(({ id: recordId, bibliographicRecords }) => {
-      bibliographicRecords.forEach(({ ids, contexts }) => {
-        for (const id of ids) {
-          if (!bibliography.library[id]) continue;
+      bibliographicRecords.forEach(({ target, contexts }) => {
+        if (!bibliography.library[target]) return;
 
-          if (referenceRecords.has(id)) {
-            const ref = referenceRecords.get(id);
-            ref.targets.add(recordId);
+        if (referenceRecords.has(target)) {
+          const ref = referenceRecords.get(target);
+          ref.targets.add(recordId);
 
-            if (ref.contexts.has(recordId)) {
-              ref.contexts.get(recordId).push(...contexts);
-            } else {
-              ref.contexts.set(recordId, contexts);
-            }
+          if (ref.contexts.has(recordId)) {
+            ref.contexts.get(recordId).push(...contexts);
           } else {
-            referenceRecords.set(id, {
-              contexts: new Map([[recordId, contexts]]),
-              targets: new Set([recordId]),
-            });
+            ref.contexts.set(recordId, contexts);
           }
+        } else {
+          referenceRecords.set(target, {
+            contexts: new Map([[recordId, contexts]]),
+            targets: new Set([recordId]),
+          });
         }
       });
     });
@@ -462,17 +460,17 @@ class Cosmoscope extends Graph {
         });
       });
 
-      bibliographicRecords.forEach(({ id: linkId, ids }) => {
-        ids.forEach((target) => {
-          if (!graph.hasNode(nodeId) || !graph.hasNode(target)) {
-            return;
-          }
+      bibliographicRecords.forEach(({ target }) => {
+        // ids.forEach((target) => {
+        if (!graph.hasNode(nodeId) || !graph.hasNode(target)) {
+          return;
+        }
 
-          return graph.addEdge(nodeId, target, {
-            type: undefined,
-            shape: getLinkShape('undefined'),
-          });
+        return graph.addEdge(nodeId, target, {
+          type: undefined,
+          shape: getLinkShape('undefined'),
         });
+        // });
       });
 
       const nodeDegree = graph.degree(nodeId);
