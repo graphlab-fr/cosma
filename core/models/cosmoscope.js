@@ -388,9 +388,6 @@ class Cosmoscope extends Graph {
   static getGraph(records, opts) {
     const graph = new GraphEngine({ multi: true }, opts);
 
-    let minDegree = Infinity,
-      maxDegree = 0;
-
     /**
      * @param {number} degree Node degree
      * @returns {number}
@@ -401,9 +398,6 @@ class Cosmoscope extends Graph {
         case 'unique':
           return opts['node_size'];
         case 'degree':
-          // const [minLinks, maxLinks] = linksExtent;
-          // const [minBacklinks, maxBacklinks] = backlinksExtent;
-
           const compute = scaleLinear()
             .domain([minDegree, maxDegree])
             .range([opts['node_size_min'], opts['node_size_max']]);
@@ -416,13 +410,7 @@ class Cosmoscope extends Graph {
 
     function getLinkShape(linkType) {
       const linkTypeConfig = opts.link_types[linkType];
-      let stroke, color;
-
-      if (linkTypeConfig) {
-        stroke = linkTypeConfig.stroke;
-      } else {
-        stroke = 'simple';
-      }
+      const stroke = linkTypeConfig?.stroke || 'simple';
 
       switch (stroke) {
         case 'simple':
@@ -438,7 +426,6 @@ class Cosmoscope extends Graph {
           return { stroke: stroke, dashInterval: '1, 3' };
       }
 
-      // default return
       return { stroke: 'simple', dashInterval: null };
     }
 
@@ -455,28 +442,26 @@ class Cosmoscope extends Graph {
     records.forEach(({ id: nodeId, wikilinks, bibliographicRecords }) => {
       wikilinks.forEach(({ target, type }) => {
         graph.addEdge(nodeId, target, {
-          type: type,
+          type,
           shape: getLinkShape(type),
         });
       });
 
       bibliographicRecords.forEach(({ target }) => {
-        // ids.forEach((target) => {
         if (!graph.hasNode(nodeId) || !graph.hasNode(target)) {
           return;
         }
 
         return graph.addEdge(nodeId, target, {
-          type: undefined,
+          type: 'undefined',
           shape: getLinkShape('undefined'),
         });
-        // });
       });
-
-      const nodeDegree = graph.degree(nodeId);
-      if (nodeDegree < minDegree) minDegree = nodeDegree;
-      if (nodeDegree > maxDegree) maxDegree = nodeDegree;
     });
+
+    const degrees = graph.nodes().map((node) => graph.degree(node));
+    const minDegree = Math.min(...degrees);
+    const maxDegree = Math.max(...degrees);
 
     graph.updateEachNodeAttributes((node, attr) => {
       const size = getNodeSize(graph.degree(node));
