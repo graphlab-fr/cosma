@@ -8,10 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { glob } from 'glob';
 import { parse } from 'csv-parse';
-import Graph from './graph.js';
 import Config from './config.js';
-import Node from './node.js';
-import Link from './link.js';
 import Record from './record.js';
 import Bibliography from './bibliography.js';
 import Report from './report.js';
@@ -51,51 +48,7 @@ import { scaleLinear } from 'd3';
  * @property {number} target.id
  */
 
-class Cosmoscope extends Graph {
-  /**
-   * @param {fs.PathLike} pathToFiles
-   * @returns {File[]}
-   */
-
-  static getFromPathFilesAsync(pathToFiles) {
-    const files = [];
-    return new Promise((resolve, reject) => {
-      glob('**/*.md', { cwd: pathToFiles, realpath: true }, (err, filesPath) => {
-        if (err) {
-          reject(err);
-        }
-        Promise.all(
-          filesPath.map((filePath) => {
-            return new Promise((resolveFile, rejectFile) => {
-              return fs.readFile(filePath, 'utf-8', (err, fileContain) => {
-                if (err) {
-                  rejectFile(err);
-                }
-                const { __content: content, ...metas } = ymlFM.loadFront(fileContain);
-                /** @type {File} */
-                const file = {
-                  path: filePath,
-                  name: path.basename(filePath),
-                  lastEditDate: fs.statSync(filePath).mtime,
-                  content,
-                  metas,
-                };
-                file.metas.type = file.metas.type || 'undefined';
-                file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
-                file.metas.id = file.metas.id;
-                file.metas.references = file.metas.references || [];
-                files.push(file);
-                resolveFile();
-              });
-            });
-          }),
-        )
-          .then(() => resolve(files))
-          .catch((err) => reject);
-      });
-    });
-  }
-
+class Cosmoscope {
   /**
    * @param {fs.PathLike} pathToFiles
    * @returns {File[]}
@@ -233,7 +186,9 @@ class Cosmoscope extends Graph {
       });
     });
 
-    // const ignoreLinesLinks = [];
+    function getFormatedDataFromCsvLine({ source, target, label, type }) {
+      return { source, target, label, type: type || 'undefined' };
+    }
 
     const linksPromise = new Promise((resolve, reject) => {
       fs.readFile(linksFilePath, 'utf-8', (err, data) => {
@@ -252,7 +207,7 @@ class Cosmoscope extends Graph {
             while ((line = this.read()) !== null) {
               i++;
               if (!!line['source'] && !!line['target']) {
-                links.push(Link.getFormatedDataFromCsvLine(line));
+                links.push(getFormatedDataFromCsvLine(line));
                 continue;
               }
               new Report('ignored_csv_line', '', 'error').aboutIgnoredCsvLine(
@@ -475,161 +430,6 @@ class Cosmoscope extends Graph {
   }
 
   /**
-   * @param {File[]} files
-   * @param {boolean} citeproc
-   * @param {Config.opts} opts
-   * @returns {Record[]}
-   */
-
-  static getRecordsFromFiles(files, citeproc, opts = {}) {
-    const config = new Config(opts);
-    /** @type {Bibliography} */
-    let bibliography;
-
-    /** @type {Link[]} */
-    const links = [];
-    /** @type {Node[]} */
-    const nodes = [];
-
-    for (const file of files) {
-      const id = file.metas['id'] || file.metas['title'].toLowerCase();
-      const { content } = file;
-      links.push(...Link.getWikiLinksFromFileContent(id, content));
-
-      let { title, types } = file.metas;
-      nodes.push(new Node(id, title, types));
-    }
-
-    /**
-     * @typedef ReferenceRecord
-     * @type {object}
-     * @property {Set<string>} targets
-     * @property {Map<string, string>} contexts
-     */
-
-    /** @type {Map<string, ReferenceRecord>} */
-    let referenceRecords = new Map([]);
-
-    if (citeproc && opts['references_as_nodes'] && config.canCiteproc()) {
-      const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
-      bibliography = new Bibliography(bib, cslStyle, xmlLocal);
-
-      for (const file of files) {
-        const quotesWithContexts = [
-          ...quoteIdsWithContexts(file.content),
-          ...file.metas.references.map((quoteId) => ({
-            contexts: [],
-            id: quoteId,
-          })),
-        ];
-
-        const fileId = file.metas['id'] || file.metas['title'].toLowerCase();
-
-        quotesWithContexts.forEach(({ id, type, contexts }) => {
-          if (!bibliography.library[id]) return;
-
-          if (referenceRecords.has(id)) {
-            const ref = referenceRecords.get(id);
-            ref.targets.add(fileId);
-          } else {
-            referenceRecords.set(id, {
-              contexts,
-              targets: new Set([fileId]),
-              type,
-            });
-          }
-        });
-      }
-    }
-
-    referenceRecords.forEach(({ targets, contexts, type }, key) => {
-      nodes.push(
-        new Node(key, bibliography.library[key]['title'] || '', [opts['references_type_label']]),
-      );
-      Array.from(targets).forEach((id) =>
-        links.push(
-          new Link(
-            undefined,
-            contexts,
-            type || 'undefined',
-            undefined,
-            undefined,
-            undefined,
-            id,
-            key,
-          ),
-        ),
-      );
-    });
-
-    const records = files.map((file) => {
-      let { id, title, types, tags, thumbnail, references, begin, end, ...metas } = file.metas;
-      id = id || file.metas['title'].toLowerCase();
-
-      const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
-        id,
-        links,
-        nodes,
-      );
-      const bibliographicRecords = [
-        ...Bibliography.getBibliographicRecordsFromText(file.content),
-        ...Bibliography.getBibliographicRecordsFromList(references),
-      ];
-
-      return new Record(
-        id,
-        title,
-        types,
-        tags,
-        metas,
-        file.content,
-        linksReferences,
-        backlinksReferences,
-        begin,
-        end,
-        bibliographicRecords,
-        thumbnail,
-        opts,
-      );
-    });
-
-    referenceRecords.forEach((targets, key) => {
-      const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
-        key,
-        links,
-        nodes,
-      );
-
-      bibliography.citeproc.updateItems([key]);
-      let content = bibliography.citeproc
-        .makeBibliography()[1]
-        .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t))[0];
-
-      const title = bibliography.library[key]['title'] || '';
-
-      records.push(
-        new Record(
-          key,
-          title,
-          [opts['references_type_label']],
-          undefined,
-          undefined,
-          content,
-          linksReferences,
-          backlinksReferences,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          opts,
-        ),
-      );
-    });
-
-    return records;
-  }
-
-  /**
    * Get the index from which to create new records in the mass
    * The index depends on the identifier of the last record created in the mass
    * The index is obtained via the Graph analysis
@@ -652,9 +452,7 @@ class Cosmoscope extends Graph {
     return 0;
   }
 
-  constructor(records, opts, params) {
-    super(records, opts, params);
-  }
+  constructor(records, opts, params) {}
 }
 
 export default Cosmoscope;

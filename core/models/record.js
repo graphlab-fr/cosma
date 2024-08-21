@@ -25,8 +25,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import yml from 'yaml';
 import Config from './config.js';
-import Node from './node.js';
-import Link from './link.js';
 import Bibliography from './bibliography.js';
 import Report from './report.js';
 import lang from './lang.js';
@@ -263,16 +261,9 @@ class Record {
       throw new Error('Need instance of Config to process');
     }
 
-    // const nodes = data.map(({ id, title, types }) => new Node(id, title, types));
-
     return data.map((line) => {
       const { id, title, content, types, metas, tags, references, begin, end, thumbnail } = line;
 
-      // const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
-      //   id,
-      //   links,
-      //   nodes,
-      // );
       const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
 
       const record = new Record(
@@ -710,7 +701,9 @@ class Record {
       links[targetId] = { type, targetId, text, context: new Set(), originalText };
     }
 
-    let paraphs = this.content.match(Link.regexParagraph) || [];
+    const regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
+
+    let paraphs = this.content.match(regexParagraph) || [];
 
     for (const paraph of paraphs) {
       let match;

@@ -1,9 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import getHistorySavePath from './history.js';
-import Graph from '../core/models/graph.js';
 import Cosmoscope from '../core/models/cosmoscope.js';
-import Link from '../core/models/link.js';
 import Record from '../core/models/record.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
@@ -25,16 +23,9 @@ async function modelize(options) {
     })
     .filter(({ value }) => value === true);
 
-  const optionsGraph = options
-    .filter(({ name }) => Graph.validParams.has(name))
-    .map(({ name }) => name);
   const optionsTemplate = options
     .filter(({ name }) => Template.validParams.has(name))
     .map(({ name }) => name);
-
-  if (optionsGraph.includes('sample')) {
-    config = new Config(Config.getSampleConfig());
-  }
 
   const {
     select_origin: originType,
@@ -78,7 +69,7 @@ async function modelize(options) {
       break;
   }
 
-  console.log(getModelizeMessage(optionsGraph, optionsTemplate, originType));
+  console.log(getModelizeMessage(optionsTemplate, originType));
 
   let records;
   switch (originType) {
@@ -112,14 +103,12 @@ async function modelize(options) {
     }
     case 'csv': {
       let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
-      const links = Link.formatedDatasetToLinks(formatedLinks);
-      records = Record.formatedDatasetToRecords(formatedRecords, links, config);
+      records = Record.formatedDatasetToRecords(formatedRecords, formatedLinks, config);
       break;
     }
   }
 
   const graph = Cosmoscope.getGraph(records, config.opts);
-  // const graph = new Cosmoscope(records, config.opts, []);
 
   const { html } = new Template(records, graph, optionsTemplate);
 
@@ -169,13 +158,12 @@ async function modelize(options) {
 }
 
 /**
- * @param {string[]} optionsGraph
  * @param {string[]} optionsTemplate
  * @param {string} originType
  */
 
-function getModelizeMessage(optionsGraph, optionsTemplate, originType) {
-  const settings = [...optionsGraph, ...optionsTemplate].filter((setting) => setting !== 'publish');
+function getModelizeMessage(optionsTemplate, originType) {
+  const settings = optionsTemplate.filter((setting) => setting !== 'publish');
 
   const msgSetting =
     settings.length === 0 ? '' : `; settings: \x1b[1m${settings.join(', ')}\x1b[0m`;
