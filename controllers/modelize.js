@@ -9,6 +9,7 @@ import Report from '../models/report-cli.js';
 import { DowloadOnlineCsvFilesError } from '../core/models/errors.js';
 import { downloadFile } from '../core/utils/misc.js';
 import { tmpdir } from 'node:os';
+import getGraph from '../functions/getGraph.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -108,7 +109,7 @@ async function modelize(options) {
     }
   }
 
-  const graph = Cosmoscope.getGraph(records, config.opts);
+  const graph = getGraph(records, config);
 
   const { html } = new Template(records, graph, optionsTemplate);
 
