@@ -20,7 +20,7 @@ Visit <https://cosma.arthurperret.fr> to learn more about the software.
 ## Install
 
 ```bash
-npm run i # install dependences + build JS files
+npm i # install dependences + build JS files
 ```
 
 ## Development
