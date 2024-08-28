@@ -1,11 +1,11 @@
 select_origin: csv
-files_origin: ../../temp/
+files_origin: ../../temp
 nodes_origin: ./nodes.csv
 links_origin: ./links.csv
 nodes_online: ""
 links_online: ""
 images_origin: ""
-export_target: ../../temp/
+export_target: ../../temp
 history: false
 focus_max: 2
 record_types:
