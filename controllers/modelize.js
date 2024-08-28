@@ -113,7 +113,7 @@ async function modelize(options) {
 
   const { html } = new Template(graph, optionsTemplate);
 
-  fs.writeFile(exportPath + 'cosmoscope.html', html, (err) => {
+  fs.writeFile(path.join(exportPath, 'cosmoscope.html'), html, (err) => {
     // Cosmoscope file for export folder
     if (err) {
       return console.error(
