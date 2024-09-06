@@ -273,8 +273,6 @@ class Record {
         tags,
         metas,
         content,
-        [], // linksReferences
-        [], // backlinksReferences
         begin,
         end,
         bibliographicRecords,
@@ -325,8 +323,6 @@ class Record {
               tags,
               metas,
               content,
-              undefined,
-              undefined,
               begin,
               end,
               Bibliography.getBibliographicRecordsFromList(references),
@@ -507,11 +503,9 @@ class Record {
    * @param {string} id - Unique identifier of the record.
    * @param {string} title - Title of the record.
    * @param {string[]} [type=['undefined']] - Type of the record, registred into the config.
-   * @param {string | string[]} tags - List of tags of the record.
+   * @param {string[]} tags - List of tags of the record.
    * @param {object} metas - Metas to add to Front Matter.
    * @param {string} content - Text content if the record.
-   * @param {Reference[]} links - Link, to others records.
-   * @param {Reference[]} backlinks - Backlinks, from others records.
    * @param {number} begin - Timestamp.
    * @param {number} end - Timestamp.
    * @param {Wikilink[]} bibliographicRecords
@@ -526,8 +520,6 @@ class Record {
     tags = [],
     metas = {},
     content = '',
-    links = [],
-    backlinks = [],
     begin,
     end,
     bibliographicRecords = [],
@@ -547,14 +539,11 @@ class Record {
     /** @type {Wikilink[]} */
     this.wikilinks = [];
 
-    if (tags) {
-      if (Array.isArray(tags)) {
-        tags = tags.filter((tag) => !!tag);
-        this.tags = tags.length === 0 ? [] : tags;
-      } else {
-        this.tags = tags.split(',').filter((str) => str !== '');
-      }
+    if (!Array.isArray(tags) || !tags.every((tag) => typeof tag === 'string')) {
+      throw new Error('Tags is array if string');
     }
+
+    this.tags = tags;
 
     const config = new Config(opts);
     const typesRecords = config.getTypesRecords();
@@ -593,8 +582,6 @@ class Record {
 
     this.ymlFrontMatter = this.getYamlFrontMatter();
 
-    this.links = links;
-    this.backlinks = backlinks;
     this.begin;
     if (begin) {
       const beginUnix = getTimestamp(begin);
@@ -613,19 +600,6 @@ class Record {
         this.end = endUnix;
       }
     }
-
-    this.links = this.links.map((link) => {
-      if (typesLinks.has(link.type)) {
-        return link;
-      }
-      new Report(this.id, this.title, 'warning').aboutLinkTypeChange(
-        this.title,
-        link.target.id,
-        link.type,
-      );
-      link.type = 'undefined';
-      return link;
-    });
 
     this.config = config;
     /**
@@ -737,6 +711,7 @@ class Record {
         if (this.isValid() === false) {
           throw new ErrorRecord(this.writeReport(), 'report');
         }
+
         if (this.config.canSaveRecords() === false) {
           throw new ErrorRecord('Directory for record save is unset', 'no dir');
         }
