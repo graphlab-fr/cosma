@@ -82,77 +82,6 @@ class Record {
   /**
    * Get data from a fromated CSV line
    * @param {object} line
-   * @return {DeepFormatedRecordData}
-   * ```
-   * Record.getFormatedDataFromCsvLine({
-   *    'title': 'Paul Otlet',
-   *    'type:étude': 'documentation',
-   *    'type:relation': 'ami',
-   *    'tag:genre': 'homme',
-   *    'content:biography': 'Lorem ipsum...',
-   *    'content:notes': 'Lorem ipsum...',
-   *    'meta:prenom': 'Paul',
-   *    'meta:nom': 'Otlet',
-   *    'time:begin': '1868',
-   *    'time:end': '1944',
-   *    'thumbnail': 'photo.jpg',
-   *    'references': 'otlet1934'
-   *})
-   * ```
-   */
-
-  static getDeepFormatedDataFromCsvLine({ title, id, thumbnail, references = [], ...rest }) {
-    let content = {},
-      type = {},
-      metas = {},
-      tags = {};
-    for (const [key, value] of Object.entries(rest)) {
-      const [field, label] = key.split(':', 2);
-      if (field === 'time') {
-        continue;
-      }
-      switch (field) {
-        case 'content':
-          content[label] = value;
-          break;
-        case 'type':
-          type[label] = value;
-          break;
-        case 'tag':
-          tags[label] = value;
-          break;
-        case 'meta':
-        default:
-          if (!!label && !!value) {
-            metas[label] = value;
-          }
-          break;
-      }
-    }
-
-    if (typeof references === 'string') {
-      references = references.split(',');
-    }
-
-    return {
-      id,
-      title,
-      content,
-      type,
-      metas,
-      tags,
-      references,
-      time: {
-        begin: rest['time:begin'],
-        end: rest['time:end'],
-      },
-      thumbnail: thumbnail,
-    };
-  }
-
-  /**
-   * Get data from a fromated CSV line
-   * @param {object} line
    * @return {FormatedRecordData}
    * ```
    * Record.getFormatedDataFromCsvLine({
@@ -453,51 +382,6 @@ class Record {
   }
 
   /**
-   * @param {Reference[]} referenceArray
-   * @returns {boolean}
-   */
-
-  static verifReferenceArray(referenceArray) {
-    if (Array.isArray(referenceArray) === false) {
-      return false;
-    }
-    for (const reference of referenceArray) {
-      if (typeof reference !== 'object') {
-        return false;
-      }
-      if (
-        typeof reference['context'] !== 'string' ||
-        typeof reference['source'] !== 'object' ||
-        typeof reference['target'] !== 'object'
-      ) {
-        return false;
-      }
-      if (
-        Record.verifDirectionArray(reference['source']) === false ||
-        Record.verifDirectionArray(reference['target']) === false
-      ) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * @param {Direction} direction
-   * @returns {boolean}
-   */
-
-  static verifDirectionArray(direction) {
-    if (!direction['id'] || !direction['title'] || !direction['type']) {
-      return false;
-    }
-    if (isNaN(direction['id'])) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * Generate a record,
    * a named dataset, with references to others, validated from a configuration
    * @param {string} id - Unique identifier of the record.
@@ -744,12 +628,6 @@ class Record {
     if (!this.title) {
       this.report.push('title');
     }
-
-    // if (this.links !== undefined && Record.verifReferenceArray(this.links) === false) {
-    //     this.report.push('links'); }
-
-    // if (this.backlinks !== undefined && Record.verifReferenceArray(this.backlinks) === false) {
-    //     this.report.push('backlinks'); }
   }
 
   /**
