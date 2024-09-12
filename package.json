@@ -20,10 +20,10 @@
     "test:e2e:gui": "./node_modules/.bin/cypress open --config-file ./e2e/cypress.config.js",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
     "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1",
-    "watch:front": "./node_modules/.bin/webpack-cli build --config ./webpack-front.config.mjs --mode development --watch",
-    "build:front": "./node_modules/.bin/webpack-cli build --config ./webpack-front.config.mjs --mode production",
-    "watch:back": "./node_modules/.bin/webpack-cli build --config ./webpack-back.config.mjs --mode development --watch",
-    "build:back": "./node_modules/.bin/webpack-cli build --config ./webpack-back.config.mjs --mode production",
+    "watch:front": "./node_modules/.bin/webpack build --config ./webpack-front.config.mjs --mode development --watch",
+    "build:front": "./node_modules/.bin/webpack build --config ./webpack-front.config.mjs --mode production",
+    "watch:back": "./node_modules/.bin/webpack build --config ./webpack-back.config.mjs --mode development --watch",
+    "build:back": "./node_modules/.bin/webpack build --config ./webpack-back.config.mjs --mode production",
     "prepare": "npm run build:front && npm run build:back"
   },
   "contributors": [
@@ -61,8 +61,7 @@
     "mocha": "^10.4.0",
     "prettier": "3.2.5",
     "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-cli": "^5.1.4"
   },
   "directories": {
     "doc": "docs",
