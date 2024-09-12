@@ -26,11 +26,5 @@ export default {
   resolve: {
     extensions: ['.js'],
   },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, './temp'),
-    },
-    port: 9000,
-  },
   mode: 'development',
 };
