@@ -18,7 +18,6 @@
     "test:unit": "./node_modules/.bin/mocha 'core/test/**.js' --timeout 30000",
     "test:e2e": "./node_modules/.bin/cypress run --config-file ./e2e/cypress.config.js",
     "test:e2e:gui": "./node_modules/.bin/cypress open --config-file ./e2e/cypress.config.js",
-    "fake": "node ./core/index.js",
     "format": "./node_modules/.bin/prettier --write --list-different './**/**+(.js|.css)'",
     "man": "mkdir -p man && pandoc docs/user-manual.md -f markdown -t man -s --lua-filter man/manfilter.lua --include-before-body man/cosma.1.before --include-after-body man/cosma.1.after --metadata author=\"\" -o man/cosma.1",
     "watch:front": "./node_modules/.bin/webpack-cli build --config ./webpack-front.config.mjs --mode development --watch",
@@ -55,7 +54,6 @@
   "devDependencies": {
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
-    "@faker-js/faker": "^8.4.1",
     "babel-loader": "^9.1.3",
     "chai": "^4.3.6",
     "chai-fs": "^2.0.0",
