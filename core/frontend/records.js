@@ -1,5 +1,4 @@
-import { graph, highlightNodes, unlightNodes } from './graph.js';
-import { zoomToNode } from './zoom.js';
+import { graph, zoomToNode, highlightNodes, unlightNodes } from './graph.js';
 import hotkeys from 'hotkeys-js';
 
 window.addEventListener('DOMContentLoaded', () => {
