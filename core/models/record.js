@@ -193,7 +193,7 @@ class Record {
     return data.map((line) => {
       const { id, title, content, types, metas, tags, references, begin, end, thumbnail } = line;
 
-      const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
+      const bibliographicLinks = Bibliography.getBibliographicLinksFromList(references);
 
       const record = new Record(
         id,
@@ -204,7 +204,7 @@ class Record {
         content,
         begin,
         end,
-        bibliographicRecords,
+        bibliographicLinks,
         thumbnail,
         config.opts,
       );
@@ -254,7 +254,7 @@ class Record {
               content,
               begin,
               end,
-              Bibliography.getBibliographicRecordsFromList(references),
+              Bibliography.getBibliographicLinksFromList(references),
               thumbnail,
               configOpts,
             );
@@ -392,7 +392,7 @@ class Record {
    * @param {string} content - Text content if the record.
    * @param {number} begin - Timestamp.
    * @param {number} end - Timestamp.
-   * @param {Wikilink[]} bibliographicRecords
+   * @param {Wikilink[]} bibliographicLinks
    * @param {string} thumbnail - Image path
    * @param {object} opts
    */
@@ -406,7 +406,7 @@ class Record {
     content = '',
     begin,
     end,
-    bibliographicRecords = [],
+    bibliographicLinks = [],
     thumbnail,
     opts,
   ) {
@@ -415,16 +415,17 @@ class Record {
     this.types = types;
     this.tags = tags;
     this.content = content;
-    this.bibliographicRecords = bibliographicRecords;
+    this.bibliographicLinks = bibliographicLinks;
     /** @type {string[]} */
     this.bibliography = [];
     this.thumbnail = thumbnail;
 
     /** @type {Wikilink[]} */
     this.wikilinks = [];
+    this.setWikiLinksFromContent();
 
     if (!Array.isArray(tags) || !tags.every((tag) => typeof tag === 'string')) {
-      throw new Error('Tags is array if string');
+      throw new Error('Tags is array of string');
     }
 
     this.tags = tags;
@@ -496,7 +497,7 @@ class Record {
   }
 
   getYamlFrontMatter() {
-    const bibliographicIds = this.bibliographicRecords.map(({ target }) => target);
+    const bibliographicIds = this.bibliographicLinks.map(({ target }) => target);
     const ymlContent = yml.stringify({
       title: this.title,
       id: this.id,

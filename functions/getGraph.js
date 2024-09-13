@@ -73,7 +73,7 @@ export default function getGraph(records, config) {
     });
   });
 
-  records.forEach(({ id: nodeId, wikilinks, bibliographicRecords }) => {
+  records.forEach(({ id: nodeId, wikilinks, bibliographicLinks }) => {
     wikilinks.forEach(({ target, type }) => {
       graph.addEdge(nodeId, target, {
         type,
@@ -81,7 +81,7 @@ export default function getGraph(records, config) {
       });
     });
 
-    bibliographicRecords.forEach(({ target }) => {
+    bibliographicLinks.forEach(({ target }) => {
       if (!graph.hasNode(nodeId) || !graph.hasNode(target)) {
         return;
       }
