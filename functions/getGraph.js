@@ -93,7 +93,7 @@ export default function getGraph(records, config) {
     });
   });
 
-  const degrees = graph.nodes().map((node) => graph.degree(node));
+  const degrees = graph.mapNodes((node) => graph.degree(node));
   const minDegree = Math.min(...degrees);
   const maxDegree = Math.max(...degrees);
 

@@ -77,7 +77,7 @@ async function modelize(options) {
     case 'directory': {
       const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
 
-      records = Cosmoscope._getRecordsFromFiles(files, config.opts);
+      records = Cosmoscope.getRecordsFromFiles(files, config.opts);
 
       if (
         optionsTemplate.includes('citeproc') &&

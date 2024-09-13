@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import View from './view.js';
-import { svg, translate, nodes } from './graph.js';
+import { svg, translate, graph } from './graph.js';
 import hotkeys from 'hotkeys-js';
 import { getRecordIdFromHash } from './records.js';
 
@@ -14,7 +14,7 @@ let zoomInterval = 0.2;
  * Sum of nodes size
  * @type {number}
  */
-const nodeFactor = nodes.reduce((acc, { size }) => acc + size, 0);
+const nodeFactor = graph.reduceNodes((acc, node, { size }) => acc + size, 0);
 
 window.addEventListener('resize', () => {
   let density = nodeFactor / (window.innerWidth * window.innerHeight);

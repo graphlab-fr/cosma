@@ -1,7 +1,7 @@
 /**
  * @typedef NodeNetwork
  * @type {object}
- * @property {d3.Selection<SVGGElement, Node, SVGElement>} node
+ * @property {d3.Selection<SVGGElement, Node, SVGElement>} nodes
  * @property {d3.Selection<SVGLineElement, Link, SVGElement>} links
  */
 
@@ -536,12 +536,6 @@ function translate() {
   }
 }
 
-// const nodes = elts.nodes.data();
-// const links = elts.links.data();
-
-const nodes = [];
-const links = [];
-
 export {
   svg,
   svgSub,
@@ -553,7 +547,5 @@ export {
   highlightNodes,
   unlightNodes,
   translate,
-  nodes,
-  links,
   graph,
 };

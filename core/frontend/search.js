@@ -16,12 +16,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const resultContainer = document.getElementById('search-result-list');
 
   input.addEventListener('focus', () => {
-    const visibleNodes = graph
-      .filterNodes((node, attr) => attr.hidden === false)
-      .map((key) => ({
-        key,
-        attributes: graph.getNodeAttributes(key),
-      }));
+    const visibleNodes = graph.reduceNodes((acc, key, attributes) => {
+      if (attributes.hidden === false) {
+        acc.push({
+          key,
+          attributes,
+        });
+      }
+      return acc;
+    }, []);
 
     fuse.setCollection(visibleNodes);
 

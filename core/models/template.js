@@ -40,24 +40,6 @@ class Template {
   static validParams = new Set(['publish', 'css_custom', 'citeproc', 'dev']);
 
   /**
-   * Match and transform links from context
-   * @param {Array} recordLinks Array of link objets
-   * @param {Function} fxToHighlight Function return a boolean
-   * @returns {String}
-   */
-
-  static markLinkContext(recordLinks) {
-    return recordLinks.map((link) => {
-      if (link.context.length > 0) {
-        link.context = link.context.join('\n\n');
-      } else {
-        link.context = '';
-      }
-      return link;
-    });
-  }
-
-  /**
    * Convert a path to an image to the base64 encoding of the image source
    * @param {string} imgPath
    * @returns {string|boolean} False if error
@@ -144,11 +126,11 @@ class Template {
 
     /** @type {Map<string, Record>} */
     const recordDict = new Map();
-
     /** @type {Map<string, Set<string>>} */
     const filtersDict = new Map();
     /** @type {Map<string, Set<string>>} */
     const tagsDict = new Map();
+
     records.forEach((record) => {
       recordDict.set(record.id, record);
 
@@ -178,20 +160,6 @@ class Template {
       arr[1] = Array.from(arr[1]);
       return arr;
     });
-
-    // graph.getTypesFromRecords().forEach((nodes, name) => {
-    //   nodes = Array.from(nodes);
-    //   filtersFromGraph[name] = {
-    //     nodes,
-    //     active: true,
-    //   };
-    // });
-
-    // const tagsFromGraph = tagsDictAsArrays;
-    // graph.getTagsFromRecords().forEach((nodes, name) => {
-    //   nodes = Array.from(nodes);
-    //   tagsFromGraph.push({ name, nodes });
-    // });
 
     const tagsListAlphabetical = tagsDictAsArrays
       .map(([name]) => name)
@@ -272,13 +240,6 @@ class Template {
     });
     templateEngine.addFilter('imgPathToBase64', Template.imagePathToBase64);
 
-    // records = records.map((record) => {
-    //   record.links = Template.markLinkContext(record.links, linkSymbol);
-    //   record.backlinks = Template.markLinkContext(record.backlinks, linkSymbol);
-
-    //   return record;
-    // });
-
     this.custom_css = null;
     if (this.params.has('css_custom') === true && this.config.canCssCustom() === true) {
       this.custom_css = fs.readFileSync(cssCustomPath, 'utf-8');
@@ -293,7 +254,7 @@ class Template {
       records: records.map(({ thumbnail, wikilinks, bibliographicLinks, ...rest }) => {
         const backNodes = graph.inNeighbors(rest.id);
 
-        const _links = wikilinks.map(({ contexts, type, ...rest }) => {
+        const links = wikilinks.map(({ contexts, type, ...rest }) => {
           const target = recordDict.get(rest.target);
 
           return {
@@ -314,7 +275,7 @@ class Template {
             return;
           }
 
-          _links.push({
+          links.push({
             context: contexts.join(''),
             target: {
               id: recordTarget.id,
@@ -325,7 +286,7 @@ class Template {
           });
         });
 
-        const _backlinks = [];
+        const backlinks = [];
 
         backNodes.forEach((nodeId) => {
           const record = recordDict.get(nodeId);
@@ -335,7 +296,7 @@ class Template {
               return link.target === rest.id;
             })
             .forEach((link) => {
-              _backlinks.push({
+              backlinks.push({
                 context: link.contexts.join(''),
                 source: {
                   id: record.id,
@@ -351,7 +312,7 @@ class Template {
               return target === rest.id;
             })
             .forEach(({ contexts }) => {
-              _backlinks.push({
+              backlinks.push({
                 context: contexts.join(''),
                 source: {
                   id: record.id,
@@ -365,8 +326,8 @@ class Template {
 
         return {
           ...rest,
-          backlinks: _backlinks,
-          links: _links,
+          backlinks,
+          links,
           thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
         };
       }),

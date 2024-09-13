@@ -1,10 +1,7 @@
-import GraphEngine from 'graphology';
 import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs.js';
 import hotkeys from 'hotkeys-js';
 import { graph, displayNodesAll, setNodesDisplaying } from './graph.js';
 import { getRecordIdFromHash } from './records.js';
-
-// let graph = getGraphEngine();
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement} */

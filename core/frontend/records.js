@@ -116,10 +116,4 @@ graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
   elt.style.display = attributes.hidden ? 'none' : null;
 });
 
-graph.on('toto', function () {
-  // const elt = indexContainer.querySelector(`[data-index="${key}"]`);
-  // elt.style.display = attributes.hidden ? 'none' : null;
-  console.log('tt');
-});
-
 export { getRecordIdFromHash };
