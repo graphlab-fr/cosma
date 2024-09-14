@@ -1,15 +1,19 @@
 describe('focus', () => {
+  function assertFocusIsActive() {
+    cy.get('#focus-check').should('be.checked');
+    cy.get('#focus-input').should('have.focus');
+  }
+
+  function assertFocusIsNotActive() {
+    cy.get('#focus-check').should('not.be.checked');
+  }
+
   beforeEach(() => {
     cy.visit('temp/citeproc.html');
   });
 
   describe('have select node', () => {
     beforeEach(() => cy.get('[data-node="evergreen notes should be densely linked"]').click());
-
-    function assertFocusIsActive() {
-      cy.get('#focus-check').should('be.checked');
-      cy.get('#focus-input').should('have.focus');
-    }
 
     it('should active focus on click if record selected', () => {
       cy.get('.graph-control-label').click();
@@ -25,14 +29,29 @@ describe('focus', () => {
       beforeEach(() => {
         cy.get('.graph-control-label').click();
         assertFocusIsActive();
-      });
 
-      it('should display more nodes if range inscrease', () => {
         cy.shouldGraphHasNodes([
           'Evergreen notes should beconcept-oriented',
           'Evergreen notes should bedensely linked',
         ]);
+      });
 
+      it('should toggle hide nodes', () => {
+        cy.get('.graph-control-label').click();
+
+        cy.shouldGraphHasNodes([
+          'Augmenting Human Intellect:A Conceptual Framework',
+          'Evergreen note titles arelike APIs',
+          'Evergreen notes',
+          'Evergreen notes should beatomic',
+          'Evergreen notes should beconcept-oriented',
+          'Evergreen notes should bedensely linked',
+          'How can we develop transformativetools for thought?',
+          'Tools for thought',
+        ]);
+      });
+
+      it('should display more nodes if range inscrease', () => {
         cy.get('#focus-input')
           .should('have.attr', 'max', 2)
           .should('have.attr', 'value', 1)
@@ -47,10 +66,6 @@ describe('focus', () => {
       });
     });
   });
-
-  function assertFocusIsNotActive() {
-    cy.get('#focus-check').should('not.be.checked');
-  }
 
   it('should not active focus on click if no record selected', () => {
     cy.get('.graph-control-label').click();
