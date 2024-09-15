@@ -553,62 +553,11 @@ window.labelDisplayToggle = function (isChecked) {
 };
 
 /**
- * Add 'highlight' class to texts linked to nodes ids
- * @param {string[]|number[]} nodeIds - List of node ids
- */
-
-window.labelHighlight = function (nodeIds) {
-  elts.nodes.data().map((node) => {
-    if (nodeIds.includes(node.id)) {
-      node.highlighted = true;
-    }
-    return node;
-  });
-
-  elts.nodes
-    .filter((node) => nodeIds.includes(node.id))
-    .select('text')
-    .style('fill', 'var(--highlight)');
-};
-
-/**
  * Change the font size of graph labels
  */
 
 window.updateFontsize = function () {
   elts.labels.attr('font-size', graphProperties.text_size);
-};
-
-/**
- * Remove 'highlight' class from texts linked to nodes ids
- * @param {string[]|number[]} nodeIds - List of node ids
- */
-
-window.labelUnlight = function (nodeIds) {
-  elts.nodes.data().map((node) => {
-    if (nodeIds.includes(node.id)) {
-      node.highlighted = false;
-    }
-    return node;
-  });
-
-  elts.nodes
-    .filter((node) => nodeIds.includes(node.id))
-    .select('text')
-    .style('fill', null);
-};
-
-/**
- * Remove 'highlight' class from all texts
- */
-
-window.labelUnlightAll = function () {
-  data.nodes = data.nodes.map(function (node) {
-    node.highlighted = false;
-    return node;
-  });
-
-  elts.labels.style('fill', null);
 };
 
 function translate() {
