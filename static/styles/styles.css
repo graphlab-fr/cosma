@@ -670,9 +670,27 @@ a.record-link.highlight {
 - Graph elements
 --- */
 
+[data-node] a.highlight .border {
+  fill: var(--highlight);
+}
+
+[data-link].highlight {
+  stroke: var(--highlight);
+}
+
+[data-node] a.translucent,
+[data-link].translucent {
+  opacity: 0.5;
+}
+
+[data-node] a.hide,
+[data-link].hide,
+[data-node] .label.hide {
+  visibility: hidden;
+}
+
 /* nodes */
-circle,
-text {
+[data-node] {
   cursor: pointer;
 }
 
