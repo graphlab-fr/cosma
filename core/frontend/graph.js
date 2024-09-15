@@ -138,8 +138,6 @@ elts.nodes = svgSub
   .enter()
   .append('g')
   .attr('data-node', (d) => d.id)
-  .append('a')
-  .attr('href', (d) => '#' + d.id)
   .call(
     d3
       .drag()
@@ -232,6 +230,7 @@ elts.nodes = svgSub
 
 elts.nodes.each(function (d) {
   const node = d3.select(this);
+  const link = node.append('a').attr('href', (d) => '#' + d.id);
 
   const getFill = (fill) => {
     if (imageFileValidExtnames.has(fill.split('.').at(-1))) {
@@ -249,13 +248,13 @@ elts.nodes.each(function (d) {
 
   const drawSimpleCircle = (stroke, fill) => {
     /** Background: color of type */
-    node
+    link
       .append('circle')
       .attr('class', 'border')
       .attr('r', d.size + 2)
       .attr('fill', stroke);
     /** Foreground: circle contains color or image */
-    node.append('circle').attr('r', d.size).attr('fill', fill);
+    link.append('circle').attr('r', d.size).attr('fill', fill);
   };
 
   if (d.thumbnail) {
@@ -267,13 +266,13 @@ elts.nodes.each(function (d) {
         ({ border }, i) => {
           const type = graphProperties['record_types'][d.types[i]];
           /** Background: borders with one color per type */
-          node.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+          link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
         },
       );
       /** Background: neutral white color */
-      node.append('circle').attr('r', d.size).attr('fill', `var(--background-gray)`);
+      link.append('circle').attr('r', d.size).attr('fill', `var(--background-gray)`);
       /** Foreground: circle contains thumbnail */
-      node.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
+      link.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
     }
     return;
   }
@@ -286,11 +285,11 @@ elts.nodes.each(function (d) {
       ({ segment, border }, i) => {
         const type = graphProperties['record_types'][d.types[i]];
         /** Background: borders with one color per type */
-        node.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+        link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
         /** Background: neutral white color */
-        node.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
+        link.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
         /** Foreground: circle fragment per type with color or image */
-        node.append('path').attr('d', segment).attr('fill', getFill(type.fill));
+        link.append('path').attr('d', segment).attr('fill', getFill(type.fill));
       },
     );
   }
@@ -298,6 +297,7 @@ elts.nodes.each(function (d) {
 
 /** @type {d3.Selection<SVGTextElement, Node, SVGGElement, any>} */
 elts.labels = elts.nodes
+  .select('a')
   .append('text')
   .attr('class', 'label')
   .each(function (d) {
