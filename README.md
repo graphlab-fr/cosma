@@ -28,7 +28,7 @@ npm i # install dependences + build JS files
 ```bash
 npm run watch:front # build web browser script
 npm run watch:back # build NodeJs executable file
-nodemon --ext css,js,cjs --watch dist/ --watch static/ --exec "sh e2e/exec-modelize.sh" # make cosmoscope files for dev or E2E testing
+nodemon --ext css,njk,js,cjs --watch dist/ --watch static/ --exec "sh e2e/exec-modelize.sh" # make cosmoscope files for dev or E2E testing
 ```
 
 ## E2E testing
