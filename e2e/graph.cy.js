@@ -51,10 +51,10 @@ describe('graph', () => {
     cy.get('@node').click();
     cy.get('[data-source="evergreen notes"]')
       .should('have.length', 1)
-      .each((elt) => expect(elt.attr('style')).to.contain('highlight'));
+      .each((elt) => expect(elt.attr('class')).to.contain('highlight'));
     cy.get('[data-target="evergreen notes"]')
       .should('have.length', 3)
-      .each((elt) => expect(elt.attr('style')).to.contain('highlight'));
+      .each((elt) => expect(elt.attr('class')).to.contain('highlight'));
   });
 
   it('should apply link shape', () => {
@@ -81,13 +81,61 @@ describe('graph', () => {
     cy.get('text:visible').should('have.length', 0);
   });
 
+  it('should change label size', () => {
+    cy.contains('Paramètres du graphe').click();
+    cy.get('form:contains("taille du texte")').as('form');
+
+    cy.get('[data-node] text').should('have.attr', 'font-size', 7);
+
+    cy.get('@form').find('input[type="number"]').invoke('val', 8).trigger('input');
+    cy.get('[data-node] text').should('have.attr', 'font-size', 8);
+
+    cy.get('@form').find('input[type="range"]').invoke('val', 10).trigger('input');
+    cy.get('[data-node] text').should('have.attr', 'font-size', 10);
+  });
+
+  it('should highlight selected node, hovered node and connected nodes, links', () => {
+    cy.get('[data-node], [data-link]').should('not.have.class', 'highlight');
+
+    cy.get('[data-node="evergreen notes should be densely linked"]').click();
+
+    cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+
+    const highlightNodes = [
+      'evergreen notes',
+      'tools for thought',
+      'evergreen notes should be atomic',
+      'evergreen note titles are like apis',
+      'evergreen notes should be concept-oriented',
+      'evergreen notes should be densely linked',
+    ];
+
+    cy.get('[data-node].highlight').should('have.length', highlightNodes.length);
+    highlightNodes.forEach((name) =>
+      cy.get(`[data-node="${name}"]`).should('have.class', 'highlight'),
+    );
+
+    cy.get('[data-link].highlight').should('have.length', 5);
+  });
+
   describe('change node opacity', () => {
-    it('should on no connected nodes to hovered node', () => {
+    it('should for no connected nodes to hovered node', () => {
+      cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
+
       cy.get('[data-node="evergreen notes"]').trigger('mouseover');
 
-      ['matuschak2019', 'engelbart1962', 'evergreen notes should be densely linked'].forEach(
-        (name) => cy.get(`[data-node="${name}"]`).find('a').should('have.attr', 'opacity', '0.5'),
+      const translucentNodes = [
+        'matuschak2019',
+        'engelbart1962',
+        'evergreen notes should be densely linked',
+      ];
+
+      cy.get('[data-node].translucent').should('have.length', translucentNodes.length);
+      translucentNodes.forEach((name) =>
+        cy.get(`[data-node="${name}"]`).should('have.class', 'translucent'),
       );
+
+      cy.get('[data-link].translucent').should('have.length', 3);
     });
 
     it('should not if option is unactivated', () => {
@@ -98,11 +146,11 @@ describe('graph', () => {
       cy.get('@option').click();
       cy.get('@option').find('input').should('not.have.checked');
 
+      cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
+
       cy.get('[data-node="evergreen notes"]').trigger('mouseover');
 
-      ['matuschak2019', 'engelbart1962', 'evergreen notes should be densely linked'].forEach(
-        (name) => cy.get(`[data-node="${name}"]`).find('a').should('not.have.attr', 'opacity'),
-      );
+      cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
     });
   });
 });
