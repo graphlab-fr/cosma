@@ -108,6 +108,7 @@ elts.links = svgSub
   .append('line')
   .attr('stroke', (d) => d.color)
   .attr('title', (d) => d.title)
+  .attr('data-link', (d) => d.id)
   .attr('data-source', (d) => d.source.id)
   .attr('data-target', (d) => d.target.id)
   .attr('stroke-dasharray', function (d) {
@@ -193,10 +194,10 @@ elts.nodes = svgSub
       return true;
     });
 
-    nodesHovered.selectAll('.border').style('fill', 'var(--highlight)');
-    linksHovered.style('stroke', 'var(--highlight)');
-    nodesToModif.attr('opacity', 0.5);
-    linksToModif.attr('stroke-opacity', 0.5);
+    nodesHovered.nodes().forEach((elt) => elt.classList.add('highlight'));
+    linksHovered.nodes().forEach((elt) => elt.classList.add('highlight'));
+    nodesToModif.nodes().forEach((elt) => elt.classList.add('translucent'));
+    linksToModif.nodes().forEach((elt) => elt.classList.add('translucent'));
   })
   .on('mouseout', () => {
     if (!graphProperties.graph_highlight_on_hover) {
@@ -212,8 +213,8 @@ elts.nodes = svgSub
         }
         return true;
       })
-      .selectAll('.border')
-      .style('fill', null);
+      .nodes()
+      .forEach((elt) => elt.classList.remove('highlight'));
     elts.links
       .filter((link) => {
         if (selectedNodeId) {
@@ -221,9 +222,10 @@ elts.nodes = svgSub
         }
         return true;
       })
-      .style('stroke', null);
-    elts.nodes.attr('opacity', null);
-    elts.links.attr('stroke-opacity', null);
+      .nodes()
+      .forEach((elt) => elt.classList.remove('highlight'));
+    elts.nodes.nodes().forEach((elt) => elt.classList.remove('translucent'));
+    elts.links.nodes().forEach((elt) => elt.classList.remove('translucent'));
   });
 
 /** Draw node content */
@@ -297,6 +299,7 @@ elts.nodes.each(function (d) {
 /** @type {d3.Selection<SVGTextElement, Node, SVGGElement, any>} */
 elts.labels = elts.nodes
   .append('text')
+  .attr('class', 'label')
   .each(function (d) {
     const words = d.label.split(' '),
       max = 25,
@@ -479,8 +482,8 @@ function hideNodesAll(priority = filterPriority.notFiltered) {
 window.hideNodeNetwork = function (nodeIds) {
   const { nodes, links } = getNodeNetwork(nodeIds);
 
-  nodes.style('display', 'none');
-  links.style('display', 'none');
+  nodes.nodes().forEach((elt) => elt.classList.add('hide'));
+  links.nodes().forEach((elt) => elt.classList.add('hide'));
 };
 
 /**
@@ -491,8 +494,8 @@ window.hideNodeNetwork = function (nodeIds) {
 window.displayNodeNetwork = function (nodeIds) {
   const { nodes, links } = getNodeNetwork(nodeIds);
 
-  nodes.style('display', null);
-  links.style('display', null);
+  nodes.nodes().forEach((elt) => elt.classList.remove('hide'));
+  links.nodes().forEach((elt) => elt.classList.remove('hide'));
 };
 
 /**
@@ -503,8 +506,8 @@ window.displayNodeNetwork = function (nodeIds) {
 function highlightNodes(nodeIds) {
   const { nodes, links } = getNodeNetwork(nodeIds);
 
-  nodes.selectAll('.border').style('fill', 'var(--highlight)');
-  links.style('stroke', 'var(--highlight)');
+  nodes.nodes().forEach((elt) => elt.classList.add('highlight'));
+  links.nodes().forEach((elt) => elt.classList.add('highlight'));
 
   View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
 }
@@ -520,8 +523,8 @@ function unlightNodes() {
 
   const { nodes, links } = getNodeNetwork(View.highlightedNodes);
 
-  nodes.selectAll('.border').style('fill', null);
-  links.style('stroke', null);
+  nodes.nodes().forEach((elt) => elt.classList.remove('highlight'));
+  links.nodes().forEach((elt) => elt.classList.remove('highlight'));
 
   View.highlightedNodes = [];
 }
@@ -533,9 +536,9 @@ function unlightNodes() {
 
 window.linksDisplayToggle = function (isChecked) {
   if (isChecked) {
-    elts.links.style('display', null);
+    elts.links.nodes().forEach((elt) => elt.classList.remove('hide'));
   } else {
-    elts.links.style('display', 'none');
+    elts.links.nodes().forEach((elt) => elt.classList.add('hide'));
   }
 };
 
@@ -546,9 +549,9 @@ window.linksDisplayToggle = function (isChecked) {
 
 window.labelDisplayToggle = function (isChecked) {
   if (isChecked) {
-    elts.labels.style('display', null);
+    elts.labels.nodes().forEach((elt) => elt.classList.remove('hide'));
   } else {
-    elts.labels.style('display', 'none');
+    elts.labels.nodes().forEach((elt) => elt.classList.add('hide'));
   }
 };
 
