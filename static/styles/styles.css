@@ -670,7 +670,7 @@ a.record-link.highlight {
 - Graph elements
 --- */
 
-[data-node] a.highlight .border {
+[data-node].highlight .border {
   fill: var(--highlight);
 }
 
@@ -678,12 +678,12 @@ a.record-link.highlight {
   stroke: var(--highlight);
 }
 
-[data-node] a.translucent,
+[data-node].translucent,
 [data-link].translucent {
   opacity: 0.5;
 }
 
-[data-node] a.hide,
+[data-node].hide,
 [data-link].hide,
 [data-node] .label.hide {
   visibility: hidden;
