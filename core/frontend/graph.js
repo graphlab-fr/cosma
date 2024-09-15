@@ -433,6 +433,8 @@ function hideNodesAll() {
   }));
 }
 
+let highlightedNodes = [];
+
 /**
  * Apply highlightColor (from config) to somes nodes and their links
  * @param {string[]|number[]} nodeIds - List of nodes ids
@@ -447,7 +449,7 @@ function highlightNodes(nodeIds) {
       links.nodes().forEach((elt) => elt.classList.add('highlight'));
     });
 
-  View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
+  highlightedNodes = highlightedNodes.concat(nodeIds);
 }
 
 /**
@@ -455,11 +457,11 @@ function highlightNodes(nodeIds) {
  */
 
 function unlightNodes() {
-  if (View.highlightedNodes.length === 0) {
+  if (highlightedNodes.length === 0) {
     return;
   }
 
-  View.highlightedNodes
+  highlightedNodes
     .filter((nodeId) => graph.hasNode(nodeId))
     .forEach((nodeId) => {
       const { links, node } = getNodeNetwork(nodeId);
@@ -467,7 +469,7 @@ function unlightNodes() {
       links.nodes().forEach((elt) => elt.classList.remove('highlight'));
     });
 
-  View.highlightedNodes = [];
+  highlightedNodes = [];
 }
 
 /**
@@ -513,7 +515,7 @@ function translate() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  const { x, y, zoom } = View.position;
+  const { x, y, zoom } = position;
 
   const screenMin = d3.min([screenHeight, screenWidth]);
 
@@ -554,35 +556,34 @@ window.addEventListener('resize', () => {
   zoomInterval = Math.log2(density);
 });
 
+const position = { x: 0, y: 0, zoom: 1 };
+
 const zoom = d3
   .zoom()
   .scaleExtent([zoomMin, zoomMax])
   .on('zoom', (e) => {
     const { x, y, k } = e.transform;
-    View.position.x = x || 0;
-    View.position.y = y || 0;
-    View.position.zoom = k || 1;
+    position.x = x || 0;
+    position.y = y || 0;
+    position.zoom = k || 1;
     translate();
   });
 
 svg.call(zoom);
 
 function zoomMore() {
-  zoom.scaleTo(svg, View.position.zoom + zoomInterval);
+  zoom.scaleTo(svg, position.zoom + zoomInterval);
 }
 
 function zoomLess() {
-  zoom.scaleTo(svg, View.position.zoom - zoomInterval);
+  zoom.scaleTo(svg, position.zoom - zoomInterval);
 }
 
 function zoomReset() {
-  View.position.zoom = 1;
-  View.position.x = 0;
-  View.position.y = 0;
-  svg.call(
-    zoom.transform,
-    d3.zoomIdentity.translate(View.position.y, View.position.x).scale(View.position.zoom),
-  );
+  position.zoom = 1;
+  position.x = 0;
+  position.y = 0;
+  svg.call(zoom.transform, d3.zoomIdentity.translate(position.y, position.x).scale(position.zoom));
   translate();
 }
 
@@ -612,8 +613,7 @@ function zoomToNode(nodeId) {
   const meanX = d3.mean(nodes, (d) => d.x);
   const meanY = d3.mean(nodes, (d) => d.y);
 
-  const zoomScale =
-    View.position.zoom === 1 ? View.position.zoom + zoomInterval * 2 : View.position.zoom;
+  const zoomScale = position.zoom === 1 ? position.zoom + zoomInterval * 2 : position.zoom;
 
   svg.call(
     zoom.transform,
