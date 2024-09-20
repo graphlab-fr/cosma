@@ -94,6 +94,19 @@ describe('graph', () => {
     cy.get('[data-node] text').should('have.attr', 'font-size', 10);
   });
 
+  it('should highlight selected node and connected links', () => {
+    cy.visit('temp/citeproc.html#evergreen notes');
+
+    const highlightNodes = ['evergreen notes'];
+
+    cy.get('[data-node].highlight').should('have.length', highlightNodes.length);
+    highlightNodes.forEach((name) =>
+      cy.get(`[data-node="${name}"]`).should('have.class', 'highlight'),
+    );
+
+    cy.get('[data-link].highlight').should('have.length', 4);
+  });
+
   it('should highlight selected node, hovered node and connected nodes, links', () => {
     cy.get('[data-node], [data-link]').should('not.have.class', 'highlight');
 
