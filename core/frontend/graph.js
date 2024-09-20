@@ -210,7 +210,7 @@ elts.nodes = svgSub
 
 elts.nodes.each(function (d) {
   const node = d3.select(this);
-  const link = node.append('a').attr('href', (d) => '#' + d.id);
+  const link = node.append('a').attr('href', (d) => '#' + d.key);
 
   const getFill = (fill) => {
     if (imageFileValidExtnames.has(fill.split('.').at(-1))) {
