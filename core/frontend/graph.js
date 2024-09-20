@@ -605,7 +605,6 @@ function zoomToNode(nodeId) {
   const nodes = elts.nodes.data();
 
   const node = nodes.find(({ key }) => key === nodeId);
-  console.log(node);
 
   if (!node) return;
   const { x, y } = node;
