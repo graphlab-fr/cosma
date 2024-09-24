@@ -32,6 +32,9 @@ jobs:
       - name: Build cosmoscopes
         run: sh ./e2e/exec-modelize.sh
 
+      - name: Run unit tests
+        run: npm run test:unit -- --verbose
+
       - name: Run E2E tests
         run: npm run test:e2e
 
