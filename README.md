@@ -31,9 +31,19 @@ npm run watch:back # build NodeJs executable file
 nodemon --ext css,njk,js,cjs --watch dist/ --watch static/ --exec "sh e2e/exec-modelize.sh" # make cosmoscope files for dev or E2E testing
 ```
 
-## E2E testing
+## Testing
+
+**Unit testing**: make some asserts on core functions.
+Using [Jest](https://jestjs.io/).
+
+```bash
+npm run test:unit -- --verbose --watchAll
+```
+
+**E2E testing**: generate Cosma's HTML and Markdown files and make some asserts on.
+Using [Cypress](https://www.cypress.io/).
 
 ```bash
 sh e2e/exec-modelize.sh
-npm run test:e2e
+npm run test:e2e -- --spec "**/graph.cy.js"
 ```
