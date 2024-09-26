@@ -74,6 +74,7 @@ class Config {
     css_custom: '',
     devtools: false,
     lang: 'en',
+    start_page: '',
   });
 
   /**
