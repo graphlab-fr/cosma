@@ -6,7 +6,8 @@
 
 import fs from 'node:fs';
 import CSL from 'citeproc';
-import * as Citr from '@zettlr/citr';
+import extractCitations from '../utils/citeExtractor';
+import extractParaphs from '../utils/paraphExtractor';
 
 /**
  * @typedef BibliographicRecord
@@ -32,7 +33,7 @@ class Bibliography {
   static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
 
   /**
-   * @param {string | Record.content} recordContent
+   * @param {string} recordContent
    * @returns {BibliographicRecord[]}
    */
 
@@ -40,44 +41,20 @@ class Bibliography {
     /** @type {BibliographicRecord[]} */
     let quotes = [];
 
-    Citr.util.extractCitations(recordContent).forEach((quoteText, index) => {
-      let citationItems;
-      try {
-        citationItems = Citr.parseSingle(quoteText);
-      } catch (error) {
-        citationItems = [];
-      }
-
-      quotes.push({
-        quotesExtract: {
-          citationItems,
-          properties: { noteIndex: index + 1 },
-        },
-        text: quoteText,
-        contexts: [],
-        ids: new Set(citationItems.map(({ id }) => id)),
+    extractParaphs(recordContent).forEach((paraph) => {
+      extractCitations(paraph).forEach((result) => {
+        quotes.push({
+          quotesExtract: {
+            citationItems: result.citations,
+            properties: {
+              noteIndex: 1,
+            },
+          },
+          text: result.source,
+          contexts: [paraph],
+          ids: new Set(result.citations.map(({ id }) => id)),
+        });
       });
-    });
-
-    const paraphs = recordContent.match(Bibliography.regexParagraph) || [];
-    /** @type {Map<string, Set<string>>} */
-    const contexts = new Map();
-
-    for (const paraph of paraphs) {
-      Citr.util.extractCitations(paraph).forEach((quoteText) => {
-        if (contexts.has(quoteText)) {
-          contexts.get(quoteText).add(paraph);
-        } else {
-          contexts.set(quoteText, new Set([paraph]));
-        }
-      });
-    }
-
-    quotes = quotes.map((quote) => {
-      if (contexts.has(quote.text)) {
-        quote.contexts = Array.from(contexts.get(quote.text));
-      }
-      return quote;
     });
 
     return quotes;
