@@ -17,6 +17,7 @@ import Bibliography from './bibliography.js';
 import Report from './report.js';
 import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
 import { ReadCsvFileNodesError, ReadCsvFileLinksError, ReadCsvLinesLinksError } from './errors.js';
+import quoteIdsWithContexts from '../utils/quoteIdsWithContexts.js';
 
 /**
  * @typedef File
@@ -313,31 +314,23 @@ class Cosmoscope extends Graph {
 
       for (const file of files) {
         const bibliographicRecords = [
-          ...Bibliography.getBibliographicRecordsFromText(file.content),
+          ...quoteIdsWithContexts(file.content),
           ...Bibliography.getBibliographicRecordsFromList(file.metas.references),
         ];
 
         const fileId = file.metas['id'] || file.metas['title'].toLowerCase();
 
-        bibliographicRecords.forEach(({ ids, contexts }) => {
-          for (const id of ids) {
-            if (!bibliography.library[id]) continue;
+        bibliographicRecords.forEach(({ id, contexts }) => {
+          if (!bibliography.library[id]) return;
 
-            if (referenceRecords.has(id)) {
-              const ref = referenceRecords.get(id);
-              ref.targets.add(fileId);
-
-              if (ref.contexts.has(fileId)) {
-                ref.contexts.get(fileId).push(...contexts);
-              } else {
-                ref.contexts.set(fileId, contexts);
-              }
-            } else {
-              referenceRecords.set(id, {
-                contexts: new Map([[fileId, contexts]]),
-                targets: new Set([fileId]),
-              });
-            }
+          if (referenceRecords.has(id)) {
+            const ref = referenceRecords.get(id);
+            ref.targets.add(fileId);
+          } else {
+            referenceRecords.set(id, {
+              contexts,
+              targets: new Set([fileId]),
+            });
           }
         });
       }
@@ -349,16 +342,7 @@ class Cosmoscope extends Graph {
       );
       Array.from(targets).forEach((id) =>
         links.push(
-          new Link(
-            undefined,
-            Array.from(new Set(contexts.get(id))),
-            'undefined',
-            undefined,
-            undefined,
-            undefined,
-            id,
-            key,
-          ),
+          new Link(undefined, contexts, 'undefined', undefined, undefined, undefined, id, key),
         ),
       );
     });
