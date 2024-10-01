@@ -62,28 +62,13 @@ class Bibliography {
 
   /**
    * @param {string[]} quotesId
-   * @returns {BibliographicRecord[]}
    */
 
   static getBibliographicRecordsFromList(quotesId = []) {
     return quotesId.map((quoteId, index) => {
       return {
-        quotesExtract: {
-          citationItems: [
-            {
-              prefix: '',
-              suffix: '',
-              id: quoteId,
-              label: 'page',
-              locator: '',
-              'suppress-author': false,
-            },
-          ],
-          properties: { noteIndex: index + 1 },
-        },
-        text: '',
         contexts: [],
-        ids: new Set([quoteId]),
+        id: quoteId,
       };
     });
   }
