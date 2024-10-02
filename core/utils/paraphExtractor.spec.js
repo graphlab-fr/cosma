@@ -63,7 +63,7 @@ This is a paragraph`,
   },
 ];
 
-describe('extractCitations', function () {
+describe('paraphExtractor', function () {
   for (const test of tests) {
     it(test.description, () => {
       expect(extractParaphs(test.input)).toEqual(test.expected);
