@@ -17,6 +17,7 @@ import app from '../../package.json';
 import { isAnImagePath, slugify } from '../utils/misc.js';
 import langPck from './lang.js';
 import { fileURLToPath } from 'url';
+import convertWikilinks from '../utils/convertWikilinks.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -218,27 +219,7 @@ class Template {
       return slugify(input);
     });
     templateEngine.addFilter('convertLinks', (input, opts, idToHighlight) => {
-      // Replace wikilinks: "[[g:1234567890|toto]]" to "<a>toto</a>"
-      input = input.replace(Link.regexWikilink, (match, _, type, targetId, __, text) => {
-        const record = graph.records.find(({ id }) => id === targetId.toLowerCase());
-
-        if (!record) return match;
-
-        const isNumbers = !isNaN(Number(targetId));
-
-        let linkContent;
-        if (text) {
-          linkContent = text;
-        } else if (opts['link_symbol']) {
-          linkContent = opts['link_symbol'];
-        } else {
-          linkContent = isNumbers ? match : targetId;
-        }
-
-        return `<a href="#${record.id}" title="${escapeQuotes(record.title)}" class="record-link ${
-          record.id === idToHighlight ? 'highlight' : ''
-        }">${linkContent}</a>`.trim();
-      });
+      input = convertWikilinks(input, graph.records, opts, idToHighlight);
 
       if (bibliography) {
         Citr.util.extractCitations(input).forEach((quoteText, index) => {
