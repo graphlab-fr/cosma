@@ -18,6 +18,7 @@ import { isAnImagePath, slugify } from '../utils/misc.js';
 import langPck from './lang.js';
 import { fileURLToPath } from 'url';
 import convertWikilinks from '../utils/convertWikilinks.js';
+import convertQuotes from '../utils/convertQuotes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -222,77 +223,7 @@ class Template {
       input = convertWikilinks(input, graph.records, opts, idToHighlight);
 
       if (bibliography) {
-        Citr.util.extractCitations(input).forEach((quoteText, index) => {
-          let citationItems;
-          try {
-            citationItems = Citr.parseSingle(quoteText);
-          } catch (error) {
-            citationItems = [];
-          }
-
-          /**
-           * @type {Map<string, string>}
-           * Dictionnary contains record id for each cluster
-           * @example
-           * ```
-           * "[@Fowler_2003, 2]"
-           * { 'Fowler 2003' => 'Fowler_2003' }
-           * ```
-           */
-          const idsDictionnary = new Map();
-          for (const item of citationItems) {
-            const { id } = item;
-            if (!bibliography.library[id]) continue;
-
-            const idAsTextQuote = bibliography.citeproc
-              // get "(Fowler 2003)"
-              .processCitationCluster(
-                {
-                  citationItems: [item],
-                  properties: { noteIndex: index + 1 },
-                },
-                [],
-                [],
-              )[1][0][1]
-              // get "Fowler 2003"
-              .slice(1, -1);
-
-            idsDictionnary.set(idAsTextQuote, item.id);
-          }
-
-          /**
-           * Quoting marks to render on text
-           * @example
-           * ```
-           * "[@Fowler_2003, 2]" => "(Fowler 2003, p.2)"
-           * ```
-           */
-          let cluster = bibliography.get({
-            quotesExtract: {
-              citationItems,
-              properties: { noteIndex: index + 1 },
-            },
-            text: quoteText,
-            ids: new Set(citationItems.map(({ id }) => id)),
-          }).cluster;
-
-          // Replace "(Fowler 2003, p.2)" to "(<a>Fowler 2003</a>, p.2)"
-          idsDictionnary.forEach((recordId, key) => {
-            cluster = cluster.replace(key, () => {
-              const record = graph.records.find(({ id }) => id === recordId);
-              if (!record) return key;
-              return `<a href="#${record.id}" title="${escapeQuotes(
-                record.title,
-              )}" class="record-link ${
-                record.id === idToHighlight ? 'highlight' : ''
-              }">${key}</a>`.trim();
-            });
-          });
-
-          if (cluster) {
-            input = input.replace(quoteText, cluster);
-          }
-        });
+        input = convertQuotes(input, bibliography, graph.records, idToHighlight);
       }
 
       return input;
