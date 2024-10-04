@@ -145,7 +145,7 @@ entity type | | string |
 `stroke` | Node type outline color (used when the node is filled with an image) | HTML color |
 `link_types` | List of link types | list | 
 link type | | string | 
-`stroke` | Link type stroke style | `single` (solid line), `dash` (dashed line), `dash` (dotted line), `double` (two parallel lines)
+`stroke` | Link type stroke style | `simple` (solid line), `dash` (dashed line), `dotted` (dotted line), `double` (two parallel lines)
 `color` | Link type color | HTML color | 
 `references_as_nodes` | Treat references as graph nodes when using `cosma modelize --citeproc` |`true` or `false` | `false` |
 `references_type_label` | Name of the record type for bibliographic references when `references_as_nodes: true` | string | |
