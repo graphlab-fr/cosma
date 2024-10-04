@@ -135,6 +135,14 @@ describe('convertQuotes', () => {
     );
   });
 
+  it('should convert no link', () => {
+    const text = 'Lorem ipsum dolor est.';
+
+    const result = convertQuotes(text, bibliography, records, 'matuschak2019');
+
+    expect(result).toEqual('Lorem ipsum dolor est.');
+  });
+
   it('should not add "highlight" class if unknown record', () => {
     const text = 'Lorem @matuschak2019 ipsum dolor est.';
 
@@ -148,6 +156,14 @@ describe('convertQuotes', () => {
 
     expect(convertQuotes(text, bibliography, [], 'matuschak2019')).toEqual(
       'Lorem (Matuschak, 2019) ipsum dolor est.',
+    );
+  });
+
+  it('should return original if unknown quote id from library', () => {
+    const text = 'Lorem [@matuschak2019; @unknown] ipsum dolor est.';
+
+    expect(convertQuotes(text, bibliography, records, 'matuschak2019')).toEqual(
+      'Lorem [@matuschak2019; @unknown] ipsum dolor est.',
     );
   });
 });
