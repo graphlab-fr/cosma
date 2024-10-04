@@ -71,6 +71,91 @@ const tests = [
     description: 'extracts a regular, full citation with an URL as citekey',
   },
   {
+    input: 'With some markup [*see* @engelbart1962 p. **32**].',
+    expected: [
+      {
+        from: 17,
+        to: 49,
+        composite: false,
+        source: '[*see* @engelbart1962 p. **32**]',
+        citations: [
+          {
+            ...defaults,
+            id: 'engelbart1962',
+            label: 'page',
+            prefix: '*see*',
+            suffix: '**32**',
+          },
+        ],
+      },
+    ],
+    description: 'extracts full citation with mardown',
+  },
+  {
+    input: 'Citation with a suffix and locator [@engelbart1962 pp. 33, 35-37, and nowhere else].',
+    expected: [
+      {
+        from: 35,
+        to: 83,
+        composite: false,
+        source: '[@engelbart1962 pp. 33, 35-37, and nowhere else]',
+        citations: [
+          {
+            ...defaults,
+            id: 'engelbart1962',
+            label: 'page',
+            locator: '33, 35-37',
+            suffix: ', and nowhere else',
+          },
+        ],
+      },
+    ],
+    description: 'extracts citation with composite page locator and suffix',
+  },
+  {
+    input: 'Another one [see @engelbart1962 p. 34-35].',
+    expected: [
+      {
+        from: 12,
+        to: 41,
+        composite: false,
+        source: '[see @engelbart1962 p. 34-35]',
+        citations: [
+          {
+            ...defaults,
+            id: 'engelbart1962',
+            label: 'page',
+            prefix: 'see',
+            locator: '34-35',
+            suffix: '',
+          },
+        ],
+      },
+    ],
+    description: 'extracts citation with composite page locator and suffix',
+  },
+  {
+    input: 'Citation with suffix only [@engelbart1962 and nowhere else].',
+    expected: [
+      {
+        from: 26,
+        to: 59,
+        composite: false,
+        source: '[@engelbart1962 and nowhere else]',
+        citations: [
+          {
+            ...defaults,
+            id: 'engelbart1962',
+            label: 'page',
+            locator: undefined,
+            suffix: 'and nowhere else',
+          },
+        ],
+      },
+    ],
+    description: 'extracts citation with suffix',
+  },
+  {
     input: '[@smith{ii, A, D-Z}, with a suffix]',
     expected: [
       {

@@ -73,7 +73,7 @@ const citationRE =
   /(?:\[([^[\]]*@[^[\]]+)\])|(?<=\s|^|(-))(?:@([\p{L}\d_][^\s]*[\p{L}\d_]|\{.+\})(?: +\[(.*?)\])?)/gmu;
 
 const fullCitationRE =
-  /(?<prefix>.+)?(?:@(?<citekey>[\p{L}\d_][^\s{]*[\p{L}\d_]|\{.+\}))(?:\{(?<explicitLocator>.*)\})?(?:,\s+(?:\{(?<explicitLocatorInSuffix>.*)\})?(?<suffix>.*))?/u;
+  /(?<prefix>.+)?(?:@(?<citekey>[\p{L}\d_][^\s{]*[\p{L}\d_]|\{.+\}))(?:\{(?<explicitLocator>.*)\})?(?:,?\s+(?:\{(?<explicitLocatorInSuffix>.*)\})?(?<suffix>.*))?/u;
 
 const locatorRE = /^(?:[\d, -]*\d|[ivxlcdm, -]*[ivxlcdm])/i;
 
@@ -116,6 +116,8 @@ function parseSuffix(suffix, containsLocator) {
     if (match !== null) {
       retValue.locator = match[0];
       retValue.suffix = suffix.substr(match[0].length).trim();
+    } else {
+      retValue.suffix = suffix;
     }
   }
 
