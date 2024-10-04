@@ -6,6 +6,6 @@ tag:
   - quotes
 ---
 
-« Tools to augment human intelligence » [@engelbart1962; quoted by @matuschak2019].
+« Tools to augment human intelligence » [agreesWith: @engelbart1962; quoted by @matuschak2019].
 
 ![alt text](otlet.jpg "Title")

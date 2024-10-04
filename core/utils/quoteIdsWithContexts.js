@@ -12,13 +12,14 @@ export default function quoteIdsWithContexts(markdown) {
 
   extractParaphs(markdown).forEach((paraph) => {
     extractCitations(paraph).forEach((result) => {
-      result.citations.forEach(({ id }) => {
+      result.citations.forEach(({ id, type }) => {
         if (quotes[id]) {
           quotes[id].contexts.add(paraph);
         } else {
           quotes[id] = {
             contexts: new Set([paraph]),
             id,
+            type,
           };
         }
       });

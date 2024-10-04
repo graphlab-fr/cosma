@@ -28,6 +28,9 @@ link_types:
   adjacent concept:
     stroke: dotted
     color: "#e1e1e1"
+  agreesWith:
+    stroke: simple
+    color: "green"
 references_as_nodes: true
 references_type_label: "reference"
 record_filters: []

@@ -168,6 +168,8 @@ export default function extractCitations(markdown) {
           thisCitation['suppress-author'] = rawPrefix.trim().endsWith('-');
           if (thisCitation['suppress-author']) {
             thisCitation.prefix = rawPrefix.substring(0, rawPrefix.trim().length - 1).trim();
+          } else if (rawPrefix.trim().endsWith(':')) {
+            thisCitation.type = rawPrefix.trim().slice(0, -1);
           } else {
             thisCitation.prefix = rawPrefix.trim();
           }
