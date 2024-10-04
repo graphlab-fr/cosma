@@ -12,9 +12,11 @@ function convertQuotes(markdown, bibliography, records, idToHighlight) {
 
     const idsDictionnary = new Map();
 
-    for (const item of quote.citations) {
-      if (!bibliography.library[item.id]) continue;
+    if (!quote.citations.every(({ id }) => !!bibliography.library[id])) {
+      return markdown;
+    }
 
+    for (const item of quote.citations) {
       // get text to replace for each quote item
       const itemText = bibliography.citeproc
         .processCitationCluster(
