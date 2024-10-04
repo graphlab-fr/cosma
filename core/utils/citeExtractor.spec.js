@@ -306,6 +306,22 @@ const tests = [
     ],
     description: 'extracts an in-text citation with a URL as citekey and optional locator/suffix',
   },
+  {
+    input: 'Blah blah [agreesWith: @doe99; about: @smith2000].',
+    expected: [
+      {
+        from: 10,
+        to: 49,
+        composite: false,
+        source: '[agreesWith: @doe99; about: @smith2000]',
+        citations: [
+          { ...defaults, id: 'doe99', type: 'agreesWith' },
+          { ...defaults, id: 'smith2000', type: 'about' },
+        ],
+      },
+    ],
+    description: 'extracts regular citation with type',
+  },
   // The next tests check that locators without explicit page number are detected
   {
     input: '@{https://example.com/bib?name=foobar&date=2000} [33] says blah.',

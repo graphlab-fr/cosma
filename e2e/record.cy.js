@@ -191,8 +191,9 @@ describe('Record', () => {
       cy.get('@backlink').find('.highlight').should('have.text', 'tools for thought');
     });
 
-    it('should link type', () => {
+    it('should display link type', () => {
       cy.get('@backlink').should('contain.text', 'adjacent concept');
+      cy.get('@link').should('contain.text', 'agreesWith');
     });
   });
 

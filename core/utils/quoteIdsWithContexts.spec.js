@@ -20,6 +20,20 @@ Second paragraph quoting @doe99.`;
     ]);
   });
 
+  it('should parse quote with type', () => {
+    const text = 'First paragraph quoting [agreesWith: @smith04].';
+
+    const result = quotesWithContexts(text);
+
+    expect(result).toEqual([
+      expect.objectContaining({
+        contexts: ['First paragraph quoting [agreesWith: @smith04].'],
+        id: 'smith04',
+        type: 'agreesWith',
+      }),
+    ]);
+  });
+
   it('should parse many quotes per paragraph', () => {
     const text = `First paragraph quoting @smith04.
 

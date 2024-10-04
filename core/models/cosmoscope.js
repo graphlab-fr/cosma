@@ -323,7 +323,7 @@ class Cosmoscope extends Graph {
 
         const fileId = file.metas['id'] || file.metas['title'].toLowerCase();
 
-        quotesWithContexts.forEach(({ id, contexts }) => {
+        quotesWithContexts.forEach(({ id, type, contexts }) => {
           if (!bibliography.library[id]) return;
 
           if (referenceRecords.has(id)) {
@@ -333,19 +333,29 @@ class Cosmoscope extends Graph {
             referenceRecords.set(id, {
               contexts,
               targets: new Set([fileId]),
+              type,
             });
           }
         });
       }
     }
 
-    referenceRecords.forEach(({ targets, contexts }, key) => {
+    referenceRecords.forEach(({ targets, contexts, type }, key) => {
       nodes.push(
         new Node(key, bibliography.library[key]['title'] || '', [opts['references_type_label']]),
       );
       Array.from(targets).forEach((id) =>
         links.push(
-          new Link(undefined, contexts, 'undefined', undefined, undefined, undefined, id, key),
+          new Link(
+            undefined,
+            contexts,
+            type || 'undefined',
+            undefined,
+            undefined,
+            undefined,
+            id,
+            key,
+          ),
         ),
       );
     });
