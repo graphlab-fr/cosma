@@ -2,6 +2,18 @@
 title: Changelog
 ---
 
+# v2.5.0
+
+## Additions
+
+- Cosma's syntax for citations is now 100% identical to [Pandoc's Markdown citation syntax](https://pandoc.org/MANUAL.html#citation-syntax). This adds support for features such as writing `[prefix @key, suffix]`, or rendering `Author (Year)` when writing `@key`.
+- Link types can now be used on citations. This only works when citation keys are within brackets. Example: `[cites as authority:@engelbart1962]`.
+- Link types can now be used in CSV data, by adding a `type` header to your links table. (Pull request #104 by @snowsign)
+
+## Improvements
+
+- Until now, there were some quirks with the way Cosma handled paths in the configuration. For instance, the value of `export_target` needed to end with a slash `/` lest you end up with a weird file name (e.g. `export_target: folder` would lead to `foldercosmoscope.html`). This is no longer the case. Paths can be written however you prefer: `folder`, `./folder`, `folder/`, `'folder`, `"folder"`, etc.
+
 # v2.4.1
 
 ## Improvements

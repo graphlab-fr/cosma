@@ -755,6 +755,12 @@ record_types:
     fill: "#6C6C6C"
 ```
 
+When references are treated as nodes, you can use link types on citations. Link types can only be used when citations are within brackets. They must be the first string within the brackets, ending with a colon `:`. Example:
+
+```
+On writing as a technology of the intellect [cites as authority:@goody1977, 46-52]...
+```
+
 # Using the cosmoscope
 
 ## Layout
