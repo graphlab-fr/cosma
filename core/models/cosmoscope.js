@@ -313,14 +313,17 @@ class Cosmoscope extends Graph {
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
 
       for (const file of files) {
-        const bibliographicRecords = [
+        const quotesWithContexts = [
           ...quoteIdsWithContexts(file.content),
-          ...Bibliography.getBibliographicRecordsFromList(file.metas.references),
+          ...file.metas.references.map((quoteId) => ({
+            contexts: [],
+            id: quoteId,
+          })),
         ];
 
         const fileId = file.metas['id'] || file.metas['title'].toLowerCase();
 
-        bibliographicRecords.forEach(({ id, contexts }) => {
+        quotesWithContexts.forEach(({ id, contexts }) => {
           if (!bibliography.library[id]) return;
 
           if (referenceRecords.has(id)) {
