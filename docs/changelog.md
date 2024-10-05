@@ -2,6 +2,12 @@
 title: Changelog
 ---
 
+# v2.5.1
+
+## Bug fixes
+
+- Can not access to file contains translations (i18n.yml).
+
 # v2.5.0
 
 ## Additions
