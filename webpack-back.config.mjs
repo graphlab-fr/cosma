@@ -12,7 +12,12 @@ export default {
   },
   target: 'node',
   module: {
-    rules: [],
+    rules: [
+      {
+        test: /\.ya?ml$/,
+        use: 'yaml-loader',
+      },
+    ],
   },
   plugins: [
     new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),

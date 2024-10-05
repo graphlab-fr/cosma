@@ -4,17 +4,7 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import Config from './config.js';
-import yml from 'yaml';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// const config = new Config();
-const file = fs.readFileSync(path.join(__dirname, '../i18n.yml'), 'utf-8');
-const content = yml.parse(file);
+import content from '../i18n.yml';
 
 const i = content;
 
