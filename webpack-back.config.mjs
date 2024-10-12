@@ -17,6 +17,10 @@ export default {
         test: /\.ya?ml$/,
         use: 'yaml-loader',
       },
+      {
+        test: /\.njk$/,
+        type: 'asset/source',
+      },
     ],
   },
   plugins: [

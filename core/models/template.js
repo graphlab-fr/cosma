@@ -19,6 +19,7 @@ import langPck from './lang.js';
 import { fileURLToPath } from 'url';
 import convertWikilinks from '../utils/convertWikilinks.js';
 import convertQuotes from '../utils/convertQuotes.js';
+import cosmoscopeTemplate from '../../static/template/cosmoscope.njk';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -248,7 +249,7 @@ class Template {
       this.custom_css = fs.readFileSync(cssCustomPath, 'utf-8');
     }
 
-    this.html = templateEngine.render('static/template/cosmoscope.njk', {
+    this.html = templateEngine.renderString(cosmoscopeTemplate, {
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
