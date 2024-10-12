@@ -8,6 +8,7 @@ import path from 'node:path';
 import nunjucks from 'nunjucks';
 import lang from './lang.js';
 import { fileURLToPath } from 'url';
+import reportTemplate from '../../static/template/report.njk';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -38,7 +39,7 @@ class Report {
       minute: 'numeric',
       second: 'numeric',
     });
-    return templateEngine.render('static/template/report.njk', {
+    return templateEngine.renderString(reportTemplate, {
       lang: lang.flag,
       date,
       projectTitle,
