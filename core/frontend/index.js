@@ -1,3 +1,6 @@
+import './styles.css';
+import './print.css';
+
 import './records.js';
 import './search.js';
 import './graph.js';

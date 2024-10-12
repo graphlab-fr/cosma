@@ -22,8 +22,6 @@
             {% endfor %}
             --highlight: {{ graph.config.graph_highlight_color }};
         }
-        {% include "static/styles/styles.css" %}
-        {% include "static/styles/print.css" %}
 
         {% if customCss %}
         {{ customCss | safe }}
