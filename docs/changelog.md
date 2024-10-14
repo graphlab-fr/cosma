@@ -2,7 +2,7 @@
 title: Changelog
 ---
 
-# v2.5.2
+# v2.5.3
 
 ## Bug fixes
 
