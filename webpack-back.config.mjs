@@ -21,6 +21,18 @@ export default {
         test: /\.njk$/,
         type: 'asset/source',
       },
+      {
+        test: /\.raw.js$/,
+        type: 'asset/source',
+      },
+      {
+        test: /\.svg$/,
+        type: 'asset/source',
+      },
+      {
+        test: /\.png$/,
+        type: 'asset/inline',
+      },
     ],
   },
   plugins: [
@@ -31,6 +43,10 @@ export default {
   ],
   resolve: {
     extensions: ['.js'],
+    alias: {
+
+      front: path.resolve(__dirname, './dist/front.raw.js'), // Chemin vers le bundle front
+    },
   },
   mode: 'development',
 };
