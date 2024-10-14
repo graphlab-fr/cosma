@@ -20,6 +20,9 @@ import { fileURLToPath } from 'url';
 import convertWikilinks from '../utils/convertWikilinks.js';
 import convertQuotes from '../utils/convertQuotes.js';
 import cosmoscopeTemplate from '../../static/template/cosmoscope.njk';
+import favicon from '../../static/icons/cosmafavicon.png';
+import logo from '../../static/icons/cosmalogo.svg';
+import frontendScript from 'front';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -319,6 +322,9 @@ class Template {
       },
 
       app: app, // app version, description, license…
+      script: frontendScript,
+      favicon,
+      logo,
     });
   }
 }

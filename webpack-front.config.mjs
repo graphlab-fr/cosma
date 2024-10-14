@@ -7,7 +7,7 @@ export default {
   entry: path.resolve(__dirname, './core/frontend/index.js'),
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'front.js',
+    filename: 'front.raw.js',
   },
   module: {
     rules: [
