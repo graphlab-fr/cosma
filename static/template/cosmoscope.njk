@@ -10,7 +10,7 @@
     <meta name="date" content="{{ date }}">
     <title>Cosma — {{ metadata.title }}</title>
 
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ faviconPath | imgPathToBase64 }}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ favicon }}" />
 
     <style> 
         :root {
@@ -534,9 +534,7 @@
                 {% endif %}
 
                 {% if publishMode and metadata %}
-                <div class="logo">
-                    {% include "static/icons/cosmalogo.svg" %}
-                </div>
+                <div class="logo">{{ logo | safe }}</div>
                 {% else %}
                 <h1>Cosma</h1>
                 {% endif %}
@@ -597,17 +595,9 @@
         const sorting = {{ sorting | dump | safe }};
 
         const focusIsActive = {{ focusIsActive }};
-    </script>
 
-    {# Cosma functions #}
-
-    {% if devMode %}
-    <script src="dist/front.js"></script>
-    {% else %}
-    <script>
-        {% include "dist/front.js" %}
+        {{ script | safe }}
     </script>
-    {% endif %}
 
 </body>
 
