@@ -15,7 +15,6 @@ import { tmpdir } from 'node:os';
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
 
-  options['publish'] = true;
   options['citeproc'] = !!options['citeproc'] && config.canCiteproc();
   options['css_custom'] = !!options['customCss'] && config.canCssCustom();
 
@@ -165,7 +164,7 @@ async function modelize(options) {
  */
 
 function getModelizeMessage(optionsGraph, optionsTemplate, originType) {
-  const settings = [...optionsGraph, ...optionsTemplate].filter((setting) => setting !== 'publish');
+  const settings = [...optionsGraph, ...optionsTemplate];
 
   const msgSetting =
     settings.length === 0 ? '' : `; settings: \x1b[1m${settings.join(', ')}\x1b[0m`;

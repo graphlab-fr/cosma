@@ -40,7 +40,7 @@
 
     <aside id="menu-container" class="menu active list-content-container">
         <header role="banner">
-            {% if publishMode and metadata.title %}
+            {% if metadata.title %}
             <h1 class="title">{{ metadata.title }}</h1>
             {% endif %}
 
@@ -236,11 +236,7 @@
             </a>
 
             <a href="#credits">
-                {% if publishMode %}
-                    {{ translation.left_panel.footer.publish_mark[lang] + " " + translation.left_panel.footer.btn_about[lang] }}
-                {% else %}
-                    {{ translation.left_panel.footer.btn_about[lang] }}
-                {% endif %}
+                {{ translation.left_panel.footer.publish_mark[lang] + " " + translation.left_panel.footer.btn_about[lang] }}
             </a>
         </footer>
     </aside>
@@ -517,32 +513,27 @@
 
         <article id="credits" class="record">
             <main>
-                {% if publishMode %}
-                    {% if metadata.title %}
-                    <h1 class="metas-title">{{ metadata.title }}</h1>
-                    {% endif %}
-
-                    {% if metadata.author %}
-                    <p class="metas-author">{{ metadata.author }}</p>
-                    {% endif %}
-
-                    {% if metadata.description %}
-                    <p class="metas-description">{{ metadata.description }}</p>
-                    {% endif %}
-                    
-                    <hr>
+                {% if metadata.title %}
+                <h1 class="metas-title">{{ metadata.title }}</h1>
                 {% endif %}
 
-                {% if publishMode and metadata %}
+                {% if metadata.author %}
+                <p class="metas-author">{{ metadata.author }}</p>
+                {% endif %}
+
+                {% if metadata.description %}
+                <p class="metas-description">{{ metadata.description }}</p>
+                {% endif %}
+                
+                <hr>
+
                 <div class="logo">{{ logo | safe }}</div>
-                {% else %}
-                <h1>Cosma</h1>
-                {% endif %}
 
                 <p>
                     {{ translation.right_panel.credits.version[lang] }} {{ app.version }}
                     •
-                    {{ translation.right_panel.credits.license[lang] }} {{ app.license }}</p>
+                    {{ translation.right_panel.credits.license[lang] }} {{ app.license }}
+                </p>
 
                 <ul>
                     {% for person in app.contributors %}

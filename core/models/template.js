@@ -37,7 +37,7 @@ const md = new mdIt({
  */
 
 class Template {
-  static validParams = new Set(['publish', 'css_custom', 'citeproc', 'dev']);
+  static validParams = new Set(['css_custom', 'citeproc', 'dev']);
 
   /**
    * Match and transform links from context
@@ -109,7 +109,7 @@ class Template {
    * @exemple
    * ```
    * const graph = new Cosmocope(records, config.opts, optionsGraph);
-   * const { html } = new Template(graph, ['publish', 'citeproc']);
+   * const { html } = new Template(graph, ['citeproc']);
    * ```
    */
 
@@ -251,8 +251,6 @@ class Template {
     }
 
     this.html = templateEngine.renderString(cosmoscopeTemplate, {
-      publishMode: this.params.has('publish') === true,
-      devMode: this.params.has('dev') === true,
       canSaveRecords: this.config.canSaveRecords(),
 
       hideIdFromRecordHeader,
