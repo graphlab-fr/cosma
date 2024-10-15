@@ -37,7 +37,7 @@ const md = new mdIt({
  */
 
 class Template {
-  static validParams = new Set(['publish', 'css_custom', 'citeproc', 'dev']);
+  static validParams = new Set(['css_custom', 'citeproc', 'dev']);
 
   /**
    * Match and transform links from context
@@ -109,7 +109,7 @@ class Template {
    * @exemple
    * ```
    * const graph = new Cosmocope(records, config.opts, optionsGraph);
-   * const { html } = new Template(graph, ['publish', 'citeproc']);
+   * const { html } = new Template(graph, ['citeproc']);
    * ```
    */
 
@@ -212,9 +212,7 @@ class Template {
         };
       });
 
-    const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../../')),
-    );
+    const templateEngine = new nunjucks.Environment();
 
     md.inline.ruler2.push('image_to_base64', (state) =>
       Template.mdItImageToBase64(imagesPath, state),
@@ -253,10 +251,6 @@ class Template {
     }
 
     this.html = templateEngine.renderString(cosmoscopeTemplate, {
-      publishMode: this.params.has('publish') === true,
-      devMode: this.params.has('dev') === true,
-      canSaveRecords: this.config.canSaveRecords(),
-
       hideIdFromRecordHeader,
       records: graph.records.map(({ thumbnail, ...rest }) => ({
         ...rest,
@@ -295,20 +289,11 @@ class Template {
 
       focusIsActive: !(focusMax <= 0),
 
-      faviconPath: path.join(__dirname, '../static/icons/cosmafavicon.png'),
-
       // stats
 
       nblinks: graph.data.links.length,
 
-      date: new Date().toLocaleDateString(lang, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      }),
+      date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }),
 
       sorting: {
         records: graph.records.map(({ title }) => ({
