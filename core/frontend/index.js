@@ -4,7 +4,6 @@ import './print.css';
 import './records.js';
 import './search.js';
 import './graph.js';
-import './zoom.js';
 import './bibliography.js';
 import './timeline.js';
 import './filter.js';

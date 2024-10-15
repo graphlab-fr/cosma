@@ -63,11 +63,11 @@
             </summary>
 
             <form id="types-form" class="menu-types-container">
-                {% for filterName, filterMetas in filters %}
+                {% for filterName, nodes in filters %}
                 <label class="filter">
                     <input type="checkbox" name="{{ filterName }}">
                     <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
-                    <span class="badge">{{ filterMetas.nodes | length }}</span>
+                    <span class="badge">{{ nodes | length }}</span>
                 </label>
                 {% endfor %}
             </form>
@@ -88,11 +88,11 @@
             </select>
 
             <form id="tags-form" class="menu-tags-container menu-tags-container-prim sort-box active">
-                {% for tag in tags %}
+                {% for tagName, nodes in tags %}
                 <label class="btn" style="order: {{ loop.index }}">
-                    <input type="checkbox" name="{{ tag.name }}">
-                    <span class="label">{{ tag.name }}</span>
-                    <span class="badge">{{ tag.nodes | length }}</span>
+                    <input type="checkbox" name="{{ tagName }}">
+                    <span class="label">{{ tagName }}</span>
+                    <span class="badge">{{ nodes | length }}</span>
                 </label>
                 {% endfor %}
             </form>
@@ -432,7 +432,7 @@
                         <span class="badge">{{ record.backlinks | length }}</span>
                     </summary>
 
-                    <ul class="record-backlinks-list">
+                     <ul class="record-backlinks-list">
                         {% for backlink in record.backlinks %}
                         <li data-target-id="{{ backlink.source.id }}">
                             <a href="#{{ backlink.source.id }}">

@@ -25,13 +25,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import yml from 'yaml';
 import Config from './config.js';
-import Node from './node.js';
-import Link from './link.js';
 import Bibliography from './bibliography.js';
 import Report from './report.js';
 import lang from './lang.js';
 import { getTimestampTuple, getTimestamp, slugify } from '../utils/misc.js';
 import { RecordMaxOutDailyIdError } from './errors.js';
+import * as Citr from '@zettlr/citr';
 
 /**
  * @typedef DeepFormatedRecordData
@@ -62,77 +61,23 @@ import { RecordMaxOutDailyIdError } from './errors.js';
  * @property {string} thumbnail
  */
 
+/**
+ * @typedef Wikilink
+ * @type {object}
+ * @property {string} type
+ * @property {string} target
+ * @property {string} text
+ * @property {string[]} contexts
+ */
+
 class Record {
-  /**
-   * Get data from a fromated CSV line
-   * @param {object} line
-   * @return {DeepFormatedRecordData}
-   * ```
-   * Record.getFormatedDataFromCsvLine({
-   *    'title': 'Paul Otlet',
-   *    'type:étude': 'documentation',
-   *    'type:relation': 'ami',
-   *    'tag:genre': 'homme',
-   *    'content:biography': 'Lorem ipsum...',
-   *    'content:notes': 'Lorem ipsum...',
-   *    'meta:prenom': 'Paul',
-   *    'meta:nom': 'Otlet',
-   *    'time:begin': '1868',
-   *    'time:end': '1944',
-   *    'thumbnail': 'photo.jpg',
-   *    'references': 'otlet1934'
-   *})
-   * ```
-   */
+  static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
 
-  static getDeepFormatedDataFromCsvLine({ title, id, thumbnail, references = [], ...rest }) {
-    let content = {},
-      type = {},
-      metas = {},
-      tags = {};
-    for (const [key, value] of Object.entries(rest)) {
-      const [field, label] = key.split(':', 2);
-      if (field === 'time') {
-        continue;
-      }
-      switch (field) {
-        case 'content':
-          content[label] = value;
-          break;
-        case 'type':
-          type[label] = value;
-          break;
-        case 'tag':
-          tags[label] = value;
-          break;
-        case 'meta':
-        default:
-          if (!!label && !!value) {
-            metas[label] = value;
-          }
-          break;
-      }
-    }
-
-    if (typeof references === 'string') {
-      references = references.split(',');
-    }
-
-    return {
-      id,
-      title,
-      content,
-      type,
-      metas,
-      tags,
-      references,
-      time: {
-        begin: rest['time:begin'],
-        end: rest['time:end'],
-      },
-      thumbnail: thumbnail,
-    };
-  }
+  /** @exemple `"[[a:20210424214230|link text]]"` */
+  static regexWikilink = new RegExp(
+    /\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+?))?\]\]/,
+    'g',
+  );
 
   /**
    * Get data from a fromated CSV line
@@ -245,33 +190,34 @@ class Record {
       throw new Error('Need instance of Config to process');
     }
 
-    const nodes = data.map(({ id, title, types }) => new Node(id, title, types));
-
     return data.map((line) => {
       const { id, title, content, types, metas, tags, references, begin, end, thumbnail } = line;
 
-      const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
-        id,
-        links,
-        nodes,
-      );
-      const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
+      const bibliographicLinks = Bibliography.getBibliographicLinksFromList(references);
 
-      return new Record(
+      const record = new Record(
         id,
         title,
         types,
         tags,
         metas,
         content,
-        linksReferences,
-        backlinksReferences,
         begin,
         end,
-        bibliographicRecords,
+        bibliographicLinks,
         thumbnail,
         config.opts,
       );
+
+      record.wikilinks = links
+        .filter(({ source }) => source === record.id)
+        .map(({ type, target, context }) => ({
+          type,
+          target,
+          contexts: [context],
+        }));
+
+      return record;
     });
   }
 
@@ -306,11 +252,9 @@ class Record {
               tags,
               metas,
               content,
-              undefined,
-              undefined,
               begin,
               end,
-              Bibliography.getBibliographicRecordsFromList(references),
+              Bibliography.getBibliographicLinksFromList(references),
               thumbnail,
               configOpts,
             );
@@ -438,64 +382,17 @@ class Record {
   }
 
   /**
-   * @param {Reference[]} referenceArray
-   * @returns {boolean}
-   */
-
-  static verifReferenceArray(referenceArray) {
-    if (Array.isArray(referenceArray) === false) {
-      return false;
-    }
-    for (const reference of referenceArray) {
-      if (typeof reference !== 'object') {
-        return false;
-      }
-      if (
-        typeof reference['context'] !== 'string' ||
-        typeof reference['source'] !== 'object' ||
-        typeof reference['target'] !== 'object'
-      ) {
-        return false;
-      }
-      if (
-        Record.verifDirectionArray(reference['source']) === false ||
-        Record.verifDirectionArray(reference['target']) === false
-      ) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * @param {Direction} direction
-   * @returns {boolean}
-   */
-
-  static verifDirectionArray(direction) {
-    if (!direction['id'] || !direction['title'] || !direction['type']) {
-      return false;
-    }
-    if (isNaN(direction['id'])) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * Generate a record,
    * a named dataset, with references to others, validated from a configuration
    * @param {string} id - Unique identifier of the record.
    * @param {string} title - Title of the record.
    * @param {string[]} [type=['undefined']] - Type of the record, registred into the config.
-   * @param {string | string[]} tags - List of tags of the record.
+   * @param {string[]} tags - List of tags of the record.
    * @param {object} metas - Metas to add to Front Matter.
    * @param {string} content - Text content if the record.
-   * @param {Reference[]} links - Link, to others records.
-   * @param {Reference[]} backlinks - Backlinks, from others records.
    * @param {number} begin - Timestamp.
    * @param {number} end - Timestamp.
-   * @param {BibliographicRecord[]} bibliographicRecords
+   * @param {Wikilink[]} bibliographicLinks
    * @param {string} thumbnail - Image path
    * @param {object} opts
    */
@@ -507,11 +404,9 @@ class Record {
     tags = [],
     metas = {},
     content = '',
-    links = [],
-    backlinks = [],
     begin,
     end,
-    bibliographicRecords = [],
+    bibliographicLinks = [],
     thumbnail,
     opts,
   ) {
@@ -520,19 +415,20 @@ class Record {
     this.types = types;
     this.tags = tags;
     this.content = content;
-    this.bibliographicRecords = bibliographicRecords;
+    this.bibliographicLinks = bibliographicLinks;
     /** @type {string[]} */
     this.bibliography = [];
     this.thumbnail = thumbnail;
 
-    if (tags) {
-      if (Array.isArray(tags)) {
-        tags = tags.filter((tag) => !!tag);
-        this.tags = tags.length === 0 ? [] : tags;
-      } else {
-        this.tags = tags.split(',').filter((str) => str !== '');
-      }
+    /** @type {Wikilink[]} */
+    this.wikilinks = [];
+    this.setWikiLinksFromContent();
+
+    if (!Array.isArray(tags) || !tags.every((tag) => typeof tag === 'string')) {
+      throw new Error('Tags is array of string');
     }
+
+    this.tags = tags;
 
     const config = new Config(opts);
     const typesRecords = config.getTypesRecords();
@@ -571,8 +467,6 @@ class Record {
 
     this.ymlFrontMatter = this.getYamlFrontMatter();
 
-    this.links = links;
-    this.backlinks = backlinks;
     this.begin;
     if (begin) {
       const beginUnix = getTimestamp(begin);
@@ -592,19 +486,6 @@ class Record {
       }
     }
 
-    this.links = this.links.map((link) => {
-      if (typesLinks.has(link.type)) {
-        return link;
-      }
-      new Report(this.id, this.title, 'warning').aboutLinkTypeChange(
-        this.title,
-        link.target.id,
-        link.type,
-      );
-      link.type = 'undefined';
-      return link;
-    });
-
     this.config = config;
     /**
      * Invalid fields
@@ -616,7 +497,7 @@ class Record {
   }
 
   getYamlFrontMatter() {
-    const bibliographicIds = this.bibliographicRecords.map(({ ids }) => Array.from(ids)).flat();
+    const bibliographicIds = this.bibliographicLinks.map(({ target }) => target);
     const ymlContent = yml.stringify({
       title: this.title,
       id: this.id,
@@ -640,17 +521,66 @@ class Record {
       throw new Error('Need instance of Bibliography to process');
     }
     const bibliographyHtml = new Set();
-    for (const bibliographicRecord of this.bibliographicRecords) {
-      const { record, unknowedIds } = bibliography.get(bibliographicRecord);
-      for (const id of unknowedIds) {
-        new Report(this.id, this.title, 'error').aboutUnknownBibliographicReference(this.title, id);
+
+    Citr.util.extractCitations(this.content).forEach((quoteText, index) => {
+      let citationItems;
+      try {
+        citationItems = Citr.parseSingle(quoteText);
+      } catch (error) {
+        citationItems = [];
       }
-      if (record) {
-        record.forEach((r) => bibliographyHtml.add(r));
+
+      let ids = new Set(citationItems.map(({ id }) => id));
+
+      bibliography.citeproc.updateItems(Array.from(ids));
+
+      let record = bibliography.citeproc
+        .makeBibliography()[1]
+        .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t));
+
+      record.forEach((r) => bibliographyHtml.add(r));
+    });
+
+    this.bibliography = Array.from(bibliographyHtml);
+  }
+
+  /**
+   * @returns {Wikilink[]}/*
+   */
+
+  setWikiLinksFromContent() {
+    const links = {};
+
+    let match;
+    while ((match = Record.regexWikilink.exec(this.content))) {
+      const originalText = match[0];
+
+      const { type, text } = match.groups;
+      const targetId = match.groups.id.toLowerCase();
+      links[targetId] = { type, targetId, text, context: new Set(), originalText };
+    }
+
+    const regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
+
+    let paraphs = this.content.match(regexParagraph) || [];
+
+    for (const paraph of paraphs) {
+      let match;
+      while ((match = Record.regexWikilink.exec(paraph))) {
+        // const { id: targetId } = match.groups;
+        const targetId = match.groups.id.toLowerCase();
+        links[targetId].context.add(paraph);
       }
     }
 
-    this.bibliography = Array.from(bibliographyHtml);
+    this.wikilinks = Object.values(links).map(({ type, targetId, text, context, originalText }) => {
+      return {
+        contexts: Array.from(context),
+        target: targetId,
+        text: originalText,
+        type: type || 'undefined',
+      };
+    });
   }
 
   /**
@@ -666,6 +596,7 @@ class Record {
         if (this.isValid() === false) {
           throw new ErrorRecord(this.writeReport(), 'report');
         }
+
         if (this.config.canSaveRecords() === false) {
           throw new ErrorRecord('Directory for record save is unset', 'no dir');
         }
@@ -698,12 +629,6 @@ class Record {
     if (!this.title) {
       this.report.push('title');
     }
-
-    // if (this.links !== undefined && Record.verifReferenceArray(this.links) === false) {
-    //     this.report.push('links'); }
-
-    // if (this.backlinks !== undefined && Record.verifReferenceArray(this.backlinks) === false) {
-    //     this.report.push('backlinks'); }
   }
 
   /**

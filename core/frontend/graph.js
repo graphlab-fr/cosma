@@ -6,25 +6,27 @@
  */
 
 import * as d3 from 'd3';
+import GraphEngine from 'graphology';
 
 import View from './view.js';
-import { hideFromIndex, displayFromIndex, getRecordIdFromHash } from './records.js';
+import { getRecordIdFromHash } from './records.js';
 import { setCounters } from './counter.js';
 import hotkeys from 'hotkeys-js';
-import filterPriority from './filterPriority.js';
 
 /** Data serialization
 ------------------------------------------------------------*/
 
-const allNodeIds = [];
+const graph = new GraphEngine({ multi: true });
+graph.import(data);
 
-data.nodes = data.nodes.map((node) => {
-  allNodeIds.push(node.id);
-  node.hidden = filterPriority.notFiltered;
-  node.isolated = false;
-  node.highlighted = false;
-  return node;
+graph.updateEachNodeAttributes((node, attr) => {
+  return {
+    ...attr,
+    hidden: false,
+  };
 });
+
+const allNodeIds = graph.nodes();
 
 /** Box sizing
 ------------------------------------------------------------*/
@@ -43,7 +45,7 @@ const simulation = d3
   .forceSimulation(data.nodes)
   .force(
     'link',
-    d3.forceLink(data.links).id((d) => d.id),
+    d3.forceLink(data.edges).id((d) => d.key),
   )
   .force('charge', d3.forceManyBody())
   .force('center', d3.forceCenter())
@@ -103,22 +105,22 @@ const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
 elts.links = svgSub
   .append('g')
   .selectAll('line')
-  .data(data.links)
+  .data(data.edges)
   .enter()
   .append('line')
-  .attr('stroke', (d) => d.color)
-  .attr('title', (d) => d.title)
-  .attr('data-link', (d) => d.id)
-  .attr('data-source', (d) => d.source.id)
-  .attr('data-target', (d) => d.target.id)
+  .attr('stroke', (d) => `var(--l_${d.attributes.type})`)
+  .attr('title', (d) => d.attributes.title)
+  .attr('data-link', (d) => d.key)
+  .attr('data-source', (d) => d.source.key)
+  .attr('data-target', (d) => d.target.key)
   .attr('stroke-dasharray', function (d) {
-    if (d.shape.stroke === 'dash' || d.shape.stroke === 'dotted') {
-      return d.shape.dashInterval;
+    if (d.attributes.shape.stroke === 'dash' || d.attributes.shape.stroke === 'dotted') {
+      return d.attributes.shape.dashInterval;
     }
     return false;
   })
   .attr('filter', function (d) {
-    if (d.shape.stroke === 'double') {
+    if (d.attributes.shape.stroke === 'double') {
       return 'url(#double)';
     }
     return false;
@@ -137,7 +139,7 @@ elts.nodes = svgSub
   .data(data.nodes)
   .enter()
   .append('g')
-  .attr('data-node', (d) => d.id)
+  .attr('data-node', (d) => d.key)
   .call(
     d3
       .drag()
@@ -156,48 +158,26 @@ elts.nodes = svgSub
         d.fy = null;
       }),
   )
-  .on('mouseover', (e, nodeMetas) => {
+  .on('mouseover', (e, { key: nodeId }) => {
     if (!graphProperties.graph_highlight_on_hover) {
       return;
     }
 
-    let nodesIdsHovered = [nodeMetas.id];
+    const links = graph.edges(nodeId);
+    const nodes = graph.neighbors(nodeId);
+    nodes.push(nodeId);
 
-    const linksToModif = elts.links.filter(function (link) {
-      if (link.source.id === nodeMetas.id || link.target.id === nodeMetas.id) {
-        nodesIdsHovered.push(link.source.id, link.target.id);
-        return false;
-      }
-      return true;
-    });
-
-    const nodesToModif = elts.nodes.filter(function (node) {
-      if (nodesIdsHovered.includes(node.id)) {
-        return false;
-      }
-      return true;
-    });
-
-    const linksHovered = elts.links.filter(function (link) {
-      if (link.source.id !== nodeMetas.id && link.target.id !== nodeMetas.id) {
-        return false;
-      }
-      return true;
-    });
-
-    const nodesHovered = elts.nodes.filter(function (node) {
-      if (!nodesIdsHovered.includes(node.id)) {
-        return false;
-      }
-      return true;
-    });
+    const linksTransparent = elts.links.filter(({ key }) => !links.includes(key));
+    const nodesTransparent = elts.nodes.filter(({ key }) => !nodes.includes(key));
+    const linksHovered = elts.links.filter(({ key }) => links.includes(key));
+    const nodesHovered = elts.nodes.filter(({ key }) => nodes.includes(key));
 
     nodesHovered.nodes().forEach((elt) => elt.classList.add('highlight'));
     linksHovered.nodes().forEach((elt) => elt.classList.add('highlight'));
-    nodesToModif.nodes().forEach((elt) => elt.classList.add('translucent'));
-    linksToModif.nodes().forEach((elt) => elt.classList.add('translucent'));
+    nodesTransparent.nodes().forEach((elt) => elt.classList.add('translucent'));
+    linksTransparent.nodes().forEach((elt) => elt.classList.add('translucent'));
   })
-  .on('mouseout', () => {
+  .on('mouseout', (e, { key: nodeId }) => {
     if (!graphProperties.graph_highlight_on_hover) {
       return;
     }
@@ -230,7 +210,7 @@ elts.nodes = svgSub
 
 elts.nodes.each(function (d) {
   const node = d3.select(this);
-  const link = node.append('a').attr('href', (d) => '#' + d.id);
+  const link = node.append('a').attr('href', (d) => '#' + d.key);
 
   const getFill = (fill) => {
     if (imageFileValidExtnames.has(fill.split('.').at(-1))) {
@@ -251,47 +231,54 @@ elts.nodes.each(function (d) {
     link
       .append('circle')
       .attr('class', 'border')
-      .attr('r', d.size + 2)
+      .attr('r', d.attributes.size + 2)
       .attr('fill', stroke);
     /** Foreground: circle contains color or image */
-    link.append('circle').attr('r', d.size).attr('fill', fill);
+    link.append('circle').attr('r', d.attributes.size).attr('fill', fill);
   };
 
-  if (d.thumbnail) {
-    if (d.types.length === 1) {
-      const type = graphProperties['record_types'][d.types[0]];
-      drawSimpleCircle(type.stroke, `url(#${d.thumbnail})`);
+  if (d.attributes.thumbnail) {
+    if (d.attributes.types.length === 1) {
+      const type = graphProperties['record_types'][d.attributes.types[0]];
+      drawSimpleCircle(type.stroke, `url(#${d.attributes.thumbnail})`);
     } else {
-      generatePathCoordinatesWithBorder(d.types.length, d.size, strokeWidth).forEach(
-        ({ border }, i) => {
-          const type = graphProperties['record_types'][d.types[i]];
-          /** Background: borders with one color per type */
-          link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
-        },
-      );
+      generatePathCoordinatesWithBorder(
+        d.attributes.types.length,
+        d.attributes.size,
+        strokeWidth,
+      ).forEach(({ border }, i) => {
+        const type = graphProperties['record_types'][d.attributes.types[i]];
+        /** Background: borders with one color per type */
+        link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+      });
       /** Background: neutral white color */
-      link.append('circle').attr('r', d.size).attr('fill', `var(--background-gray)`);
+      link.append('circle').attr('r', d.attributes.size).attr('fill', `var(--background-gray)`);
       /** Foreground: circle contains thumbnail */
-      link.append('circle').attr('r', d.size).attr('fill', `url(#${d.thumbnail})`);
+      link
+        .append('circle')
+        .attr('r', d.attributes.size)
+        .attr('fill', `url(#${d.attributes.thumbnail})`);
     }
     return;
   }
 
-  if (d.types.length === 1) {
-    const type = graphProperties['record_types'][d.types[0]];
+  if (d.attributes.types.length === 1) {
+    const type = graphProperties['record_types'][d.attributes.types[0]];
     drawSimpleCircle(type.stroke, getFill(type.fill));
   } else {
-    generatePathCoordinatesWithBorder(d.types.length, d.size, strokeWidth).forEach(
-      ({ segment, border }, i) => {
-        const type = graphProperties['record_types'][d.types[i]];
-        /** Background: borders with one color per type */
-        link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
-        /** Background: neutral white color */
-        link.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
-        /** Foreground: circle fragment per type with color or image */
-        link.append('path').attr('d', segment).attr('fill', getFill(type.fill));
-      },
-    );
+    generatePathCoordinatesWithBorder(
+      d.attributes.types.length,
+      d.attributes.size,
+      strokeWidth,
+    ).forEach(({ segment, border }, i) => {
+      const type = graphProperties['record_types'][d.attributes.types[i]];
+      /** Background: borders with one color per type */
+      link.append('path').attr('d', border).attr('fill', type.stroke).attr('class', 'border');
+      /** Background: neutral white color */
+      link.append('path').attr('d', segment).attr('fill', 'var(--background-gray)');
+      /** Foreground: circle fragment per type with color or image */
+      link.append('path').attr('d', segment).attr('fill', getFill(type.fill));
+    });
   }
 });
 
@@ -301,7 +288,7 @@ elts.labels = elts.nodes
   .append('text')
   .attr('class', 'label')
   .each(function (d) {
-    const words = d.label.split(' '),
+    const words = d.attributes.label.split(' '),
       max = 25,
       text = d3.select(this);
     let label = '';
@@ -322,7 +309,7 @@ elts.labels = elts.nodes
   })
   .attr('font-size', graphProperties.graph_text_size)
   .attr('x', 0)
-  .attr('y', (d) => d.size)
+  .attr('y', (d) => d.attributes.size)
   .attr('dominant-baseline', 'middle')
   .attr('text-anchor', 'middle');
 
@@ -378,71 +365,49 @@ function generatePathCoordinatesWithBorder(numSegments, diameter, borderSize) {
 
 /**
  * Get nodes and their links
- * @param {array} nodeIds - List of nodes ids
+ * @param {string} nodeIds - List of nodes ids
  * @returns {NodeNetwork} - DOM elts : nodes and their links
  */
 
-function getNodeNetwork(nodeIds) {
-  const diplayedNodes = elts.nodes
-    .filter((item) => item.hidden === filterPriority.notFiltered)
-    .data()
-    .map((item) => item.id);
+function getNodeNetwork(nodeId) {
+  const edges = graph.edges(nodeId);
 
-  const nodes = elts.nodes.filter((node) => nodeIds.includes(node.id));
-
-  const links = elts.links.filter(function (link) {
-    if (!nodeIds.includes(link.source.id) && !nodeIds.includes(link.target.id)) {
-      return false;
-    }
-    if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
-      return false;
-    }
-
-    return true;
-  });
+  const node = elts.nodes.filter(({ key }) => key === nodeId);
+  const links = elts.links.filter(({ key }) => edges.includes(key));
 
   return {
-    nodes,
+    node,
     links,
   };
 }
 
-function setNodesDisplaying(nodeIds, priority) {
-  const toHide = [],
-    toDisplay = [];
+function setNodesDisplaying(nodeIds) {
+  const toDisplay = nodeIds;
+  const toHide = Array.from(d3.difference(allNodeIds, toDisplay));
 
-  allNodeIds.forEach((id) => {
-    if (nodeIds.includes(id)) {
-      toDisplay.push(id);
-    } else {
-      toHide.push(id);
-    }
-  });
-
-  hideNodes(toHide, priority);
-  displayNodes(toDisplay, priority);
+  displayNodes(toDisplay);
+  hideNodes(toHide);
 }
+
+graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
+  const { links, node } = getNodeNetwork(key);
+
+  if (attributes.hidden) {
+    node.style('display', 'none');
+    links.style('display', 'none');
+  } else {
+    node.style('display', null);
+    links.style('display', null);
+  }
+});
 
 /**
  * Hide some nodes & their links, by their id
  * @param {array} nodeIds - List of nodes ids
  */
 
-function hideNodes(nodeIds, priority) {
-  hideNodeNetwork(nodeIds);
-  hideFromIndex(nodeIds);
-
-  if (priority === undefined) {
-    throw new Error('Need priority');
-  }
-
-  elts.nodes.data().map((node) => {
-    const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden <= priority) {
-      node.hidden = priority;
-    }
-    return node;
-  });
+function hideNodes(nodeIds) {
+  nodeIds.forEach((nodeId) => graph.setNodeAttribute(nodeId, 'hidden', true));
 }
 
 /**
@@ -450,53 +415,25 @@ function hideNodes(nodeIds, priority) {
  * @param {array} nodeIds - List of nodes ids
  */
 
-function displayNodes(nodeIds, priority = filterPriority.notFiltered) {
-  const nodesToDisplayIds = [];
-
-  elts.nodes.data().map((node) => {
-    const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden <= priority) {
-      nodesToDisplayIds.push(id);
-      node.hidden = filterPriority.notFiltered;
-    }
-    return node;
-  });
-
-  displayNodeNetwork(nodesToDisplayIds);
-  displayFromIndex(nodesToDisplayIds);
+function displayNodes(nodeIds) {
+  nodeIds.forEach((nodeId) => graph.setNodeAttribute(nodeId, 'hidden', false));
 }
 
-function displayNodesAll(priority = filterPriority.notFiltered) {
-  displayNodes(allNodeIds, priority);
+function displayNodesAll() {
+  graph.updateEachNodeAttributes((node, attr) => ({
+    ...attr,
+    hidden: false,
+  }));
 }
 
-function hideNodesAll(priority = filterPriority.notFiltered) {
-  hideNodes(allNodeIds, priority);
+function hideNodesAll() {
+  graph.updateEachNodeAttributes((node, attr) => ({
+    ...attr,
+    hidden: true,
+  }));
 }
 
-/**
- * Display none nodes and their link
- * @param {string[]|number[]} nodeIds - List of nodes ids
- */
-
-window.hideNodeNetwork = function (nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
-
-  nodes.nodes().forEach((elt) => elt.classList.add('hide'));
-  links.nodes().forEach((elt) => elt.classList.add('hide'));
-};
-
-/**
- * Reset display nodes and their link
- * @param {string[]|number[]} nodeIds - List of nodes ids
- */
-
-window.displayNodeNetwork = function (nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
-
-  nodes.nodes().forEach((elt) => elt.classList.remove('hide'));
-  links.nodes().forEach((elt) => elt.classList.remove('hide'));
-};
+let highlightedNodes = [];
 
 /**
  * Apply highlightColor (from config) to somes nodes and their links
@@ -504,12 +441,15 @@ window.displayNodeNetwork = function (nodeIds) {
  */
 
 function highlightNodes(nodeIds) {
-  const { nodes, links } = getNodeNetwork(nodeIds);
+  nodeIds
+    .filter((nodeId) => graph.hasNode(nodeId))
+    .forEach((nodeId) => {
+      const { links, node } = getNodeNetwork(nodeId);
+      node.node().classList.add('highlight');
+      links.nodes().forEach((elt) => elt.classList.add('highlight'));
+    });
 
-  nodes.nodes().forEach((elt) => elt.classList.add('highlight'));
-  links.nodes().forEach((elt) => elt.classList.add('highlight'));
-
-  View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
+  highlightedNodes = highlightedNodes.concat(nodeIds);
 }
 
 /**
@@ -517,16 +457,19 @@ function highlightNodes(nodeIds) {
  */
 
 function unlightNodes() {
-  if (View.highlightedNodes.length === 0) {
+  if (highlightedNodes.length === 0) {
     return;
   }
 
-  const { nodes, links } = getNodeNetwork(View.highlightedNodes);
+  highlightedNodes
+    .filter((nodeId) => graph.hasNode(nodeId))
+    .forEach((nodeId) => {
+      const { links, node } = getNodeNetwork(nodeId);
+      node.node().classList.remove('highlight');
+      links.nodes().forEach((elt) => elt.classList.remove('highlight'));
+    });
 
-  nodes.nodes().forEach((elt) => elt.classList.remove('highlight'));
-  links.nodes().forEach((elt) => elt.classList.remove('highlight'));
-
-  View.highlightedNodes = [];
+  highlightedNodes = [];
 }
 
 /**
@@ -572,7 +515,7 @@ function translate() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  const { x, y, zoom } = View.position;
+  const { x, y, zoom } = position;
 
   const screenMin = d3.min([screenHeight, screenWidth]);
 
@@ -595,8 +538,95 @@ function translate() {
   }
 }
 
-const nodes = elts.nodes.data();
-const links = elts.links.data();
+const zoomMax = 10,
+  zoomMin = 1;
+
+let zoomInterval = 0.2;
+
+/**
+ * Sum of nodes size
+ * @type {number}
+ */
+const nodeFactor = graph.reduceNodes((acc, node, { size }) => acc + size, 0);
+
+window.addEventListener('resize', () => {
+  let density = nodeFactor / (window.innerWidth * window.innerHeight);
+  density *= 1000;
+
+  zoomInterval = Math.log2(density);
+});
+
+const position = { x: 0, y: 0, zoom: 1 };
+
+const zoom = d3
+  .zoom()
+  .scaleExtent([zoomMin, zoomMax])
+  .on('zoom', (e) => {
+    const { x, y, k } = e.transform;
+    position.x = x || 0;
+    position.y = y || 0;
+    position.zoom = k || 1;
+    translate();
+  });
+
+svg.call(zoom);
+
+function zoomMore() {
+  zoom.scaleTo(svg, position.zoom + zoomInterval);
+}
+
+function zoomLess() {
+  zoom.scaleTo(svg, position.zoom - zoomInterval);
+}
+
+function zoomReset() {
+  position.zoom = 1;
+  position.x = 0;
+  position.y = 0;
+  svg.call(zoom.transform, d3.zoomIdentity.translate(position.y, position.x).scale(position.zoom));
+  translate();
+}
+
+window.zoomMore = zoomMore;
+window.zoomLess = zoomLess;
+window.zoomReset = zoomReset;
+
+hotkeys('e,alt+r', (e) => {
+  e.preventDefault();
+  zoomReset();
+});
+
+/**
+ * Zoom to a node from its coordinates
+ * @param {string} nodeId
+ */
+
+function zoomToNode(nodeId) {
+  const nodes = elts.nodes.data();
+
+  const node = nodes.find(({ key }) => key === nodeId);
+
+  if (!node) return;
+  const { x, y } = node;
+
+  const meanX = d3.mean(nodes, (d) => d.x);
+  const meanY = d3.mean(nodes, (d) => d.y);
+
+  const zoomScale = position.zoom === 1 ? position.zoom + zoomInterval * 2 : position.zoom;
+
+  svg.call(
+    zoom.transform,
+    d3.zoomIdentity.translate(-(x * zoomScale - meanX), -(y * zoomScale - meanY)).scale(zoomScale),
+  );
+  translate();
+}
+
+hotkeys('c', (e) => {
+  e.preventDefault();
+  const recordId = getRecordIdFromHash();
+
+  zoomToNode(recordId);
+});
 
 export {
   svg,
@@ -609,6 +639,6 @@ export {
   highlightNodes,
   unlightNodes,
   translate,
-  nodes,
-  links,
+  graph,
+  zoomToNode,
 };

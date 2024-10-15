@@ -8,7 +8,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import envPaths from 'env-paths';
 import yml from 'yaml';
-import Link from './link.js';
 import lang from './lang.js';
 import http from 'node:http';
 import { FindUserDataDirError, ReadUserDataDirError } from './errors.js';
@@ -255,6 +254,8 @@ class Config {
       return false;
     }
 
+    const validLinkStrokes = new Set(['simple', 'double', 'dotted', 'dash']);
+
     for (const key in linkTypes) {
       if (!key) {
         return false;
@@ -265,7 +266,7 @@ class Config {
         typeof linkTypes[key]['color'] !== 'string' ||
         linkTypes[key]['stroke'] === undefined ||
         typeof linkTypes[key]['stroke'] !== 'string' ||
-        Link.validLinkStrokes.has(linkTypes[key]['stroke']) === false
+        validLinkStrokes.has(linkTypes[key]['stroke']) === false
       ) {
         return false;
       }
@@ -373,28 +374,6 @@ class Config {
     config.path = configFilePath;
 
     return config;
-  }
-
-  /**
-   * Config opts to overwrite the graph config for generate sample cosmoscope
-   * @return {object} - Config.opts for sample
-   */
-
-  static getSampleConfig() {
-    return Object.assign({}, Config.base, {
-      files_origin: path.join(__dirname, '../static/sample', lang.flag),
-      record_types: {
-        undefined: { fill: '#147899', stroke: '#147899' },
-        documentation: { fill: '#147899', stroke: '#147899' },
-        important: { fill: '#aa0000', stroke: '#aa0000' },
-      },
-      attraction_force: 600,
-      attraction_distance_max: 800,
-      graph_text_size: 15,
-      title: lang.getFor(lang.i.demo.title),
-      description: lang.getFor(lang.i.demo.description),
-      lang: lang.flag,
-    });
   }
 
   /**

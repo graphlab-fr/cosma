@@ -1,6 +1,5 @@
 import { setCounters } from './counter.js';
 import { setNodesDisplaying, displayNodesAll } from './graph.js';
-import filterPriority from './filterPriority.js';
 
 const { begin, end } = timeline;
 
@@ -33,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
       window.removeEventListener('resize', setChronosTicks);
       range.removeEventListener('input', action);
 
-      displayNodesAll(filterPriority.filteredByTimeline);
+      displayNodesAll();
       setCounters();
     }
   });
@@ -44,7 +43,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const toDisplay = [];
 
-    for (let { begin: nodeBegin, end: nodeEnd, id } of data.nodes) {
+    for (let {
+      attributes: { begin: nodeBegin, end: nodeEnd },
+      key,
+    } of data.nodes) {
       if (nodeEnd === undefined) {
         nodeEnd = end;
       }
@@ -53,11 +55,11 @@ window.addEventListener('DOMContentLoaded', () => {
       }
 
       if (timestamp >= nodeBegin && timestamp <= nodeEnd) {
-        toDisplay.push(id);
+        toDisplay.push(key);
       }
     }
 
-    setNodesDisplaying(toDisplay, filterPriority.filteredByTimeline);
+    setNodesDisplaying(toDisplay);
     setCounters();
   }
 

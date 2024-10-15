@@ -1,11 +1,7 @@
-import GraphEngine from 'graphology';
 import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs.js';
 import hotkeys from 'hotkeys-js';
-import { displayNodesAll, setNodesDisplaying } from './graph.js';
-import filterPriority from './filterPriority.js';
+import { graph, displayNodesAll, setNodesDisplaying } from './graph.js';
 import { getRecordIdFromHash } from './records.js';
-
-let graph = getGraphEngine();
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement} */
@@ -49,7 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
       input.classList.remove('active');
       input.removeEventListener('input', display);
       modeSelect.removeEventListener('change', changeMode);
-      displayNodesAll(filterPriority.filteredByFocus);
+      displayNodesAll();
     }
   });
 
@@ -83,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
       { mode: focusMode },
     );
 
-    setNodesDisplaying(neighborsNodeIds, filterPriority.filteredByFocus);
+    setNodesDisplaying(neighborsNodeIds);
   }
 
   function changeMode() {
@@ -91,30 +87,3 @@ window.addEventListener('DOMContentLoaded', () => {
     display();
   }
 });
-
-/**
- * @returns {GraphEngine}
- */
-
-function getGraphEngine() {
-  const graph = new GraphEngine();
-
-  for (const { id, label } of data.nodes) {
-    if (graph.hasNode(id)) {
-      continue;
-    }
-
-    graph.addNode(id, {
-      label,
-    });
-  }
-  for (const { source, target } of data.links) {
-    if (graph.hasEdge(source.id, target.id)) {
-      continue;
-    }
-
-    graph.addEdge(source.id, target.id);
-  }
-
-  return graph;
-}

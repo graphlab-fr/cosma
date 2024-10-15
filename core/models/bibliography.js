@@ -12,13 +12,10 @@ import extractParaphs from '../utils/paraphExtractor';
 /**
  * @typedef BibliographicRecord
  * @type {object}
- * @property {object} quotesExtract
- * @property {Citation[]} quotesExtract.citationItems
- * @property {object} quotesExtract.properties
- * @property {number} quotesExtract.properties.noteIndex
- * @property {string} text Quote string from plain text
- * @property {string[]} contexts Paragraph contains quote
- * @property {Set} ids All quote ids from quotesExtract.citationItems
+ * @property {string} type
+ * @property {string} target
+ * @property {string} text
+ * @property {string[]} contexts
  */
 
 /**
@@ -37,22 +34,19 @@ class Bibliography {
    * @returns {BibliographicRecord[]}
    */
 
-  static getBibliographicRecordsFromText(recordContent) {
+  static getBibliographicLinksFromText(recordContent) {
     /** @type {BibliographicRecord[]} */
     let quotes = [];
 
     extractParaphs(recordContent).forEach((paraph) => {
       extractCitations(paraph).forEach((result) => {
-        quotes.push({
-          quotesExtract: {
-            citationItems: result.citations,
-            properties: {
-              noteIndex: 1,
-            },
-          },
-          text: result.source,
-          contexts: [paraph],
-          ids: new Set(result.citations.map(({ id }) => id)),
+        result.citations.forEach((citation) => {
+          quotes.push({
+            contexts: [paraph],
+            target: citation.id,
+            text: undefined,
+            type: 'undefined',
+          });
         });
       });
     });
@@ -65,25 +59,13 @@ class Bibliography {
    * @returns {BibliographicRecord[]}
    */
 
-  static getBibliographicRecordsFromList(quotesId = []) {
+  static getBibliographicLinksFromList(quotesId = []) {
     return quotesId.map((quoteId, index) => {
       return {
-        quotesExtract: {
-          citationItems: [
-            {
-              prefix: '',
-              suffix: '',
-              id: quoteId,
-              label: 'page',
-              locator: '',
-              'suppress-author': false,
-            },
-          ],
-          properties: { noteIndex: index + 1 },
-        },
-        text: '',
         contexts: [],
-        ids: new Set([quoteId]),
+        target: quoteId,
+        text: undefined,
+        type: 'undefined',
       };
     });
   }

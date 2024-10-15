@@ -1,9 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import getHistorySavePath from './history.js';
-import Graph from '../core/models/graph.js';
 import Cosmoscope from '../core/models/cosmoscope.js';
-import Link from '../core/models/link.js';
 import Record from '../core/models/record.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
@@ -11,6 +9,7 @@ import Report from '../models/report-cli.js';
 import { DowloadOnlineCsvFilesError } from '../core/models/errors.js';
 import { downloadFile } from '../core/utils/misc.js';
 import { tmpdir } from 'node:os';
+import getGraph from '../functions/getGraph.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -25,16 +24,9 @@ async function modelize(options) {
     })
     .filter(({ value }) => value === true);
 
-  const optionsGraph = options
-    .filter(({ name }) => Graph.validParams.has(name))
-    .map(({ name }) => name);
   const optionsTemplate = options
     .filter(({ name }) => Template.validParams.has(name))
     .map(({ name }) => name);
-
-  if (optionsGraph.includes('sample')) {
-    config = new Config(Config.getSampleConfig());
-  }
 
   const {
     select_origin: originType,
@@ -78,19 +70,26 @@ async function modelize(options) {
       break;
   }
 
-  console.log(getModelizeMessage(optionsGraph, optionsTemplate, originType));
+  console.log(getModelizeMessage(optionsTemplate, originType));
 
   let records;
   switch (originType) {
-    case 'directory':
+    case 'directory': {
       const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
-      records = Cosmoscope.getRecordsFromFiles(
-        files,
-        optionsTemplate.includes('citeproc'),
-        config.opts,
-      );
+
+      records = Cosmoscope.getRecordsFromFiles(files, config.opts);
+
+      if (
+        optionsTemplate.includes('citeproc') &&
+        config.opts['references_as_nodes'] &&
+        config.canCiteproc()
+      ) {
+        records = records.concat(Cosmoscope.getBibliographicRecords(records, config.opts));
+      }
+
       break;
-    case 'online':
+    }
+    case 'online': {
       const tempDir = tmpdir();
       nodesPath = path.join(tempDir, 'cosma-nodes.csv');
       linksPath = path.join(tempDir, 'cosma-links.csv');
@@ -102,16 +101,17 @@ async function modelize(options) {
       } catch (error) {
         throw new DowloadOnlineCsvFilesError(error);
       }
-    case 'csv':
+    }
+    case 'csv': {
       let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
-      const links = Link.formatedDatasetToLinks(formatedLinks);
-      records = Record.formatedDatasetToRecords(formatedRecords, links, config);
+      records = Record.formatedDatasetToRecords(formatedRecords, formatedLinks, config);
       break;
+    }
   }
 
-  const graph = new Cosmoscope(records, config.opts, []);
+  const graph = getGraph(records, config);
 
-  const { html } = new Template(graph, optionsTemplate);
+  const { html } = new Template(records, graph, optionsTemplate);
 
   fs.writeFile(path.join(exportPath, 'cosmoscope.html'), html, (err) => {
     // Cosmoscope file for export folder
@@ -123,7 +123,7 @@ async function modelize(options) {
     }
     console.log(
       ['\x1b[34m', 'Cosmoscope generated', '\x1b[0m'].join(''),
-      `(${graph.records.length} records)`,
+      `(${records.length} records)`,
     );
   });
 
@@ -159,13 +159,12 @@ async function modelize(options) {
 }
 
 /**
- * @param {string[]} optionsGraph
  * @param {string[]} optionsTemplate
  * @param {string} originType
  */
 
-function getModelizeMessage(optionsGraph, optionsTemplate, originType) {
-  const settings = [...optionsGraph, ...optionsTemplate].filter((setting) => setting !== 'publish');
+function getModelizeMessage(optionsTemplate, originType) {
+  const settings = optionsTemplate.filter((setting) => setting !== 'publish');
 
   const msgSetting =
     settings.length === 0 ? '' : `; settings: \x1b[1m${settings.join(', ')}\x1b[0m`;
