@@ -50,8 +50,8 @@ node_size_max: 20
 node_size_min: 10
 attraction_force: 600
 attraction_distance_max: 600
-attraction_vertical: 0
-attraction_horizontal: 0
+attraction_vertical: 0.1
+attraction_horizontal: 0.1
 hide_id_from_record_header: false
 views: {}
 record_metas:
@@ -68,6 +68,6 @@ keywords: []
 link_symbol: ""
 link_context: inline
 devtools: false
-lang: fr
+lang: en
 name: ""
 generate_id: never
