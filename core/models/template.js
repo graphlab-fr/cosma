@@ -212,9 +212,7 @@ class Template {
         };
       });
 
-    const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../../')),
-    );
+    const templateEngine = new nunjucks.Environment();
 
     md.inline.ruler2.push('image_to_base64', (state) =>
       Template.mdItImageToBase64(imagesPath, state),
