@@ -40,11 +40,13 @@ class Bibliography {
 
     extractParaphs(recordContent).forEach((paraph) => {
       extractCitations(paraph).forEach((result) => {
-        quotes.push({
-          contexts: [paraph],
-          target: id,
-          text: undefined,
-          type: 'undefined',
+        result.citations.forEach((citation) => {
+          quotes.push({
+            contexts: [paraph],
+            target: citation.id,
+            text: undefined,
+            type: 'undefined',
+          });
         });
       });
     });
