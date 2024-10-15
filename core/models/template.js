@@ -251,8 +251,6 @@ class Template {
     }
 
     this.html = templateEngine.renderString(cosmoscopeTemplate, {
-      canSaveRecords: this.config.canSaveRecords(),
-
       hideIdFromRecordHeader,
       records: graph.records.map(({ thumbnail, ...rest }) => ({
         ...rest,
@@ -291,20 +289,11 @@ class Template {
 
       focusIsActive: !(focusMax <= 0),
 
-      faviconPath: path.join(__dirname, '../static/icons/cosmafavicon.png'),
-
       // stats
 
       nblinks: graph.data.links.length,
 
-      date: new Date().toLocaleDateString(lang, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      }),
+      date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }),
 
       sorting: {
         records: graph.records.map(({ title }) => ({
