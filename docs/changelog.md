@@ -4,9 +4,12 @@ title: Changelog
 
 # v2.5.3
 
+This is the first official release for v2.5 of Cosma. We had to make a couple of “crash test” releases following big changes in the program's build process. Everything should work as expected now.
+
 ## Bug fixes
 
-- Can not access to file contains translations (i18n.yml).
+- Fixed a bug with accessing translations in `i18n.yml`.
+- Fixed a bug preventing the user from displaying Cosma's user manual with the command-line `man` program.
 
 # v2.5.0
 
