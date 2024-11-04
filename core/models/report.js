@@ -4,13 +4,9 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-import path from 'node:path';
 import nunjucks from 'nunjucks';
 import lang from './lang.js';
-import { fileURLToPath } from 'url';
 import reportTemplate from '../../static/template/report.njk';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Report {
   static listWarnings = new Map();
@@ -22,9 +18,7 @@ class Report {
    */
 
   static getAsHtmlFile(projectTitle) {
-    const templateEngine = new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, '../../')),
-    );
+    const templateEngine = new nunjucks.Environment();
     templateEngine.addFilter('translate', (input, args) => {
       if (args) {
         return lang.getWith(lang.i['report'][input], Object.values(args));

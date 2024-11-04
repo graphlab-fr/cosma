@@ -8,23 +8,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import Graph from './graph.js';
 import Config from './config.js';
-import Link from './link.js';
 import Bibliography from './bibliography.js';
 import nunjucks from 'nunjucks';
 import mdIt from 'markdown-it';
-import * as Citr from '@zettlr/citr';
 import app from '../../package.json';
 import { isAnImagePath, slugify } from '../utils/misc.js';
 import langPck from './lang.js';
-import { fileURLToPath } from 'url';
 import convertWikilinks from '../utils/convertWikilinks.js';
 import convertQuotes from '../utils/convertQuotes.js';
 import cosmoscopeTemplate from '../../static/template/cosmoscope.njk';
 import favicon from '../../static/icons/cosmafavicon.png';
 import logo from '../../static/icons/cosmalogo.svg';
 import frontendScript from 'front';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const md = new mdIt({
   html: true,

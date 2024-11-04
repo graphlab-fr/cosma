@@ -13,9 +13,6 @@ import lang from './lang.js';
 import http from 'node:http';
 import { FindUserDataDirError, ReadUserDataDirError } from './errors.js';
 import app from '../../package.json';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const { data: envPathDataDir } = envPaths('cosma-cli', { suffix: '' });
 
@@ -295,8 +292,6 @@ class Config {
   static configDirPath = envPathDataDir;
   /** config file contains global user default options */
   static defaultConfigPath = path.join(Config.configDirPath, 'defaults.yml');
-  /** config file contains global developer default options */
-  static installationConfigPath = path.join(__dirname, '../', 'defaults.yml');
   /** config file contains local user options */
   static executionConfigPath = path.join(process.cwd(), 'config.yml');
 
@@ -373,28 +368,6 @@ class Config {
     config.path = configFilePath;
 
     return config;
-  }
-
-  /**
-   * Config opts to overwrite the graph config for generate sample cosmoscope
-   * @return {object} - Config.opts for sample
-   */
-
-  static getSampleConfig() {
-    return Object.assign({}, Config.base, {
-      files_origin: path.join(__dirname, '../static/sample', lang.flag),
-      record_types: {
-        undefined: { fill: '#147899', stroke: '#147899' },
-        documentation: { fill: '#147899', stroke: '#147899' },
-        important: { fill: '#aa0000', stroke: '#aa0000' },
-      },
-      attraction_force: 600,
-      attraction_distance_max: 800,
-      graph_text_size: 15,
-      title: lang.getFor(lang.i.demo.title),
-      description: lang.getFor(lang.i.demo.description),
-      lang: lang.flag,
-    });
   }
 
   /**
