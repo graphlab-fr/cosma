@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     strategy:
       matrix:
@@ -30,7 +30,8 @@ jobs:
         run: npm install . --global
 
       - name: Build cosmoscopes
-        run: sh ./e2e/exec-modelize.sh
+        shell: bash
+        run: ./e2e/exec-modelize.sh
 
       - name: Run unit tests
         run: npm run test:unit -- --verbose
