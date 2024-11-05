@@ -2,6 +2,12 @@
 title: Changelog
 ---
 
+# v2.5.4
+
+## Bug fixes
+
+- Fixed a bug related to the handling of paths which made Cosma unusable on Windows (issue [147](https://github.com/graphlab-fr/cosma/issues/147))
+
 # v2.5.3
 
 This is the first official release for v2.5 of Cosma. We had to make a couple of “crash test” releases following big changes in the program's build process. Everything should work as expected now.
