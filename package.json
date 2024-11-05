@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/graphlab-fr/cosma/issues"
   },
-  "main": "app.js",
+  "main": "dist/back.cjs",
   "bin": {
     "cosma": "dist/back.cjs"
   },
@@ -72,6 +72,10 @@
     "doc": "docs",
     "man": "man"
   },
+  "files": [
+    "docs",
+    "man"
+  ],
   "keywords": [],
   "prettier": {
     "printWidth": 100,
