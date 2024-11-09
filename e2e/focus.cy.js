@@ -52,12 +52,16 @@ describe('focus', () => {
       });
 
       it('should toggle index', () => {
+        cy.contains('Index').click();
+
         cy.shouldIndexHasItems([
           'Evergreen notes should be concept-oriented',
           'Evergreen notes should be densely linked',
         ]);
 
         cy.get('.graph-control-label').click();
+
+        cy.get('#menu-container').scrollTo('bottom');
 
         cy.shouldIndexHasItems([
           'Augmenting Human Intellect: A Conceptual Framework',
