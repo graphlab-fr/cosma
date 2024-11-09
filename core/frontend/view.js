@@ -1,11 +1,3 @@
-export default class View {
-  static highlightedNodes = [];
-
-  static focusMode = false;
-
-  static position = { x: 0, y: 0, zoom: 1 };
-}
-
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('view-save').addEventListener('click', () => {
     const url = new URL(window.location);

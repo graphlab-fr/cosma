@@ -51,6 +51,26 @@ describe('focus', () => {
         ]);
       });
 
+      it('should toggle index', () => {
+        cy.shouldIndexHasItems([
+          'Evergreen notes should be concept-oriented',
+          'Evergreen notes should be densely linked',
+        ]);
+
+        cy.get('.graph-control-label').click();
+
+        cy.shouldIndexHasItems([
+          'Augmenting Human Intellect: A Conceptual Framework',
+          'Evergreen note titles are like APIs',
+          'Evergreen notes',
+          'Evergreen notes should be atomic',
+          'Evergreen notes should be concept-oriented',
+          'Evergreen notes should be densely linked',
+          'How can we develop transformative tools for thought?',
+          'Tools for thought',
+        ]);
+      });
+
       it('should display more nodes if range inscrease', () => {
         cy.get('#focus-input')
           .should('have.attr', 'max', 2)
