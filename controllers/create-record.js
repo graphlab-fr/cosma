@@ -66,8 +66,6 @@ function createRecord(
     undefined,
     undefined,
     undefined,
-    undefined,
-    undefined,
     config.opts,
   );
   if (saveIdOnYmlFrontMatter === false) {

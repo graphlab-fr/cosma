@@ -35,6 +35,36 @@ describe('tags', () => {
     cy.shouldGraphHasNodes(['Tools for thought']);
   });
 
+  it('should display index items has selected tag from list', () => {
+    assertTagsAreChecked([]);
+
+    cy.contains('Index').click();
+    cy.contains('Mots-clés').click();
+
+    cy.contains('wip').click();
+    assertTagsAreChecked(['wip']);
+    cy.shouldIndexHasItems(['Evergreen notes should be concept-oriented', 'Tools for thought']);
+
+    cy.contains('wip').click();
+    cy.get('#menu-container').scrollTo('bottom');
+    assertTagsAreChecked([]);
+    cy.shouldIndexHasItems([
+      'Augmenting Human Intellect: A Conceptual Framework',
+      'Evergreen note titles are like APIs',
+      'Evergreen notes',
+      'Evergreen notes should be atomic',
+      'Evergreen notes should be concept-oriented',
+      'Evergreen notes should be densely linked',
+      'How can we develop transformative tools for thought?',
+      'Tools for thought',
+    ]);
+
+    cy.contains('quotes').click();
+    assertTagsAreChecked(['quotes']);
+    cy.shouldGraphHasNodes(['Tools for thought']);
+    cy.shouldIndexHasItems(['Tools for thought']);
+  });
+
   it('should display tags from URL params', () => {
     cy.visit('temp/citeproc.html?tags=quotes');
     assertTagsAreChecked(['quotes']);

@@ -70,6 +70,9 @@ describe('graph', () => {
     cy.contains('Afficher les liens').click();
 
     cy.get('line:visible').should('have.length', 0);
+
+    cy.contains('Afficher les liens').click();
+    cy.get('line:visible').should('have.length', 7);
   });
 
   it('should hide all labels', () => {

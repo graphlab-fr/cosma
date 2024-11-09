@@ -8,7 +8,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import envPaths from 'env-paths';
 import yml from 'yaml';
-import Link from './link.js';
 import lang from './lang.js';
 import http from 'node:http';
 import { FindUserDataDirError, ReadUserDataDirError } from './errors.js';
@@ -252,6 +251,8 @@ class Config {
       return false;
     }
 
+    const validLinkStrokes = new Set(['simple', 'double', 'dotted', 'dash']);
+
     for (const key in linkTypes) {
       if (!key) {
         return false;
@@ -262,7 +263,7 @@ class Config {
         typeof linkTypes[key]['color'] !== 'string' ||
         linkTypes[key]['stroke'] === undefined ||
         typeof linkTypes[key]['stroke'] !== 'string' ||
-        Link.validLinkStrokes.has(linkTypes[key]['stroke']) === false
+        validLinkStrokes.has(linkTypes[key]['stroke']) === false
       ) {
         return false;
       }
