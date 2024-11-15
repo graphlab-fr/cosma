@@ -33,8 +33,6 @@ describe('Record model', () => {
     expect(record.begin).toEqual(1609459200);
     expect(record.end).toEqual(1609545600);
     expect(record.thumbnail).toEqual('img.jpg');
-    expect(record.links).toEqual([]);
-    expect(record.path).toEqual('test-record.md');
   });
 
   it('should correctly initialize default values if some properties are not provided', () => {
@@ -55,7 +53,6 @@ describe('Record model', () => {
     expect(record.begin).toBeUndefined();
     expect(record.end).toBeUndefined();
     expect(record.thumbnail).toBeUndefined();
-    expect(record.links).toEqual([]);
   });
 
   it('should generate the correct YAML front matter', () => {
@@ -91,5 +88,33 @@ types:
 thumbnail: img.jpg
 author: John Doe
 ---`);
+  });
+
+  it('should get from file', () => {
+    const file = `---
+id: "20200501150208"
+title: Test Record
+keyword:
+  - test
+author: Paul Otlet
+---
+
+File content`;
+
+    const result = Record.recordFromFile(file, config);
+    expect(result).toEqual({
+      content: '\n\nFile content',
+      title: 'Test Record',
+      id: '20200501150208',
+      types: ['undefined'],
+      tags: ['test'],
+      metas: {
+        author: 'Paul Otlet',
+      },
+      begin: undefined,
+      end: undefined,
+      thumbnail: undefined,
+      config: config,
+    });
   });
 });
