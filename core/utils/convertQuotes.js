@@ -3,7 +3,7 @@ import Bibliography from '../models/bibliography';
 
 /**
  * @param {string} markdown
- * @param {Bibliography} bibliography
+ * @param {import('../models/bibliography').default} bibliography
  */
 
 function convertQuotes(markdown, bibliography, records, idToHighlight) {

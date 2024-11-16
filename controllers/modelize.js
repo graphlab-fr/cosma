@@ -1,8 +1,10 @@
 import fs from 'node:fs';
+import fsPromise from 'node:fs/promises';
 import path from 'node:path';
 import getHistorySavePath from './history.js';
 import Cosmoscope from '../core/models/cosmoscope.js';
 import Record from '../core/models/record.js';
+import Rrecord from '../core/models/_record.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
 import Report from '../models/report-cli.js';
@@ -10,6 +12,7 @@ import { DowloadOnlineCsvFilesError } from '../core/models/errors.js';
 import { downloadFile } from '../core/utils/misc.js';
 import { tmpdir } from 'node:os';
 import getGraph from '../core/utils/getGraph.js';
+import extractCitations from '../core/utils/citeExtractor.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -70,6 +73,48 @@ async function modelize(options) {
   }
 
   console.log(getModelizeMessage(optionsTemplate, originType));
+
+  async function findMarkdownFilesRecursively(dir) {
+    let results = [];
+
+    const list = await fsPromise.readdir(dir);
+
+    for (const file of list) {
+      const filePath = path.resolve(dir, file);
+      const stat = await fsPromise.stat(filePath);
+
+      if (stat.isDirectory()) {
+        // call for subdirs
+        const res = await findMarkdownFilesRecursively(filePath);
+        results = results.concat(res);
+      } else {
+        if (path.extname(file) === '.md') {
+          results.push(filePath);
+        }
+      }
+    }
+
+    return results;
+  }
+
+  const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
+
+  const fileMap = new Map();
+
+  await Promise.all(
+    files.map(async (filePath) => {
+      const content = await fsPromise.readFile(filePath, 'utf8');
+      const record = Rrecord.recordFromFile(content, config);
+      fileMap.set(record.id, record);
+
+      const citeExtract = extractCitations(record.content);
+      citeExtract.forEach((extract) => extract.citations.forEach((cite) => console.log(cite)));
+    }),
+  );
+
+  // console.log(fileMap.size);
+
+  return;
 
   let records;
   switch (originType) {

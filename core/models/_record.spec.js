@@ -131,7 +131,7 @@ File linked to [[20210901132906]]`;
   it('should get with timestamp as id', () => {
     const props = {
       title: 'Paul Otlet',
-      types: ['people']
+      types: ['people'],
     };
 
     const result = Record.recordWithTimestamp(props, config);
@@ -139,6 +139,34 @@ File linked to [[20210901132906]]`;
       id: expect.any(String),
       title: props.title,
       types: ['people'],
+      content: '',
+      links: [],
+      metas: {},
+      tags: [],
+      begin: undefined,
+      end: undefined,
+      thumbnail: undefined,
+      config: config,
+    });
+  });
+
+  it('should get from citeproc item', () => {
+    /** @type {import('../utils/citeExtractor.js'.CiteItem)} */
+    const citeItem = {
+      id: 'engelbart1962',
+      prefix: undefined,
+      locator: undefined,
+      label: 'page',
+      'suppress-author': false,
+      suffix: undefined,
+      type: 'agreesWith',
+    };
+
+    const result = Record.recordFromCiteItem(citeItem, config);
+    expect(result).toEqual({
+      id: citeItem.id,
+      title: 'Record',
+      types: ['undefined'],
       content: '',
       links: [],
       metas: {},

@@ -63,8 +63,16 @@ export default class Record {
 
     const props = {
       content,
+      id: head.id || head.title,
       ...normalizedHead,
     };
+
+    if (typeof props.types === 'string') {
+      props.types = [props.types];
+    }
+    if (typeof props.tags === 'string') {
+      props.tags = [props.tags];
+    }
 
     const { error } = schema.validate(props);
     if (error) {
@@ -84,6 +92,22 @@ export default class Record {
         end: props.end,
         metas,
         thumbnail: props.thumbnail,
+      },
+      config,
+    );
+  }
+
+  /**
+   * @param {import('../utils/citeExtractor.js').CiteItem} citeItem
+   * @param {import('../models/config').default} config
+   * @param {import('../models/bibliography').default} bibliography
+   */
+
+  static recordFromCiteItem(citeItem, config, bibliography) {
+    return new Record(
+      {
+        id: citeItem.id,
+        title: 'Record',
       },
       config,
     );

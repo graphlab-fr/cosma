@@ -9,37 +9,37 @@ cd ..
 
 mv ../temp/cosmoscope.html ../temp/citeproc.html
 
-cd citeproc
-cosma modelize
-cd ..
+# cd citeproc
+# cosma modelize
+# cd ..
 
-mv ../temp/cosmoscope.html ../temp/no-citeproc.html
+# mv ../temp/cosmoscope.html ../temp/no-citeproc.html
 
-cd timeline
-cosma modelize
-cd ..
+# cd timeline
+# cosma modelize
+# cd ..
 
-mv ../temp/cosmoscope.html ../temp/timeline.html
+# mv ../temp/cosmoscope.html ../temp/timeline.html
 
-cd csv
-cosma modelize
-cd ..
+# cd csv
+# cosma modelize
+# cd ..
 
-mv ../temp/cosmoscope.html ../temp/csv.html
+# mv ../temp/cosmoscope.html ../temp/csv.html
 
-cd batch
-cosma batch ./data.json
-cosma modelize
-cd ..
+# cd batch
+# cosma batch ./data.json
+# cosma modelize
+# cd ..
 
-mv ../temp/cosmoscope.html ../temp/batch.html
-rm ../temp/**.md
+# mv ../temp/cosmoscope.html ../temp/batch.html
+# rm ../temp/**.md
 
-cd batch
-cosma autorecord Toto personne tag1,tag2
-cosma autorecord Tata institution
-cosma autorecord Tutu
-cosma modelize
-cd ..
+# cd batch
+# cosma autorecord Toto personne tag1,tag2
+# cosma autorecord Tata institution
+# cosma autorecord Tutu
+# cosma modelize
+# cd ..
 
-mv ../temp/cosmoscope.html ../temp/records.html
+# mv ../temp/cosmoscope.html ../temp/records.html

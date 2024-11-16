@@ -5,6 +5,17 @@
  */
 
 /**
+ * @typedef {Object} CiteItem
+ * @property {string} id
+ * @property {string} prefix
+ * @property {string} locator
+ * @property {string} label
+ * @property {string} 'suppress-author'
+ * @property {string} suffix
+ * @property {string} type
+ */
+
+/**
  * Interface representing the position and details of a citation.
  * @typedef {Object} CitePosition
  * @property {number} from - The start position of this citation.
@@ -135,6 +146,7 @@ export default function extractCitations(markdown) {
   for (const match of markdown.matchAll(citationRE)) {
     let from = match.index;
     let to = from + match[0].length;
+    /** @type {CiteToto[]} */
     const citations = [];
     let composite = false;
 
