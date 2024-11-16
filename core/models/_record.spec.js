@@ -16,7 +16,7 @@ const props = {
   thumbnail: 'img.jpg',
 };
 
-let config = new Config({
+const config = new Config({
   files_origin: './dir',
 });
 
@@ -27,6 +27,7 @@ describe('Record model', () => {
     expect(record.id).toEqual('20200501150208');
     expect(record.title).toEqual('Test Record');
     expect(record.content).toEqual('This is a test content');
+    expect(record.links).toEqual([]);
     expect(record.types).toEqual(['type1', 'type2']);
     expect(record.tags).toEqual(['tag1', 'tag2']);
     expect(record.metas).toEqual({ author: 'John Doe' });
@@ -47,6 +48,7 @@ describe('Record model', () => {
     expect(record.id).toBe('20200501150208');
     expect(record.title).toBe('Default Record');
     expect(record.content).toBe('Content with defaults');
+    expect(record.links).toEqual([]);
     expect(record.types).toEqual(['undefined']);
     expect(record.tags).toEqual([]);
     expect(record.metas).toEqual({});
@@ -99,18 +101,48 @@ keyword:
 author: Paul Otlet
 ---
 
-File content`;
+File linked to [[20210901132906]]`;
 
     const result = Record.recordFromFile(file, config);
     expect(result).toEqual({
-      content: '\n\nFile content',
-      title: 'Test Record',
       id: '20200501150208',
+      title: 'Test Record',
+      content: '\n\nFile linked to [[20210901132906]]',
+      links: [
+        {
+          type: 'undefined',
+          target: '20210901132906',
+          text: '20210901132906',
+          contexts: ['File linked to [[20210901132906]]'],
+        },
+      ],
       types: ['undefined'],
       tags: ['test'],
       metas: {
         author: 'Paul Otlet',
       },
+      begin: undefined,
+      end: undefined,
+      thumbnail: undefined,
+      config: config,
+    });
+  });
+
+  it('should get with timestamp as id', () => {
+    const props = {
+      title: 'Paul Otlet',
+      types: ['people']
+    };
+
+    const result = Record.recordWithTimestamp(props, config);
+    expect(result).toEqual({
+      id: expect.any(String),
+      title: props.title,
+      types: ['people'],
+      content: '',
+      links: [],
+      metas: {},
+      tags: [],
       begin: undefined,
       end: undefined,
       thumbnail: undefined,

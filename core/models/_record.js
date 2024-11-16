@@ -1,14 +1,31 @@
-import path from 'node:path';
 import yml from 'yaml';
-import { getTimestampTuple, getTimestamp, slugify } from '../utils/misc.js';
+import { getTimestampTuple } from '../utils/misc.js';
 import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
 import Joi from 'joi';
 import normalizeWithAliases from '../utils/normalizeWithAliases.js';
+import parseWikilinks from '../utils/parseWikilinks.js';
+
+/**
+ * @typedef RecordLink
+ * @type {object}
+ * @property {string} type
+ * @property {string} text
+ * @property {string} target
+ * @property {string[]} contexts
+ */
+
+const recordLinkSchema = Joi.object({
+  type: Joi.string().required(),
+  text: Joi.string().required(),
+  target: Joi.string().required(),
+  contexts: Joi.array().items(Joi.string()).required(),
+});
 
 const schema = Joi.object({
   id: Joi.string().required(),
   title: Joi.string().required(),
-  content: Joi.string().required(),
+  content: Joi.string().optional(),
+  links: Joi.array().items(recordLinkSchema).optional(),
   types: Joi.array().items(Joi.string()).optional(),
   tags: Joi.array().items(Joi.string()).optional(),
   begin: Joi.number().optional(),
@@ -42,6 +59,8 @@ export default class Record {
       }
     }
 
+    const links = parseWikilinks(content, config);
+
     const props = {
       content,
       ...normalizedHead,
@@ -54,9 +73,10 @@ export default class Record {
 
     return new Record(
       {
-        content: props.content,
-        title: props.title,
         id: props.id,
+        title: props.title,
+        content: props.content,
+        links,
         tags: props.tags,
         types: props.types,
         begin: props.begin,
@@ -79,21 +99,17 @@ export default class Record {
    */
 
   static recordWithTimestamp(props, config) {
+    props = {
+      ...props,
+      id: getTimestampTuple().join(''),
+    };
+
     const { error } = schema.validate(props);
     if (error) {
       throw new Error(`Record schema validation failed: ${error.message}`);
     }
 
-    return new Record(
-      {
-        content,
-        title: props.title,
-        id: getTimestampTuple().join(),
-        tags: props.tags,
-        types: props.types,
-      },
-      config,
-    );
+    return new Record(props, config);
   }
 
   /**
@@ -102,6 +118,7 @@ export default class Record {
    *  id: string,
    *  title: string,
    *  content: string,
+   *  links?: RecordLink[],
    *  types?: string[],
    *  tags?: string[],
    *  metas?: unknown,
@@ -113,12 +130,24 @@ export default class Record {
    */
 
   constructor(
-    { id, title, content, types = ['undefined'], tags = [], metas = {}, begin, end, thumbnail },
+    {
+      id,
+      title,
+      content = '',
+      links = [],
+      types = ['undefined'],
+      tags = [],
+      metas = {},
+      begin,
+      end,
+      thumbnail,
+    },
     config,
   ) {
     this.id = id;
     this.title = title;
     this.content = content;
+    this.links = links;
     this.types = types;
     this.tags = tags;
     this.metas = metas;
