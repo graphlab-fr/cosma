@@ -3,6 +3,30 @@ import { scaleLinear } from 'd3';
 import Config from '../models/config';
 
 /**
+ * @typedef Node
+ * @type {object}
+ * @property {string} label
+ * @property {string} types
+ * @property {string} thumbnail
+ * @property {number} begin
+ * @property {number} end
+ */
+
+/**
+ * @typedef LinkShape
+ * @type {object}
+ * @property {string} stroke
+ * @property {string} dashInterval
+ */
+
+/**
+ * @typedef Edge
+ * @type {object}
+ * @property {string} type
+ * @property {LinkShape} shape
+ */
+
+/**
  * @param {number} degree
  * @param {number} minDegree
  * @param {number} maxDegree
@@ -50,45 +74,30 @@ function getLinkShape(linkType, config) {
 
 /**
  *
- * @param {Record[]} records
- * @param {Config} config
+ * @param {Map<string, import('../models/_record').default>} records
+ * @param {import('../models/config').default} config
  * @returns GraphEngine
  */
 
 export default function getGraph(records, config) {
+  /** @type {GraphEngine<Node, Edge>} */
   const graph = new GraphEngine({ multi: true }, config.opts);
 
-  /**
-   * @param {number} degree Node degree
-   * @returns {number}
-   */
-
-  records.forEach(({ id, title, types, thumbnail, begin, end }) => {
-    graph.addNode(id, {
-      label: title,
-      types,
-      thumbnail,
-      begin,
-      end,
+  records.forEach((record) => {
+    graph.addNode(record.id, {
+      label: record.title,
+      types: record.types,
+      thumbnail: record.thumbnail,
+      begin: record.begin,
+      end: record.end,
     });
   });
 
-  records.forEach(({ id: nodeId, wikilinks, bibliographicLinks }) => {
-    wikilinks.forEach(({ target, type }) => {
-      graph.addEdge(nodeId, target, {
-        type,
-        shape: getLinkShape(type, config),
-      });
-    });
-
-    bibliographicLinks.forEach(({ target, type }) => {
-      if (!graph.hasNode(nodeId) || !graph.hasNode(target)) {
-        return;
-      }
-
-      return graph.addEdge(nodeId, target, {
-        type,
-        shape: getLinkShape(type, config),
+  records.forEach((record) => {
+    record.links.forEach((link) => {
+      graph.addDirectedEdge(record.id, link.target, {
+        type: link.type,
+        shape: getLinkShape(link.type, config),
       });
     });
   });

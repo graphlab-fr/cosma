@@ -164,6 +164,32 @@ class Bibliography {
   }
 
   /**
+   * @param {import('../utils/citeExtractor').CiteItem[]} items
+   * @returns {string[]}
+   */
+
+  getNotes(items) {
+    this.citeproc.updateItems(items.map((item) => item.id));
+    return this.citeproc.makeBibliography()[1].map((t) => t.trim().slice(23, -6));
+  }
+
+  /**
+   * @param {import('../utils/citeExtractor').CiteItem[]} items
+   * @returns {string}
+   */
+
+  getCluster(items) {
+    return this.citeproc.processCitationCluster(
+      {
+        citationItems: items,
+        properties: { noteIndex: 1 },
+      },
+      [],
+      [],
+    )[1][0][1];
+  }
+
+  /**
    * @param {BibliographicRecord} bibliographicRecord
    * @returns {BibliographicOutput}
    */

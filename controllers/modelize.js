@@ -13,6 +13,7 @@ import { downloadFile } from '../core/utils/misc.js';
 import { tmpdir } from 'node:os';
 import getGraph from '../core/utils/getGraph.js';
 import extractCitations from '../core/utils/citeExtractor.js';
+import Bibliography from '../core/models/bibliography.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -99,61 +100,57 @@ async function modelize(options) {
 
   const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
 
-  const fileMap = new Map();
+  const records = new Map();
 
-  await Promise.all(
-    files.map(async (filePath) => {
-      const content = await fsPromise.readFile(filePath, 'utf8');
-      const record = Rrecord.recordFromFile(content, config);
-      fileMap.set(record.id, record);
+  const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
+  const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
 
-      const citeExtract = extractCitations(record.content);
-      citeExtract.forEach((extract) => extract.citations.forEach((cite) => console.log(cite)));
-    }),
-  );
+  switch (originType) {
+    case 'directory': {
+      await Promise.all(
+        files.map(async (filePath) => {
+          const content = await fsPromise.readFile(filePath, 'utf8');
+          const record = Rrecord.recordFromFile(content, config);
+          records.set(record.id, record);
 
-  // console.log(fileMap.size);
+          const citeExtract = extractCitations(record.content);
+          citeExtract.forEach((extract) =>
+            extract.citations.forEach((cite) => {
+              const record = Rrecord.recordFromCiteItem(cite, config, bibliography);
+              records.set(record.id, record);
+            }),
+          );
+        }),
+      );
+
+      break;
+    }
+    // case 'online': {
+    //   const tempDir = tmpdir();
+    //   nodesPath = path.join(tempDir, 'cosma-nodes.csv');
+    //   linksPath = path.join(tempDir, 'cosma-links.csv');
+    //   try {
+    //     await downloadFile(nodesUrl, nodesPath);
+    //     console.log('- Nodes file downloaded');
+    //     await downloadFile(linksUrl, linksPath);
+    //     console.log('- Links file downloaded');
+    //   } catch (error) {
+    //     throw new DowloadOnlineCsvFilesError(error);
+    //   }
+    // }
+    // case 'csv': {
+    //   let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
+    //   records = Record.formatedDatasetToRecords(formatedRecords, formatedLinks, config);
+    //   break;
+    // }
+  }
+
+  // console.log(records.size);
+  const graph = getGraph(records, config);
 
   return;
 
-  let records;
-  switch (originType) {
-    case 'directory': {
-      const files = Cosmoscope.getFromPathFiles(filesPath, config.opts);
-
-      records = Cosmoscope.getRecordsFromFiles(files, config.opts);
-
-      if (
-        optionsTemplate.includes('citeproc') &&
-        config.opts['references_as_nodes'] &&
-        config.canCiteproc()
-      ) {
-        records = records.concat(Cosmoscope.getBibliographicRecords(records, config.opts));
-      }
-
-      break;
-    }
-    case 'online': {
-      const tempDir = tmpdir();
-      nodesPath = path.join(tempDir, 'cosma-nodes.csv');
-      linksPath = path.join(tempDir, 'cosma-links.csv');
-      try {
-        await downloadFile(nodesUrl, nodesPath);
-        console.log('- Nodes file downloaded');
-        await downloadFile(linksUrl, linksPath);
-        console.log('- Links file downloaded');
-      } catch (error) {
-        throw new DowloadOnlineCsvFilesError(error);
-      }
-    }
-    case 'csv': {
-      let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
-      records = Record.formatedDatasetToRecords(formatedRecords, formatedLinks, config);
-      break;
-    }
-  }
-
-  const graph = getGraph(records, config);
+  // const graph = getGraph(records, config);
 
   const { html } = new Template(records, graph, optionsTemplate);
 

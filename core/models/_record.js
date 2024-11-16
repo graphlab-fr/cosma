@@ -104,10 +104,13 @@ export default class Record {
    */
 
   static recordFromCiteItem(citeItem, config, bibliography) {
+    const libraryItem = bibliography.library[citeItem.id];
+
     return new Record(
       {
         id: citeItem.id,
-        title: 'Record',
+        title: libraryItem['title'],
+        content: bibliography.getNotes([citeItem])[0],
       },
       config,
     );

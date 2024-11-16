@@ -162,12 +162,23 @@ File linked to [[20210901132906]]`;
       type: 'agreesWith',
     };
 
-    const result = Record.recordFromCiteItem(citeItem, config);
+    const note = 'ENGELBART, Douglas C, 1962.';
+
+    const bibliography = {
+      library: {
+        engelbart1962: {
+          title: 'Augmenting Human Intellect: A Conceptual Framework',
+        },
+      },
+      getNotes: () => [note],
+    };
+
+    const result = Record.recordFromCiteItem(citeItem, config, bibliography);
     expect(result).toEqual({
       id: citeItem.id,
-      title: 'Record',
+      title: bibliography.library['engelbart1962'].title,
       types: ['undefined'],
-      content: '',
+      content: note,
       links: [],
       metas: {},
       tags: [],

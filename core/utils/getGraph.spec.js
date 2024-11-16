@@ -1,5 +1,5 @@
 import getGraph from './getGraph';
-import Record from '../models/record';
+import Record from '../models/_record';
 import Config from '../models/config';
 
 jest.mock('../i18n.yml', () => ({}));
@@ -18,54 +18,59 @@ const opts = {
 };
 const config = new Config(opts);
 
-const records = [
-  new Record(
+const recordDict = new Map([
+  [
     'paul-otlet',
-    'Paul Otlet',
-    ['people'],
-    [],
-    {},
-    'Fondateur du Mundaneum',
-    Number(new Date('1868')),
-    Number(new Date('1944')),
-    [
+    new Record(
       {
-        target: 'traite-documentation',
-        type: 'by',
+        id: 'paul-otlet',
+        title: 'Paul Otlet',
+        types: ['people'],
+        links: [
+          {
+            target: 'traite-documentation',
+            type: 'by',
+            text: '->',
+            contexts: [],
+          },
+        ],
       },
-    ],
-    'paulotlet.png',
-    opts,
-  ),
-  new Record(
+      config,
+    ),
+  ],
+  [
     'suzanne-briet',
-    'Suzanne Briet',
-    ['people'],
-    [],
-    {},
-    'Pionnière des SIC. Elle collabore avec [[collab:paul-otlet]]',
-    Number(new Date('1894')),
-    Number(new Date('1989')),
-    [],
-    'suzannebriet.png',
-    opts,
-  ),
-  new Record(
+    new Record(
+      {
+        id: 'suzanne-briet',
+        title: 'Suzanne Briet',
+        types: ['people'],
+        links: [
+          {
+            target: 'paul-otlet',
+            type: 'collab',
+            text: '->',
+            contexts: [],
+          },
+        ],
+      },
+      config,
+    ),
+  ],
+  [
     'traite-documentation',
-    'Traité de documentation',
-    ['reference'],
-    [],
-    {},
-    'Otlet, P. (1934). Traité de documentation: Le livre sur le livre, théorie et pratique. Bruxelles: Editiones Mundaneum.',
-    undefined,
-    undefined,
-    [],
-    undefined,
-    opts,
-  ),
-];
+    new Record(
+      {
+        id: 'traite-documentation',
+        title: 'Traité de documentation',
+        types: ['reference'],
+      },
+      config,
+    ),
+  ],
+]);
 
-const graph = getGraph(records, config);
+const graph = getGraph(recordDict, config);
 const graphData = graph.export();
 
 describe('getGraph', () => {
@@ -76,9 +81,9 @@ describe('getGraph', () => {
         attributes: {
           label: 'Paul Otlet',
           types: ['people'],
-          thumbnail: 'paulotlet.png',
-          begin: -3218832000,
-          end: -820540800,
+          thumbnail: undefined,
+          begin: undefined,
+          end: undefined,
           size: 20,
         },
       },
@@ -87,9 +92,9 @@ describe('getGraph', () => {
         attributes: {
           label: 'Suzanne Briet',
           types: ['people'],
-          thumbnail: 'suzannebriet.png',
-          begin: -2398291200,
-          end: 599616000,
+          thumbnail: undefined,
+          begin: undefined,
+          end: undefined,
           size: 2,
         },
       },
@@ -97,7 +102,10 @@ describe('getGraph', () => {
         key: 'traite-documentation',
         attributes: {
           label: 'Traité de documentation',
-          types: ['undefined'],
+          types: ['reference'],
+          thumbnail: undefined,
+          begin: undefined,
+          end: undefined,
           size: 2,
         },
       },
