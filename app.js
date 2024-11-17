@@ -142,6 +142,8 @@ program
     'Use the configuration file for project <name> from the user data directory.',
   )
   .action((filePath, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
+    console.log(('coucou'));
+    
     setConfigFileToRun(projectName);
     batch(filePath, saveIdOnYmlFrontMatter);
   })

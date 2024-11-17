@@ -100,6 +100,7 @@ async function modelize(options) {
 
   const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
 
+  /** @type {Map<string, Rrecord>} */
   const records = new Map();
 
   const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
@@ -148,10 +149,6 @@ async function modelize(options) {
   // console.log(records.size);
   const graph = getGraph(records, config);
 
-  return;
-
-  // const graph = getGraph(records, config);
-
   const { html } = new Template(records, graph, optionsTemplate);
 
   fs.writeFile(path.join(exportPath, 'cosmoscope.html'), html, (err) => {
@@ -164,7 +161,7 @@ async function modelize(options) {
     }
     console.log(
       ['\x1b[34m', 'Cosmoscope generated', '\x1b[0m'].join(''),
-      `(${records.length} records)`,
+      `(${records.size} records)`,
     );
   });
 

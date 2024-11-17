@@ -4,6 +4,8 @@ import Bibliography from '../models/bibliography';
 /**
  * @param {string} markdown
  * @param {import('../models/bibliography').default} bibliography
+ * @param {Map<string, import('../models/_record').default>} records
+ * @param {boolean} idToHighlight
  */
 
 function convertQuotes(markdown, bibliography, records, idToHighlight) {
@@ -45,7 +47,7 @@ function convertQuotes(markdown, bibliography, records, idToHighlight) {
     // replace each item of quote
     idsDictionnary.forEach((recordId, key) => {
       quoteText = quoteText.replace(key, () => {
-        const record = records.find(({ id }) => id === recordId);
+        const record = records.get(recordId);
 
         if (!record) return key;
         return `<a href="#${record.id}" title="${record.title}" class="record-link ${record.id === idToHighlight ? 'highlight' : ''}">${key}</a>`;

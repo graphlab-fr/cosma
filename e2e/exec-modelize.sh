@@ -3,11 +3,11 @@ cd e2e/
 rm -rf ../temp
 mkdir ../temp
 
-cd citeproc
-cosma modelize --citeproc
-cd ..
+# cd citeproc
+# cosma modelize --citeproc
+# cd ..
 
-mv ../temp/cosmoscope.html ../temp/citeproc.html
+# mv ../temp/cosmoscope.html ../temp/citeproc.html
 
 # cd citeproc
 # cosma modelize
@@ -27,8 +27,8 @@ mv ../temp/cosmoscope.html ../temp/citeproc.html
 
 # mv ../temp/cosmoscope.html ../temp/csv.html
 
-# cd batch
-# cosma batch ./data.json
+cd batch
+cosma batch ./data.json
 # cosma modelize
 # cd ..
 

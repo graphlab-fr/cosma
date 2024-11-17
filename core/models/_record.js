@@ -63,7 +63,7 @@ export default class Record {
 
     const props = {
       content,
-      id: head.id || head.title,
+      id: head.id || head.title.toLowerCase(),
       ...normalizedHead,
     };
 

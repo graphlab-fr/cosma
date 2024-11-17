@@ -83,7 +83,7 @@ class Template {
 
   /**
    * Get data from graph and make a web app
-   * @param {Record[]} records
+   * @param {Map<string, import('../models/_record.js').default>} records
    * @param {GraphEngine} graph
    * @param {string[]} params
    * @exemple
@@ -121,16 +121,12 @@ class Template {
     /** @type {Bibliography} */
     let bibliography;
 
-    /** @type {Map<string, Record>} */
-    const recordDict = new Map();
     /** @type {Map<string, Set<string>>} */
     const filtersDict = new Map();
     /** @type {Map<string, Set<string>>} */
     const tagsDict = new Map();
 
     records.forEach((record) => {
-      recordDict.set(record.id, record);
-
       record.types.forEach((type) => {
         if (filtersDict.has(type)) {
           filtersDict.get(type).add(record.id);
@@ -169,10 +165,10 @@ class Template {
       })
       .map(([name]) => name);
 
-    const recordsListAlphabetical = records
+    const recordsListAlphabetical = [...records.values()]
       .sort((a, b) => a.title.localeCompare(b.title))
       .map(({ title }) => title);
-    const recordsListChronological = records
+    const recordsListChronological = [...records.values()]
       .sort((a, b) => {
         if (a.begin < b.begin) return -1;
         if (a.begin > b.begin) return 1;
@@ -183,13 +179,13 @@ class Template {
     if (this.params.has('citeproc') && this.config.canCiteproc()) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
-      for (const record of records) {
-        record.setBibliography(bibliography);
+      // for (const record of records) {
+      //   record.setBibliography(bibliography);
 
-        record.bibliographicLinks.forEach(({ target }) =>
-          references.push(bibliography.library[target]),
-        );
-      }
+      //   record.bibliographicLinks.forEach(({ target }) =>
+      //     references.push(bibliography.library[target]),
+      //   );
+      // }
     }
 
     const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
@@ -200,7 +196,7 @@ class Template {
           path: path.join(imagesPath, recordTypes[type]['fill']),
         };
       });
-    const thumbnailsFromRecords = records
+    const thumbnailsFromRecords = [...records.values()]
       .filter(({ thumbnail }) => typeof thumbnail === 'string')
       .map(({ thumbnail }) => {
         return {
@@ -242,31 +238,13 @@ class Template {
 
     this.html = templateEngine.renderString(cosmoscopeTemplate, {
       hideIdFromRecordHeader,
-      records: records.map(({ thumbnail, wikilinks, bibliographicLinks, ...rest }) => {
+      records: [...records.values()].map(({ thumbnail, links, bibliographicLinks, ...rest }) => {
         const backNodes = graph.inNeighbors(rest.id);
 
-        const links = wikilinks.map(({ contexts, type, ...rest }) => {
-          const target = recordDict.get(rest.target);
+        const toto = links.map(({ contexts, type, target }) => {
+          const recordTarget = records.get(target);
 
           return {
-            context: contexts.join(''),
-            target: {
-              id: target.id,
-              title: target.title,
-              types: target.types,
-            },
-            type,
-          };
-        });
-
-        bibliographicLinks.forEach(({ target, type, contexts }) => {
-          const recordTarget = recordDict.get(target);
-
-          if (!recordTarget) {
-            return;
-          }
-
-          links.push({
             context: contexts.join(''),
             target: {
               id: recordTarget.id,
@@ -274,15 +252,15 @@ class Template {
               types: recordTarget.types,
             },
             type,
-          });
+          };
         });
 
         const backlinks = [];
 
         backNodes.forEach((nodeId) => {
-          const record = recordDict.get(nodeId);
+          const record = records.get(nodeId);
 
-          record.wikilinks
+          record.links
             .filter((link) => {
               return link.target === rest.id;
             })
@@ -297,28 +275,12 @@ class Template {
                 type: link.type,
               });
             });
-
-          record.bibliographicLinks
-            .filter(({ target }) => {
-              return target === rest.id;
-            })
-            .forEach(({ contexts, type }) => {
-              backlinks.push({
-                context: contexts.join(''),
-                source: {
-                  id: record.id,
-                  title: record.title,
-                  types: record.types,
-                },
-                type,
-              });
-            });
         });
 
         return {
           ...rest,
           backlinks,
-          links,
+          links: toto,
           thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
         };
       }),
@@ -331,7 +293,7 @@ class Template {
 
       timeline: (() => {
         let dates = [];
-        for (const { begin, end } of records) {
+        for (const { begin, end } of [...records.values()]) {
           dates.push(begin, end);
         }
         const [begin, end] = extent(dates);
@@ -377,7 +339,7 @@ class Template {
       }),
 
       sorting: {
-        records: records.map(({ title }) => ({
+        records: [...records.values()].map(({ title }) => ({
           alphabetical: recordsListAlphabetical.indexOf(title),
           chronological: recordsListChronological.indexOf(title),
         })),
