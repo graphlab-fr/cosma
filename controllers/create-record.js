@@ -4,10 +4,12 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
 import Config from '../core/models/config.js';
 import Record from '../core/models/record.js';
+import Reecord from '../core/models/_record.js';
 
 /**
  * Format data, prompt warnings and create record file
@@ -28,6 +30,41 @@ function createRecord(
   if (config instanceof Config === false) {
     throw new Error('Need instance of Config to create record');
   }
+
+  const types = type.split(',').map((t) => t.trim());
+  tags = tags.split(',').map((t) => t.trim());
+
+  const record = Reecord.recordWithTimestamp({
+    title,
+    types,
+    tags,
+  });
+
+  const filePath = path.join(config.opts['files_origin'], record.id + '.md');
+
+  const save = () =>
+    fs.writeFile(filePath, record.getAsFileContent(saveIdOnYmlFrontMatter), (err) => {
+      logRecordIsSaved();
+    });
+
+  if (fs.existsSync(filePath)) {
+    rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    rl.question(`Do you want to overwrite '${record.title}.md' ? (y/n) `, async (answer) => {
+      if (answer === 'y') {
+        try {
+          save();
+        } catch (err) {
+          console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+        }
+      }
+      rl.close();
+    });
+    return;
+  }
+
+  save();
+
+  /**
 
   type = type.split(',').map((t) => t.trim());
   tags = tags.split(',').map((t) => t.trim());
@@ -103,8 +140,10 @@ function createRecord(
       }
     });
 
+    
+    */
   function logRecordIsSaved() {
-    const { dir: fileDir, base: fileName } = path.parse(record.path);
+    const { dir: fileDir, base: fileName } = path.parse(filePath);
     console.log(
       ['\x1b[32m', 'Record created', '\x1b[0m'].join(''),
       `: ${['\x1b[2m', fileDir, '/', '\x1b[0m', fileName].join('')}`,

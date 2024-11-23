@@ -101,7 +101,7 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
           throw new Error(`File ${filePath} already exist`);
         }
 
-        await fsPromises.writeFile(filePath, record.getAsFileContent(true));
+        await fsPromises.writeFile(filePath, record.getAsFileContent(saveIdOnYmlFrontMatter));
       }),
     );
 

@@ -27,17 +27,17 @@ mkdir ../temp
 
 # mv ../temp/cosmoscope.html ../temp/csv.html
 
-cd batch
-cosma batch ./data.json
-cosma batch ./otletosphere.csv
+# cd batch
+# cosma batch ./data.json
+# cosma batch ./otletosphere.csv
 # cosma modelize
 # cd ..
 
 # mv ../temp/cosmoscope.html ../temp/batch.html
 # rm ../temp/**.md
 
-# cd batch
-# cosma autorecord Toto personne tag1,tag2
+cd batch
+cosma autorecord Toto personne tag1,tag2
 # cosma autorecord Tata institution
 # cosma autorecord Tutu
 # cosma modelize
