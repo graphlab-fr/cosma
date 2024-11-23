@@ -12,7 +12,7 @@ const wikilinkRE = new RegExp(/\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+
 
 function convertWikilinks(markdown, records, opts, idToHighlight) {
   return markdown.replace(wikilinkRE, (match, _, type, targetId, __, text) => {
-    const record = records.get(targetId.toLowerCase())
+    const record = records.get(targetId.toLowerCase());
 
     if (!record) return match;
 

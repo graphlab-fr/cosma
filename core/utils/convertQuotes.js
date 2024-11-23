@@ -1,5 +1,4 @@
 import extractCitations from './citeExtractor';
-import Bibliography from '../models/bibliography';
 
 /**
  * @param {string} markdown
