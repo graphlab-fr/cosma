@@ -4,6 +4,7 @@ import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
 import Joi from 'joi';
 import normalizeWithAliases from '../utils/normalizeWithAliases.js';
 import parseWikilinks from '../utils/parseWikilinks.js';
+import timestampIncrement from '../utils/timestampIncrement.js';
 
 /**
  * @typedef RecordLink
@@ -38,6 +39,7 @@ const aliasTable = {
   tag: 'tags',
   keywords: 'tags',
   keyword: 'tags',
+  type: 'types',
 };
 
 export default class Record {
@@ -72,6 +74,12 @@ export default class Record {
     }
     if (typeof props.tags === 'string') {
       props.tags = [props.tags];
+    }
+    if (typeof props.begin === 'string') {
+      props.begin = new Date(props.begin).getTime();
+    }
+    if (typeof props.end === 'string') {
+      props.end = new Date(props.end).getTime();
     }
 
     const { error } = schema.validate(props);
@@ -140,6 +148,49 @@ export default class Record {
   }
 
   /**
+   * @param {unknown} props
+   * @param {import('../models/config').default} config
+   * @param {number} increment
+   */
+
+  static recordWithIncrementedTimestamp(props, config, increment) {
+    const normalizedProps = normalizeWithAliases(aliasTable, props);
+    const metas = {};
+
+    for (const key of Object.keys(normalizedProps)) {
+      if (!schemaKeys.includes(key)) {
+        metas[key] = normalizedProps[key];
+        delete normalizedProps[key];
+      }
+    }
+
+    props = {
+      ...normalizedProps,
+      id: timestampIncrement(increment),
+    };
+
+    if (typeof props.types === 'string') {
+      props.types = [props.types];
+    }
+    if (typeof props.tags === 'string') {
+      props.tags = [props.tags];
+    }
+    if (typeof props.begin === 'string') {
+      props.begin = new Date(props.begin).getTime();
+    }
+    if (typeof props.end === 'string') {
+      props.end = new Date(props.end).getTime();
+    }
+
+    const { error } = schema.validate(props);
+    if (error) {
+      throw new Error(`Record schema validation failed: ${error.message}`);
+    }
+
+    return new Record(props, config);
+  }
+
+  /**
    *
    * @param {{
    *  id: string,
@@ -185,9 +236,13 @@ export default class Record {
     this.config = config;
   }
 
-  getYamlFrontMatter() {
+  /**
+   * @param {boolean} withId
+   */
+
+  getAsFileContent(withId) {
     const ymlContent = yml.stringify({
-      id: this.id,
+      id: withId ? this.id : undefined,
       title: this.title,
       types: this.types,
       tags: this.tags.length === 0 ? undefined : this.tags,
@@ -195,6 +250,6 @@ export default class Record {
       ...this.metas,
     });
 
-    return ['---\n', ymlContent, '---'].join('');
+    return ['---\n', ymlContent, '---\n\n', this.content].join('');
   }
 }

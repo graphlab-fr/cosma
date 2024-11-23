@@ -177,11 +177,10 @@ class Template {
       .map(({ title }) => title);
 
     if (this.params.has('citeproc') && this.config.canCiteproc()) {
-      const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
-      bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+      // const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
+      // bibliography = new Bibliography(bib, cslStyle, xmlLocal);
       // for (const record of records) {
       //   record.setBibliography(bibliography);
-
       //   record.bibliographicLinks.forEach(({ target }) =>
       //     references.push(bibliography.library[target]),
       //   );

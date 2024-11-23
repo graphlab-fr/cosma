@@ -29,6 +29,7 @@ mkdir ../temp
 
 cd batch
 cosma batch ./data.json
+cosma batch ./otletosphere.csv
 # cosma modelize
 # cd ..
 

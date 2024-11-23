@@ -14,6 +14,7 @@ import { tmpdir } from 'node:os';
 import getGraph from '../core/utils/getGraph.js';
 import extractCitations from '../core/utils/citeExtractor.js';
 import Bibliography from '../core/models/bibliography.js';
+import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -74,29 +75,6 @@ async function modelize(options) {
   }
 
   console.log(getModelizeMessage(optionsTemplate, originType));
-
-  async function findMarkdownFilesRecursively(dir) {
-    let results = [];
-
-    const list = await fsPromise.readdir(dir);
-
-    for (const file of list) {
-      const filePath = path.resolve(dir, file);
-      const stat = await fsPromise.stat(filePath);
-
-      if (stat.isDirectory()) {
-        // call for subdirs
-        const res = await findMarkdownFilesRecursively(filePath);
-        results = results.concat(res);
-      } else {
-        if (path.extname(file) === '.md') {
-          results.push(filePath);
-        }
-      }
-    }
-
-    return results;
-  }
 
   const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
 

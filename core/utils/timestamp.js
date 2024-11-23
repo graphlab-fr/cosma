@@ -2,6 +2,7 @@
  *
  * @param {Date} date
  * @returns {[string, string, string, string, string, string]}
+ * @example ['2021', '09', '01', '13', '29', '06']
  */
 
 export default function getTimestampTuple(date = new Date()) {
