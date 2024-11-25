@@ -96,12 +96,12 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
 
     await Promise.all(
       records.map(async (record) => {
-        const filePath = path.join(config.opts['files_origin'], record.id + '.md');
+        const filePath = path.join(config.opts['files_origin'], record.getFileName());
         if (fs.existsSync(filePath)) {
           throw new Error(`File ${filePath} already exist`);
         }
 
-        await fsPromises.writeFile(filePath, record.getAsFileContent(saveIdOnYmlFrontMatter));
+        await fsPromises.writeFile(filePath, record.getFileContent(saveIdOnYmlFrontMatter));
       }),
     );
 

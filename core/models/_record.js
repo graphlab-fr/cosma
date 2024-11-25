@@ -5,6 +5,7 @@ import Joi from 'joi';
 import normalizeWithAliases from '../utils/normalizeWithAliases.js';
 import parseWikilinks from '../utils/parseWikilinks.js';
 import timestampIncrement from '../utils/timestampIncrement.js';
+import slugify from '../utils/slugify.js';
 
 /**
  * @typedef RecordLink
@@ -139,6 +140,18 @@ export default class Record {
       id: getTimestampTuple().join(''),
     };
 
+    const knownTypes = config.getTypesRecords();
+    props.types = props.types.reduce((acc, curr, i, arr) => {
+      if (!knownTypes.has(curr)) {
+        if (!acc.includes('undefined')) {
+          acc.push('undefined');
+        }
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
     const { error } = schema.validate(props);
     if (error) {
       throw new Error(`Record schema validation failed: ${error.message}`);
@@ -240,7 +253,7 @@ export default class Record {
    * @param {boolean} withId
    */
 
-  getAsFileContent(withId) {
+  getFileContent(withId) {
     const ymlContent = yml.stringify({
       id: withId ? this.id : undefined,
       title: this.title,
@@ -251,5 +264,9 @@ export default class Record {
     });
 
     return ['---\n', ymlContent, '---\n\n', this.content].join('');
+  }
+
+  getFileName() {
+    return slugify(this.title) + '.md';
   }
 }

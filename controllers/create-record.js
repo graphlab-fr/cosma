@@ -8,22 +8,21 @@ import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
 import Config from '../core/models/config.js';
-import Record from '../core/models/record.js';
 import Reecord from '../core/models/_record.js';
 
 /**
  * Format data, prompt warnings and create record file
  * @param {string} title
- * @param {string} type
- * @param {string} tags
+ * @param {string} typeString
+ * @param {string} tagsString
  * @param {Config} config
  * @param {boolean} saveIdOnYmlFrontMatter
  */
 
 function createRecord(
-  title = '',
-  type = 'undefined',
-  tags = '',
+  title,
+  typeString = 'undefined',
+  tagsString = '',
   config,
   saveIdOnYmlFrontMatter = true,
 ) {
@@ -31,25 +30,58 @@ function createRecord(
     throw new Error('Need instance of Config to create record');
   }
 
-  const types = type.split(',').map((t) => t.trim());
-  tags = tags.split(',').map((t) => t.trim());
+  typeString = typeString.trim();
+  tagsString = tagsString.trim();
 
-  const record = Reecord.recordWithTimestamp({
-    title,
-    types,
-    tags,
-  });
+  let types = [];
+  let tags = [];
 
-  const filePath = path.join(config.opts['files_origin'], record.id + '.md');
+  if (typeString !== '') {
+    types = typeString
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s !== '');
+  }
+  if (tagsString !== '') {
+    tags = tagsString
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s !== '');
+  }
+
+  const knownTypes = config.getTypesRecords();
+  const unknownTypes = types.filter((t) => !knownTypes.has(t));
+
+  if (unknownTypes.length > 0) {
+    console.log(
+      ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
+      unknownTypes.length === 1
+        ? `type "${unknownTypes[0]}" is`
+        : `types "${unknownTypes.join('","')}" are`,
+      `not set in the configuration, will treat as "undefined"`,
+    );
+  }
+
+  const record = Reecord.recordWithTimestamp(
+    {
+      title,
+      types,
+      tags,
+    },
+    config,
+  );
+
+  const fileName = record.getFileName();
+  const filePath = path.join(config.opts['files_origin'], fileName);
 
   const save = () =>
-    fs.writeFile(filePath, record.getAsFileContent(saveIdOnYmlFrontMatter), (err) => {
+    fs.writeFile(filePath, record.getFileContent(saveIdOnYmlFrontMatter), (err) => {
       logRecordIsSaved();
     });
 
   if (fs.existsSync(filePath)) {
-    rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    rl.question(`Do you want to overwrite '${record.title}.md' ? (y/n) `, async (answer) => {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    rl.question(`Do you want to overwrite '${fileName}' ? (y/n) `, async (answer) => {
       if (answer === 'y') {
         try {
           save();
@@ -64,84 +96,6 @@ function createRecord(
 
   save();
 
-  /**
-
-  type = type.split(',').map((t) => t.trim());
-  tags = tags.split(',').map((t) => t.trim());
-
-  const knownTypes = config.getTypesRecords();
-  const unknownTypes = [];
-  for (const t of type) {
-    if (knownTypes.has(t)) {
-      continue;
-    }
-    config.opts.record_types = {
-      // add unknown type to the config for generate file
-      ...config.opts.record_types,
-      [t]: config.opts.record_types.undefined,
-    };
-    unknownTypes.push(t);
-  }
-  if (unknownTypes.length > 0) {
-    console.log(
-      ['\x1b[33m', 'Warn.', '\x1b[0m'].join(''),
-      unknownTypes.length === 1
-        ? `type "${unknownTypes[0]}" is`
-        : `types "${unknownTypes.join('","')}" are`,
-      `not set in the configuration, will treat as "undefined"`,
-    );
-  }
-
-  const record = new Record(
-    undefined,
-    title,
-    type,
-    tags,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    config.opts,
-  );
-  if (saveIdOnYmlFrontMatter === false) {
-    record.id = undefined;
-    record.ymlFrontMatter = record.getYamlFrontMatter();
-  }
-  record
-    .saveAsFile()
-    .then(() => {
-      logRecordIsSaved();
-    })
-    .catch((err) => {
-      const { message, type } = err;
-      switch (type) {
-        case 'overwriting':
-          rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-          rl.question(`Do you want to overwrite '${record.title}.md' ? (y/n) `, async (answer) => {
-            if (answer === 'y') {
-              try {
-                await record.saveAsFile(true);
-                logRecordIsSaved();
-              } catch (err) {
-                console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-              }
-            }
-            rl.close();
-          });
-          return;
-        case 'no dir':
-        case 'fs error':
-        case 'report':
-        default:
-          console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), message);
-          return;
-      }
-    });
-
-    
-    */
   function logRecordIsSaved() {
     const { dir: fileDir, base: fileName } = path.parse(filePath);
     console.log(
