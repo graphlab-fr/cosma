@@ -32,15 +32,16 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
 
   const todayMaxTimestamp = timestampIncrement(0);
   const timestamps = [todayMaxTimestamp];
-  files
-    .map((filePath) => {
-      const [fileName] = path.basename(filePath).split('.');
-      return fileName;
-    })
-    .filter(isTimestampIncrement)
-    .forEach((fileName) => {
-      timestamps.push(fileName);
-    });
+
+  await Promise.all(
+    files.map(async (filePath) => {
+      const content = await fsPromises.readFile(filePath, 'utf8');
+      const record = Rrecord.recordFromFile(content, config);
+      if (isTimestampIncrement(record.id)) {
+        timestamps.push(record.id);
+      }
+    }),
+  );
   timestamps.sort((a, b) => Number(b) - Number(a));
 
   const heigtherTimestamp = timestamps[0];
