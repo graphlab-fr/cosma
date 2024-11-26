@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import slugifyTool from 'slugify';
+import { finished } from 'stream/promises';
+const { Readable } = require('stream');
 
 /**
  * @param {string} url

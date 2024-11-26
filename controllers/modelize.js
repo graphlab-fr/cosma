@@ -1,20 +1,18 @@
+import { parse } from 'csv-parse';
 import fs from 'node:fs';
 import fsPromise from 'node:fs/promises';
 import path from 'node:path';
-import getHistorySavePath from './history.js';
-import Cosmoscope from '../core/models/cosmoscope.js';
-import Record from '../core/models/record.js';
+import { finished } from 'stream/promises';
 import Rrecord from '../core/models/_record.js';
+import Bibliography from '../core/models/bibliography.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
-import Report from '../models/report-cli.js';
-import { DowloadOnlineCsvFilesError } from '../core/models/errors.js';
-import { downloadFile } from '../core/utils/misc.js';
-import { tmpdir } from 'node:os';
-import getGraph from '../core/utils/getGraph.js';
 import extractCitations from '../core/utils/citeExtractor.js';
-import Bibliography from '../core/models/bibliography.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
+import getGraph from '../core/utils/getGraph.js';
+import Report from '../models/report-cli.js';
+import getHistorySavePath from './history.js';
+const { Readable } = require('stream');
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -81,11 +79,109 @@ async function modelize(options) {
   /** @type {Map<string, Rrecord>} */
   const records = new Map();
 
-  const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
-  const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+  async function processNodes(filePath) {
+    const parser = fs.createReadStream(filePath).pipe(
+      parse({
+        columns: true,
+        skip_empty_lines: true,
+        cast: (value) => (value === '' ? undefined : value),
+      }),
+    );
+    parser.on('readable', function () {
+      let line;
+      while ((line = parser.read()) !== null) {
+        const record = Rrecord.recordFromCsv(line, config);
+        records.set(record.id, record);
+      }
+    });
+    await finished(parser);
+  }
+
+  async function processNodesOnline(url) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch CSV: ${response.statusText}`);
+    }
+
+    const readableStream = Readable.fromWeb(response.body);
+
+    const parser = readableStream.pipe(
+      parse({
+        columns: true,
+        skip_empty_lines: true,
+        cast: (value) => (value === '' ? undefined : value),
+      }),
+    );
+
+    parser.on('readable', function () {
+      let line;
+      while ((line = parser.read()) !== null) {
+        const record = Rrecord.recordFromCsv(line, config);
+        records.set(record.id, record);
+      }
+    });
+    await finished(parser);
+  }
+
+  async function processLinksOnline(url) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch CSV: ${response.statusText}`);
+    }
+
+    const readableStream = Readable.fromWeb(response.body);
+
+    const parser = readableStream.pipe(
+      parse({
+        columns: true,
+        skip_empty_lines: true,
+        cast: (value) => (value === '' ? undefined : value),
+      }),
+    );
+
+    parser.on('readable', function () {
+      let line;
+      while ((line = parser.read()) !== null) {
+        records.get(line['source']).addLink({
+          contexts: line['label'] ? [line['label']] : [],
+          target: line['target'],
+          type: line['type'] || 'undefined',
+          text: undefined,
+        });
+      }
+    });
+    await finished(parser);
+  }
+
+  async function processLinks(filePath) {
+    const parser = fs.createReadStream(filePath).pipe(
+      parse({
+        columns: true,
+        skip_empty_lines: true,
+        cast: (value) => (value === '' ? undefined : value),
+      }),
+    );
+    parser.on('readable', function () {
+      let line;
+      while ((line = parser.read()) !== null) {
+        records.get(line['source']).addLink({
+          contexts: line['label'] ? [line['label']] : [],
+          target: line['target'],
+          type: line['type'] || 'undefined',
+          text: undefined,
+        });
+      }
+    });
+    await finished(parser);
+  }
 
   switch (originType) {
     case 'directory': {
+      const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
+      const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+
       await Promise.all(
         files.map(async (filePath) => {
           const content = await fsPromise.readFile(filePath, 'utf8');
@@ -104,27 +200,23 @@ async function modelize(options) {
 
       break;
     }
-    // case 'online': {
-    //   const tempDir = tmpdir();
-    //   nodesPath = path.join(tempDir, 'cosma-nodes.csv');
-    //   linksPath = path.join(tempDir, 'cosma-links.csv');
-    //   try {
-    //     await downloadFile(nodesUrl, nodesPath);
-    //     console.log('- Nodes file downloaded');
-    //     await downloadFile(linksUrl, linksPath);
-    //     console.log('- Links file downloaded');
-    //   } catch (error) {
-    //     throw new DowloadOnlineCsvFilesError(error);
-    //   }
-    // }
-    // case 'csv': {
-    //   let [formatedRecords, formatedLinks] = await Cosmoscope.getFromPathCsv(nodesPath, linksPath);
-    //   records = Record.formatedDatasetToRecords(formatedRecords, formatedLinks, config);
-    //   break;
-    // }
+    case 'online': {
+      await processNodesOnline(config.opts['nodes_online']);
+      await processLinksOnline(config.opts['links_online']);
+
+      break;
+    }
+    case 'csv': {
+      await processNodes(config.opts['nodes_origin']);
+      await processLinks(config.opts['links_origin']);
+
+      break;
+    }
+    default: {
+      throw new Error('Unknow method to modelize.');
+    }
   }
 
-  // console.log(records.size);
   const graph = getGraph(records, config);
 
   const { html } = new Template(records, graph, optionsTemplate);

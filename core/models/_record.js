@@ -11,14 +11,14 @@ import slugify from '../utils/slugify.js';
  * @typedef RecordLink
  * @type {object}
  * @property {string} type
- * @property {string} text
+ * @property {string} [text]
  * @property {string} target
  * @property {string[]} contexts
  */
 
 const recordLinkSchema = Joi.object({
   type: Joi.string().required(),
-  text: Joi.string().required(),
+  text: Joi.string().optional(),
   target: Joi.string().required(),
   contexts: Joi.array().items(Joi.string()).required(),
 });
@@ -97,6 +97,61 @@ export default class Record {
         tags: props.tags,
         types: props.types,
         begin: props.begin,
+        end: props.end,
+        metas,
+        thumbnail: props.thumbnail,
+      },
+      config,
+    );
+  }
+
+  /**
+   *
+   * @param {unknown} line
+   * @param {import('../models/config').default} config
+   */
+
+  static recordFromCsv(line, config) {
+    const normalizedHead = normalizeWithAliases(aliasTable, line);
+    const metas = {};
+
+    for (const key of Object.keys(normalizedHead)) {
+      if (!schemaKeys.includes(key)) {
+        metas[key] = normalizedHead[key];
+        delete normalizedHead[key];
+      }
+    }
+
+    const props = {
+      ...normalizedHead,
+    };
+
+    if (typeof props.types === 'string') {
+      props.types = [props.types];
+    }
+    if (typeof props.tags === 'string') {
+      props.tags = [props.tags];
+    }
+    if (typeof props.begin === 'string') {
+      props.begin = new Date(props.begin).getTime();
+    }
+    if (typeof props.end === 'string') {
+      props.end = new Date(props.end).getTime();
+    }
+
+    const { error } = schema.validate(props);
+    if (error) {
+      throw new Error(`Record schema validation failed: ${error.message}`);
+    }
+
+    return new Record(
+      {
+        id: props.id,
+        title: props.title,
+        content: props.content,
+        links: [],
+        tags: props.tags,
+        types: props.types,
         begin: props.begin,
         end: props.end,
         metas,
@@ -104,6 +159,8 @@ export default class Record {
       },
       config,
     );
+
+    return undefined;
   }
 
   /**
@@ -268,5 +325,19 @@ export default class Record {
 
   getFileName() {
     return slugify(this.title) + '.md';
+  }
+
+  /**
+   *
+   * @param {RecordLink} link
+   */
+
+  addLink(link) {
+    const { error } = recordLinkSchema.validate(link);
+    if (error) {
+      throw new Error(`Record schema validation failed: ${error.message}`);
+    }
+
+    this.links.push(link);
   }
 }
