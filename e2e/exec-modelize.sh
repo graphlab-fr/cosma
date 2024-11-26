@@ -3,29 +3,29 @@ cd e2e/
 rm -rf ../temp
 mkdir ../temp
 
-# cd citeproc
-# cosma modelize --citeproc
-# cd ..
+cd citeproc
+cosma modelize --citeproc
+cd ..
 
-# mv ../temp/cosmoscope.html ../temp/citeproc.html
+mv ../temp/cosmoscope.html ../temp/citeproc.html
 
-# cd citeproc
-# cosma modelize
-# cd ..
+cd citeproc
+cosma modelize
+cd ..
 
-# mv ../temp/cosmoscope.html ../temp/no-citeproc.html
+mv ../temp/cosmoscope.html ../temp/no-citeproc.html
 
-# cd timeline
-# cosma modelize
-# cd ..
+cd timeline
+cosma modelize
+cd ..
 
-# mv ../temp/cosmoscope.html ../temp/timeline.html
+mv ../temp/cosmoscope.html ../temp/timeline.html
 
-# cd csv
-# cosma modelize
-# cd ..
+cd csv
+cosma modelize
+cd ..
 
-# mv ../temp/cosmoscope.html ../temp/csv.html
+mv ../temp/cosmoscope.html ../temp/csv.html
 
 cd online
 cosma modelize
@@ -49,4 +49,4 @@ mv ../temp/cosmoscope.html ../temp/online.html
 # cosma modelize
 # cd ..
 
-# mv ../temp/cosmoscope.html ../temp/records.html
+mv ../temp/cosmoscope.html ../temp/records.html

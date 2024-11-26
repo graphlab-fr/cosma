@@ -179,8 +179,12 @@ async function modelize(options) {
 
   switch (originType) {
     case 'directory': {
-      const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
-      const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+      let bibliography;
+
+      if (config.canCiteproc()) {
+        const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
+        bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+      }
 
       await Promise.all(
         files.map(async (filePath) => {
@@ -188,13 +192,15 @@ async function modelize(options) {
           const record = Rrecord.recordFromFile(content, config);
           records.set(record.id, record);
 
-          const citeExtract = extractCitations(record.content);
-          citeExtract.forEach((extract) =>
-            extract.citations.forEach((cite) => {
-              const record = Rrecord.recordFromCiteItem(cite, config, bibliography);
-              records.set(record.id, record);
-            }),
-          );
+          if (bibliography) {
+            const citeExtract = extractCitations(record.content);
+            citeExtract.forEach((extract) =>
+              extract.citations.forEach((cite) => {
+                const record = Rrecord.recordFromCiteItem(cite, config, bibliography);
+                records.set(record.id, record);
+              }),
+            );
+          }
         }),
       );
 
