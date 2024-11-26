@@ -49,4 +49,4 @@ mv ../temp/cosmoscope.html ../temp/online.html
 # cosma modelize
 # cd ..
 
-mv ../temp/cosmoscope.html ../temp/records.html
+# mv ../temp/cosmoscope.html ../temp/records.html
