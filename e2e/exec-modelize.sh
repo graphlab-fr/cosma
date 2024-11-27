@@ -34,8 +34,8 @@ cd ..
 mv ../temp/cosmoscope.html ../temp/online.html
 
 cd batch
-# cosma batch ./data.json -id
-cosma batch ./otletosphere.csv -id
+cosma batch ./data.json -id
+# cosma batch ./otletosphere.csv -id
 cosma modelize
 cd ..
 

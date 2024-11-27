@@ -181,7 +181,11 @@ async function modelize(options) {
     case 'directory': {
       let bibliography;
 
-      if (config.canCiteproc()) {
+      if (
+        optionsTemplate.includes('citeproc') &&
+        config.opts['references_as_nodes'] &&
+        config.canCiteproc()
+      ) {
         const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(config);
         bibliography = new Bibliography(bib, cslStyle, xmlLocal);
       }
@@ -196,8 +200,13 @@ async function modelize(options) {
             const citeExtract = extractCitations(record.content);
             citeExtract.forEach((extract) =>
               extract.citations.forEach((cite) => {
-                const record = Rrecord.recordFromCiteItem(cite, config, bibliography);
-                records.set(record.id, record);
+                const recordCite = Rrecord.recordFromCiteItem(cite, config, bibliography);
+                record.addLink({
+                  contexts: [extract.source],
+                  target: recordCite.id,
+                  type: cite.type || 'undefined',
+                });
+                records.set(recordCite.id, recordCite);
               }),
             );
           }

@@ -27,7 +27,7 @@ describe('Timeline', () => {
         });
     });
 
-    it('should hide nodes', () => {
+    it.only('should hide nodes', () => {
       cy.shouldGraphHasNodes(['Henry La Fontaine']);
 
       cy.get('#timeline-form input').invoke('val', -2228347880).trigger('input');

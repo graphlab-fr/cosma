@@ -22,6 +22,7 @@ import logo from '../../static/icons/cosmalogo.svg';
 import frontendScript from 'front';
 import GraphEngine from 'graphology';
 import { extent } from 'd3';
+import extractCitations from '../utils/citeExtractor.js';
 
 const md = new mdIt({
   html: true,
@@ -116,8 +117,8 @@ class Template {
       hide_id_from_record_header: hideIdFromRecordHeader,
     } = this.config.opts;
 
-    /** @type {string[]} */
-    const references = [];
+    /** @type {Map<string, unknown>} */
+    const references = new Map();
     /** @type {Bibliography} */
     let bibliography;
 
@@ -177,14 +178,17 @@ class Template {
       .map(({ title }) => title);
 
     if (this.params.has('citeproc') && this.config.canCiteproc()) {
-      // const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
-      // bibliography = new Bibliography(bib, cslStyle, xmlLocal);
-      // for (const record of records) {
-      //   record.setBibliography(bibliography);
-      //   record.bibliographicLinks.forEach(({ target }) =>
-      //     references.push(bibliography.library[target]),
-      //   );
-      // }
+      const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
+      bibliography = new Bibliography(bib, cslStyle, xmlLocal);
+
+      [...records.values()].forEach((record) => {
+        const citeExtract = extractCitations(record.content);
+        citeExtract.forEach((extract) =>
+          extract.citations.forEach((item) =>
+            references.set(item.id, bibliography.library[item.id]),
+          ),
+        );
+      });
     }
 
     const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
@@ -237,52 +241,54 @@ class Template {
 
     this.html = templateEngine.renderString(cosmoscopeTemplate, {
       hideIdFromRecordHeader,
-      records: [...records.values()].map(({ thumbnail, links, bibliographicLinks, ...rest }) => {
-        const backNodes = graph.inNeighbors(rest.id);
+      records: [...records.values()]
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .map(({ thumbnail, links, bibliographicLinks, ...rest }) => {
+          const backNodes = graph.inNeighbors(rest.id);
 
-        const toto = links.map(({ contexts, type, target }) => {
-          const recordTarget = records.get(target);
+          const toto = links.map(({ contexts, type, target }) => {
+            const recordTarget = records.get(target);
+
+            return {
+              context: contexts.join(''),
+              target: {
+                id: recordTarget.id,
+                title: recordTarget.title,
+                types: recordTarget.types,
+              },
+              type,
+            };
+          });
+
+          const backlinks = [];
+
+          backNodes.forEach((nodeId) => {
+            const record = records.get(nodeId);
+
+            record.links
+              .filter((link) => {
+                return link.target === rest.id;
+              })
+              .forEach((link) => {
+                backlinks.push({
+                  context: link.contexts.join(''),
+                  source: {
+                    id: record.id,
+                    title: record.title,
+                    types: record.types,
+                  },
+                  type: link.type,
+                });
+              });
+          });
 
           return {
-            context: contexts.join(''),
-            target: {
-              id: recordTarget.id,
-              title: recordTarget.title,
-              types: recordTarget.types,
-            },
-            type,
+            ...rest,
+            backlinks,
+            links: toto,
+            thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
           };
-        });
-
-        const backlinks = [];
-
-        backNodes.forEach((nodeId) => {
-          const record = records.get(nodeId);
-
-          record.links
-            .filter((link) => {
-              return link.target === rest.id;
-            })
-            .forEach((link) => {
-              backlinks.push({
-                context: link.contexts.join(''),
-                source: {
-                  id: record.id,
-                  title: record.title,
-                  types: record.types,
-                },
-                type: link.type,
-              });
-            });
-        });
-
-        return {
-          ...rest,
-          backlinks,
-          links: toto,
-          thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
-        };
-      }),
+        }),
 
       graph: {
         config: this.config.opts,
@@ -312,7 +318,7 @@ class Template {
       filters: Object.fromEntries(filtersDictAsArrays),
       tags: Object.fromEntries(tagsDictAsArrays),
 
-      references,
+      references: [...references.values()],
 
       metadata: {
         title,

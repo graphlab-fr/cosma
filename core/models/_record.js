@@ -252,6 +252,18 @@ export default class Record {
       props.end = new Date(props.end).getTime();
     }
 
+    const knownTypes = config.getTypesRecords();
+    props.types = props.types.reduce((acc, curr, i, arr) => {
+      if (!knownTypes.has(curr)) {
+        if (!acc.includes('undefined')) {
+          acc.push('undefined');
+        }
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
     const { error } = schema.validate(props);
     if (error) {
       throw new Error(`Record schema validation failed: ${error.message}`);

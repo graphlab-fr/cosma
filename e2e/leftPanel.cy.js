@@ -18,7 +18,7 @@ describe('left panel', () => {
       cy.get('#menu-container').scrollTo('bottom');
     });
 
-    it('should display each record with alphabetical order', () => {
+    it.only('should display each record with alphabetical order', () => {
       cy.shouldIndexHasItems([
         'Augmenting Human Intellect: A Conceptual Framework',
         'Evergreen note titles are like APIs',

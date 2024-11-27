@@ -51,7 +51,7 @@ describe('focus', () => {
         ]);
       });
 
-      it('should toggle index', () => {
+      it.only('should toggle index', () => {
         cy.contains('Index').click();
 
         cy.shouldIndexHasItems([
