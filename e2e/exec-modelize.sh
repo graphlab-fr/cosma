@@ -33,20 +33,20 @@ cd ..
 
 mv ../temp/cosmoscope.html ../temp/online.html
 
-# cd batch
+cd batch
 # cosma batch ./data.json -id
-# cosma batch ./otletosphere.csv -id
-# cosma modelize
-# cd ..
+cosma batch ./otletosphere.csv -id
+cosma modelize
+cd ..
 
-# mv ../temp/cosmoscope.html ../temp/batch.html
-# rm ../temp/**.md
+mv ../temp/cosmoscope.html ../temp/batch.html
+rm ../temp/**.md
 
-# cd batch
-# cosma autorecord Toto personne tag1,tag2
-# cosma autorecord Tata institution,personne  
-# cosma autorecord Tutu
-# cosma modelize
-# cd ..
+cd batch
+cosma autorecord Toto personne tag1,tag2
+cosma autorecord Tata institution,personne  
+cosma autorecord Tutu
+cosma modelize
+cd ..
 
-# mv ../temp/cosmoscope.html ../temp/records.html
+mv ../temp/cosmoscope.html ../temp/records.html

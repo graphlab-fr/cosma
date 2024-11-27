@@ -6,13 +6,13 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import Record from './record.js';
 import Config from './config.js';
 import Bibliography from './bibliography.js';
 import nunjucks from 'nunjucks';
 import mdIt from 'markdown-it';
 import app from '../../package.json';
-import { isAnImagePath, slugify } from '../utils/misc.js';
+import { isAnImagePath } from '../utils/misc.js';
+import slugify from '../utils/slugify.js';
 import langPck from './lang.js';
 import convertWikilinks from '../utils/convertWikilinks.js';
 import convertQuotes from '../utils/convertQuotes.js';
