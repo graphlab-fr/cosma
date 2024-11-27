@@ -18,6 +18,10 @@ const props = {
 
 const config = new Config({
   files_origin: './dir',
+  record_types: {
+    undefined: { fill: '#858585', stroke: '#858585' },
+    people: { fill: '#858585', stroke: '#858585' },
+  },
 });
 
 describe('Record model', () => {
@@ -60,9 +64,9 @@ describe('Record model', () => {
   it('should generate the correct YAML front matter', () => {
     const record = new Record(props, config);
 
-    const yamlFrontMatter = record.getYamlFrontMatter();
+    const file = record.getFileContent(true);
 
-    expect(yamlFrontMatter).toEqual(`---
+    expect(file).toEqual(`---
 id: "20200501150208"
 title: Test Record
 types:
@@ -73,23 +77,26 @@ tags:
   - tag2
 thumbnail: img.jpg
 author: John Doe
----`);
+---
+
+This is a test content`);
   });
 
   it('should generate the correct YAML front matter', () => {
     const record = new Record({ ...props, tags: undefined }, config);
 
-    const yamlFrontMatter = record.getYamlFrontMatter();
+    const file = record.getFileContent(false);
 
-    expect(yamlFrontMatter).toEqual(`---
-id: "20200501150208"
+    expect(file).toEqual(`---
 title: Test Record
 types:
   - type1
   - type2
 thumbnail: img.jpg
 author: John Doe
----`);
+---
+
+This is a test content`);
   });
 
   it('should get from file', () => {

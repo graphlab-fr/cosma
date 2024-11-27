@@ -1,11 +1,11 @@
 import yml from 'yaml';
-import { getTimestampTuple } from '../utils/misc.js';
 import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
 import Joi from 'joi';
 import normalizeWithAliases from '../utils/normalizeWithAliases.js';
 import parseWikilinks from '../utils/parseWikilinks.js';
 import timestampIncrement from '../utils/timestampIncrement.js';
 import slugify from '../utils/slugify.js';
+import getTimestampTuple from '../utils/timestamp.js';
 
 /**
  * @typedef RecordLink
