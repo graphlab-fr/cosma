@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import envPaths from 'env-paths';
-import { getTimestampTuple } from '../core/utils/misc.js';
+import getTimestampTuple from '../core/utils/timestamp.js';
 
 const { data } = envPaths('cosma-cli', { suffix: '' });
 

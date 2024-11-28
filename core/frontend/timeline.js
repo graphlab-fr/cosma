@@ -47,6 +47,11 @@ window.addEventListener('DOMContentLoaded', () => {
       attributes: { begin: nodeBegin, end: nodeEnd },
       key,
     } of data.nodes) {
+
+      console.log({nodeBegin,
+        nodeEnd});
+      
+      
       if (nodeEnd === undefined) {
         nodeEnd = end;
       }

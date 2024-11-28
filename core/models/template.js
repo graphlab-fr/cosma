@@ -6,13 +6,13 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import Record from './record.js';
 import Config from './config.js';
 import Bibliography from './bibliography.js';
 import nunjucks from 'nunjucks';
 import mdIt from 'markdown-it';
 import app from '../../package.json';
-import { isAnImagePath, slugify } from '../utils/misc.js';
+import { isAnImagePath } from '../utils/misc.js';
+import slugify from '../utils/slugify.js';
 import langPck from './lang.js';
 import convertWikilinks from '../utils/convertWikilinks.js';
 import convertQuotes from '../utils/convertQuotes.js';
@@ -22,6 +22,7 @@ import logo from '../../static/icons/cosmalogo.svg';
 import frontendScript from 'front';
 import GraphEngine from 'graphology';
 import { extent } from 'd3';
+import extractCitations from '../utils/citeExtractor.js';
 
 const md = new mdIt({
   html: true,
@@ -83,7 +84,7 @@ class Template {
 
   /**
    * Get data from graph and make a web app
-   * @param {Record[]} records
+   * @param {Map<string, import('../models/_record.js').default>} records
    * @param {GraphEngine} graph
    * @param {string[]} params
    * @exemple
@@ -116,21 +117,17 @@ class Template {
       hide_id_from_record_header: hideIdFromRecordHeader,
     } = this.config.opts;
 
-    /** @type {string[]} */
-    const references = [];
+    /** @type {Map<string, unknown>} */
+    const references = new Map();
     /** @type {Bibliography} */
     let bibliography;
 
-    /** @type {Map<string, Record>} */
-    const recordDict = new Map();
     /** @type {Map<string, Set<string>>} */
     const filtersDict = new Map();
     /** @type {Map<string, Set<string>>} */
     const tagsDict = new Map();
 
     records.forEach((record) => {
-      recordDict.set(record.id, record);
-
       record.types.forEach((type) => {
         if (filtersDict.has(type)) {
           filtersDict.get(type).add(record.id);
@@ -169,10 +166,10 @@ class Template {
       })
       .map(([name]) => name);
 
-    const recordsListAlphabetical = records
+    const recordsListAlphabetical = [...records.values()]
       .sort((a, b) => a.title.localeCompare(b.title))
       .map(({ title }) => title);
-    const recordsListChronological = records
+    const recordsListChronological = [...records.values()]
       .sort((a, b) => {
         if (a.begin < b.begin) return -1;
         if (a.begin > b.begin) return 1;
@@ -183,13 +180,15 @@ class Template {
     if (this.params.has('citeproc') && this.config.canCiteproc()) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
       bibliography = new Bibliography(bib, cslStyle, xmlLocal);
-      for (const record of records) {
-        record.setBibliography(bibliography);
 
-        record.bibliographicLinks.forEach(({ target }) =>
-          references.push(bibliography.library[target]),
+      [...records.values()].forEach((record) => {
+        const citeExtract = extractCitations(record.content);
+        citeExtract.forEach((extract) =>
+          extract.citations.forEach((item) =>
+            references.set(item.id, bibliography.library[item.id]),
+          ),
         );
-      }
+      });
     }
 
     const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
@@ -200,7 +199,7 @@ class Template {
           path: path.join(imagesPath, recordTypes[type]['fill']),
         };
       });
-    const thumbnailsFromRecords = records
+    const thumbnailsFromRecords = [...records.values()]
       .filter(({ thumbnail }) => typeof thumbnail === 'string')
       .map(({ thumbnail }) => {
         return {
@@ -242,86 +241,54 @@ class Template {
 
     this.html = templateEngine.renderString(cosmoscopeTemplate, {
       hideIdFromRecordHeader,
-      records: records.map(({ thumbnail, wikilinks, bibliographicLinks, ...rest }) => {
-        const backNodes = graph.inNeighbors(rest.id);
+      records: [...records.values()]
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .map(({ thumbnail, links, bibliographicLinks, ...rest }) => {
+          const backNodes = graph.inNeighbors(rest.id);
 
-        const links = wikilinks.map(({ contexts, type, ...rest }) => {
-          const target = recordDict.get(rest.target);
+          const toto = links.map(({ contexts, type, target }) => {
+            const recordTarget = records.get(target);
+
+            return {
+              context: contexts.join(''),
+              target: {
+                id: recordTarget.id,
+                title: recordTarget.title,
+                types: recordTarget.types,
+              },
+              type,
+            };
+          });
+
+          const backlinks = [];
+
+          backNodes.forEach((nodeId) => {
+            const record = records.get(nodeId);
+
+            record.links
+              .filter((link) => {
+                return link.target === rest.id;
+              })
+              .forEach((link) => {
+                backlinks.push({
+                  context: link.contexts.join(''),
+                  source: {
+                    id: record.id,
+                    title: record.title,
+                    types: record.types,
+                  },
+                  type: link.type,
+                });
+              });
+          });
 
           return {
-            context: contexts.join(''),
-            target: {
-              id: target.id,
-              title: target.title,
-              types: target.types,
-            },
-            type,
+            ...rest,
+            backlinks,
+            links: toto,
+            thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
           };
-        });
-
-        bibliographicLinks.forEach(({ target, type, contexts }) => {
-          const recordTarget = recordDict.get(target);
-
-          if (!recordTarget) {
-            return;
-          }
-
-          links.push({
-            context: contexts.join(''),
-            target: {
-              id: recordTarget.id,
-              title: recordTarget.title,
-              types: recordTarget.types,
-            },
-            type,
-          });
-        });
-
-        const backlinks = [];
-
-        backNodes.forEach((nodeId) => {
-          const record = recordDict.get(nodeId);
-
-          record.wikilinks
-            .filter((link) => {
-              return link.target === rest.id;
-            })
-            .forEach((link) => {
-              backlinks.push({
-                context: link.contexts.join(''),
-                source: {
-                  id: record.id,
-                  title: record.title,
-                  types: record.types,
-                },
-                type: link.type,
-              });
-            });
-
-          record.bibliographicLinks
-            .filter(({ target }) => {
-              return target === rest.id;
-            })
-            .forEach(({ contexts, type }) => {
-              backlinks.push({
-                context: contexts.join(''),
-                source: {
-                  id: record.id,
-                  title: record.title,
-                  types: record.types,
-                },
-                type,
-              });
-            });
-        });
-
-        return {
-          ...rest,
-          backlinks,
-          links,
-          thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
-        };
-      }),
+        }),
 
       graph: {
         config: this.config.opts,
@@ -331,7 +298,7 @@ class Template {
 
       timeline: (() => {
         let dates = [];
-        for (const { begin, end } of records) {
+        for (const { begin, end } of [...records.values()]) {
           dates.push(begin, end);
         }
         const [begin, end] = extent(dates);
@@ -351,7 +318,7 @@ class Template {
       filters: Object.fromEntries(filtersDictAsArrays),
       tags: Object.fromEntries(tagsDictAsArrays),
 
-      references,
+      references: [...references.values()],
 
       metadata: {
         title,
@@ -377,7 +344,7 @@ class Template {
       }),
 
       sorting: {
-        records: records.map(({ title }) => ({
+        records: [...records.values()].map(({ title }) => ({
           alphabetical: recordsListAlphabetical.indexOf(title),
           chronological: recordsListChronological.indexOf(title),
         })),

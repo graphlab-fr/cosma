@@ -4,14 +4,17 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
 import { parse } from 'csv-parse/sync';
-import Cosmoscope from '../core/models/cosmoscope.js';
-import Record from '../core/models/record.js';
+import fs from 'node:fs';
+import fsPromises from 'node:fs/promises';
+import path from 'node:path';
+import Rrecord from '../core/models/_record.js';
 import Config from '../core/models/config.js';
+import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
+import isTimestampIncrement from '../core/utils/isTimestampIncrement.js';
+import timestampIncrement from '../core/utils/timestampIncrement.js';
 
-function batch(filePath, saveIdOnYmlFrontMatter) {
+async function batch(filePath, saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
   console.log(config.getConfigConsolMessage());
 
@@ -25,7 +28,29 @@ function batch(filePath, saveIdOnYmlFrontMatter) {
     return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Data file does not exist.');
   }
 
-  fs.readFile(filePath, 'utf-8', (err, data) => {
+  const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
+
+  const todayMaxTimestamp = timestampIncrement(0);
+  const timestamps = [todayMaxTimestamp];
+
+  await Promise.all(
+    files.map(async (filePath) => {
+      const content = await fsPromises.readFile(filePath, 'utf8');
+      const record = Rrecord.recordFromFile(content, config);
+      if (isTimestampIncrement(record.id)) {
+        timestamps.push(record.id);
+      }
+    }),
+  );
+  timestamps.sort((a, b) => Number(b) - Number(a));
+
+  const heigtherTimestamp = timestamps[0];
+  const increment = heigtherTimestamp - todayMaxTimestamp + 1;
+
+  /** @type {Rrecord[]} */
+  let records = [];
+
+  fs.readFile(filePath, 'utf-8', async (err, data) => {
     if (err) {
       return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Cannot read data file.');
     }
@@ -47,7 +72,8 @@ function batch(filePath, saveIdOnYmlFrontMatter) {
           data = parse(data, {
             columns: true,
             skip_empty_lines: true,
-          }).map((line) => Record.getFormatedDataFromCsvLine(line));
+            cast: (value) => (value === '' ? undefined : value),
+          });
         } catch (error) {
           return console.error(
             ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
@@ -63,19 +89,28 @@ function batch(filePath, saveIdOnYmlFrontMatter) {
         );
     }
 
-    const { files_origin } = config.opts;
-    const index = Cosmoscope.getIndexToMassSave(files_origin) + 1;
-    Record.massSave(data, index, config.opts, saveIdOnYmlFrontMatter)
-      .then(() => {
-        return console.log(
-          ['\x1b[32m', 'Records created', '\x1b[0m'].join(''),
-          `(${data.length})`,
-          ['\x1b[2m', files_origin, '\x1b[0m'].join(''),
-        );
-      })
-      .catch((err) => {
-        return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err);
-      });
+    if (!Array.isArray(data)) {
+      throw new Error('Batch data should be array');
+    }
+
+    records = data.map((e, i) => Rrecord.recordWithIncrementedTimestamp(e, config, increment + i));
+
+    await Promise.all(
+      records.map(async (record) => {
+        const filePath = path.join(config.opts['files_origin'], record.getFileName());
+        if (fs.existsSync(filePath)) {
+          throw new Error(`File ${filePath} already exist`);
+        }
+
+        await fsPromises.writeFile(filePath, record.getFileContent(saveIdOnYmlFrontMatter));
+      }),
+    );
+
+    console.log(
+      ['\x1b[32m', 'Records created', '\x1b[0m'].join(''),
+      `(${records.length})`,
+      ['\x1b[2m', config.opts['files_origin'], '\x1b[0m'].join(''),
+    );
   });
 }
 

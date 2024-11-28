@@ -8,7 +8,7 @@ const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|\.]{3})?([\w\W]*)*/;
  * Get result as JSON
  * @param {string} fileContent
  * @param {object} options https://eemeli.org/yaml/#options
- * @returns {{head: object, content: string}} JSON
+ * @returns {{head: unknown, content: string}} JSON
  */
 
 function read(fileContent, options = {}) {

@@ -39,6 +39,7 @@ Using [Jest](https://jestjs.io/).
 ```bash
 npm run test:unit -- --verbose --watchAll
 npm run test:unit -- filename --verbose --watchAll
+npm run test:unit -- --runTestsByPath filepath --verbose --watchAll
 ```
 
 **E2E testing**: generate Cosma's HTML and Markdown files and make some asserts on.

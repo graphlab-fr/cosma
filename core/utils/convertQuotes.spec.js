@@ -39,16 +39,22 @@ const bibliography = {
   },
 };
 
-const records = [
-  {
-    id: 'matuschak2019',
-    title: 'Matuschak 2019',
-  },
-  {
-    id: 'engelbart1962',
-    title: 'Engelbart 1962',
-  },
-];
+const records = new Map([
+  [
+    'matuschak2019',
+    {
+      id: 'matuschak2019',
+      title: 'Matuschak 2019',
+    },
+  ],
+  [
+    'engelbart1962',
+    {
+      id: 'engelbart1962',
+      title: 'Engelbart 1962',
+    },
+  ],
+]);
 
 describe('convertQuotes', () => {
   it('should convert one link', () => {
@@ -154,7 +160,7 @@ describe('convertQuotes', () => {
   it('should not get anchor if no record', () => {
     const text = 'Lorem @matuschak2019 ipsum dolor est.';
 
-    expect(convertQuotes(text, bibliography, [], 'matuschak2019')).toEqual(
+    expect(convertQuotes(text, bibliography, new Map(), 'matuschak2019')).toEqual(
       'Lorem (Matuschak, 2019) ipsum dolor est.',
     );
   });

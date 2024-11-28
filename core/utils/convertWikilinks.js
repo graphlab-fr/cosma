@@ -2,7 +2,7 @@ const wikilinkRE = new RegExp(/\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+
 
 /**
  * @param {string} markdown
- * @param {Record[]} records
+ * @param {Map<string, import('../models/_record').default>} records
  * @param {Config} opts
  * @param {string} idToHighlight
  * @returns string
@@ -12,7 +12,7 @@ const wikilinkRE = new RegExp(/\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+
 
 function convertWikilinks(markdown, records, opts, idToHighlight) {
   return markdown.replace(wikilinkRE, (match, _, type, targetId, __, text) => {
-    const record = records.find(({ id }) => id === targetId.toLowerCase());
+    const record = records.get(targetId.toLowerCase());
 
     if (!record) return match;
 

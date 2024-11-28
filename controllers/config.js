@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
 import Config from '../core/models/config.js';
-import { slugify } from '../core/utils/misc.js';
+import slugify from '../core/utils/slugify.js';
 
 /**
  * Make config file on execution dir or global dir
