@@ -12,6 +12,7 @@ import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursi
 import getGraph from '../core/utils/getGraph.js';
 import Report from '../models/report-cli.js';
 import getHistorySavePath from './history.js';
+import citeLinks from '../core/utils/citeLinks.js';
 const { Readable } = require('stream');
 
 async function modelize(options) {
@@ -201,14 +202,11 @@ async function modelize(options) {
             citeExtract.forEach((extract) =>
               extract.citations.forEach((cite) => {
                 const recordCite = Rrecord.recordFromCiteItem(cite, config, bibliography);
-                record.addLink({
-                  contexts: [extract.source],
-                  target: recordCite.id,
-                  type: cite.type || 'undefined',
-                });
                 records.set(recordCite.id, recordCite);
               }),
             );
+
+            citeLinks(record.content).forEach((link) => record.addLink(link));
           }
         }),
       );

@@ -15,7 +15,7 @@ describe('graph', () => {
     cy.get('[data-node]:visible').should('have.length', 128);
   });
 
-  it.only('should get bibliographic nodes with citeproc', () => {
+  it('should get bibliographic nodes with citeproc', () => {
     cy.shouldGraphHasNodes([
       'Evergreen note titles arelike APIs',
       'Evergreen notes should beatomic',
