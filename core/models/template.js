@@ -84,7 +84,7 @@ class Template {
 
   /**
    * Get data from graph and make a web app
-   * @param {Map<string, import('../models/_record.js').default>} records
+   * @param {Map<string, import('../models/record.js').default>} records
    * @param {GraphEngine} graph
    * @param {string[]} params
    * @exemple

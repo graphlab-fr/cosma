@@ -74,7 +74,7 @@ function getLinkShape(linkType, config) {
 
 /**
  *
- * @param {Map<string, import('../models/_record').default>} records
+ * @param {Map<string, import('../models/record').default>} records
  * @param {import('../models/config').default} config
  * @returns GraphEngine
  */

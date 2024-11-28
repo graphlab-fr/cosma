@@ -3,7 +3,7 @@ import extractCitations from './citeExtractor';
 /**
  * @param {string} markdown
  * @param {import('../models/bibliography').default} bibliography
- * @param {Map<string, import('../models/_record').default>} records
+ * @param {Map<string, import('../models/record').default>} records
  * @param {boolean} idToHighlight
  */
 

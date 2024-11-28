@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
 import Config from '../core/models/config.js';
-import Reecord from '../core/models/_record.js';
+import Record from '../core/models/record.js';
 
 /**
  * Format data, prompt warnings and create record file
@@ -62,7 +62,7 @@ function createRecord(
     );
   }
 
-  const record = Reecord.recordWithTimestamp(
+  const record = Record.recordWithTimestamp(
     {
       title,
       types,
