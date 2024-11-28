@@ -8,7 +8,7 @@ import { parse } from 'csv-parse/sync';
 import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
-import Rrecord from '../core/models/_record.js';
+import Record from '../core/models/record.js';
 import Config from '../core/models/config.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
 import isTimestampIncrement from '../core/utils/isTimestampIncrement.js';
@@ -36,7 +36,7 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
   await Promise.all(
     files.map(async (filePath) => {
       const content = await fsPromises.readFile(filePath, 'utf8');
-      const record = Rrecord.recordFromFile(content, config);
+      const record = Record.recordFromFile(content, config);
       if (isTimestampIncrement(record.id)) {
         timestamps.push(record.id);
       }
@@ -47,7 +47,7 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
   const heigtherTimestamp = timestamps[0];
   const increment = heigtherTimestamp - todayMaxTimestamp + 1;
 
-  /** @type {Rrecord[]} */
+  /** @type {Record[]} */
   let records = [];
 
   fs.readFile(filePath, 'utf-8', async (err, data) => {
@@ -93,7 +93,7 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
       throw new Error('Batch data should be array');
     }
 
-    records = data.map((e, i) => Rrecord.recordWithIncrementedTimestamp(e, config, increment + i));
+    records = data.map((e, i) => Record.recordWithIncrementedTimestamp(e, config, increment + i));
 
     await Promise.all(
       records.map(async (record) => {

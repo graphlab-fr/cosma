@@ -1,4 +1,4 @@
-import Record from './_record.js';
+import Record from './record.js';
 import Config from './config.js';
 
 jest.mock('../i18n.yml', () => ({}));

@@ -12,7 +12,7 @@ import extractParaphs from './paraphExtractor';
 /**
  *
  * @param {string} markdown
- * @returns {import('../models/_record').RecordLink[]}
+ * @returns {import('../models/record').RecordLink[]}
  */
 
 export default function citeLinks(markdown) {

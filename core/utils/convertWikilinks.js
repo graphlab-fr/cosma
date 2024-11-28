@@ -2,7 +2,7 @@ const wikilinkRE = new RegExp(/\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+
 
 /**
  * @param {string} markdown
- * @param {Map<string, import('../models/_record').default>} records
+ * @param {Map<string, import('../models/record').default>} records
  * @param {Config} opts
  * @param {string} idToHighlight
  * @returns string

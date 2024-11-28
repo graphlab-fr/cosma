@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import fsPromise from 'node:fs/promises';
 import path from 'node:path';
 import { finished } from 'stream/promises';
-import Rrecord from '../core/models/_record.js';
+import Record from '../core/models/record.js';
 import Bibliography from '../core/models/bibliography.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
@@ -77,7 +77,7 @@ async function modelize(options) {
 
   const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
 
-  /** @type {Map<string, Rrecord>} */
+  /** @type {Map<string, Record>} */
   const records = new Map();
 
   async function processNodes(filePath) {
@@ -91,7 +91,7 @@ async function modelize(options) {
     parser.on('readable', function () {
       let line;
       while ((line = parser.read()) !== null) {
-        const record = Rrecord.recordFromCsv(line, config);
+        const record = Record.recordFromCsv(line, config);
         records.set(record.id, record);
       }
     });
@@ -118,7 +118,7 @@ async function modelize(options) {
     parser.on('readable', function () {
       let line;
       while ((line = parser.read()) !== null) {
-        const record = Rrecord.recordFromCsv(line, config);
+        const record = Record.recordFromCsv(line, config);
         records.set(record.id, record);
       }
     });
@@ -194,14 +194,14 @@ async function modelize(options) {
       await Promise.all(
         files.map(async (filePath) => {
           const content = await fsPromise.readFile(filePath, 'utf8');
-          const record = Rrecord.recordFromFile(content, config);
+          const record = Record.recordFromFile(content, config);
           records.set(record.id, record);
 
           if (bibliography) {
             const citeExtract = extractCitations(record.content);
             citeExtract.forEach((extract) =>
               extract.citations.forEach((cite) => {
-                const recordCite = Rrecord.recordFromCiteItem(cite, config, bibliography);
+                const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
                 records.set(recordCite.id, recordCite);
               }),
             );

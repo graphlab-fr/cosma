@@ -1,5 +1,5 @@
 import getGraph from './getGraph';
-import Record from '../models/_record';
+import Record from '../models/record';
 import Config from '../models/config';
 
 jest.mock('../i18n.yml', () => ({}));
