@@ -77,10 +77,10 @@ export default class Record {
       props.tags = [props.tags];
     }
     if (typeof props.begin === 'string') {
-      props.begin = new Date(props.begin).getTime();
+      props.begin = new Date(props.begin).getTime() / 1000;
     }
     if (typeof props.end === 'string') {
-      props.end = new Date(props.end).getTime();
+      props.end = new Date(props.end).getTime() / 1000;
     }
 
     const { error } = schema.validate(props);
