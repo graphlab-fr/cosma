@@ -31,20 +31,9 @@ async function modelize(options) {
     .filter(({ name }) => Template.validParams.has(name))
     .map(({ name }) => name);
 
-  const {
-    select_origin: originType,
-    files_origin: filesPath,
-    nodes_online: nodesUrl,
-    links_online: linksUrl,
-    export_target: exportPath,
-    history,
-  } = config.opts;
-
-  let { nodes_origin: nodesPath, links_origin: linksPath } = config.opts;
-
   console.log(config.getConfigConsolMessage());
 
-  switch (originType) {
+  switch (config.opts.select_origin) {
     case 'directory':
       if (config.canModelizeFromDirectory() === false) {
         return console.error(
@@ -62,9 +51,7 @@ async function modelize(options) {
       }
       break;
     case 'online':
-      try {
-        await config.canModelizeFromOnline();
-      } catch (err) {
+      if (config.canModelizeFromOnline() === false) {
         return console.error(
           ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
           'Cannot modelize from online csv files with this config.',
@@ -73,7 +60,7 @@ async function modelize(options) {
       break;
   }
 
-  console.log(getModelizeMessage(optionsTemplate, originType));
+  console.log(getModelizeMessage(optionsTemplate, config.opts.select_origin));
 
   const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
 
@@ -178,7 +165,7 @@ async function modelize(options) {
     await finished(parser);
   }
 
-  switch (originType) {
+  switch (config.opts.select_origin) {
     case 'directory': {
       let bibliography;
 
@@ -234,7 +221,7 @@ async function modelize(options) {
 
   const { html } = new Template(records, graph, optionsTemplate);
 
-  fs.writeFile(path.join(exportPath, 'cosmoscope.html'), html, (err) => {
+  fs.writeFile(path.join(config.opts.export_target, 'cosmoscope.html'), html, (err) => {
     // Cosmoscope file for export folder
     if (err) {
       return console.error(
@@ -248,7 +235,7 @@ async function modelize(options) {
     );
   });
 
-  if (history) {
+  if (config.opts.history) {
     const projectScope = Config.configFilePath.includes(Config.configDirPath) ? 'global' : 'local';
     const projectName = path.parse(Config.configFilePath).name;
 
