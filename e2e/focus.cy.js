@@ -38,6 +38,7 @@ describe('focus', () => {
 
       it('should toggle hide nodes', () => {
         cy.get('.graph-control-label').click();
+        cy.get('#close-right-side').click();
 
         cy.shouldGraphHasNodes([
           'Augmenting Human Intellect:A Conceptual Framework',
