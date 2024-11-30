@@ -16,7 +16,7 @@ const opts = {
     by: { stroke: 'dotted', color: '#e1e1e1' },
   },
 };
-const config = new Config(opts);
+const config = Config.getFrom(opts);
 
 const recordDict = new Map([
   [

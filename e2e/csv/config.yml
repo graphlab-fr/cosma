@@ -2,9 +2,9 @@ select_origin: csv
 files_origin: ../../temp
 nodes_origin: ./nodes.csv
 links_origin: ./links.csv
-nodes_online: ""
-links_online: ""
-images_origin: ""
+nodes_online: null
+links_online: null
+images_origin: null
 export_target: ../../temp
 history: false
 focus_max: 2
@@ -62,12 +62,11 @@ record_metas:
   - domaine
   - lien wikipédia
 title: "Cosma demo: CSV"
-author: ""
+author: null
 description: "Extraction de l'Otletoshpère"
 keywords: []
-link_symbol: ""
+link_symbol: null
 link_context: inline
 devtools: false
 lang: en
-name: ""
 generate_id: never

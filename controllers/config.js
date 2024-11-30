@@ -13,6 +13,7 @@ import slugify from '../core/utils/slugify.js';
 
 function makeConfigFile(title, { global: isGlobal }) {
   isGlobal = !!isGlobal;
+  console.log(Config.configDirPath);
 
   if (isGlobal && fs.existsSync(Config.configDirPath) === false) {
     return console.log(
@@ -47,7 +48,7 @@ function makeConfigFile(title, { global: isGlobal }) {
   const { dir: configFileDir, base: configFileName } = path.parse(configFilePath);
 
   if (fs.existsSync(configFilePath)) {
-    rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
     rl.question(`Do you want to overwrite '${configFileName}' ? (y/n) `, async (answer) => {
       if (answer === 'y') {
         saveConfig();
@@ -59,16 +60,16 @@ function makeConfigFile(title, { global: isGlobal }) {
   }
 
   function saveConfig() {
-    const config = new Config(opts);
-    config.path = configFilePath;
-    const isOk = config.save();
+    const config = Config.getFrom(opts);
 
-    if (isOk) {
+    try {
+      fs.writeFileSync(configFilePath, config.getYaml());
+
       console.log(
         ['\x1b[32m', 'Configuration file created', '\x1b[0m'].join(''),
         `: ${['\x1b[2m', configFileDir, '/', '\x1b[0m', configFileName].join('')}`,
       );
-    } else {
+    } catch (error) {
       console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'could not save configuration file');
     }
   }

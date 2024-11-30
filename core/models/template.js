@@ -98,10 +98,6 @@ class Template {
     this.params = new Set(params.filter((param) => Template.validParams.has(param)));
     this.config = Config.get(Config.configFilePath);
 
-    if (this.config.isValid() === false) {
-      throw new Error('Can not template : config invalid');
-    }
-
     const {
       images_origin: imagesPath,
       css_custom: cssCustomPath,
@@ -191,8 +187,24 @@ class Template {
       });
     }
 
+    /**
+     * @param {string} type
+     * @param {import('./config.js').Options} opts
+     * @returns {'image'|'color'}
+     */
+
+    function getFormatOfTypeRecord(type, opts) {
+      const validExtnames = new Set(['.jpg', '.jpeg', '.png']);
+
+      const { fill } = opts['record_types'][type];
+      if (validExtnames.has(path.extname(fill))) {
+        return 'image';
+      }
+      return 'color';
+    }
+
     const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
-      .filter((type) => this.config.getFormatOfTypeRecord(type) === 'image')
+      .filter((type) => getFormatOfTypeRecord(type, this.config.opts) === 'image')
       .map((type) => {
         return {
           name: recordTypes[type]['fill'],

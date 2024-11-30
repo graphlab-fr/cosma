@@ -1,10 +1,10 @@
 select_origin: directory
 files_origin: ./
-nodes_origin: ""
-links_origin: ""
-nodes_online: ""
-links_online: ""
-images_origin: ""
+nodes_origin: null
+links_origin: null
+nodes_online: null
+links_online: null
+images_origin: null
 export_target: ../../temp
 history: false
 focus_max: 2
@@ -36,17 +36,16 @@ hide_id_from_record_header: true
 views: {}
 record_metas:
   - pays
-title: "Cosma demo: Evergreen notes"
-author: "Notes by Andy Matuschak; presentation by Arthur Perret"
-description: ""
+title: "Cosma demo: timeline"
+author: null
+description: null
 keywords: []
-link_symbol: ""
+link_symbol: null
 link_context: inline
-csl: ./iso690-author-date-fr.csl
-bibliography: ./references.json
-csl_locale: ./locales.xml
-css_custom: ../styles.css
+csl: null
+bibliography: null
+csl_locale: null
+css_custom: null
 devtools: false
 lang: fr
-name: ""
 generate_id: never
