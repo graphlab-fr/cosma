@@ -22,7 +22,7 @@ cd ..
 mv ../temp/cosmoscope.html ../temp/timeline.html
 
 cd csv
-cosma modelize
+cosma modelize --custom-css
 cd ..
 
 mv ../temp/cosmoscope.html ../temp/csv.html
