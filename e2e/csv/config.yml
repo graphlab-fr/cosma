@@ -39,7 +39,7 @@ link_types:
     color: "purple"
 references_as_nodes: false
 record_filters: []
-graph_background_color: "#ffffff"
+graph_background_color: black
 graph_highlight_color: "#ff6a6a"
 graph_highlight_on_hover: true
 graph_text_size: 7
@@ -70,3 +70,4 @@ link_context: inline
 devtools: false
 lang: en
 generate_id: never
+css_custom: ./styles.css
