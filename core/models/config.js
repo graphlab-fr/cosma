@@ -367,7 +367,7 @@ class Config {
 
   static get(configFilePath) {
     if (configFilePath === undefined || fs.existsSync(configFilePath) === false) {
-      throw new Error('Can not find config file.');
+      throw new Error(`Can not find config file from ${configFilePath}.`);
     }
 
     const fileContent = fs.readFileSync(configFilePath, 'utf8');
@@ -390,7 +390,7 @@ class Config {
         .flatMap((detail) => [detail.message, detail.context.message])
         .join(', ');
 
-      throw new Error(`Config schema validation failed: ${details}`);
+      throw new Error(`Config file ${configFilePath} contains errors :\n${details}`);
     }
 
     return new Config(opts);

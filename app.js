@@ -193,3 +193,12 @@ function setConfigFileToRun(projectName) {
     Config.configFilePath = Config.defaultConfigPath;
   }
 }
+
+process.on('uncaughtException', (err) => {
+  console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+  process.exit(1);
+});
+process.on('unhandledRejection', (err) => {
+  console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+  process.exit(1);
+});
