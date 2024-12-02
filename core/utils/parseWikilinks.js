@@ -1,4 +1,5 @@
 import extractParaphs from './paraphExtractor';
+import slugify from './slugify';
 
 /**
  * @typedef Link
@@ -27,7 +28,7 @@ export default function parseWikilinks(markdown, config) {
 
   for (const match of markdown.matchAll(wikilinkRE) || []) {
     const [full, _, type, id, __, placeholder] = match;
-    const target = id.toLowerCase();
+    const target = slugify(id);
 
     linksDict.set(target, {
       type: type || 'undefined',
@@ -40,7 +41,7 @@ export default function parseWikilinks(markdown, config) {
   extractParaphs(markdown).forEach((paraph) => {
     for (const match of paraph.matchAll(wikilinkRE)) {
       const [full, _, type, id] = match;
-      const target = id.toLowerCase();
+      const target = slugify(id);
 
       linksDict.get(target).contexts.add(paraph);
     }

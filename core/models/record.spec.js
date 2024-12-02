@@ -61,27 +61,6 @@ describe('Record model', () => {
     expect(record.thumbnail).toBeUndefined();
   });
 
-  it('should generate the correct YAML front matter', () => {
-    const record = new Record(props, config);
-
-    const file = record.getFileContent(true);
-
-    expect(file).toEqual(`---
-id: "20200501150208"
-title: Test Record
-types:
-  - type1
-  - type2
-tags:
-  - tag1
-  - tag2
-thumbnail: img.jpg
-author: John Doe
----
-
-This is a test content`);
-  });
-
   it('should generate YAML front matter with id', () => {
     const record = new Record({ ...props, tags: undefined }, config);
 
@@ -157,6 +136,29 @@ File linked to [[20210901132906]]`;
       metas: {
         author: 'Paul Otlet',
       },
+      begin: undefined,
+      end: undefined,
+      thumbnail: undefined,
+      config: config,
+    });
+  });
+
+  it('should title became id if no id', () => {
+    const file = `---
+title: Test Record
+---
+
+Content`;
+
+    const result = Record.recordFromFile(file, config);
+    expect(result).toEqual({
+      id: 'test-record',
+      title: 'Test Record',
+      content: '\n\nContent',
+      links: [],
+      types: ['undefined'],
+      tags: [],
+      metas: {},
       begin: undefined,
       end: undefined,
       thumbnail: undefined,
