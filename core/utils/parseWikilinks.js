@@ -18,12 +18,14 @@ const wikilinkRE = new RegExp(/\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+
  */
 
 export default function parseWikilinks(markdown, config) {
+  if (!markdown) return [];
+
   /**
    * @type {Map<string, Link>}
    */
   const linksDict = new Map();
 
-  for (const match of markdown.matchAll(wikilinkRE)) {
+  for (const match of markdown.matchAll(wikilinkRE) || []) {
     const [full, _, type, id, __, placeholder] = match;
     const target = id.toLowerCase();
 

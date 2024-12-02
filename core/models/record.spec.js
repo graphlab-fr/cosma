@@ -16,12 +16,12 @@ const props = {
   thumbnail: 'img.jpg',
 };
 
-const config = new Config({
-  files_origin: './dir',
+const config = Config.getFrom({
   record_types: {
     undefined: { fill: '#858585', stroke: '#858585' },
     people: { fill: '#858585', stroke: '#858585' },
   },
+  record_metas: ['author'],
 });
 
 describe('Record model', () => {
@@ -82,7 +82,25 @@ author: John Doe
 This is a test content`);
   });
 
-  it('should generate the correct YAML front matter', () => {
+  it('should generate YAML front matter with id', () => {
+    const record = new Record({ ...props, tags: undefined }, config);
+
+    const file = record.getFileContent(true);
+
+    expect(file).toEqual(`---
+id: "20200501150208"
+title: Test Record
+types:
+  - type1
+  - type2
+thumbnail: img.jpg
+author: John Doe
+---
+
+This is a test content`);
+  });
+
+  it('should generate YAML front matter without id', () => {
     const record = new Record({ ...props, tags: undefined }, config);
 
     const file = record.getFileContent(false);
@@ -99,10 +117,21 @@ author: John Doe
 This is a test content`);
   });
 
+  it('should get from empty file', () => {
+    const file = '';
+
+    expect(() => {
+      Record.recordFromFile(file, config);
+    }).toThrowError(/Record contains error/);
+  });
+
   it('should get from file', () => {
     const file = `---
 id: "20200501150208"
 title: Test Record
+type:
+  - people
+  - unknown
 keyword:
   - test
 author: Paul Otlet
@@ -123,33 +152,11 @@ File linked to [[20210901132906]]`;
           contexts: ['File linked to [[20210901132906]]'],
         },
       ],
-      types: ['undefined'],
+      types: ['people', 'undefined'],
       tags: ['test'],
       metas: {
         author: 'Paul Otlet',
       },
-      begin: undefined,
-      end: undefined,
-      thumbnail: undefined,
-      config: config,
-    });
-  });
-
-  it('should get with timestamp as id', () => {
-    const props = {
-      title: 'Paul Otlet',
-      types: ['people'],
-    };
-
-    const result = Record.recordWithTimestamp(props, config);
-    expect(result).toEqual({
-      id: expect.any(String),
-      title: props.title,
-      types: ['people'],
-      content: '',
-      links: [],
-      metas: {},
-      tags: [],
       begin: undefined,
       end: undefined,
       thumbnail: undefined,

@@ -14,6 +14,14 @@ const configWithLinkSymbol = new Config({
 });
 
 describe('parseWikilinks', () => {
+  it('should return empty array if empty input', () => {
+    const paraph = '';
+
+    const result = parseWikilinks(paraph, config);
+
+    expect(result).toEqual([]);
+  });
+
   it('should parse link id', () => {
     const paraph = 'Lorem ipsum [[20210901132906]] dolor sit amet.';
 

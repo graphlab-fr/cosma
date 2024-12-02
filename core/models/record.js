@@ -23,6 +23,22 @@ const recordLinkSchema = Joi.object({
   contexts: Joi.array().items(Joi.string()).required(),
 });
 
+function validateTimestamp(value, helpers) {
+  const err = helpers.error('timestamp.invalid', {
+    message: `"${value}" can not convert to a valid timestamp.`,
+  });
+
+  if (!Number.isInteger(value) || value < 0) {
+    return err;
+  }
+  const date = new Date(value);
+  if (isNaN(date.getTime())) {
+    return err;
+  }
+
+  return value;
+}
+
 const schema = Joi.object({
   id: Joi.string().required(),
   title: Joi.string().required(),
@@ -30,9 +46,10 @@ const schema = Joi.object({
   links: Joi.array().items(recordLinkSchema).optional(),
   types: Joi.array().items(Joi.string()).optional(),
   tags: Joi.array().items(Joi.string()).optional(),
-  begin: Joi.number().optional(),
-  end: Joi.number().optional(),
+  begin: Joi.number().custom(validateTimestamp, 'timestamp validation').optional(),
+  end: Joi.number().custom(validateTimestamp, 'timestamp validation').optional(),
   thumbnail: Joi.string().optional(),
+  metas: Joi.object().pattern(Joi.string(), Joi.any()).optional(),
 });
 const schemaKeys = Object.keys(schema.describe().keys);
 
@@ -52,22 +69,12 @@ export default class Record {
   static recordFromFile(file, config) {
     const { content, head } = readYmlFm(file, { schema: 'failsafe' });
 
-    const normalizedHead = normalizeWithAliases(aliasTable, head);
-    const metas = {};
-
-    for (const key of Object.keys(normalizedHead)) {
-      if (!schemaKeys.includes(key)) {
-        metas[key] = normalizedHead[key];
-        delete normalizedHead[key];
-      }
-    }
-
     const links = parseWikilinks(content, config);
 
     const props = {
+      ...normalizeInput(head, config),
+      links,
       content,
-      id: head.id || head.title.toLowerCase(),
-      ...normalizedHead,
     };
 
     if (typeof props.types === 'string') {
@@ -85,7 +92,7 @@ export default class Record {
 
     const { error } = schema.validate(props);
     if (error) {
-      throw new Error(`Record schema validation failed: ${error.message}`);
+      throw new Error(`Record contains error: ${error.message}`);
     }
 
     return new Record(
@@ -98,7 +105,7 @@ export default class Record {
         types: props.types,
         begin: props.begin,
         end: props.end,
-        metas,
+        metas: props.metas,
         thumbnail: props.thumbnail,
       },
       config,
@@ -112,36 +119,11 @@ export default class Record {
    */
 
   static recordFromCsv(line, config) {
-    const normalizedHead = normalizeWithAliases(aliasTable, line);
-    const metas = {};
-
-    for (const key of Object.keys(normalizedHead)) {
-      if (!schemaKeys.includes(key)) {
-        metas[key] = normalizedHead[key];
-        delete normalizedHead[key];
-      }
-    }
-
-    const props = {
-      ...normalizedHead,
-    };
-
-    if (typeof props.types === 'string') {
-      props.types = [props.types];
-    }
-    if (typeof props.tags === 'string') {
-      props.tags = [props.tags];
-    }
-    if (typeof props.begin === 'string') {
-      props.begin = new Date(props.begin).getTime();
-    }
-    if (typeof props.end === 'string') {
-      props.end = new Date(props.end).getTime();
-    }
+    const props = normalizeInput(line, config);
 
     const { error } = schema.validate(props);
     if (error) {
-      throw new Error(`Record schema validation failed: ${error.message}`);
+      throw new Error(`Record contains error: ${error.message}`);
     }
 
     return new Record(
@@ -172,14 +154,18 @@ export default class Record {
   static recordFromCiteItem(citeItem, config, bibliography) {
     const libraryItem = bibliography.library[citeItem.id];
 
-    return new Record(
-      {
-        id: citeItem.id,
-        title: libraryItem['title'],
-        content: bibliography.getNotes([citeItem])[0],
-      },
-      config,
-    );
+    const props = {
+      id: citeItem.id,
+      title: libraryItem['title'],
+      content: bibliography.getNotes([citeItem])[0],
+    };
+
+    const { error } = schema.validate(props);
+    if (error) {
+      throw new Error(`Record contains error: ${error.message}`);
+    }
+
+    return new Record(props, config);
   }
 
   /**
@@ -193,25 +179,13 @@ export default class Record {
 
   static recordWithTimestamp(props, config) {
     props = {
-      ...props,
+      ...normalizeInput(props, config),
       id: getTimestampTuple().join(''),
     };
 
-    const knownTypes = config.getTypesRecords();
-    props.types = props.types.reduce((acc, curr, i, arr) => {
-      if (!knownTypes.has(curr)) {
-        if (!acc.includes('undefined')) {
-          acc.push('undefined');
-        }
-      } else {
-        acc.push(curr);
-      }
-      return acc;
-    }, []);
-
     const { error } = schema.validate(props);
     if (error) {
-      throw new Error(`Record schema validation failed: ${error.message}`);
+      throw new Error(`Record contains error: ${error.message}`);
     }
 
     return new Record(props, config);
@@ -224,49 +198,14 @@ export default class Record {
    */
 
   static recordWithIncrementedTimestamp(props, config, increment) {
-    const normalizedProps = normalizeWithAliases(aliasTable, props);
-    const metas = {};
-
-    for (const key of Object.keys(normalizedProps)) {
-      if (!schemaKeys.includes(key)) {
-        metas[key] = normalizedProps[key];
-        delete normalizedProps[key];
-      }
-    }
-
     props = {
-      ...normalizedProps,
+      ...normalizeInput(line, config),
       id: timestampIncrement(increment),
     };
 
-    if (typeof props.types === 'string') {
-      props.types = [props.types];
-    }
-    if (typeof props.tags === 'string') {
-      props.tags = [props.tags];
-    }
-    if (typeof props.begin === 'string') {
-      props.begin = new Date(props.begin).getTime();
-    }
-    if (typeof props.end === 'string') {
-      props.end = new Date(props.end).getTime();
-    }
-
-    const knownTypes = config.getTypesRecords();
-    props.types = props.types.reduce((acc, curr, i, arr) => {
-      if (!knownTypes.has(curr)) {
-        if (!acc.includes('undefined')) {
-          acc.push('undefined');
-        }
-      } else {
-        acc.push(curr);
-      }
-      return acc;
-    }, []);
-
     const { error } = schema.validate(props);
     if (error) {
-      throw new Error(`Record schema validation failed: ${error.message}`);
+      throw new Error(`Record contains error: ${error.message}`);
     }
 
     return new Record(props, config);
@@ -281,7 +220,7 @@ export default class Record {
    *  links?: RecordLink[],
    *  types?: string[],
    *  tags?: string[],
-   *  metas?: unknown,
+   *  metas?: Object<string, any>,
    *  begin?: number,
    *  end?: number,
    *  thumbnail?: string,
@@ -347,9 +286,64 @@ export default class Record {
   addLink(link) {
     const { error } = recordLinkSchema.validate(link);
     if (error) {
-      throw new Error(`Record schema validation failed: ${error.message}`);
+      throw new Error(`Record contains error: ${error.message}`);
     }
 
     this.links.push(link);
   }
+}
+
+/**
+ * @param {unknown} head
+ * @param {import('../models/config').default} config
+ */
+
+function normalizeInput(head, config) {
+  const normalizedHead = normalizeWithAliases(aliasTable, head);
+
+  const metas = {};
+
+  for (const key of Object.keys(normalizedHead)) {
+    if (config.opts.record_metas.includes(key)) {
+      metas[key] = normalizedHead[key];
+    }
+
+    if (!schemaKeys.includes(key)) {
+      delete normalizedHead[key];
+    }
+  }
+
+  const props = {
+    metas,
+    ...normalizedHead,
+  };
+
+  if (typeof props.types === 'string') {
+    props.types = [props.types];
+  }
+  if (typeof props.tags === 'string') {
+    props.tags = [props.tags];
+  }
+  if (typeof props.begin === 'string') {
+    props.begin = new Date(props.begin).getTime() / 1000;
+  }
+  if (typeof props.end === 'string') {
+    props.end = new Date(props.end).getTime() / 1000;
+  }
+
+  if (props.types) {
+    const knownTypes = config.getTypesRecords();
+    props.types = props.types.reduce((acc, curr, i, arr) => {
+      if (!knownTypes.has(curr)) {
+        if (!acc.includes('undefined')) {
+          acc.push('undefined');
+        }
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+  }
+
+  return props;
 }
