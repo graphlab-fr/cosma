@@ -69,26 +69,11 @@ export default class Record {
   static recordFromFile(file, config) {
     const { content, head } = readYmlFm(file, { schema: 'failsafe' });
 
-    const links = parseWikilinks(content, config);
-
     const props = {
       ...normalizeInput(head, config),
-      links,
+      links: parseWikilinks(content, config),
       content,
     };
-
-    if (typeof props.types === 'string') {
-      props.types = [props.types];
-    }
-    if (typeof props.tags === 'string') {
-      props.tags = [props.tags];
-    }
-    if (typeof props.begin === 'string') {
-      props.begin = new Date(props.begin).getTime() / 1000;
-    }
-    if (typeof props.end === 'string') {
-      props.end = new Date(props.end).getTime() / 1000;
-    }
 
     const { error } = schema.validate(props);
     if (error) {
@@ -100,7 +85,7 @@ export default class Record {
         id: props.id,
         title: props.title,
         content: props.content,
-        links,
+        links: props.links,
         tags: props.tags,
         types: props.types,
         begin: props.begin,
@@ -141,8 +126,6 @@ export default class Record {
       },
       config,
     );
-
-    return undefined;
   }
 
   /**
@@ -153,6 +136,10 @@ export default class Record {
 
   static recordFromCiteItem(citeItem, config, bibliography) {
     const libraryItem = bibliography.library[citeItem.id];
+
+    if (!libraryItem) {
+      throw new Error(`Library item "${citeItem.id}" is unknown`);
+    }
 
     const props = {
       id: citeItem.id,
@@ -318,6 +305,9 @@ function normalizeInput(head, config) {
     ...normalizedHead,
   };
 
+  if (!props.id && props.title) {
+    props.id = props.title;
+  }
   if (typeof props.types === 'string') {
     props.types = [props.types];
   }
@@ -329,6 +319,10 @@ function normalizeInput(head, config) {
   }
   if (typeof props.end === 'string') {
     props.end = new Date(props.end).getTime() / 1000;
+  }
+
+  if (props.id) {
+    props.id = slugify(props.id);
   }
 
   if (props.types) {
