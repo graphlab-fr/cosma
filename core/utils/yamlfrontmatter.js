@@ -7,7 +7,7 @@ const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|\.]{3})?([\w\W]*)*/;
  * Read head of markdown files as YAML content
  * Get result as JSON
  * @param {string} fileContent
- * @param {object} options https://eemeli.org/yaml/#options
+ * @param {import('yaml').ParseOptions & import('yaml').SchemaOptions} options
  * @returns {{head: unknown, content: string}} JSON
  */
 
@@ -19,7 +19,7 @@ function read(fileContent, options = {}) {
 
   let ymlResult = {};
 
-  if (!!fileContent) {
+  if (fileContent && withoutDash) {
     ymlResult = yml.parse(withoutDash, options);
   }
 

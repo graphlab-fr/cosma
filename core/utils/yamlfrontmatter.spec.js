@@ -41,6 +41,14 @@ Paul Otlet est la tête pensante du Mundaneum`,
     },
     description: 'Empty',
   },
+  {
+    input: 'No Yaml Front Matter',
+    expected: {
+      content: 'No Yaml Front Matter',
+      head: {},
+    },
+    description: 'No head',
+  },
 ];
 
 describe('YAML Front Matter parser', function () {
