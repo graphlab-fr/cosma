@@ -37,17 +37,17 @@ describe('Record', () => {
       .find('.record-title')
       .should('have.text', 'Evergreen notes should be concept-oriented');
 
-    cy.hash().should('eq', '#' + encodeURI('evergreen notes should be concept-oriented'));
+    cy.hash().should('eq', '#' + 'evergreen-notes-should-be-concept-oriented');
   }
 
   it('should display record if id on on URL hash', () => {
-    cy.visit('temp/citeproc.html#evergreen notes should be concept-oriented');
+    cy.visit('temp/citeproc.html#evergreen-notes-should-be-concept-oriented');
 
     assertRecordIsOpened();
   });
 
   it('should display record container on click on node', () => {
-    cy.get('[data-node="evergreen notes should be concept-oriented"]').click();
+    cy.get('[data-node="evergreen-notes-should-be-concept-oriented"]').click();
 
     assertRecordIsOpened();
   });
@@ -60,7 +60,7 @@ describe('Record', () => {
   });
 
   it('should click on record links redirect to record', () => {
-    cy.get('[data-node="evergreen notes should be densely linked"]').click();
+    cy.get('[data-node="evergreen-notes-should-be-densely-linked"]').click();
 
     cy.get('.record.active .record-content').find('a').should('have.length', 1).click();
 
@@ -68,7 +68,7 @@ describe('Record', () => {
   });
 
   it('should click on link from footer list redirect to record', () => {
-    cy.get('[data-node="evergreen notes should be densely linked"]').click();
+    cy.get('[data-node="evergreen-notes-should-be-densely-linked"]').click();
 
     cy.get('.record.active footer').contains('Evergreen notes should be concept-oriented').click();
 
@@ -77,7 +77,7 @@ describe('Record', () => {
 
   describe('Have click on node', () => {
     beforeEach(() => {
-      cy.get('[data-node="evergreen notes should be concept-oriented"]').click();
+      cy.get('[data-node="evergreen-notes-should-be-concept-oriented"]').click();
 
       assertRecordIsOpened();
     });
@@ -113,10 +113,10 @@ describe('Record', () => {
       cy.get('@record')
         .find('.record-links-list li')
         .should('have.length', 1)
-        .should('have.attr', 'data-target-id', 'evergreen notes')
+        .should('have.attr', 'data-target-id', 'evergreen-notes')
         .as('link');
 
-      cy.get('@link').find('a').should('have.attr', 'href', '#evergreen notes');
+      cy.get('@link').find('a').should('have.attr', 'href', '#evergreen-notes');
       cy.get('@link')
         .find('.record-links-context ')
         .should('contain.text', 'It’s best to factor evergreen notes by concept');
@@ -126,12 +126,12 @@ describe('Record', () => {
       cy.get('@record')
         .find('.record-backlinks-list li')
         .should('have.length', 1)
-        .should('have.attr', 'data-target-id', 'evergreen notes should be densely linked')
+        .should('have.attr', 'data-target-id', 'evergreen-notes-should-be-densely-linked')
         .as('link');
 
       cy.get('@link')
         .find('a')
-        .should('have.attr', 'href', '#evergreen notes should be densely linked');
+        .should('have.attr', 'href', '#evergreen-notes-should-be-densely-linked');
       cy.get('@link')
         .find('.record-links-context ')
         .should('contain.text', '(see Evergreen notes should be concept-oriented)');
@@ -141,7 +141,7 @@ describe('Record', () => {
       cy.get('#close-right-side').click();
 
       assertRecordPanelIsClosed();
-      cy.get('[data-node="tools for thought"]').click();
+      cy.get('[data-node="tools-for-thought"]').click();
       assertRecordPanelIsClosed();
     });
   });
@@ -157,7 +157,7 @@ describe('Record', () => {
 
   describe('footer', () => {
     beforeEach(() => {
-      cy.get('[data-node="tools for thought"]').click();
+      cy.get('[data-node="tools-for-thought"]').click();
       cy.get('.record.active footer').as('footer');
 
       cy.get('@footer').find('.record-links-list li').should('have.length', 2).eq(0).as('link');
@@ -173,8 +173,8 @@ describe('Record', () => {
       cy.get('@link').should('have.attr', 'data-target-id', 'engelbart1962');
       cy.get('@link').find('a').should('have.attr', 'href', '#engelbart1962');
 
-      cy.get('@backlink').should('have.attr', 'data-target-id', 'evergreen notes');
-      cy.get('@backlink').find('a').should('have.attr', 'href', '#evergreen notes');
+      cy.get('@backlink').should('have.attr', 'data-target-id', 'evergreen-notes');
+      cy.get('@backlink').find('a').should('have.attr', 'href', '#evergreen-notes');
     });
 
     it('should contains context and mark of relationship', () => {
@@ -198,7 +198,7 @@ describe('Record', () => {
   });
 
   it('should display thumbnails on graph', () => {
-    cy.get('[data-node="evergreen notes"] circle')
+    cy.get('[data-node="evergreen-notes"] circle')
       .eq(1)
       .should('have.attr', 'fill', 'url(#otlet.jpg)');
 
@@ -206,12 +206,12 @@ describe('Record', () => {
   });
 
   it('should display thumbnails on record', () => {
-    cy.get('[data-node="evergreen notes"]').click();
+    cy.get('[data-node="evergreen-notes"]').click();
     cy.get('.record.active .record-img').should('be.visible');
   });
 
   it('should render images record', () => {
-    cy.get('[data-node="tools for thought"]').click();
+    cy.get('[data-node="tools-for-thought"]').click();
     cy.get('.record.active .record-content img').should('have.length', 1);
   });
 });

@@ -41,18 +41,18 @@ describe('graph', () => {
   });
 
   it('should open record on click on node', () => {
-    cy.get('[data-node="evergreen notes"]').as('node');
+    cy.get('[data-node="evergreen-notes"]').as('node');
     cy.get('@node').find('text').should('have.text', 'Evergreen notes').click();
     cy.get('.record.active .record-title').should('have.text', 'Evergreen notes');
   });
 
   it('should hilight links from and to clicked node', () => {
-    cy.get('[data-node="evergreen notes"]').as('node');
+    cy.get('[data-node="evergreen-notes"]').as('node');
     cy.get('@node').click();
-    cy.get('[data-source="evergreen notes"]')
+    cy.get('[data-source="evergreen-notes"]')
       .should('have.length', 1)
       .each((elt) => expect(elt.attr('class')).to.contain('highlight'));
-    cy.get('[data-target="evergreen notes"]')
+    cy.get('[data-target="evergreen-notes"]')
       .should('have.length', 3)
       .each((elt) => expect(elt.attr('class')).to.contain('highlight'));
   });
@@ -98,9 +98,9 @@ describe('graph', () => {
   });
 
   it('should highlight selected node and connected links', () => {
-    cy.visit('temp/citeproc.html#evergreen notes');
+    cy.visit('temp/citeproc.html#evergreen-notes');
 
-    const highlightNodes = ['evergreen notes'];
+    const highlightNodes = ['evergreen-notes'];
 
     cy.get('[data-node].highlight').should('have.length', highlightNodes.length);
     highlightNodes.forEach((name) =>
@@ -113,17 +113,17 @@ describe('graph', () => {
   it('should highlight selected node, hovered node and connected nodes, links', () => {
     cy.get('[data-node], [data-link]').should('not.have.class', 'highlight');
 
-    cy.get('[data-node="evergreen notes should be densely linked"]').click();
+    cy.get('[data-node="evergreen-notes-should-be-densely-linked"]').click();
 
-    cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+    cy.get('[data-node="evergreen-notes"]').trigger('mouseover');
 
     const highlightNodes = [
-      'evergreen notes',
-      'tools for thought',
-      'evergreen notes should be atomic',
-      'evergreen note titles are like apis',
-      'evergreen notes should be concept-oriented',
-      'evergreen notes should be densely linked',
+      'evergreen-notes',
+      'tools-for-thought',
+      'evergreen-notes-should-be-atomic',
+      'evergreen-note-titles-are-like-apis',
+      'evergreen-notes-should-be-concept-oriented',
+      'evergreen-notes-should-be-densely-linked',
     ];
 
     cy.get('[data-node].highlight').should('have.length', highlightNodes.length);
@@ -138,12 +138,12 @@ describe('graph', () => {
     it('should for no connected nodes to hovered node', () => {
       cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
 
-      cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+      cy.get('[data-node="evergreen-notes"]').trigger('mouseover');
 
       const translucentNodes = [
         'matuschak2019',
         'engelbart1962',
-        'evergreen notes should be densely linked',
+        'evergreen-notes-should-be-densely-linked',
       ];
 
       cy.get('[data-node].translucent').should('have.length', translucentNodes.length);
@@ -164,7 +164,7 @@ describe('graph', () => {
 
       cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
 
-      cy.get('[data-node="evergreen notes"]').trigger('mouseover');
+      cy.get('[data-node="evergreen-notes"]').trigger('mouseover');
 
       cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
     });

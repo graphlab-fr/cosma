@@ -84,7 +84,7 @@ describe('tags', () => {
   });
 
   it('should display nodes has selected tag from node', () => {
-    cy.get('[data-node="tools for thought"]').click();
+    cy.get('[data-node="tools-for-thought"]').click();
     cy.get('.record.active .record-tags').contains('wip').click();
     cy.shouldGraphHasNodes(['Evergreen notes should beconcept-oriented', 'Tools for thought']);
   });
