@@ -13,7 +13,7 @@ describe('focus', () => {
   });
 
   describe('have select node', () => {
-    beforeEach(() => cy.get('[data-node="evergreen notes should be densely linked"]').click());
+    beforeEach(() => cy.get('[data-node="evergreen-notes-should-be-densely-linked"]').click());
 
     it('should active focus on click if record selected', () => {
       cy.get('.graph-control-label').click();
@@ -36,9 +36,8 @@ describe('focus', () => {
         ]);
       });
 
-      it('should toggle hide nodes', () => {
-        cy.get('.graph-control-label').click();
-        cy.get('#close-right-side').click();
+      it.only('should toggle hide nodes', () => {
+        cy.contains('Réinitialiser').click();
 
         cy.shouldGraphHasNodes([
           'Augmenting Human Intellect:A Conceptual Framework',
