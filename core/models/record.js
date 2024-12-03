@@ -24,11 +24,11 @@ const recordLinkSchema = Joi.object({
 });
 
 function validateTimestamp(value, helpers) {
-  const err = helpers.error('timestamp.invalid', {
+  const err = helpers.error('any.invalid', {
     message: `"${value}" can not convert to a valid timestamp.`,
   });
 
-  if (!Number.isInteger(value) || value < 0) {
+  if (!Number.isInteger(value)) {
     return err;
   }
   const date = new Date(value);
@@ -80,21 +80,7 @@ export default class Record {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(
-      {
-        id: props.id,
-        title: props.title,
-        content: props.content,
-        links: props.links,
-        tags: props.tags,
-        types: props.types,
-        begin: props.begin,
-        end: props.end,
-        metas: props.metas,
-        thumbnail: props.thumbnail,
-      },
-      config,
-    );
+    return new Record(props, config);
   }
 
   /**
@@ -111,21 +97,7 @@ export default class Record {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(
-      {
-        id: props.id,
-        title: props.title,
-        content: props.content,
-        links: [],
-        tags: props.tags,
-        types: props.types,
-        begin: props.begin,
-        end: props.end,
-        metas,
-        thumbnail: props.thumbnail,
-      },
-      config,
-    );
+    return new Record(props, config);
   }
 
   /**
@@ -186,7 +158,7 @@ export default class Record {
 
   static recordWithIncrementedTimestamp(props, config, increment) {
     props = {
-      ...normalizeInput(line, config),
+      ...normalizeInput(props, config),
       id: timestampIncrement(increment),
     };
 
