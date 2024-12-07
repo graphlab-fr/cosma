@@ -12,32 +12,29 @@
     </title>
     <style>
         :root {
-            /* typography */
             --sans: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
-            --mono: 'Consolas', "Courrier New", 'Courrier', monospace;
-            /* global size */
-            font-size: 62.5%;
         }
 
         body {
-            width: 100%;
             max-width: 800px;
             margin: 0 auto;
             font-family: var(--sans);
-            font-size: 1.4rem;
             padding: 1rem;
             box-sizing: border-box;
         }
 
-        li {
-            margin: 0.8rem 0;
+        details + details {
+            margin-top: 2em;
+            border-top: 1px solid black;
+            padding-top: 2em;
         }
 
-        em {
-            display: block;
-            font-size: 12px;
-            text-indent: 2rem;
-            margin-left: 3.8rem;
+        h2 {
+            font-size: 0.8em;
+        }
+
+        article {
+            margin-left: 1em;
         }
     </style>
 </head>
@@ -55,37 +52,37 @@
     </header>
 
     <main>
-        <section>
-            <h2>{{ 'section_error' | translate({ length: errorsLength }) }}</h2>
-            {% for recordId, lines in listErrors %}
-                {% set title = lines[0].recordTitle %}
+        <details open="open">
+            <summary class="menu-title">
+                {{ 'section_error' | translate({ length: errorsLength }) }}
+            </summary>
 
-                {% if recordId == "ignored_csv_line" %}
-                <h3>{{ 'csv_error' | translate }}</h3>
-                {% else %}
-                <h3>{{ title }}</h3>
-                {% endif %}
+            {% for report in reports %}
+            {% if report.isError %}
+            <article>
+                <h2>{{ report.locator }}</h2>
                 
-                <ul>
-                    {% for line in lines %}
-                    <li>{{line.about | translate(line.args) | safe }}</li>
-                    {% endfor %}
-                </ul>
+                <p>{{ report.message }}</p>
+            </article>
+            {% endif %}
             {% endfor %}
-        </section>
+        </details>
 
-        <section>
-            <h2>{{ 'section_warning' | translate({ length: warningsLength }) }}</h2>
-            {% for recordId, lines in listWarnings %}
-                {% set title = lines[0].recordTitle %}
-                <h3>{{ title }}</h3>
-                <ul>
-                    {% for line in lines %}
-                    <li>{{line.about | translate(line.args) | safe}}</li>
-                    {% endfor %}
-                </ul>
+        <details open="open">
+            <summary class="menu-title">
+                {{ 'section_warning' | translate({ length: warningsLength }) }}
+            </summary>
+
+            {% for report in reports %}
+            {% if report.isError == false %}
+            <article>
+                <h2>{{ report.locator }}</h2>
+                
+                <p>{{ report.message }}</p>
+            </article>
+            {% endif %}
             {% endfor %}
-        </section>
+         </details>
     </main>
 </body>
 

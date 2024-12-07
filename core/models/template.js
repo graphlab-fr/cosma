@@ -258,19 +258,21 @@ class Template {
         .map(({ thumbnail, links, bibliographicLinks, ...rest }) => {
           const backNodes = graph.inNeighbors(rest.id);
 
-          const toto = links.map(({ contexts, type, target }) => {
-            const recordTarget = records.get(target);
+          const toto = links
+            .filter(({ target }) => records.has(target))
+            .map(({ contexts, type, target }) => {
+              const recordTarget = records.get(target);
 
-            return {
-              context: contexts.join(''),
-              target: {
-                id: recordTarget.id,
-                title: recordTarget.title,
-                types: recordTarget.types,
-              },
-              type,
-            };
-          });
+              return {
+                context: contexts.join(''),
+                target: {
+                  id: recordTarget.id,
+                  title: recordTarget.title,
+                  types: recordTarget.types,
+                },
+                type,
+              };
+            });
 
           const backlinks = [];
 

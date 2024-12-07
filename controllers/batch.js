@@ -47,9 +47,6 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
   const heigtherTimestamp = timestamps[0];
   const increment = heigtherTimestamp - todayMaxTimestamp + 1;
 
-  /** @type {Record[]} */
-  let records = [];
-
   fs.readFile(filePath, 'utf-8', async (err, data) => {
     if (err) {
       return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Cannot read data file.');
@@ -93,7 +90,9 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
       throw new Error('Batch data should be array');
     }
 
-    records = data.map((e, i) => Record.recordWithIncrementedTimestamp(e, config, increment + i));
+    const records = data.map((e, i) =>
+      Record.recordWithIncrementedTimestamp(e, config, increment + i),
+    );
 
     await Promise.all(
       records.map(async (record) => {

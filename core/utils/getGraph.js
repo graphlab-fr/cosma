@@ -3,6 +3,13 @@ import { scaleLinear } from 'd3';
 import Config from '../models/config';
 
 /**
+ * @typedef BrokenEdge
+ * @type {object}
+ * @property {string} source
+ * @property {string} target
+ */
+
+/**
  * @typedef Node
  * @type {object}
  * @property {string} label
@@ -82,6 +89,8 @@ function getLinkShape(linkType, config) {
 export default function getGraph(records, config) {
   /** @type {GraphEngine<Node, Edge>} */
   const graph = new GraphEngine({ multi: true }, config.opts);
+  /** @type {BrokenEdge[]} */
+  const brokenEdges = [];
 
   records.forEach((record) => {
     graph.addNode(record.id, {
@@ -95,6 +104,14 @@ export default function getGraph(records, config) {
 
   records.forEach((record) => {
     record.links.forEach((link) => {
+      if (!graph.hasNode(link.target)) {
+        brokenEdges.push({
+          source: record.id,
+          target: link.target,
+        });
+        return;
+      }
+
       graph.addDirectedEdge(record.id, link.target, {
         type: link.type,
         shape: getLinkShape(link.type, config),
@@ -114,5 +131,5 @@ export default function getGraph(records, config) {
     };
   });
 
-  return graph;
+  return { graph, brokenEdges };
 }

@@ -1,5 +1,4 @@
 ---
-title: Evergreen notes
 type: concept
 thumbnail: otlet.jpg
 ---

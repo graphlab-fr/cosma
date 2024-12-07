@@ -1,0 +1,27 @@
+[
+  {
+    "isError": false,
+    "message": "Unknonw type \"tto\", replaced by \"undefined\"",
+    "locator": "/Applications/MAMP/htdocs/cosma/e2e/records/evergreen-notes-should-be-atomic.md"
+  },
+  {
+    "isError": true,
+    "message": "\"id\" is required",
+    "locator": "/Applications/MAMP/htdocs/cosma/e2e/records/evergreen-notes.md"
+  },
+  {
+    "isError": false,
+    "locator": "/Applications/MAMP/htdocs/cosma/e2e/records/evergreen-notes-should-be-atomic.md",
+    "message": "Link to \"otes\" is broken"
+  },
+  {
+    "isError": false,
+    "locator": "/Applications/MAMP/htdocs/cosma/e2e/records/sub/evergreen-note-titles-are-like-apis.md",
+    "message": "Link to \"evergreen-notes\" is broken"
+  },
+  {
+    "isError": false,
+    "locator": "/Applications/MAMP/htdocs/cosma/e2e/records/evergreen-notes-should-be-concept-oriented.md",
+    "message": "Link to \"evergreen-notes\" is broken"
+  }
+]

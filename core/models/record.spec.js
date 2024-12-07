@@ -99,9 +99,15 @@ This is a test content`);
   it('should get from empty file', () => {
     const file = '';
 
-    expect(() => {
-      Record.recordFromFile(file, config);
-    }).toThrowError(/Record contains error/);
+    const { record, report } = Record.recordFromFile(file, config);
+
+    expect(record).toEqual(undefined);
+    expect(report).toEqual([
+      {
+        isError: true,
+        message: expect.stringContaining('id'),
+      },
+    ]);
   });
 
   it('should get from file', () => {
@@ -118,8 +124,8 @@ author: Paul Otlet
 
 File linked to [[20210901132906]]`;
 
-    const result = Record.recordFromFile(file, config);
-    expect(result).toEqual({
+    const { record } = Record.recordFromFile(file, config);
+    expect(record).toEqual({
       id: '20200501150208',
       title: 'Test Record',
       content: '\n\nFile linked to [[20210901132906]]',
@@ -150,8 +156,8 @@ title: Test Record
 
 Content`;
 
-    const result = Record.recordFromFile(file, config);
-    expect(result).toEqual({
+    const { record } = Record.recordFromFile(file, config);
+    expect(record).toEqual({
       id: 'test-record',
       title: 'Test Record',
       content: '\n\nContent',

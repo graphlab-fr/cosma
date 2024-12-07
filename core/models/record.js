@@ -6,6 +6,14 @@ import parseWikilinks from '../utils/parseWikilinks.js';
 import timestampIncrement from '../utils/timestampIncrement.js';
 import slugify from '../utils/slugify.js';
 import getTimestampTuple from '../utils/timestamp.js';
+import Report from './report.js';
+
+/**
+ * @typedef RecordReport
+ * @type {object}
+ * @property {boolean} isError
+ * @property {string} message
+ */
 
 /**
  * @typedef RecordLink
@@ -24,7 +32,7 @@ const recordLinkSchema = Joi.object({
 });
 
 function validateTimestamp(value, helpers) {
-  const err = helpers.error('timestamp.invalid', {
+  const err = helpers.error('any.invalid', {
     message: `"${value}" can not convert to a valid timestamp.`,
   });
 
@@ -64,68 +72,115 @@ export default class Record {
   /**
    * @param {string} file
    * @param {import('../models/config').default} config
+   * @returns {{ record: Record, report: RecordReport[] }}
    */
 
   static recordFromFile(file, config) {
-    const { content, head } = readYmlFm(file, { schema: 'failsafe' });
+    /** @type {Record} */
+    let record;
+    /** @type {RecordReport[]} */
+    let report = [];
+
+    let extract;
+    try {
+      extract = readYmlFm(file, { schema: 'failsafe' });
+    } catch (error) {
+      return {
+        record: undefined,
+        report: [
+          {
+            isError: true,
+            message: 'File parsing error: ' + error.message,
+          },
+        ],
+      };
+    }
+
+    const { content, head } = extract;
+
+    const normalized = normalizeInput(head, config);
+    report = [...report, ...normalized.report];
 
     const props = {
-      ...normalizeInput(head, config),
+      ...normalized.props,
       links: parseWikilinks(content, config),
       content,
     };
 
     const { error } = schema.validate(props);
     if (error) {
-      throw new Error(`Record contains error: ${error.message}`);
+      report.push({
+        isError: true,
+        message: error.message,
+      });
+    } else {
+      record = new Record(
+        {
+          id: props.id,
+          title: props.title,
+          content: props.content,
+          links: props.links,
+          tags: props.tags,
+          types: props.types,
+          begin: props.begin,
+          end: props.end,
+          metas: props.metas,
+          thumbnail: props.thumbnail,
+        },
+        config,
+      );
     }
 
-    return new Record(
-      {
-        id: props.id,
-        title: props.title,
-        content: props.content,
-        links: props.links,
-        tags: props.tags,
-        types: props.types,
-        begin: props.begin,
-        end: props.end,
-        metas: props.metas,
-        thumbnail: props.thumbnail,
-      },
-      config,
-    );
+    return {
+      record,
+      report,
+    };
   }
 
   /**
    *
    * @param {unknown} line
    * @param {import('../models/config').default} config
+   * @returns {{ record: Record, report: RecordReport[] }}
    */
 
   static recordFromCsv(line, config) {
-    const props = normalizeInput(line, config);
+    /** @type {Record} */
+    let record;
+    /** @type {RecordReport[]} */
+    let report = [];
+
+    const normalized = normalizeInput(line, config);
+    const props = normalized.props;
 
     const { error } = schema.validate(props);
     if (error) {
-      throw new Error(`Record contains error: ${error.message}`);
+      report.push({
+        isError: true,
+        message: error.message,
+      });
+    } else {
+      record = new Record(
+        {
+          id: props.id,
+          title: props.title,
+          content: props.content,
+          links: [],
+          tags: props.tags,
+          types: props.types,
+          begin: props.begin,
+          end: props.end,
+          metas: props.metas,
+          thumbnail: props.thumbnail,
+        },
+        config,
+      );
     }
 
-    return new Record(
-      {
-        id: props.id,
-        title: props.title,
-        content: props.content,
-        links: [],
-        tags: props.tags,
-        types: props.types,
-        begin: props.begin,
-        end: props.end,
-        metas,
-        thumbnail: props.thumbnail,
-      },
-      config,
-    );
+    return {
+      record,
+      report,
+    };
   }
 
   /**
@@ -165,8 +220,10 @@ export default class Record {
    */
 
   static recordWithTimestamp(props, config) {
+    const normalized = normalizeInput(head, config);
+
     props = {
-      ...normalizeInput(props, config),
+      ...normalized(props, config).props,
       id: getTimestampTuple().join(''),
     };
 
@@ -185,8 +242,10 @@ export default class Record {
    */
 
   static recordWithIncrementedTimestamp(props, config, increment) {
+    const normalized = normalizeInput(head, config);
+
     props = {
-      ...normalizeInput(line, config),
+      ...normalized(line, config).props,
       id: timestampIncrement(increment),
     };
 
@@ -286,6 +345,9 @@ export default class Record {
  */
 
 function normalizeInput(head, config) {
+  /** @type {RecordReport[]} */
+  const report = [];
+
   const normalizedHead = normalizeWithAliases(aliasTable, head);
 
   const metas = {};
@@ -331,6 +393,10 @@ function normalizeInput(head, config) {
       if (!knownTypes.has(curr)) {
         if (!acc.includes('undefined')) {
           acc.push('undefined');
+          report.push({
+            isError: false,
+            message: `Unknonw type "${curr}", replaced by "undefined"`,
+          });
         }
       } else {
         acc.push(curr);
@@ -339,5 +405,34 @@ function normalizeInput(head, config) {
     }, []);
   }
 
-  return props;
+  return {
+    props,
+    report,
+  };
+}
+
+/**
+ *
+ * @param {RecordLink[]} links
+ * @param {import('../models/config').default} config
+ */
+
+function linksWithFilteredTypes(links, config) {
+  const report = [];
+
+  const knownTypes = config.getTypesLinks();
+
+  return links.map((link) => {
+    if (!knownTypes.has(link.type)) {
+      // if (!acc.includes('undefined')) {
+      //   acc.push('undefined');
+      // }
+      link.type = 'undefined';
+      report.push({
+        isError: false,
+        message: `Unknonw link type "${curr}", replaced by "undefined"`,
+      });
+    }
+    return link;
+  });
 }

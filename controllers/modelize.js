@@ -13,10 +13,20 @@ import getGraph from '../core/utils/getGraph.js';
 import Report from '../models/report-cli.js';
 import getHistorySavePath from './history.js';
 import citeLinks from '../core/utils/citeLinks.js';
+import templateReport from '../core/utils/templateReport.js';
 const { Readable } = require('stream');
 
+/**
+ * @typedef RecordLocator
+ * @type {object}
+ * @property {string} file
+ * @property {number} [line]
+ */
+
 async function modelize(options) {
-  let config = Config.get(Config.configFilePath);
+  const config = Config.get(Config.configFilePath);
+  /** @type {import('../core/utils/templateReport.js').ReportWithLocator[]} */
+  const report = [];
 
   options['citeproc'] = !!options['citeproc'] && config.canCiteproc();
   options['css_custom'] = !!options['customCss'] && config.canCssCustom();
@@ -66,6 +76,7 @@ async function modelize(options) {
 
   /** @type {Map<string, Record>} */
   const records = new Map();
+  const recordsLocate = new Map();
 
   async function processNodes(filePath) {
     const parser = fs.createReadStream(filePath).pipe(
@@ -75,11 +86,20 @@ async function modelize(options) {
         cast: (value) => (value === '' ? undefined : value),
       }),
     );
+
+    let lineNb = 1;
     parser.on('readable', function () {
       let line;
       while ((line = parser.read()) !== null) {
-        const record = Record.recordFromCsv(line, config);
+        const locator = `${filePath} at line ${lineNb}`;
+
+        const { record, report: recordReport } = Record.recordFromCsv(line, config);
+        recordReport.map((r) => ({ ...r, locator })).forEach((r) => report.push(r));
+
         records.set(record.id, record);
+        recordsLocate.set(record.id, locator);
+
+        lineNb++;
       }
     });
     await finished(parser);
@@ -102,11 +122,19 @@ async function modelize(options) {
       }),
     );
 
+    let lineNb = 1;
     parser.on('readable', function () {
       let line;
       while ((line = parser.read()) !== null) {
-        const record = Record.recordFromCsv(line, config);
+        const locator = `${url} at line ${lineNb}`;
+
+        const { record, report: recordReport } = Record.recordFromCsv(line, config);
+        recordReport.map((r) => ({ ...r, locator })).forEach((r) => report.push(r));
+
         records.set(record.id, record);
+        recordsLocate.set(record.id, locator);
+
+        lineNb++;
       }
     });
     await finished(parser);
@@ -132,12 +160,16 @@ async function modelize(options) {
     parser.on('readable', function () {
       let line;
       while ((line = parser.read()) !== null) {
-        records.get(line['source']).addLink({
-          contexts: line['label'] ? [line['label']] : [],
-          target: line['target'],
-          type: line['type'] || 'undefined',
-          text: undefined,
-        });
+        const record = records.get(line['source']);
+
+        if (record) {
+          record.addLink({
+            contexts: line['label'] ? [line['label']] : [],
+            target: line['target'],
+            type: line['type'] || 'undefined',
+            text: undefined,
+          });
+        }
       }
     });
     await finished(parser);
@@ -154,12 +186,16 @@ async function modelize(options) {
     parser.on('readable', function () {
       let line;
       while ((line = parser.read()) !== null) {
-        records.get(line['source']).addLink({
-          contexts: line['label'] ? [line['label']] : [],
-          target: line['target'],
-          type: line['type'] || 'undefined',
-          text: undefined,
-        });
+        const record = records.get(line['source']);
+
+        if (record) {
+          record.addLink({
+            contexts: line['label'] ? [line['label']] : [],
+            target: line['target'],
+            type: line['type'] || 'undefined',
+            text: undefined,
+          });
+        }
       }
     });
     await finished(parser);
@@ -180,20 +216,29 @@ async function modelize(options) {
 
       await Promise.all(
         files.map(async (filePath) => {
+          const locator = filePath;
+
           const content = await fsPromise.readFile(filePath, 'utf8');
-          const record = Record.recordFromFile(content, config);
-          records.set(record.id, record);
+          const { record, report: recordReport } = Record.recordFromFile(content, config);
 
-          if (bibliography) {
-            const citeExtract = extractCitations(record.content);
-            citeExtract.forEach((extract) =>
-              extract.citations.forEach((cite) => {
-                const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
-                records.set(recordCite.id, recordCite);
-              }),
-            );
+          recordReport.map((r) => ({ ...r, locator })).forEach((r) => report.push(r));
 
-            citeLinks(record.content).forEach((link) => record.addLink(link));
+          if (record) {
+            records.set(record.id, record);
+            recordsLocate.set(record.id, locator);
+
+            if (bibliography) {
+              const citeExtract = extractCitations(record.content);
+              citeExtract.forEach((extract) =>
+                extract.citations.forEach((cite) => {
+                  const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
+                  records.set(recordCite.id, recordCite);
+                  recordsLocate.set(recordCite.id, locator);
+                }),
+              );
+
+              citeLinks(record.content).forEach((link) => record.addLink(link));
+            }
           }
         }),
       );
@@ -217,7 +262,14 @@ async function modelize(options) {
     }
   }
 
-  const graph = getGraph(records, config);
+  const { graph, brokenEdges } = getGraph(records, config);
+  brokenEdges.forEach(({ source, target }) =>
+    report.push({
+      isError: false,
+      locator: recordsLocate.get(source),
+      message: `Link to "${target}" is broken`,
+    }),
+  );
 
   const { html } = new Template(records, graph, optionsTemplate);
 
@@ -251,19 +303,31 @@ async function modelize(options) {
     });
   }
 
-  if (Report.isItEmpty() === false) {
-    try {
-      await Report.makeDir();
-      const pathSaveReport = await Report.save(config.opts.title);
-      console.log(Report.getAsMessage());
-      console.log(['\x1b[2m', pathSaveReport, '\x1b[0m'].join(''));
-    } catch (err) {
-      console.error(
-        ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-        'cannot save log file in history folder: ' + err,
-      );
-    }
+  if (report.length > 0) {
+    const htmlReport = templateReport('toto', report);
+    fs.writeFile('report.html', htmlReport, (err) => {
+      if (err) {
+        console.error(
+          ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
+          'cannot save log file in history folder: ' + err,
+        );
+      }
+    });
   }
+
+  // if (Report.isItEmpty() === false) {
+  //   try {
+  //     await Report.makeDir();
+  //     const pathSaveReport = await Report.save(config.opts.title);
+  //     console.log(Report.getAsMessage());
+  //     console.log(['\x1b[2m', pathSaveReport, '\x1b[0m'].join(''));
+  //   } catch (err) {
+  //     console.error(
+  //       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
+  //       'cannot save log file in history folder: ' + err,
+  //     );
+  //   }
+  // }
 }
 
 /**
