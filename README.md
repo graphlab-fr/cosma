@@ -17,6 +17,13 @@ Visit <https://cosma.arthurperret.fr> to learn more about the software.
 - [Getting started](https://cosma.arthurperret.fr/getting-started.html)
 - [User manual](https://cosma.arthurperret.fr/user-manual.html)
 
+Cosma's development is publicly funded through [Université Jean Moulin Lyon 3](https://www.univ-lyon3.fr/accueil-en) and [Université Bordeaux Montaigne](https://www.u-bordeaux-montaigne.fr/en/index.html).
+
+<div>
+<img src="https://cosma.arthurperret.fr/img/logo-universite-jean-moulin-lyon-3.png" title="Université Jean Moulin Lyon 3 - logo" height="100px" width="auto" style="display: inline" />
+<img src="https://cosma.arthurperret.fr/img/logo-universite-bordeaux-montaigne.png" title="Université Bordeaux Montaigne - logo" height="100px" width="auto" style="display: inline" />
+</div>
+
 ## Commands
 
 ### Install
