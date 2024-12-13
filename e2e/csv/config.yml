@@ -30,7 +30,7 @@ record_types:
 link_types:
   undefined:
     stroke: simple
-    color: "#e1e1e1"
+    color: "#a0a0a0"
   proche:
     stroke: double
     color: "#000"

@@ -23,6 +23,8 @@ import frontendScript from 'front';
 import GraphEngine from 'graphology';
 import { extent } from 'd3';
 import extractCitations from '../utils/citeExtractor.js';
+import cssPrint from '../frontend/print.css';
+import cssStyles from '../frontend/styles.css';
 
 /**
  * @typedef ThumbnailIntegration
@@ -332,6 +334,7 @@ class Template {
       translation: langPck.i,
       lang: lang,
 
+      css: cssStyles + cssPrint,
       customCss: this.custom_css,
 
       views: views || [],

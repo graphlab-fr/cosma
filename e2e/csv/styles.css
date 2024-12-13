@@ -1,3 +1,29 @@
+:root {
+  --background-gray: rgb(31, 31, 31);
+}
+
+body {
+  background-color: black;
+}
+
+aside.menu {
+  color: white;
+}
+
+main.record-container {
+  background-color: rgb(31, 31, 31);
+  color: white;
+}
+
 .title {
-  color: gray !important;
+  color: gray;
+  text-transform: unset;
+}
+
+.graph-controls {
+  color: white;
+}
+
+.graph-wrapper text {
+  fill: white;
 }
