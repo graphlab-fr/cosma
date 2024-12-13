@@ -4,7 +4,7 @@ nodes_origin: ./nodes.csv
 links_origin: ./links.csv
 nodes_online: null
 links_online: null
-images_origin: null
+images_origin: ../records
 export_target: ../../temp
 history: false
 focus_max: 2
@@ -14,7 +14,7 @@ record_types:
     fill: "#eeeeee"
   Personne:
     stroke: "#1b9e77"
-    fill: "#1b9e77"
+    fill: people.png
   Œuvre:
     stroke: "#d95f02"
     fill: "#d95f02"
@@ -45,7 +45,7 @@ graph_highlight_on_hover: true
 graph_text_size: 7
 graph_arrows: true
 node_size_method: unique
-node_size: 5
+node_size: 10
 node_size_max: 20
 node_size_min: 10
 attraction_force: 600
@@ -55,8 +55,6 @@ attraction_horizontal: 0.1
 hide_id_from_record_header: false
 views: {}
 record_metas:
-  - prenom
-  - nom
   - titre
   - pays
   - domaine

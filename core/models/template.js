@@ -24,6 +24,13 @@ import GraphEngine from 'graphology';
 import { extent } from 'd3';
 import extractCitations from '../utils/citeExtractor.js';
 
+/**
+ * @typedef ThumbnailIntegration
+ * @type {object}
+ * @property {string} name
+ * @property {string} path
+ */
+
 const md = new mdIt({
   html: true,
   linkify: true,
@@ -187,44 +194,45 @@ class Template {
       });
     }
 
-    /**
-     * @param {string} type
-     * @param {import('./config.js').Options} opts
-     * @returns {'image'|'color'}
-     */
+    /** @type {Map<string, ThumbnailIntegration>} */
+    const thumbnailsMap = new Map();
 
-    function getFormatOfTypeRecord(type, opts) {
+    if (this.config.opts.images_origin) {
       const validExtnames = new Set(['.jpg', '.jpeg', '.png']);
 
-      const { fill } = opts['record_types'][type];
-      if (validExtnames.has(path.extname(fill))) {
-        return 'image';
-      }
-      return 'color';
-    }
+      records.forEach((record) => {
+        if (
+          record.thumbnail &&
+          validExtnames.has(path.extname(record.thumbnail)) &&
+          fs.existsSync(path.join(this.config.opts.images_origin, record.thumbnail))
+        ) {
+          thumbnailsMap.set(record.thumbnail, {
+            name: record.thumbnail,
+            path: path.join(this.config.opts.images_origin, record.thumbnail),
+          });
+        }
+      });
 
-    const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
-      .filter((type) => getFormatOfTypeRecord(type, this.config.opts) === 'image')
-      .map((type) => {
-        return {
-          name: recordTypes[type]['fill'],
-          path: path.join(imagesPath, recordTypes[type]['fill']),
-        };
+      Object.entries(this.config.opts.record_types).forEach(([type, { fill }]) => {
+        if (
+          validExtnames.has(path.extname(fill)) &&
+          fs.existsSync(path.join(this.config.opts.images_origin, fill))
+        ) {
+          thumbnailsMap.set(fill, {
+            name: fill,
+            path: path.join(this.config.opts.images_origin, fill),
+          });
+        }
       });
-    const thumbnailsFromRecords = [...records.values()]
-      .filter(({ thumbnail }) => typeof thumbnail === 'string')
-      .map(({ thumbnail }) => {
-        return {
-          name: thumbnail,
-          path: path.join(imagesPath, thumbnail),
-        };
-      });
+    }
 
     const templateEngine = new nunjucks.Environment();
 
-    md.inline.ruler2.push('image_to_base64', (state) =>
-      Template.mdItImageToBase64(imagesPath, state),
-    );
+    if (imagesPath) {
+      md.inline.ruler2.push('image_to_base64', (state) =>
+        Template.mdItImageToBase64(imagesPath, state),
+      );
+    }
 
     templateEngine.addFilter('slugify', (input) => {
       return slugify(input);
@@ -298,7 +306,7 @@ class Template {
             ...rest,
             backlinks,
             links: toto,
-            thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
+            thumbnail: thumbnailsMap.has(thumbnail) ? thumbnailsMap.get(thumbnail).path : undefined,
           };
         }),
 
@@ -339,9 +347,7 @@ class Template {
         keywords,
       },
 
-      nodeThumbnails: [...thumbnailsFromTypesRecords, ...thumbnailsFromRecords].filter(({ path }) =>
-        isAnImagePath(path),
-      ),
+      nodeThumbnails: [...thumbnailsMap.values()],
 
       focusIsActive: !(focusMax <= 0),
 
