@@ -169,4 +169,12 @@ describe('graph', () => {
       cy.get('[data-node], [data-link]').should('not.have.class', 'translucent');
     });
   });
+
+  it('should put thumbnail on graph patterns', () => {
+    cy.visit('temp/csv.html');
+
+    ['otlet.jpg', 'people.png'].forEach((id) => {
+      cy.get('#graph-canvas').find(`[id="${id}"]`).should('exist');
+    });
+  });
 });
