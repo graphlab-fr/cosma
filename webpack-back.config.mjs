@@ -30,6 +30,10 @@ export default {
         type: 'asset/source',
       },
       {
+        test: /\.css$/,
+        type: 'asset/source',
+      },
+      {
         test: /\.png$/,
         type: 'asset/inline',
       },

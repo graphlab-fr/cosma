@@ -23,6 +23,7 @@
             --highlight: {{ graph.config.graph_highlight_color }};
         }
 
+        {{ css | safe }}
         {% if customCss %}
         {{ customCss | safe }}
         {% endif %}
