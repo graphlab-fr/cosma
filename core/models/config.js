@@ -106,7 +106,7 @@ const minValues = {
   attraction_horizontal: 0,
 };
 
-function pathExists(path) {
+function pathExists(path, helpers) {
   if (fs.existsSync(path)) {
     return path;
   }
