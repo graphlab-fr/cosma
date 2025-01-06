@@ -117,6 +117,7 @@ export default class Record {
       id: citeItem.id,
       title: libraryItem['title'],
       content: bibliography.getNotes([citeItem])[0],
+      types: [config.opts.references_type_label],
     };
 
     const { error } = schema.validate(props);
