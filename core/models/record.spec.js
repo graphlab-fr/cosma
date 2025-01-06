@@ -22,6 +22,7 @@ const config = Config.getFrom({
     people: { fill: '#858585', stroke: '#858585' },
   },
   record_metas: ['author'],
+  references_type_label: 'author',
 });
 
 describe('Record model', () => {
@@ -193,7 +194,7 @@ Content`;
     expect(result).toEqual({
       id: citeItem.id,
       title: bibliography.library['engelbart1962'].title,
-      types: ['undefined'],
+      types: [config.opts.references_type_label],
       content: note,
       links: [],
       metas: {},

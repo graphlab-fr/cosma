@@ -146,13 +146,22 @@ describe('Record', () => {
     });
   });
 
-  it('should create bibliographic record contains quote note', () => {
-    cy.visit('temp/citeproc.html#matuschak2019');
-    assertRecordPanelIsOpened();
-    cy.get('.record-content:visible').should(
-      'contain.text',
-      'MATUSCHAK, Andy et NIELSEN, Michael, 2019',
-    );
+  describe('bibliographic record', () => {
+    beforeEach(() => {
+      cy.visit('temp/citeproc.html#matuschak2019');
+      assertRecordPanelIsOpened();
+    });
+
+    it('should contains quote note', () => {
+      cy.get('.record-content:visible').should(
+        'contain.text',
+        'MATUSCHAK, Andy et NIELSEN, Michael, 2019',
+      );
+    });
+
+    it('should has type from config', () => {
+      cy.get('.record.active .record-type').should('contain.text', 'reference');
+    });
   });
 
   it('should add quote notes at footer of record', () => {
