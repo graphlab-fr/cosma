@@ -265,10 +265,10 @@ class Template {
       hideIdFromRecordHeader,
       records: [...records.values()]
         .sort((a, b) => a.title.localeCompare(b.title))
-        .map(({ thumbnail, links, bibliographicLinks, ...rest }) => {
+        .map(({ thumbnail, links, bibliographicLinks, content, ...rest }) => {
           const backNodes = graph.inNeighbors(rest.id);
 
-          const toto = links.map(({ contexts, type, target }) => {
+          const recordLinks = links.map(({ contexts, type, target }) => {
             const recordTarget = records.get(target);
 
             return {
@@ -282,7 +282,7 @@ class Template {
             };
           });
 
-          const backlinks = [];
+          const recordBacklinks = [];
 
           backNodes.forEach((nodeId) => {
             const record = records.get(nodeId);
@@ -292,7 +292,7 @@ class Template {
                 return link.target === rest.id;
               })
               .forEach((link) => {
-                backlinks.push({
+                recordBacklinks.push({
                   context: link.contexts.join(''),
                   source: {
                     id: record.id,
@@ -304,10 +304,20 @@ class Template {
               });
           });
 
+          const citeNotes = new Set();
+          if (bibliography) {
+            const citeExtract = extractCitations(content);
+            citeExtract.forEach((extract) => {
+              bibliography.getNotes(extract.citations).forEach((quote) => citeNotes.add(quote));
+            });
+          }
+
           return {
             ...rest,
-            backlinks,
-            links: toto,
+            backlinks: recordBacklinks,
+            links: recordLinks,
+            bibliography: Array.from(citeNotes),
+            content,
             thumbnail: thumbnailsMap.has(thumbnail) ? thumbnailsMap.get(thumbnail).path : undefined,
           };
         }),
