@@ -146,13 +146,31 @@ describe('Record', () => {
     });
   });
 
-  it('should bibliographic record contains citeproc', () => {
+  it('should create bibliographic record contains quote note', () => {
     cy.visit('temp/citeproc.html#matuschak2019');
     assertRecordPanelIsOpened();
     cy.get('.record-content:visible').should(
       'contain.text',
       'MATUSCHAK, Andy et NIELSEN, Michael, 2019',
     );
+  });
+
+  it('should add quote notes at footer of record', () => {
+    cy.visit('temp/citeproc.html#tools-for-thought');
+
+    const notes = [
+      'ENGELBART, Douglas C, 1962. AFOSR-3223: Augmenting Human Intellect: A Conceptual Framework',
+      'MATUSCHAK, Andy et NIELSEN, Michael, 2019. How can we develop transformative tools for thought?',
+    ];
+
+    cy.get('.record-content:visible')
+      .find('.csl-entry')
+      .as('quoteNotes')
+      .should('have.length', notes.length);
+
+    notes.forEach((n, i) => {
+      cy.get('@quoteNotes').eq(i).should('contains.text', n);
+    });
   });
 
   describe('footer', () => {
