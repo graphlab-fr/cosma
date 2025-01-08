@@ -1,5 +1,7 @@
 const data = require('./batch/data.json');
 
+const allTitles = data.map(({ title }) => title);
+
 describe('Filters', () => {
   beforeEach(() => {
     cy.visit('temp/batch.html');
@@ -58,8 +60,6 @@ describe('Filters', () => {
   });
 
   it('should toggle filter toggle node visibility', () => {
-    const allTitles = data.map(({ title }) => title);
-
     cy.shouldGraphHasNodes(allTitles);
 
     clickOnFilter('œuvre');
@@ -81,6 +81,25 @@ describe('Filters', () => {
     assertFiltersAreChecked(['œuvre', 'institution']);
 
     cy.shouldGraphHasNodes(['Mundaneum', 'CDU']);
+  });
+
+  it('should filter node with several types', () => {
+    cy.shouldGraphHasNodes(allTitles);
+
+    clickOnFilter('otlet');
+    cy.shouldGraphHasNodes(allTitles);
+
+    clickOnFilter('personne');
+    cy.shouldGraphHasNodes(['Mundaneum', 'CDU']);
+
+    clickOnFilter('otlet');
+    cy.shouldGraphHasNodes(['Paul Otlet', 'Mundaneum', 'CDU']);
+
+    clickOnFilter('otlet');
+    cy.shouldGraphHasNodes(['Mundaneum', 'CDU']);
+
+    clickOnFilter('personne');
+    cy.shouldGraphHasNodes(allTitles);
   });
 
   describe('with alt key', () => {

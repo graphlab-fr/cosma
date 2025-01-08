@@ -177,4 +177,26 @@ describe('graph', () => {
       cy.get('#graph-canvas').find(`[id="${id}"]`).should('exist');
     });
   });
+
+  it('should display image on node if thumnail', () => {
+    cy.visit('temp/csv.html');
+
+    cy.get('[data-node="1"] [fill="url(#otlet.jpg)"]').should('be.visible');
+
+    cy.visit('temp/citeproc.html');
+
+    cy.get('[data-node="evergreen-notes"] [fill="url(#otlet.jpg)"]').should('be.visible');
+  });
+});
+
+it('should node with several types have several borders', () => {
+  cy.visit('temp/batch.html');
+
+  cy.get('[data-node="paul-otlet"] path.border').should('have.length', 2);
+});
+
+it('should display image on node if type fill is image', () => {
+  cy.visit('temp/csv.html');
+
+  cy.get('[data-node="1"] [fill="url(#otlet.jpg)"]').should('be.visible');
 });
