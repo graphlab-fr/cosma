@@ -340,7 +340,7 @@ class Config {
       ...opts,
     };
 
-    const { error } = optionsSchema.validate(opts);
+    const { error, value } = optionsSchema.validate(opts, { stripUnknown: true });
     if (error) {
       const details = (error?.details || [])
         .flatMap((detail) => [detail.message, detail.context.message])
@@ -349,7 +349,7 @@ class Config {
       throw new Error(`Config schema validation failed: ${details}`);
     }
 
-    return new Config(opts);
+    return new Config(value);
   }
 
   /**
@@ -384,7 +384,7 @@ class Config {
       ...data,
     };
 
-    const { error } = optionsSchema.validate(opts);
+    const { error, value } = optionsSchema.validate(opts, { stripUnknown: true });
     if (error) {
       const details = (error?.details || [])
         .flatMap((detail) => [detail.message, detail.context.message])
@@ -393,7 +393,7 @@ class Config {
       throw new Error(`Config file ${configFilePath} contains errors :\n${details}`);
     }
 
-    return new Config(opts);
+    return new Config(value);
   }
 
   /**
