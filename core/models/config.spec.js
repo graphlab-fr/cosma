@@ -216,4 +216,19 @@ css_custom: styles.css
     const config = Config.get('../config.yml');
     expect(config.canCssCustom()).toBe(true);
   });
+
+  it('should ignore unknown options', () => {
+    const configContent = `
+${minimalConfigContent}
+unknown: true
+        `;
+
+    mockReadConfigFile.mockImplementationOnce(() => configContent);
+    const config = Config.get('../config.yml');
+    expect(config.opts).not.toEqual(
+      expect.objectContaining({
+        unknown: true,
+      }),
+    );
+  });
 });
