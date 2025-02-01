@@ -8,10 +8,10 @@ const defaults = {
   suffix: undefined,
 };
 
-const tests = [
-  {
-    input: 'Blah blah [@doe99; @smith2000; @smith2004].',
-    expected: [
+describe('extractCitations', function () {
+  it('extracts a regular, full citation containing three IDs', () => {
+    const input = 'Blah blah [@doe99; @smith2000; @smith2004].';
+    const expected = [
       {
         from: 10,
         to: 42,
@@ -23,12 +23,13 @@ const tests = [
           { ...defaults, id: 'smith2004' },
         ],
       },
-    ],
-    description: 'extracts a regular, full citation containing three IDs',
-  },
-  {
-    input: 'Blah blah [see @doe99, pp. 33-35 and *passim*; @smith04, chap. 1].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular, full citation with prefixes, suffixes, and locators', () => {
+    const input = 'Blah blah [see @doe99, pp. 33-35 and *passim*; @smith04, chap. 1].';
+    const expected = [
       {
         from: 10,
         to: 65,
@@ -46,12 +47,13 @@ const tests = [
           { ...defaults, id: 'smith04', label: 'chapter', locator: '1', suffix: '' },
         ],
       },
-    ],
-    description: 'extracts a regular, full citation with prefixes, suffixes, and locators',
-  },
-  {
-    input: '[@{https://example.com/bib?name=foobar&date=2000}, p. 33]',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular, full citation with an URL as citekey', () => {
+    const input = '[@{https://example.com/bib?name=foobar&date=2000}, p. 33]';
+    const expected = [
       {
         from: 0,
         to: 57,
@@ -67,12 +69,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts a regular, full citation with an URL as citekey',
-  },
-  {
-    input: 'With some markup [*see* @engelbart1962 p. **32**].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts full citation with mardown', () => {
+    const input = 'With some markup [*see* @engelbart1962 p. **32**].';
+    const expected = [
       {
         from: 17,
         to: 49,
@@ -88,12 +91,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts full citation with mardown',
-  },
-  {
-    input: 'Citation with a suffix and locator [@engelbart1962 pp. 33, 35-37, and nowhere else].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts citation with composite page locator and suffix', () => {
+    const input = 'Citation with a suffix and locator [@engelbart1962 pp. 33, 35-37, and nowhere else].';
+    const expected = [
       {
         from: 35,
         to: 83,
@@ -109,12 +113,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts citation with composite page locator and suffix',
-  },
-  {
-    input: 'Another one [see @engelbart1962 p. 34-35].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts citation with composite page locator and suffix', () => {
+    const input = 'Another one [see @engelbart1962 p. 34-35].';
+    const expected = [
       {
         from: 12,
         to: 41,
@@ -131,12 +136,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts citation with composite page locator and suffix',
-  },
-  {
-    input: 'Citation with suffix only [@engelbart1962 and nowhere else].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts citation with suffix', () => {
+    const input = 'Citation with suffix only [@engelbart1962 and nowhere else].';
+    const expected = [
       {
         from: 26,
         to: 59,
@@ -152,12 +158,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts citation with suffix',
-  },
-  {
-    input: '[@smith{ii, A, D-Z}, with a suffix]',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular, full citation with an explicit locator in curly braces', () => {
+    const input = '[@smith{ii, A, D-Z}, with a suffix]';
+    const expected = [
       {
         from: 0,
         to: 35,
@@ -173,12 +180,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts a regular, full citation with an explicit locator in curly braces',
-  },
-  {
-    input: '[@smith, {pp. iv, vi-xi, (xv)-(xvii)} with suffix here]',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular, full citation with an explicit locator in the suffix', () => {
+    const input = '[@smith, {pp. iv, vi-xi, (xv)-(xvii)} with suffix here]';
+    const expected = [
       {
         from: 0,
         to: 55,
@@ -194,12 +202,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts a regular, full citation with an explicit locator in the suffix',
-  },
-  {
-    input: '[@smith{}, 99 years later]',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular, full citation with an empty explicit locator to prevent suffix parsing', () => {
+    const input = '[@smith{}, 99 years later]';
+    const expected = [
       {
         from: 0,
         to: 26,
@@ -209,13 +218,13 @@ const tests = [
           { ...defaults, id: 'smith', label: 'page', suffix: '99 years later', locator: '' },
         ],
       },
-    ],
-    description:
-      'extracts a regular, full citation with an empty explicit locator to prevent suffix parsing',
-  },
-  {
-    input: 'Smith says blah [-@smith04].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular, full citation with author suppression', () => {
+    const input = 'Smith says blah [-@smith04].';
+    const expected = [
       {
         from: 16,
         to: 27,
@@ -223,12 +232,13 @@ const tests = [
         source: '[-@smith04]',
         citations: [{ ...defaults, id: 'smith04', 'suppress-author': true, prefix: '' }],
       },
-    ],
-    description: 'extracts a regular, full citation with author suppression',
-  },
-  {
-    input: 'One other citation where Smith says -@smith04',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation with author suppression', () => {
+    const input = 'One other citation where Smith says -@smith04';
+    const expected = [
       {
         from: 36,
         to: 45,
@@ -236,12 +246,13 @@ const tests = [
         source: '@smith04',
         citations: [{ ...defaults, id: 'smith04', 'suppress-author': true }],
       },
-    ],
-    description: 'extracts an in-text citation with author suppression',
-  },
-  {
-    input: '@smith04 and @doe99 says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation', () => {
+    const input = '@smith04 and @doe99 says blah.';
+    const expected = [
       {
         from: 0,
         to: 8,
@@ -256,12 +267,13 @@ const tests = [
         source: '@doe99',
         citations: [{ ...defaults, id: 'doe99' }],
       },
-    ],
-    description: 'extracts an in-text citation',
-  },
-  {
-    input: '@smith04 [p. 33] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation with optional locator/suffix', () => {
+    const input = '@smith04 [p. 33] says blah.';
+    const expected = [
       {
         from: 0,
         to: 16,
@@ -269,12 +281,13 @@ const tests = [
         source: '@smith04 [p. 33]',
         citations: [{ ...defaults, id: 'smith04', label: 'page', locator: '33', suffix: '' }],
       },
-    ],
-    description: 'extracts an in-text citation with optional locator/suffix',
-  },
-  {
-    input: '@{https://example.com/bib?name=foobar&date=2000} says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation with a URL as citekey', () => {
+    const input = '@{https://example.com/bib?name=foobar&date=2000} says blah.';
+    const expected = [
       {
         from: 0,
         to: 48,
@@ -282,12 +295,13 @@ const tests = [
         source: '@{https://example.com/bib?name=foobar&date=2000}',
         citations: [{ ...defaults, id: 'https://example.com/bib?name=foobar&date=2000' }],
       },
-    ],
-    description: 'extracts an in-text citation with a URL as citekey',
-  },
-  {
-    input: '@{https://example.com/bib?name=foobar&date=2000} [p. 33] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation with a URL as citekey and optional locator/suffix', () => {
+    const input = '@{https://example.com/bib?name=foobar&date=2000} [p. 33] says blah.';
+    const expected = [
       {
         from: 0,
         to: 56,
@@ -303,12 +317,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts an in-text citation with a URL as citekey and optional locator/suffix',
-  },
-  {
-    input: 'Blah blah [agreesWith: @doe99; about: @smith2000].',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts regular citation with type', () => {
+    const input = 'Blah blah [agreesWith: @doe99; about: @smith2000].';
+    const expected = [
       {
         from: 10,
         to: 49,
@@ -319,13 +334,13 @@ const tests = [
           { ...defaults, id: 'smith2000', type: 'about' },
         ],
       },
-    ],
-    description: 'extracts regular citation with type',
-  },
-  // The next tests check that locators without explicit page number are detected
-  {
-    input: '@{https://example.com/bib?name=foobar&date=2000} [33] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation with a URL as citekey and locator without explicit label', () => {
+    const input = '@{https://example.com/bib?name=foobar&date=2000} [33] says blah.';
+    const expected = [
       {
         from: 0,
         to: 53,
@@ -341,13 +356,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description:
-      'extracts an in-text citation with a URL as citekey and locator without explicit label',
-  },
-  {
-    input: '@Author2015 [33] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts an in-text citation with a regular citekey and locator without explicit label', () => {
+    const input = '@Author2015 [33] says blah.';
+    const expected = [
       {
         from: 0,
         to: 16,
@@ -355,13 +370,13 @@ const tests = [
         source: '@Author2015 [33]',
         citations: [{ ...defaults, id: 'Author2015', label: 'page', locator: '33', suffix: '' }],
       },
-    ],
-    description:
-      'extracts an in-text citation with a regular citekey and locator without explicit label',
-  },
-  {
-    input: 'Someone [@Author2015, 33] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular citation with a regular citekey and locator without explicit label', () => {
+    const input = 'Someone [@Author2015, 33] says blah.';
+    const expected = [
       {
         from: 8,
         to: 25,
@@ -369,13 +384,13 @@ const tests = [
         source: '[@Author2015, 33]',
         citations: [{ ...defaults, id: 'Author2015', label: 'page', locator: '33', suffix: '' }],
       },
-    ],
-    description:
-      'extracts a regular citation with a regular citekey and locator without explicit label',
-  },
-  {
-    input: 'Someone [@Author2015, 33 and someplace else] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a regular citation with locator without explicit label and a suffix', () => {
+    const input = 'Someone [@Author2015, 33 and someplace else] says blah.';
+    const expected = [
       {
         from: 8,
         to: 44,
@@ -391,12 +406,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts a regular citation with locator without explicit label and a suffix',
-  },
-  {
-    input: 'Someone [@Author2015, ix-xi and someplace else] says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('extracts a citations and locators with latin numbers and a suffix', () => {
+    const input = 'Someone [@Author2015, ix-xi and someplace else] says blah.';
+    const expected = [
       {
         from: 8,
         to: 47,
@@ -412,12 +428,13 @@ const tests = [
           },
         ],
       },
-    ],
-    description: 'extracts a citations and locators with latin numbers and a suffix',
-  },
-  {
-    input: '@GrewalNetworkPower2009\n[@gallowayProtocolHowControl2004]',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('tests for an edge case of a barebones citation, followed by a newline and a bracket-citation', () => {
+    const input = '@GrewalNetworkPower2009\n[@gallowayProtocolHowControl2004]';
+    const expected = [
       {
         citations: [
           {
@@ -450,13 +467,13 @@ const tests = [
         source: '[@gallowayProtocolHowControl2004]',
         to: 57,
       },
-    ],
-    description:
-      'tests for an edge case of a barebones citation, followed by a newline and a bracket-citation',
-  },
-  {
-    input: '\\@smith04 and @doe99 says blah.',
-    expected: [
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
+
+  it('ignore quote begin by \\', () => {
+    const input = '\\@smith04 and @doe99 says blah.';
+    const expected = [
       {
         from: 14,
         to: 20,
@@ -464,15 +481,7 @@ const tests = [
         source: '@doe99',
         citations: [{ ...defaults, id: 'doe99' }],
       },
-    ],
-    description: 'ignore quote begin by \\',
-  },
-];
-
-describe('extractCitations', function () {
-  for (const test of tests) {
-    it(test.description, () => {
-      expect(extractCitations(test.input)).toEqual(test.expected);
-    });
-  }
+    ];
+    expect(extractCitations(input)).toEqual(expected);
+  });
 });
