@@ -217,7 +217,7 @@ async function modelize(options) {
     }
   }
 
-  const graph = getGraph(records, config);
+  const { graph } = getGraph(records, config);
 
   const { html } = new Template(records, graph, optionsTemplate);
 

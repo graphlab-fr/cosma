@@ -52,6 +52,12 @@ const recordDict = new Map([
             text: '->',
             contexts: [],
           },
+          {
+            target: 'unknown',
+            type: 'undefined',
+            text: '->',
+            contexts: [],
+          },
         ],
       },
       config,
@@ -70,7 +76,7 @@ const recordDict = new Map([
   ],
 ]);
 
-const graph = getGraph(recordDict, config);
+const { graph, brokenEdges } = getGraph(recordDict, config);
 const graphData = graph.export();
 
 describe('getGraph', () => {
@@ -131,6 +137,15 @@ describe('getGraph', () => {
           type: 'collab',
           shape: { stroke: 'double', dashInterval: null },
         },
+      },
+    ]);
+  });
+
+  it('should list broken edges', () => {
+    expect(brokenEdges).toEqual([
+      {
+        source: 'suzanne-briet',
+        target: 'unknown',
       },
     ]);
   });
