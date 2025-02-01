@@ -454,6 +454,19 @@ const tests = [
     description:
       'tests for an edge case of a barebones citation, followed by a newline and a bracket-citation',
   },
+  {
+    input: '\\@smith04 and @doe99 says blah.',
+    expected: [
+      {
+        from: 14,
+        to: 20,
+        composite: true,
+        source: '@doe99',
+        citations: [{ ...defaults, id: 'doe99' }],
+      },
+    ],
+    description: 'ignore quote begin by \\',
+  },
 ];
 
 describe('extractCitations', function () {
