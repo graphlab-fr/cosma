@@ -25,6 +25,7 @@ import { extent } from 'd3';
 import extractCitations from '../utils/citeExtractor.js';
 import cssPrint from '../frontend/print.css';
 import cssStyles from '../frontend/styles.css';
+import quotesFromText from '../utils/quotesFromText.js';
 
 /**
  * @typedef ThumbnailIntegration
@@ -243,7 +244,11 @@ class Template {
       input = convertWikilinks(input, records, opts, idToHighlight);
 
       if (bibliography) {
-        input = convertQuotes(input, bibliography, records, idToHighlight);
+        const citeItems = quotesFromText(input);
+
+        if (citeItems.every((item) => bibliography.existsOnLibrary(item))) {
+          input = convertQuotes(input, bibliography, records, idToHighlight);
+        }
       }
 
       return input;
@@ -268,19 +273,21 @@ class Template {
         .map(({ thumbnail, links, bibliographicLinks, content, ...rest }) => {
           const backNodes = graph.inNeighbors(rest.id);
 
-          const recordLinks = links.map(({ contexts, type, target }) => {
-            const recordTarget = records.get(target);
+          const recordLinks = links
+            .filter((link) => graph.hasNode(link.target))
+            .map(({ contexts, type, target }) => {
+              const recordTarget = records.get(target);
 
-            return {
-              context: contexts.join(''),
-              target: {
-                id: recordTarget.id,
-                title: recordTarget.title,
-                types: recordTarget.types,
-              },
-              type,
-            };
-          });
+              return {
+                context: contexts.join(''),
+                target: {
+                  id: recordTarget.id,
+                  title: recordTarget.title,
+                  types: recordTarget.types,
+                },
+                type,
+              };
+            });
 
           const recordBacklinks = [];
 
@@ -304,19 +311,23 @@ class Template {
               });
           });
 
-          const citeNotes = new Set();
+          /** @type {string[]} */
+          let citeNotes = [];
+
           if (bibliography) {
-            const citeExtract = extractCitations(content);
-            citeExtract.forEach((extract) => {
-              bibliography.getNotes(extract.citations).forEach((quote) => citeNotes.add(quote));
-            });
+            const citeItems = quotesFromText(content);
+
+            if (citeItems.every((item) => bibliography.existsOnLibrary(item))) {
+              citeNotes = new Set(bibliography.getNotes(citeItems));
+              citeNotes = Array.from(citeNotes);
+            }
           }
 
           return {
             ...rest,
             backlinks: recordBacklinks,
             links: recordLinks,
-            bibliography: Array.from(citeNotes),
+            bibliography: citeNotes,
             content,
             thumbnail: thumbnailsMap.has(thumbnail) ? thumbnailsMap.get(thumbnail).path : undefined,
           };

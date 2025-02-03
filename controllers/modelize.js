@@ -187,10 +187,12 @@ async function modelize(options) {
           if (bibliography) {
             const citeExtract = extractCitations(record.content);
             citeExtract.forEach((extract) =>
-              extract.citations.forEach((cite) => {
-                const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
-                records.set(recordCite.id, recordCite);
-              }),
+              extract.citations
+                .filter((cite) => bibliography.existsOnLibrary(cite))
+                .forEach((cite) => {
+                  const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
+                  records.set(recordCite.id, recordCite);
+                }),
             );
 
             citeLinks(record.content).forEach((link) => record.addLink(link));
