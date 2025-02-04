@@ -5,6 +5,7 @@
  */
 
 import fs from 'node:fs';
+import fsPromise from 'node:fs/promises';
 import path from 'node:path';
 import envPaths from 'env-paths';
 import yaml from 'yaml';
@@ -447,6 +448,27 @@ class Config {
 
   getYaml() {
     return yaml.stringify(this.opts, { keepUndefined: true });
+  }
+
+  /**
+   * @param {import('./config').default} config
+   * @returns {{csl: string, bib: string, local: string}}
+   */
+
+  async getBibliographyFiles() {
+    if (!this.canCiteproc()) {
+      return Promise.reject(
+        'You can not get bibliographic files from config witout register files paths in config',
+      );
+    }
+
+    const [csl, bib, local] = await Promise.all([
+      fsPromise.readFile(this.opts.csl, 'utf-8'),
+      fsPromise.readFile(this.opts.bibliography, 'utf-8'),
+      fsPromise.readFile(this.opts.csl_locale, 'utf-8'),
+    ]);
+
+    return { csl, bib, local };
   }
 
   /**

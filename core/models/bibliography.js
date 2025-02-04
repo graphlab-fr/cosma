@@ -6,68 +6,49 @@
 
 import fs from 'node:fs';
 import CSL from 'citeproc';
-import extractCitations from '../utils/citeExtractor';
-import extractParaphs from '../utils/paraphExtractor';
+import Joi from 'joi';
 
-/**
- * @typedef BibliographicRecord
- * @type {object}
- * @property {string} type
- * @property {string} target
- * @property {string} text
- * @property {string[]} contexts
- */
-
-/**
- * @typedef BibliographicOutput
- * @type {object}
- * @property {string} cluster Quoting string to insert in text
- * @property {string[]} record Bibliographic record in HTML
- * @property {string[]} unknowedIds Ids out from library
- */
+const cslJsonSchema = Joi.array().items(
+  Joi.object({
+    id: Joi.string().required(),
+  }).unknown(true),
+);
 
 class Bibliography {
-  static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
-
   /**
-   * @param {string} recordContent
-   * @returns {BibliographicRecord[]}
+   * @param {import('./config').default} config
    */
 
-  static getBibliographicLinksFromText(recordContent) {
-    /** @type {BibliographicRecord[]} */
-    let quotes = [];
+  static async getBibliography(config) {
+    const { bib, csl, local } = await config.getBibliographyFiles();
 
-    extractParaphs(recordContent).forEach((paraph) => {
-      extractCitations(paraph).forEach((result) => {
-        result.citations.forEach((citation) => {
-          quotes.push({
-            contexts: [paraph],
-            target: citation.id,
-            text: undefined,
-            type: citation.type || 'undefined',
-          });
-        });
-      });
-    });
+    console.log(bib);
+    
 
-    return quotes;
-  }
+    // const { error } = cslJsonSchema.validate(bib);
+    // if (error) {
+    //   throw new Error(`Bibliography validation error: ${error.message}`);
+    // }
 
-  /**
-   * @param {string[]} quotesId
-   * @returns {BibliographicRecord[]}
-   */
+    const library = {};
+    for (const { id, ...rest } of bib) {
+      library[id] = { id, ...rest };
+    }
 
-  static getBibliographicLinksFromList(quotesId = []) {
-    return quotesId.map((quoteId, index) => {
-      return {
-        contexts: [],
-        target: quoteId,
-        text: undefined,
-        type: 'undefined',
-      };
-    });
+    const citeproc = new CSL.Engine(
+      {
+        retrieveLocale: () => {
+          return local;
+        },
+        retrieveItem: (id) => {
+          // find the quote item : CSL-JSON object
+          return library[id];
+        },
+      },
+      csl,
+    );
+
+    return new Bibliography(library, citeproc);
   }
 
   /**
@@ -113,54 +94,18 @@ class Bibliography {
   }
 
   /**
-   * @param {object} library
-   * @param {string} cslStyle
-   * @param {string} xmlLocal
-   * @param {Record[]} records
+   * @param {Record<string, unknown>} library
+   * @param {CSL.Engine} citeproc
    * @returns
    * @exemple
    * ```
-   * const { records } = new Graph(records, undefined, []);
-   * const bibliography = new Bibliography(
-   *      [
-   *          {
-   *              "id": "Goody_1979",
-   *              "type": "book",
-   *              "title": "La Raison graphique: la domestication de la pensée sauvage",
-   *              ...
-   *              "author": [
-   *                  {
-   *                      "family": "Goody",
-   *                      "given": "Jack"
-   *                  }
-   *              ],
-   *              "issued": { "date-parts": [[1979]] }
-   *          },
-   *      ],
-   *      '<?xml version="1.0" encoding="utf-8"?><style xmlns="http://purl.org/net/xbiblio/csl" ...> ... </style>',
-   *      '<?xml version="1.0" encoding="utf-8"?><locale xmlns="http://purl.org/net/xbiblio/csl" ...> ... </locale>',
-   *      records
-   * );
+   *
    * ```
    */
 
-  constructor(library = {}, cslStyle, xmlLocal) {
-    this.library = {};
-    this.ids = new Set();
-    for (const { id, ...rest } of Object.values(library)) {
-      this.library[id] = { id, ...rest };
-      this.ids.add(id);
-    }
-    this.cslStyle = cslStyle;
-    this.xmlLocal = xmlLocal;
-
-    this.citeproc;
-
-    if (!this.cslStyle || !this.xmlLocal) {
-      return;
-    }
-
-    this.citeproc = this.getCSL();
+  constructor(library, citeproc) {
+    this.library = library;
+    this.citeproc = citeproc;
   }
 
   /**
@@ -190,70 +135,11 @@ class Bibliography {
   }
 
   /**
-   * @param {BibliographicRecord} bibliographicRecord
-   * @returns {BibliographicOutput}
+   * @param {import('../utils/citeExtractor').CiteItem} item
    */
 
-  get(bibliographicRecord) {
-    const unknowedIds = [];
-    const ids = Array.from(bibliographicRecord.ids).filter((id) => {
-      if (this.ids.has(id)) {
-        return true;
-      }
-      unknowedIds.push(id);
-      return false;
-    });
-    if (ids.length === 0) {
-      return {
-        record: undefined,
-        cluster: '',
-        unknowedIds,
-      };
-    }
-
-    for (const id of ids) {
-      this.library[id]['used'] = true;
-    }
-
-    this.citeproc.updateItems(ids);
-    let record = this.citeproc
-      .makeBibliography()[1]
-      .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t));
-
-    bibliographicRecord.quotesExtract.citationItems = [
-      ...bibliographicRecord.quotesExtract.citationItems.filter(({ id }) => this.ids.has(id)),
-    ];
-    const cluster = this.citeproc.processCitationCluster(
-      bibliographicRecord.quotesExtract,
-      [],
-      [],
-    )[1][0][1];
-
-    return {
-      record,
-      cluster,
-      unknowedIds,
-    };
-  }
-
-  /**
-   * Get 'citeproc' engine, from library (JSON CSL) and config files (XML, CSL)
-   * @returns {CSL}
-   */
-
-  getCSL() {
-    return new CSL.Engine(
-      {
-        retrieveLocale: () => {
-          return this.xmlLocal;
-        },
-        retrieveItem: (id) => {
-          // find the quote item : CSL-JSON object
-          return this.library[id];
-        },
-      },
-      this.cslStyle,
-    );
+  existsOnLibrary(item) {
+    return !!this.library[item.id];
   }
 }
 
