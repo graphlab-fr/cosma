@@ -1,5 +1,5 @@
 import yml from 'yaml';
-import { read as readYmlFm } from '../utils/yamlfrontmatter.js';
+import readYamlFrontmatter from '../utils/yamlfrontmatter.js';
 import Joi from 'joi';
 import normalizeWithAliases from '../utils/normalizeWithAliases.js';
 import parseWikilinks from '../utils/parseWikilinks.js';
@@ -67,12 +67,12 @@ export default class Record {
    */
 
   static recordFromFile(file, config) {
-    const { content, head } = readYmlFm(file, { schema: 'failsafe' });
+    const { body, head } = readYamlFrontmatter(file, { schema: 'failsafe' });
 
     const props = {
       ...normalizeInput(head, config),
-      links: parseWikilinks(content, config),
-      content,
+      links: parseWikilinks(body, config),
+      body,
     };
 
     const { error } = schema.validate(props);

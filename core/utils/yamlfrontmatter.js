@@ -8,25 +8,32 @@ const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|\.]{3})?([\w\W]*)*/;
  * Get result as JSON
  * @param {string} fileContent
  * @param {import('yaml').ParseOptions & import('yaml').SchemaOptions} options
- * @returns {{head: unknown, content: string}} JSON
+ * @returns {{head: unknown, body: string}} JSON
+ * @throws {YAMLParseError}
  */
 
-function read(fileContent, options = {}) {
+export default function readYamlFrontmatter(fileContent, options = {}) {
+  if (fileContent === '') {
+    return {
+      body: undefined,
+      head: null,
+    };
+  }
+
   const windowsCariageReturn = new RegExp(/\r\n/g);
   fileContent = fileContent.replace(windowsCariageReturn, '\n');
 
-  const [, withDash, withoutDash, content] = regex.exec(fileContent);
+  const [, withDash, withoutDash, body] = regex.exec(fileContent);
 
-  let ymlResult = {};
-
-  if (fileContent && withoutDash) {
-    ymlResult = yml.parse(withoutDash, options);
+  if (withoutDash === undefined) {
+    return {
+      body: fileContent,
+      head: null,
+    };
   }
 
   return {
-    head: ymlResult,
-    content,
+    body,
+    head: yml.parse(withoutDash, options),
   };
 }
-
-export { read };

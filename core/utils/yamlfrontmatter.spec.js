@@ -1,60 +1,73 @@
-import { read } from './yamlfrontmatter';
+import { YAMLParseError } from 'yaml';
+import readYamlFrontmatter from './yamlfrontmatter';
 
-const tests = [
-  {
-    input: `---
+describe('YAML Front Matter parser', function () {
+  it('With "---" separator', () => {
+    const input = `---
 id: 20210901132906
 ---
 
-Paul Otlet est la tête pensante du Mundaneum`,
-    expected: {
-      content: `
+Paul Otlet est la tête pensante du Mundaneum`;
+
+    expect(readYamlFrontmatter(input)).toEqual({
+      body: `
 
 Paul Otlet est la tête pensante du Mundaneum`,
       head: {
         id: 20210901132906,
       },
-    },
-    description: 'With "---" separator',
-  },
-  {
-    input: `---
+    });
+  });
+
+  it('With "..." separator', () => {
+    const input = `---
 id: 20210901132906
 ...
 
-Paul Otlet est la tête pensante du Mundaneum`,
-    expected: {
-      content: `
+Paul Otlet est la tête pensante du Mundaneum`;
+
+    expect(readYamlFrontmatter(input)).toEqual({
+      body: `
 
 Paul Otlet est la tête pensante du Mundaneum`,
       head: {
         id: 20210901132906,
       },
-    },
-    description: 'With "..." separator',
-  },
-  {
-    input: '',
-    expected: {
-      content: undefined,
-      head: {},
-    },
-    description: 'Empty',
-  },
-  {
-    input: 'No Yaml Front Matter',
-    expected: {
-      content: 'No Yaml Front Matter',
-      head: {},
-    },
-    description: 'No head',
-  },
-];
-
-describe('YAML Front Matter parser', function () {
-  for (const test of tests) {
-    it(test.description, () => {
-      expect(read(test.input)).toEqual(test.expected);
     });
-  }
+  });
+
+  it('Catch YAML parse error', () => {
+    const input = `---
+id: 20210901132906
+id: 20210901132906
+...
+
+Paul Otlet est la tête pensante du Mundaneum`;
+
+    expect(() => readYamlFrontmatter(input)).toThrow(YAMLParseError);
+
+    try {
+      readYamlFrontmatter(input);
+    } catch (error) {
+      console.log(error.linePos);
+    }
+  });
+
+  it('Empty', () => {
+    const input = '';
+
+    expect(readYamlFrontmatter(input)).toEqual({
+      body: undefined,
+      head: null,
+    });
+  });
+
+  it('No head', () => {
+    const input = 'No Yaml Front Matter';
+
+    expect(readYamlFrontmatter(input)).toEqual({
+      body: 'No Yaml Front Matter',
+      head: null,
+    });
+  });
 });
