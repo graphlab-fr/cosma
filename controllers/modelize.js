@@ -1,8 +1,6 @@
-import { parse } from 'csv-parse';
 import fs from 'node:fs';
 import fsPromise from 'node:fs/promises';
 import path from 'node:path';
-import { finished } from 'stream/promises';
 import Record from '../core/models/record.js';
 import Bibliography from '../core/models/bibliography.js';
 import Config from '../core/models/config.js';
@@ -13,7 +11,27 @@ import getGraph from '../core/utils/getGraph.js';
 import Report from '../models/report-cli.js';
 import getHistorySavePath from './history.js';
 import citeLinks from '../core/utils/citeLinks.js';
-const { Readable } = require('stream');
+import {
+  processLinks,
+  processLinksOnline,
+  processNodes,
+  processNodesOnline,
+} from '../core/utils/csvToNodes.js';
+
+/**
+ * @typedef ReportLocator
+ * @type {object}
+ * @property {string} file
+ * @property {number} [line]
+ */
+
+/**
+ * @typedef ReportItem
+ * @type {object}
+ * @property {ReportLocator} locator
+ * @property {boolean} isError
+ * @property {string} message
+ */
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -58,6 +76,8 @@ async function modelize(options) {
         );
       }
       break;
+    default:
+      throw new Error('Unknown data origin.');
   }
 
   console.log(getModelizeMessage(optionsTemplate, config.opts.select_origin));
@@ -66,104 +86,6 @@ async function modelize(options) {
 
   /** @type {Map<string, Record>} */
   const records = new Map();
-
-  async function processNodes(filePath) {
-    const parser = fs.createReadStream(filePath).pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        const record = Record.recordFromCsv(line, config);
-        records.set(record.id, record);
-      }
-    });
-    await finished(parser);
-  }
-
-  async function processNodesOnline(url) {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch CSV: ${response.statusText}`);
-    }
-
-    const readableStream = Readable.fromWeb(response.body);
-
-    const parser = readableStream.pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        const record = Record.recordFromCsv(line, config);
-        records.set(record.id, record);
-      }
-    });
-    await finished(parser);
-  }
-
-  async function processLinksOnline(url) {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch CSV: ${response.statusText}`);
-    }
-
-    const readableStream = Readable.fromWeb(response.body);
-
-    const parser = readableStream.pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        records.get(line['source']).addLink({
-          contexts: line['label'] ? [line['label']] : [],
-          target: line['target'],
-          type: line['type'] || 'undefined',
-          text: undefined,
-        });
-      }
-    });
-    await finished(parser);
-  }
-
-  async function processLinks(filePath) {
-    const parser = fs.createReadStream(filePath).pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        records.get(line['source']).addLink({
-          contexts: line['label'] ? [line['label']] : [],
-          target: line['target'],
-          type: line['type'] || 'undefined',
-          text: undefined,
-        });
-      }
-    });
-    await finished(parser);
-  }
 
   switch (config.opts.select_origin) {
     case 'directory': {
@@ -203,14 +125,14 @@ async function modelize(options) {
       break;
     }
     case 'online': {
-      await processNodesOnline(config.opts['nodes_online']);
-      await processLinksOnline(config.opts['links_online']);
+      await processNodesOnline(config.opts['nodes_online'], records, config);
+      await processLinksOnline(config.opts['links_online'], records);
 
       break;
     }
     case 'csv': {
-      await processNodes(config.opts['nodes_origin']);
-      await processLinks(config.opts['links_origin']);
+      await processNodes(config.opts['nodes_origin'], records, config);
+      await processLinks(config.opts['links_origin'], records);
 
       break;
     }
