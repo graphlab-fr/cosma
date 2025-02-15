@@ -1,18 +1,52 @@
 const data = require('./batch/data.json');
 
+it('should get one node per record from batch', () => {
+  cy.visit('temp/batch.html');
+
+  const allTitles = data.map(({ title }) => title);
+  cy.shouldGraphHasNodes(allTitles);
+});
+
+it('should get one node per record from csv batch', () => {
+  cy.visit('temp/batch-csv.html');
+
+  cy.get('[data-node]:visible').should('have.length', 128);
+});
+
+it('should get one node per record from csv', () => {
+  cy.visit('temp/csv.html');
+
+  cy.get('[data-node]:visible').should('have.length', 128);
+});
+
+it('should get one node per record from oneline', () => {
+  cy.visit('temp/online.html');
+
+  cy.shouldGraphHasNodes(['Paul Otlet', 'Suzanne Briet']);
+});
+
+it('should get one node per created record', () => {
+  cy.visit('temp/records.html');
+
+  cy.shouldGraphHasNodes(['Toto', 'Tata', 'Tutu']);
+});
+
+it('should not get bibliographic nodes without citeproc', () => {
+  cy.visit('temp/no-citeproc.html');
+
+  cy.shouldGraphHasNodes([
+    'Evergreen note titles arelike APIs',
+    'Evergreen notes should beatomic',
+    'Evergreen notes should beconcept-oriented',
+    'Evergreen notes should bedensely linked',
+    'Evergreen notes',
+    'Tools for thought',
+  ]);
+});
+
 describe('graph', () => {
   beforeEach(() => {
     cy.visit('temp/citeproc.html');
-  });
-
-  it('should get one node per record', () => {
-    cy.visit('temp/batch.html');
-
-    const allTitles = data.map(({ title }) => title);
-    cy.shouldGraphHasNodes(allTitles);
-
-    cy.visit('temp/csv.html');
-    cy.get('[data-node]:visible').should('have.length', 128);
   });
 
   it('should get bibliographic nodes with citeproc', () => {
@@ -26,17 +60,6 @@ describe('graph', () => {
       // bibliographic nodes
       'Augmenting Human Intellect:A Conceptual Framework',
       'How can we develop transformativetools for thought?',
-    ]);
-
-    cy.visit('temp/no-citeproc.html');
-
-    cy.shouldGraphHasNodes([
-      'Evergreen note titles arelike APIs',
-      'Evergreen notes should beatomic',
-      'Evergreen notes should beconcept-oriented',
-      'Evergreen notes should bedensely linked',
-      'Evergreen notes',
-      'Tools for thought',
     ]);
   });
 
