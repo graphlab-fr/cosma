@@ -1,5 +1,6 @@
 import Record from './record.js';
 import Config from './config.js';
+import Joi from 'joi';
 
 jest.mock('../i18n.yml', () => ({}));
 jest.mock('../../static/template/report.njk', () => '');
@@ -97,29 +98,24 @@ author: John Doe
 This is a test content`);
   });
 
-  it('should get from empty file', () => {
-    const file = '';
-
-    expect(() => {
-      Record.recordFromFile(file, config);
-    }).toThrowError(/Record contains error/);
-  });
-
-  it('should get from file', () => {
-    const file = `---
-id: "20200501150208"
-title: Test Record
-type:
-  - people
-  - unknown
-keyword:
-  - test
-author: Paul Otlet
----
+  it('should get from file data', () => {
+    const body = `
 
 File linked to [[20210901132906]]`;
+    const head = {
+      id: '20200501150208',
+      title: 'Test Record',
+      types: ['people', 'undefined'],
+      tags: ['test'],
+      metas: {
+        author: 'Paul Otlet',
+      },
+      begin: undefined,
+      end: undefined,
+      thumbnail: undefined,
+    };
 
-    const result = Record.recordFromFile(file, config);
+    const result = Record.recordFromFile(body, head, config);
     expect(result).toEqual({
       id: '20200501150208',
       title: 'Test Record',
@@ -145,13 +141,20 @@ File linked to [[20210901132906]]`;
   });
 
   it('should title became id if no id', () => {
-    const file = `---
-title: Test Record
----
+    const body = `
 
 Content`;
+    const head = {
+      title: 'Test Record',
+      types: ['unknown'],
+      tags: [],
+      metas: {},
+      begin: undefined,
+      end: undefined,
+      thumbnail: undefined,
+    };
 
-    const result = Record.recordFromFile(file, config);
+    const result = Record.recordFromFile(body, head, config);
     expect(result).toEqual({
       id: 'test-record',
       title: 'Test Record',
@@ -204,5 +207,33 @@ Content`;
       thumbnail: undefined,
       config: config,
     });
+  });
+
+  it('should get Joi schema error if no id', () => {
+    const result = Record.getErrors({}, config);
+
+    expect(Joi.isError(result)).toBe(true);
+
+    expect(result.message).toEqual('"id" is required');
+    expect(result.name).toEqual('ValidationError');
+    expect(result.details).toEqual([
+      {
+        context: { key: 'id', label: 'id' },
+        message: '"id" is required',
+        path: ['id'],
+        type: 'any.required',
+      },
+    ]);
+  });
+
+  it('should get Joi schema error if props are null', () => {
+    expect(() => Record.getErrors(null, config)).toThrow('Head is required.');
+  });
+
+  it('should return undefined if no error', () => {
+    const result = Record.getErrors(props, config);
+
+    expect(Joi.isError(result)).toBe(false);
+    expect(result).toBeUndefined();
   });
 });

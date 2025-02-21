@@ -15,7 +15,7 @@ const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|\.]{3})?([\w\W]*)*/;
 export default function readYamlFrontmatter(fileContent, options = {}) {
   if (fileContent === '') {
     return {
-      body: undefined,
+      body: null,
       head: null,
     };
   }

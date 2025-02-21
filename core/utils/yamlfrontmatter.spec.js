@@ -45,19 +45,13 @@ id: 20210901132906
 Paul Otlet est la tête pensante du Mundaneum`;
 
     expect(() => readYamlFrontmatter(input)).toThrow(YAMLParseError);
-
-    try {
-      readYamlFrontmatter(input);
-    } catch (error) {
-      console.log(error.linePos);
-    }
   });
 
   it('Empty', () => {
     const input = '';
 
     expect(readYamlFrontmatter(input)).toEqual({
-      body: undefined,
+      body: null,
       head: null,
     });
   });

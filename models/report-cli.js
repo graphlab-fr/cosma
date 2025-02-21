@@ -38,6 +38,7 @@ class ReportCli extends Report {
     return new Promise((resolve, reject) => {
       if (fs.existsSync(ReportCli.pathDir)) {
         resolve();
+        return;
       }
       fs.mkdir(ReportCli.pathDir, { recursive: true }, (err) => {
         if (err) {

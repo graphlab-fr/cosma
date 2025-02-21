@@ -7,6 +7,7 @@ import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
 import extractCitations from '../core/utils/citeExtractor.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
+import readYamlFrontmatter from '../core/utils/yamlfrontmatter.js';
 import getGraph from '../core/utils/getGraph.js';
 import Report from '../models/report-cli.js';
 import getHistorySavePath from './history.js';
@@ -17,21 +18,7 @@ import {
   processNodes,
   processNodesOnline,
 } from '../core/utils/csvToNodes.js';
-
-/**
- * @typedef ReportLocator
- * @type {object}
- * @property {string} file
- * @property {number} [line]
- */
-
-/**
- * @typedef ReportItem
- * @type {object}
- * @property {ReportLocator} locator
- * @property {boolean} isError
- * @property {string} message
- */
+import writeReportFile from '../core/utils/writeReportFile.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -50,6 +37,9 @@ async function modelize(options) {
     .map(({ name }) => name);
 
   console.log(config.getConfigConsolMessage());
+
+  /** @type {import('../core/utils/writeReportFile.js').ReportItem[]} */
+  const reportMap = [];
 
   switch (config.opts.select_origin) {
     case 'directory':
@@ -103,7 +93,43 @@ async function modelize(options) {
       await Promise.all(
         files.map(async (filePath) => {
           const content = await fsPromise.readFile(filePath, 'utf8');
-          const record = Record.recordFromFile(content, config);
+
+          let body, props;
+
+          try {
+            const { body: toto, head } = readYamlFrontmatter(content, { schema: 'failsafe' });
+            body = toto;
+            props = head;
+          } catch (error) {
+            reportMap.push({
+              locator: { file: filePath, line: error.linePos[0].line },
+              isError: true,
+              message: error.message,
+            });
+            return;
+          }
+
+          if (!props) {
+            reportMap.push({
+              locator: { file: filePath },
+              isError: true,
+              message: 'Yaml Front Matter is required.',
+            });
+            return;
+          }
+
+          const error = Record.getErrors(props, config);
+
+          if (error) {
+            reportMap.push({
+              locator: { file: filePath },
+              isError: true,
+              message: error.message,
+            });
+            return;
+          }
+
+          const record = Record.recordFromFile(body, props, config);
           records.set(record.id, record);
 
           if (bibliography) {
@@ -175,18 +201,9 @@ async function modelize(options) {
     });
   }
 
-  if (Report.isItEmpty() === false) {
-    try {
-      await Report.makeDir();
-      const pathSaveReport = await Report.save(config.opts.title);
-      console.log(Report.getAsMessage());
-      console.log(['\x1b[2m', pathSaveReport, '\x1b[0m'].join(''));
-    } catch (err) {
-      console.error(
-        ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-        'cannot save log file in history folder: ' + err,
-      );
-    }
+  if (reportMap.length > 0) {
+    const reportHtml = writeReportFile(reportMap);
+    await fsPromise.writeFile('./toto.html', reportHtml, 'utf8');
   }
 }
 

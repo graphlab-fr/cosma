@@ -62,17 +62,27 @@ const aliasTable = {
 
 export default class Record {
   /**
-   * @param {string} file
+   * @param {unknown} data
    * @param {import('../models/config').default} config
    */
 
-  static recordFromFile(file, config) {
-    const { body, head } = readYamlFrontmatter(file, { schema: 'failsafe' });
+  static getErrors(data, config) {
+    data = normalizeInput(data, config);
+    const { error } = schema.validate(data);
+    return error;
+  }
 
+  /**
+   * @param {string} body
+   * @param {unknown} head
+   * @param {import('../models/config').default} config
+   */
+
+  static recordFromFile(body, head, config) {
     const props = {
       ...normalizeInput(head, config),
       links: parseWikilinks(body, config),
-      body,
+      content: body,
     };
 
     const { error } = schema.validate(props);
@@ -259,6 +269,10 @@ export default class Record {
  */
 
 function normalizeInput(head, config) {
+  if (!head) {
+    throw new Error('Head is required.');
+  }
+
   const normalizedHead = normalizeWithAliases(aliasTable, head);
 
   const metas = {};
