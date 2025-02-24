@@ -5,13 +5,9 @@ import Record from '../core/models/record.js';
 import Bibliography from '../core/models/bibliography.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
-import extractCitations from '../core/utils/citeExtractor.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
-import readYamlFrontmatter from '../core/utils/yamlfrontmatter.js';
 import getGraph from '../core/utils/getGraph.js';
-import Report from '../models/report-cli.js';
 import getHistorySavePath from './history.js';
-import citeLinks from '../core/utils/citeLinks.js';
 import {
   processLinks,
   processLinksOnline,
@@ -19,6 +15,7 @@ import {
   processNodesOnline,
 } from '../core/utils/csvToNodes.js';
 import writeReportFile from '../core/utils/writeReportFile.js';
+import readRecordFile from '../core/utils/readRecordFile.js';
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -40,6 +37,31 @@ async function modelize(options) {
 
   /** @type {import('../core/utils/writeReportFile.js').ReportItem[]} */
   const reportMap = [];
+
+  /**
+   * @param {{
+   *   records: Record[],
+   *   reportItems: import('../core/utils/writeReportFile.js').ReportItem[]
+   * }} input
+   * @param {Map<string, Record>} records
+   */
+
+  function pushAndReport(input, records) {
+    input.records.forEach((r) => {
+      if (records.has(r.id)) {
+        reportMap.push({
+          isError: true,
+          locator: { file: filePath },
+          message: `Id "${r.id}" is duplicated.`,
+        });
+        return;
+      }
+
+      records.set(r.id, r);
+    });
+
+    reportMap.push(...input.reportItems);
+  }
 
   switch (config.opts.select_origin) {
     case 'directory':
@@ -92,72 +114,25 @@ async function modelize(options) {
 
       await Promise.all(
         files.map(async (filePath) => {
-          const content = await fsPromise.readFile(filePath, 'utf8');
-
-          let body, props;
-
-          try {
-            const { body: toto, head } = readYamlFrontmatter(content, { schema: 'failsafe' });
-            body = toto;
-            props = head;
-          } catch (error) {
-            reportMap.push({
-              locator: { file: filePath, line: error.linePos[0].line },
-              isError: true,
-              message: error.message,
-            });
-            return;
-          }
-
-          if (!props) {
-            reportMap.push({
-              locator: { file: filePath },
-              isError: true,
-              message: 'Yaml Front Matter is required.',
-            });
-            return;
-          }
-
-          const error = Record.getErrors(props, config);
-
-          if (error) {
-            reportMap.push({
-              locator: { file: filePath },
-              isError: true,
-              message: error.message,
-            });
-            return;
-          }
-
-          const record = Record.recordFromFile(body, props, config);
-          records.set(record.id, record);
-
-          if (bibliography) {
-            const citeExtract = extractCitations(record.content);
-            citeExtract.forEach((extract) =>
-              extract.citations
-                .filter((cite) => bibliography.existsOnLibrary(cite))
-                .forEach((cite) => {
-                  const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
-                  records.set(recordCite.id, recordCite);
-                }),
-            );
-
-            citeLinks(record.content).forEach((link) => record.addLink(link));
-          }
+          const input = await readRecordFile(filePath, config, bibliography);
+          pushAndReport(input);
         }),
       );
 
       break;
     }
     case 'online': {
-      await processNodesOnline(config.opts['nodes_online'], records, config);
+      const input = await processNodesOnline(config.opts['nodes_online'], config);
+      pushAndReport(input);
+
       await processLinksOnline(config.opts['links_online'], records);
 
       break;
     }
     case 'csv': {
-      await processNodes(config.opts['nodes_origin'], records, config);
+      const input = await processNodes(config.opts['nodes_origin'], config);
+      pushAndReport(input);
+
       await processLinks(config.opts['links_origin'], records);
 
       break;

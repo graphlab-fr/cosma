@@ -10,7 +10,12 @@ import Record from '../models/record.js';
  * @param {import('../models/config.js').default} config
  */
 
-export async function processNodes(filePath, records, config) {
+export async function processNodes(filePath, config) {
+  /** @type {Record[]} */
+  const records = [];
+  /** @type {import('../utils/writeReportFile').ReportItem[]} */
+  const reportItems = [];
+
   const parser = fs.createReadStream(filePath).pipe(
     parse({
       columns: true,
@@ -20,12 +25,33 @@ export async function processNodes(filePath, records, config) {
   );
   parser.on('readable', function () {
     let line;
+    let i = 1;
+
     while ((line = parser.read()) !== null) {
+      i++;
+
+      const error = Record.getErrors(line, config);
+
+      if (error) {
+        reportItems.push({
+          locator: { file: filePath, line: i },
+          isError: true,
+          message: error.message,
+        });
+        continue;
+      }
+
       const record = Record.recordFromCsv(line, config);
-      records.set(record.id, record);
+      records.push(record);
     }
   });
+
   await finished(parser);
+
+  return {
+    records,
+    reportItems,
+  };
 }
 
 /**
@@ -34,7 +60,12 @@ export async function processNodes(filePath, records, config) {
  * @param {import('../models/config.js').default} config
  */
 
-export async function processNodesOnline(url, records, config) {
+export async function processNodesOnline(url, config) {
+  /** @type {Record[]} */
+  const records = [];
+  /** @type {import('../utils/writeReportFile').ReportItem[]} */
+  const reportItems = [];
+
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -53,12 +84,33 @@ export async function processNodesOnline(url, records, config) {
 
   parser.on('readable', function () {
     let line;
+    let i = 1;
+
     while ((line = parser.read()) !== null) {
+      i++;
+
+      const error = Record.getErrors(line, config);
+
+      if (error) {
+        reportItems.push({
+          locator: { file: url, line: i },
+          isError: true,
+          message: error.message,
+        });
+        continue;
+      }
+
       const record = Record.recordFromCsv(line, config);
       records.set(record.id, record);
     }
   });
+
   await finished(parser);
+
+  return {
+    records,
+    reportItems,
+  };
 }
 
 /**
@@ -85,7 +137,11 @@ export async function processLinksOnline(url, records) {
 
   parser.on('readable', function () {
     let line;
+    let i = 1;
+
     while ((line = parser.read()) !== null) {
+      i++;
+
       records.get(line['source']).addLink({
         contexts: line['label'] ? [line['label']] : [],
         target: line['target'],
@@ -94,7 +150,13 @@ export async function processLinksOnline(url, records) {
       });
     }
   });
+
   await finished(parser);
+
+  return {
+    records,
+    reportItems,
+  };
 }
 
 /**
@@ -112,7 +174,11 @@ export async function processLinks(filePath, records) {
   );
   parser.on('readable', function () {
     let line;
+    let i = 1;
+
     while ((line = parser.read()) !== null) {
+      i++;
+
       records.get(line['source']).addLink({
         contexts: line['label'] ? [line['label']] : [],
         target: line['target'],
@@ -121,5 +187,11 @@ export async function processLinks(filePath, records) {
       });
     }
   });
+
   await finished(parser);
+
+  return {
+    records,
+    reportItems,
+  };
 }

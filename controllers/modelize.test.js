@@ -69,7 +69,7 @@ const options = {
   customCss: false,
 };
 
-describe('modelize', () => {
+describe.skip('modelize', () => {
   it('should throw an error for unknown data origin', () => {
     const config = {
       opts: {

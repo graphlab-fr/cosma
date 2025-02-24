@@ -437,6 +437,18 @@ class Config {
     return new Set(Object.keys(this.opts.record_types));
   }
 
+  /** @param {string} type */
+
+  hasRecordType(type) {
+    return Object.keys(this.opts.record_types).includes(type);
+  }
+
+  /** @param {string} meta */
+
+  canSupportRecordMeta(meta) {
+    return this.opts.record_metas.includes(meta);
+  }
+
   getTypesLinks() {
     return new Set(Object.keys(this.opts.link_types));
   }
