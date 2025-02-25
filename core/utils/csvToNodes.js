@@ -101,7 +101,7 @@ export async function processNodesOnline(url, config) {
       }
 
       const record = Record.recordFromCsv(line, config);
-      records.set(record.id, record);
+      records.push(record);
     }
   });
 
@@ -152,11 +152,6 @@ export async function processLinksOnline(url, records) {
   });
 
   await finished(parser);
-
-  return {
-    records,
-    reportItems,
-  };
 }
 
 /**
@@ -189,9 +184,4 @@ export async function processLinks(filePath, records) {
   });
 
   await finished(parser);
-
-  return {
-    records,
-    reportItems,
-  };
 }
