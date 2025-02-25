@@ -17,6 +17,16 @@ const config = {
   getTypesRecords: () => new Set(),
 };
 
+const bibliography = {
+  library: {
+    smith04: {
+      title: 'Smith',
+    },
+  },
+  getNotes: () => ['note'],
+  existsOnLibrary: jest.fn(() => true),
+};
+
 const filePath = './test.md';
 
 describe('readRecordFile', () => {
@@ -39,7 +49,7 @@ Test @smith04`;
     });
   });
 
-  it('should get record with YAML report', async () => {
+  it('should get YAML report', async () => {
     const fileContent = `---
 id: test-1
 id: test-1
@@ -64,6 +74,26 @@ Test @smith04`;
     });
   });
 
+  it('should get report for no YAML frontmatter', async () => {
+    const fileContent = 'Test';
+    fsPromise.readFile.mockResolvedValue(fileContent);
+
+    const bibliography = undefined;
+
+    const result = await readRecordFile(filePath, config, bibliography);
+
+    expect(result).toEqual({
+      records: [],
+      reportItems: [
+        {
+          locator: { file: filePath },
+          isError: true,
+          message: 'Yaml Front Matter is required.',
+        },
+      ],
+    });
+  });
+
   it('should get record from bibliography', async () => {
     const fileContent = `---
 id: test-1
@@ -73,16 +103,6 @@ title: Test Title
 Test @smith04`;
     fsPromise.readFile.mockResolvedValue(fileContent);
 
-    const bibliography = {
-      library: {
-        smith04: {
-          title: 'Smith',
-        },
-      },
-      getNotes: () => ['note'],
-      existsOnLibrary: () => true,
-    };
-
     const result = await readRecordFile(filePath, config, bibliography);
 
     expect(result).toEqual({
@@ -91,6 +111,31 @@ Test @smith04`;
         expect.objectContaining({ id: 'smith04' }),
       ],
       reportItems: [],
+    });
+  });
+
+  it('should get report for unknown quote', async () => {
+    const fileContent = `---
+id: test-1
+title: Test Title
+---
+
+Test @smith04`;
+    fsPromise.readFile.mockResolvedValue(fileContent);
+
+    bibliography.existsOnLibrary.mockReturnValue(false);
+
+    const result = await readRecordFile(filePath, config, bibliography);
+
+    expect(result).toEqual({
+      records: [expect.objectContaining({ id: 'test-1' })],
+      reportItems: [
+        {
+          locator: { file: filePath },
+          isError: false,
+          message: 'Quote "smith04" has no reference from library.',
+        },
+      ],
     });
   });
 });

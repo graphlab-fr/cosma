@@ -64,12 +64,26 @@ global.console = {
   log: jest.fn(),
 };
 
+const config = {
+  opts: {
+    select_origin: 'directory',
+    references_as_nodes: true,
+    record_metas: [],
+    references_type_label: 'reference',
+  },
+  canCiteproc: () => true,
+  canCssCustom: jest.fn(),
+  getConfigConsolMessage: jest.fn(),
+  canModelizeFromDirectory: () => true,
+  getTypesRecords: () => new Set(),
+};
+
 const options = {
   citeproc: true,
   customCss: false,
 };
 
-describe.skip('modelize', () => {
+describe('modelize', () => {
   it('should throw an error for unknown data origin', () => {
     const config = {
       opts: {
@@ -84,82 +98,6 @@ describe.skip('modelize', () => {
     Config.get.mockReturnValue(config);
 
     expect(modelize(options)).rejects.toThrow('Unknown data origin.');
-  });
-
-  const config = {
-    opts: {
-      select_origin: 'directory',
-      references_as_nodes: true,
-      record_metas: [],
-      references_type_label: 'reference',
-    },
-    canCiteproc: () => true,
-    canCssCustom: jest.fn(),
-    getConfigConsolMessage: jest.fn(),
-    canModelizeFromDirectory: () => true,
-    getTypesRecords: () => new Set(),
-  };
-
-  it('should generate records from citations', async () => {
-    Config.get.mockReturnValue(config);
-
-    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
-
-    fsPromise.readFile.mockResolvedValue(
-      `---
-id: test-1
-title: Test Title
----
-
-Test @smith04`,
-    );
-
-    getGraph.mockReturnValue('graph');
-
-    await modelize({
-      citeproc: true,
-      customCss: false,
-    });
-
-    expect(getGraph).toHaveBeenCalledTimes(1);
-    expect(getGraph).toHaveBeenCalledWith(
-      new Map([
-        ['test-1', expect.objectContaining({ id: 'test-1', title: 'Test Title' })],
-        ['smith04', expect.objectContaining({ id: 'smith04' })],
-      ]),
-      config,
-    );
-  });
-
-  it('should report if duplicated key on YFM', async () => {
-    mockWriteReportFile.mockClear();
-
-    Config.get.mockReturnValue(config);
-    getGraph.mockReturnValue('graph');
-
-    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
-
-    fsPromise.readFile.mockResolvedValue(
-      `---
-id: test-1
-id: test-1
----
-
-Content`,
-    );
-
-    await modelize({
-      citeproc: false,
-      customCss: false,
-    });
-
-    expect(mockWriteReportFile).toHaveBeenCalledWith([
-      {
-        locator: { file: '../file1.md', line: 2 },
-        isError: true,
-        message: expect.stringContaining('Map keys must be unique'),
-      },
-    ]);
   });
 
   it('should report if empty file', async () => {
@@ -182,34 +120,6 @@ Content`,
         locator: { file: '../file1.md' },
         isError: true,
         message: 'Yaml Front Matter is required.',
-      },
-    ]);
-  });
-
-  it('should report if does not contains title and id', async () => {
-    mockWriteReportFile.mockClear();
-
-    Config.get.mockReturnValue(config);
-    getGraph.mockReturnValue('graph');
-
-    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
-
-    fsPromise.readFile.mockResolvedValue(
-      `---
-type: test
----`,
-    );
-
-    await modelize({
-      citeproc: false,
-      customCss: false,
-    });
-
-    expect(mockWriteReportFile).toHaveBeenCalledWith([
-      {
-        locator: { file: '../file1.md' },
-        isError: true,
-        message: '"id" is required',
       },
     ]);
   });
