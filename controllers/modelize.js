@@ -35,34 +35,6 @@ async function modelize(options) {
 
   console.log(config.getConfigConsolMessage());
 
-  /** @type {import('../core/utils/writeReportFile.js').ReportItem[]} */
-  const reportMap = [];
-
-  /**
-   * @param {{
-   *   records: Record[],
-   *   reportItems: import('../core/utils/writeReportFile.js').ReportItem[]
-   * }} input
-   * @param {Map<string, Record>} records
-   */
-
-  function pushAndReport(input, records) {
-    input.records.forEach((r) => {
-      if (records.has(r.id)) {
-        reportMap.push({
-          isError: true,
-          locator: { file: filePath },
-          message: `Id "${r.id}" is duplicated.`,
-        });
-        return;
-      }
-
-      records.set(r.id, r);
-    });
-
-    reportMap.push(...input.reportItems);
-  }
-
   switch (config.opts.select_origin) {
     case 'directory':
       if (config.canModelizeFromDirectory() === false) {
@@ -98,6 +70,34 @@ async function modelize(options) {
 
   /** @type {Map<string, Record>} */
   const records = new Map();
+
+  /** @type {import('../core/utils/writeReportFile.js').ReportItem[]} */
+  const reportMap = [];
+
+  /**
+   * @param {{
+   *   records: Record[],
+   *   reportItems: import('../core/utils/writeReportFile.js').ReportItem[]
+   * }} input
+   * @param {Map<string, Record>} records
+   */
+
+  function pushAndReport(input) {
+    input.records.forEach((r) => {
+      if (records.has(r.id)) {
+        reportMap.push({
+          isError: true,
+          locator: { file: filePath },
+          message: `Id "${r.id}" is duplicated.`,
+        });
+        return;
+      }
+
+      records.set(r.id, r);
+    });
+
+    reportMap.push(...input.reportItems);
+  }
 
   switch (config.opts.select_origin) {
     case 'directory': {
