@@ -49,6 +49,8 @@ describe('writeReportFile', () => {
           ],
         },
       },
+      nbErrors: 0,
+      nbWarnings: 1,
     });
   });
 
@@ -113,6 +115,8 @@ describe('writeReportFile', () => {
           ],
         },
       },
+      nbErrors: 3,
+      nbWarnings: 1,
     });
   });
 
@@ -162,6 +166,8 @@ describe('writeReportFile', () => {
           ],
         },
       },
+      nbErrors: 0,
+      nbWarnings: 3,
     });
   });
 });

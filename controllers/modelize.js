@@ -177,7 +177,7 @@ async function modelize(options) {
   }
 
   if (reportMap.length > 0) {
-    const reportHtml = writeReportFile(reportMap);
+    const reportHtml = writeReportFile(reportMap, config);
     await fsPromise.writeFile('./toto.html', reportHtml, 'utf8');
   }
 }

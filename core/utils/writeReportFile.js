@@ -38,18 +38,19 @@ export default function writeReportFile(items, config) {
     return a.locator.line - b.locator.line;
   };
 
+  const errors = items.filter((d) => d.isError);
+  const warnings = items.filter((d) => !d.isError);
+
   const output = {
-    errors: Object.fromEntries(
-      groups(items.filter((d) => d.isError).sort(sortItems), (d) => d.locator.file),
-    ),
-    warnings: Object.fromEntries(
-      groups(items.filter((d) => !d.isError).sort(sortItems), (d) => d.locator.file),
-    ),
+    errors: Object.fromEntries(groups(errors.sort(sortItems), (d) => d.locator.file)),
+    warnings: Object.fromEntries(groups(warnings.sort(sortItems), (d) => d.locator.file)),
   };
 
   return templateEngine.renderString(reportTemplate, {
     date,
     projectTitle: config.opts.title,
     items: output,
+    nbErrors: errors.length,
+    nbWarnings: warnings.length,
   });
 }
