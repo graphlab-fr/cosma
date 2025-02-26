@@ -16,6 +16,11 @@ import {
 } from '../core/utils/csvToNodes.js';
 import writeReportFile from '../core/utils/writeReportFile.js';
 import readRecordFile from '../core/utils/readRecordFile.js';
+import envPaths from 'env-paths';
+import getTimestampTuple from '../core/utils/timestamp.js';
+
+const { log: envPathLogDir } = envPaths('cosma-cli', { suffix: '' });
+const reportDir = path.join(envPathLogDir, 'logs');
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -178,7 +183,16 @@ async function modelize(options) {
 
   if (reportMap.length > 0) {
     const reportHtml = writeReportFile(reportMap, config);
-    await fsPromise.writeFile('./toto.html', reportHtml, 'utf8');
+
+    if (!fs.existsSync(reportDir)) {
+      await fsPromise.mkdir(reportDir);
+    }
+
+    const reportFilePath = path.join(reportDir, getTimestampTuple().join('') + '.html');
+    await fsPromise.writeFile(reportFilePath, reportHtml, 'utf8');
+
+    console.log(reportMessage(reportMap));
+    console.log(['\x1b[2m', reportFilePath, '\x1b[0m'].join(''));
   }
 }
 
@@ -193,6 +207,30 @@ function getModelizeMessage(optionsTemplate, originType) {
   const msgSetting =
     settings.length === 0 ? '' : `; settings: \x1b[1m${settings.join(', ')}\x1b[0m`;
   return `Building cosmoscope… (source type: \x1b[1m${originType}\x1b[0m${msgSetting})`;
+}
+
+/**
+ * @param {import('../core/utils/writeReportFile.js').ReportItem[]} items
+ * @returns
+ */
+
+function reportMessage(items) {
+  const errors = items.filter((i) => i.isError);
+  const warnings = items.filter((i) => !i.isError);
+
+  let message = 'Report: ';
+  const sentences = [];
+
+  if (errors.length > 0) {
+    sentences.push(`${errors.length} ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`);
+  }
+  if (warnings.length > 0) {
+    sentences.push(`${warnings.length} ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`);
+  }
+
+  message = message + sentences.join(' and ');
+
+  return message;
 }
 
 export default modelize;

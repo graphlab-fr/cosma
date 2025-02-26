@@ -39,11 +39,6 @@ jest.mock('../core/utils/csvToNodes.js', () => {
     processNodesOnline: jest.fn(),
   };
 });
-jest.mock('../models/report-cli.js', () => {
-  return {
-    isItEmpty: () => false,
-  };
-});
 jest.mock('./history.js');
 jest.mock('node:fs/promises');
 jest.mock('node:fs');
