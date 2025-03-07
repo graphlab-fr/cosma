@@ -12,3 +12,6 @@ record_types:
 title: "With report"
 record_metas:
   - href
+csl: ../iso690-author-date-fr.csl
+bibliography: ../references.json
+csl_locale: ../locales.xml

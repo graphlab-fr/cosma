@@ -1,5 +1,5 @@
 ---
-title: Unknown meta
+title: Broken link
 type: defined
 ---
 
