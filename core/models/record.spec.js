@@ -155,7 +155,7 @@ File linked to [[20210901132906]]`;
     const bibliography = {
       library: {
         engelbart1962: {
-          title: 'Augmenting Human Intellect: A Conceptual Framework',
+          title: 'Douglas Engelbart (1925–2013)',
         },
       },
       getNotes: () => [note],

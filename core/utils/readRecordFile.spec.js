@@ -46,6 +46,7 @@ Test @smith04`;
 
     expect(result).toEqual({
       records: [expect.objectContaining({ id: 'test-1' })],
+      recordsCiteproc: [],
       reportItems: [],
     });
   });
@@ -68,6 +69,7 @@ Test`;
 
     expect(result).toEqual({
       records: [expect.objectContaining({ types: ['undefined'] })],
+      recordsCiteproc: [],
       reportItems: [
         {
           locator: { file: filePath },
@@ -93,6 +95,7 @@ Test @smith04`;
 
     expect(result).toEqual({
       records: [],
+      recordsCiteproc: [],
       reportItems: [
         {
           locator: { file: filePath, line: 2 },
@@ -113,6 +116,7 @@ Test @smith04`;
 
     expect(result).toEqual({
       records: [],
+      recordsCiteproc: [],
       reportItems: [
         {
           locator: { file: filePath },
@@ -135,10 +139,8 @@ Test @smith04`;
     const result = await readRecordFile(filePath, config, bibliography);
 
     expect(result).toEqual({
-      records: [
-        expect.objectContaining({ id: 'test-1' }),
-        expect.objectContaining({ id: 'smith04' }),
-      ],
+      records: [expect.objectContaining({ id: 'test-1' })],
+      recordsCiteproc: [expect.objectContaining({ id: 'smith04' })],
       reportItems: [],
     });
   });
@@ -158,6 +160,7 @@ Test @smith04`;
 
     expect(result).toEqual({
       records: [expect.objectContaining({ id: 'test-1' })],
+      recordsCiteproc: [],
       reportItems: [
         {
           locator: { file: filePath },

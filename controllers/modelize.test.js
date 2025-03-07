@@ -106,6 +106,7 @@ describe('modelize', () => {
 
     readRecordFile.mockResolvedValueOnce({
       records: [],
+      recordsCiteproc: [],
       reportItems: [],
     });
 
@@ -128,6 +129,7 @@ describe('modelize', () => {
 
     readRecordFile.mockResolvedValueOnce({
       records: [],
+      recordsCiteproc: [],
       reportItems: [],
     });
 
@@ -149,6 +151,7 @@ describe('modelize', () => {
 
     readRecordFile.mockResolvedValueOnce({
       records: [],
+      recordsCiteproc: [],
       reportItems: [],
     });
 
@@ -158,6 +161,49 @@ describe('modelize', () => {
     });
 
     expect(readRecordFile).toHaveBeenCalledWith('../file1.md', config, expect.any(Object));
+  });
+
+  it('should merge record file and record citeproc if same id', async () => {
+    readRecordFile.mockClear();
+
+    Config.get.mockReturnValue(config);
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
+
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
+
+    readRecordFile.mockResolvedValueOnce({
+      records: [
+        { id: 'test1', types: ['undefined'] },
+        { id: 'test2', types: ['concept'] },
+      ],
+      recordsCiteproc: [{ id: 'test1' }, { id: 'test2' }],
+      reportItems: [],
+    });
+
+    await modelize({
+      citeproc: true,
+      customCss: false,
+    });
+
+    expect(getGraph).toHaveBeenCalledWith(
+      new Map([
+        [
+          'test1',
+          {
+            id: 'test1',
+            types: ['reference'],
+          },
+        ],
+        [
+          'test2',
+          {
+            id: 'test2',
+            types: ['concept', 'reference'],
+          },
+        ],
+      ]),
+      config,
+    );
   });
 
   it('should report if duplicated record', async () => {
@@ -171,10 +217,12 @@ describe('modelize', () => {
     readRecordFile
       .mockResolvedValueOnce({
         records: [{ id: 'test1' }],
+        recordsCiteproc: [],
         reportItems: [],
       })
       .mockResolvedValueOnce({
         records: [{ id: 'test1' }],
+        recordsCiteproc: [],
         reportItems: [],
       });
 
@@ -206,10 +254,12 @@ describe('modelize', () => {
     readRecordFile
       .mockResolvedValueOnce({
         records: [{ id: 'test1' }],
+        recordsCiteproc: [],
         reportItems: [],
       })
       .mockResolvedValueOnce({
         records: [{ id: 'test2' }],
+        recordsCiteproc: [],
         reportItems: [],
       });
 

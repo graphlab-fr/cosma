@@ -49,7 +49,7 @@ describe('tags', () => {
     cy.get('#menu-container').scrollTo('bottom');
     assertTagsAreChecked([]);
     cy.shouldIndexHasItems([
-      'Augmenting Human Intellect: A Conceptual Framework',
+      'Douglas Engelbart (1925–2013)',
       'Evergreen note titles are like APIs',
       'Evergreen notes',
       'Evergreen notes should be atomic',

@@ -36,11 +36,11 @@ describe('focus', () => {
         ]);
       });
 
-      it.only('should toggle hide nodes', () => {
+      it('should toggle hide nodes', () => {
         cy.contains('Réinitialiser').click();
 
         cy.shouldGraphHasNodes([
-          'Augmenting Human Intellect:A Conceptual Framework',
+          'Douglas Engelbart (1925–2013)',
           'Evergreen note titles arelike APIs',
           'Evergreen notes',
           'Evergreen notes should beatomic',
@@ -64,7 +64,7 @@ describe('focus', () => {
         cy.get('#menu-container').scrollTo('bottom');
 
         cy.shouldIndexHasItems([
-          'Augmenting Human Intellect: A Conceptual Framework',
+          'Douglas Engelbart (1925–2013)',
           'Evergreen note titles are like APIs',
           'Evergreen notes',
           'Evergreen notes should be atomic',
