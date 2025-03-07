@@ -28,7 +28,7 @@ const bibliography = {
       number: 'AFOSR-3223',
       publisher: 'Stanford Research Institute',
       'publisher-place': 'Stanford',
-      title: 'Augmenting Human Intellect: A Conceptual Framework',
+      title: 'Douglas Engelbart (1925–2013)',
       'title-short': 'Augmenting Human Intellect',
       type: 'report',
       URL: 'https://www.dougengelbart.org/content/view/138/',

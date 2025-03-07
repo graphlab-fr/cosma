@@ -54,6 +54,7 @@ it('should not get bibliographic nodes without citeproc', () => {
     'Evergreen notes should bedensely linked',
     'Evergreen notes',
     'Tools for thought',
+    'Douglas Engelbart (1925–2013)',
   ]);
 });
 
@@ -71,7 +72,7 @@ describe('graph', () => {
       'Evergreen notes',
       'Tools for thought',
       // bibliographic nodes
-      'Augmenting Human Intellect:A Conceptual Framework',
+      'Douglas Engelbart (1925–2013)',
       'How can we develop transformativetools for thought?',
     ]);
   });

@@ -4,15 +4,7 @@ import readYamlFrontmatter from './yamlfrontmatter.js';
 import citeLinks from './citeLinks.js';
 import formatAsRecord from './formatAsRecord.js';
 import Record from '../models/record.js';
-import normalizeWithAliases from './normalizeWithAliases.js';
 import unknownTypesMessage from './unknownTypesMessage.js';
-
-const aliasTable = {
-  tag: 'tags',
-  keywords: 'tags',
-  keyword: 'tags',
-  type: 'types',
-};
 
 /**
  *
@@ -26,6 +18,8 @@ export default async function readRecordFile(filePath, config, bibliography) {
 
   /** @type {Record[]} */
   const records = [];
+  /** @type {Record[]} */
+  const recordsCiteproc = [];
   /** @type {import('../utils/writeReportFile').ReportItem[]} */
   const reportItems = [];
 
@@ -43,6 +37,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
     });
     return {
       records,
+      recordsCiteproc,
       reportItems,
     };
   }
@@ -55,6 +50,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
     });
     return {
       records,
+      recordsCiteproc,
       reportItems,
     };
   }
@@ -78,6 +74,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
     });
     return {
       records,
+      recordsCiteproc,
       reportItems,
     };
   }
@@ -102,7 +99,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
         })
         .forEach((citeItem) => {
           const recordCite = Record.recordFromCiteItem(citeItem, config, bibliography);
-          records.push(recordCite);
+          recordsCiteproc.push(recordCite);
         }),
     );
 
@@ -111,6 +108,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
 
   return {
     records,
+    recordsCiteproc,
     reportItems,
   };
 }

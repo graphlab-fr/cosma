@@ -20,7 +20,7 @@ describe('left panel', () => {
 
     it('should display each record with alphabetical order', () => {
       cy.shouldIndexHasItems([
-        'Augmenting Human Intellect: A Conceptual Framework',
+        'Douglas Engelbart (1925–2013)',
         'Evergreen note titles are like APIs',
         'Evergreen notes',
         'Evergreen notes should be atomic',
@@ -35,7 +35,7 @@ describe('left panel', () => {
       cy.get('#types-form').contains('insight').click();
 
       cy.shouldIndexHasItems([
-        'Augmenting Human Intellect: A Conceptual Framework',
+        'Douglas Engelbart (1925–2013)',
         'Evergreen notes',
         'How can we develop transformative tools for thought?',
         'Tools for thought',
@@ -44,7 +44,7 @@ describe('left panel', () => {
       cy.get('#types-form').contains('insight').click();
 
       cy.shouldIndexHasItems([
-        'Augmenting Human Intellect: A Conceptual Framework',
+        'Douglas Engelbart (1925–2013)',
         'Evergreen note titles are like APIs',
         'Evergreen notes',
         'Evergreen notes should be atomic',

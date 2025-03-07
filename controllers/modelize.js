@@ -75,6 +75,8 @@ async function modelize(options) {
 
   /** @type {Map<string, Record>} */
   const records = new Map();
+  /** @type {Map<string, Record>} */
+  const recordsCiteproc = new Map();
   /** @type {Map<string, string>} */
   const recordFiles = new Map();
 
@@ -124,9 +126,28 @@ async function modelize(options) {
         files.map(async (filePath) => {
           const input = await readRecordFile(filePath, config, bibliography);
           pushAndReport(input, filePath);
+          input.recordsCiteproc.forEach((r) => recordsCiteproc.set(r.id, r));
         }),
       );
 
+      if (bibliography) {
+        recordsCiteproc.forEach((record) => {
+          const fileRecord = records.get(record.id);
+
+          if (!fileRecord) {
+            records.set(record.id, record);
+            return;
+          }
+
+          const refType = config.opts.references_type_label;
+
+          if (fileRecord.types.length === 1 && fileRecord.types[0] === 'undefined') {
+            fileRecord.types = [refType];
+          } else if (!fileRecord.types.includes(refType)) {
+            fileRecord.types = [...fileRecord.types, refType];
+          }
+        });
+      }
       break;
     }
     case 'online': {
