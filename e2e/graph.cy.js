@@ -31,7 +31,7 @@ it('should get one node per created record', () => {
   cy.shouldGraphHasNodes(['Toto', 'Tata', 'Tutu']);
 });
 
-it.only('should nodes not ignored', () => {
+it('should nodes not ignored', () => {
   cy.visit('temp/report.html');
 
   cy.shouldGraphHasNodes([
