@@ -231,4 +231,37 @@ unknown: true
       }),
     );
   });
+
+  it('should return true if type exists', () => {
+    const configContent = `
+${minimalConfigContent}
+record_types:
+  undefined:
+    stroke: "#eeeeee"
+    fill: "#eeeeee"
+  reference:
+    stroke: "#6C6C6C"
+    fill: "#6C6C6C"
+`;
+
+    mockReadConfigFile.mockImplementationOnce(() => configContent);
+    const config = Config.get('../config.yml');
+
+    expect(config.hasRecordType('reference')).toBe(true);
+    expect(config.hasRecordType('concept')).toBe(false);
+  });
+
+  it('should return true if meta is supported', () => {
+    const configContent = `
+${minimalConfigContent}
+record_metas:
+  - author
+`;
+
+    mockReadConfigFile.mockImplementationOnce(() => configContent);
+    const config = Config.get('../config.yml');
+
+    expect(config.canSupportRecordMeta('author')).toBe(true);
+    expect(config.canSupportRecordMeta('phone number')).toBe(false);
+  });
 });

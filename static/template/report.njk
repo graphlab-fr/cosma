@@ -1,92 +1,73 @@
 <!DOCTYPE html>
-<html lang="{{lang}}">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>
-        Cosma
-         - {{ 'title' | translate }}
-        {% if projectTitle %}
-         - {{ 'project' | translate({ project: projectTitle }) }}
-        {% endif %}
-    </title>
+    <title>Cosma report {{date}}</title>
+    
     <style>
-        :root {
-            /* typography */
-            --sans: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
-            --mono: 'Consolas', "Courrier New", 'Courrier', monospace;
-            /* global size */
-            font-size: 62.5%;
-        }
-
         body {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            font-family: var(--sans);
-            font-size: 1.4rem;
-            padding: 1rem;
-            box-sizing: border-box;
+            font-family: sans-serif;
         }
 
-        li {
-            margin: 0.8rem 0;
-        }
-
-        em {
-            display: block;
-            font-size: 12px;
-            text-indent: 2rem;
-            margin-left: 3.8rem;
+        summary {
+            cursor: pointer;
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <h1>
-            Cosma
-             - {{ 'title' | translate }}
-            {% if projectTitle %}
-             - {{ 'project' | translate({ project: projectTitle }) }}
-            {% endif %}
-             - {{ date }}
-        </h1>
-    </header>
+    <h1>Cosma report {{date}}</h1>
 
-    <main>
-        <section>
-            <h2>{{ 'section_error' | translate({ length: errorsLength }) }}</h2>
-            {% for recordId, lines in listErrors %}
-                {% set title = lines[0].recordTitle %}
+    <details open>
+        <summary>Erreurs ({{ nbErrors }})</summary>
 
-                {% if recordId == "ignored_csv_line" %}
-                <h3>{{ 'csv_error' | translate }}</h3>
-                {% else %}
-                <h3>{{ title }}</h3>
-                {% endif %}
-                
-                <ul>
-                    {% for line in lines %}
-                    <li>{{line.about | translate(line.args) | safe }}</li>
-                    {% endfor %}
-                </ul>
+        <ul style="list-style: none;">
+            {% for file, errors in items.errors %}
+                <li>
+                    <details open>
+                        <summary>{{ file }}</summary>
+
+                        <ul>
+                            {% for error in errors %}
+                            <li>
+                                {% if error.locator.line is defined %}
+                                (line {{ error.locator.line }})
+                                {% endif %}
+
+                                {{ error.message }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                </li>
             {% endfor %}
-        </section>
+        </ul>
+    </details>
 
-        <section>
-            <h2>{{ 'section_warning' | translate({ length: warningsLength }) }}</h2>
-            {% for recordId, lines in listWarnings %}
-                {% set title = lines[0].recordTitle %}
-                <h3>{{ title }}</h3>
-                <ul>
-                    {% for line in lines %}
-                    <li>{{line.about | translate(line.args) | safe}}</li>
-                    {% endfor %}
-                </ul>
+    <details open>
+        <summary>Avertissements ({{ nbWarnings }})</summary>
+
+        <ul style="list-style: none;">
+            {% for file, warnings in items.warnings %}
+                <li>
+                    <details open>
+                        <summary>{{ file }}</summary>
+
+                        <ul>
+                            {% for warning in warnings %}
+                            <li>
+                                {% if warning.locator.line is defined %}
+                                (line {{ warning.locator.line }})
+                                {% endif %}
+
+                                {{ warning.message }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                </li>
             {% endfor %}
-        </section>
-    </main>
+        </ul>
+    </details>
+    
 </body>
-
 </html>

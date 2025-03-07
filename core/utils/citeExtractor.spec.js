@@ -96,7 +96,8 @@ describe('extractCitations', function () {
   });
 
   it('extracts citation with composite page locator and suffix', () => {
-    const input = 'Citation with a suffix and locator [@engelbart1962 pp. 33, 35-37, and nowhere else].';
+    const input =
+      'Citation with a suffix and locator [@engelbart1962 pp. 33, 35-37, and nowhere else].';
     const expected = [
       {
         from: 35,

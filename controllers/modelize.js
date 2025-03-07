@@ -1,19 +1,26 @@
-import { parse } from 'csv-parse';
 import fs from 'node:fs';
 import fsPromise from 'node:fs/promises';
 import path from 'node:path';
-import { finished } from 'stream/promises';
 import Record from '../core/models/record.js';
 import Bibliography from '../core/models/bibliography.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
-import extractCitations from '../core/utils/citeExtractor.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
 import getGraph from '../core/utils/getGraph.js';
-import Report from '../models/report-cli.js';
 import getHistorySavePath from './history.js';
-import citeLinks from '../core/utils/citeLinks.js';
-const { Readable } = require('stream');
+import {
+  processLinks,
+  processLinksOnline,
+  processNodes,
+  processNodesOnline,
+} from '../core/utils/csvToNodes.js';
+import writeReportFile from '../core/utils/writeReportFile.js';
+import readRecordFile from '../core/utils/readRecordFile.js';
+import envPaths from 'env-paths';
+import getTimestampTuple from '../core/utils/timestamp.js';
+
+const { log: envPathLogDir } = envPaths('cosma-cli', { suffix: '' });
+const reportDir = path.join(envPathLogDir, 'logs');
 
 async function modelize(options) {
   let config = Config.get(Config.configFilePath);
@@ -58,6 +65,8 @@ async function modelize(options) {
         );
       }
       break;
+    default:
+      throw new Error('Unknown data origin.');
   }
 
   console.log(getModelizeMessage(optionsTemplate, config.opts.select_origin));
@@ -66,103 +75,36 @@ async function modelize(options) {
 
   /** @type {Map<string, Record>} */
   const records = new Map();
+  /** @type {Map<string, string>} */
+  const recordFiles = new Map();
 
-  async function processNodes(filePath) {
-    const parser = fs.createReadStream(filePath).pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        const record = Record.recordFromCsv(line, config);
-        records.set(record.id, record);
-      }
-    });
-    await finished(parser);
-  }
+  /** @type {import('../core/utils/writeReportFile.js').ReportItem[]} */
+  const reportMap = [];
 
-  async function processNodesOnline(url) {
-    const response = await fetch(url);
+  /**
+   * @param {{
+   *   records: Record[],
+   *   reportItems: import('../core/utils/writeReportFile.js').ReportItem[]
+   * }} input
+   * @param {string} filePath
+   */
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch CSV: ${response.statusText}`);
-    }
-
-    const readableStream = Readable.fromWeb(response.body);
-
-    const parser = readableStream.pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        const record = Record.recordFromCsv(line, config);
-        records.set(record.id, record);
-      }
-    });
-    await finished(parser);
-  }
-
-  async function processLinksOnline(url) {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch CSV: ${response.statusText}`);
-    }
-
-    const readableStream = Readable.fromWeb(response.body);
-
-    const parser = readableStream.pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        records.get(line['source']).addLink({
-          contexts: line['label'] ? [line['label']] : [],
-          target: line['target'],
-          type: line['type'] || 'undefined',
-          text: undefined,
+  function pushAndReport(input, filePath) {
+    input.records.forEach((r) => {
+      if (records.has(r.id)) {
+        reportMap.push({
+          isError: true,
+          locator: { file: filePath },
+          message: `Id "${r.id}" is duplicated.`,
         });
+        return;
       }
-    });
-    await finished(parser);
-  }
 
-  async function processLinks(filePath) {
-    const parser = fs.createReadStream(filePath).pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        cast: (value) => (value === '' ? undefined : value),
-      }),
-    );
-    parser.on('readable', function () {
-      let line;
-      while ((line = parser.read()) !== null) {
-        records.get(line['source']).addLink({
-          contexts: line['label'] ? [line['label']] : [],
-          target: line['target'],
-          type: line['type'] || 'undefined',
-          text: undefined,
-        });
-      }
+      records.set(r.id, r);
+      recordFiles.set(r.id, filePath);
     });
-    await finished(parser);
+
+    reportMap.push(...input.reportItems);
   }
 
   switch (config.opts.select_origin) {
@@ -180,35 +122,28 @@ async function modelize(options) {
 
       await Promise.all(
         files.map(async (filePath) => {
-          const content = await fsPromise.readFile(filePath, 'utf8');
-          const record = Record.recordFromFile(content, config);
-          records.set(record.id, record);
-
-          if (bibliography) {
-            const citeExtract = extractCitations(record.content);
-            citeExtract.forEach((extract) =>
-              extract.citations.forEach((cite) => {
-                const recordCite = Record.recordFromCiteItem(cite, config, bibliography);
-                records.set(recordCite.id, recordCite);
-              }),
-            );
-
-            citeLinks(record.content).forEach((link) => record.addLink(link));
-          }
+          const input = await readRecordFile(filePath, config, bibliography);
+          pushAndReport(input, filePath);
         }),
       );
 
       break;
     }
     case 'online': {
-      await processNodesOnline(config.opts['nodes_online']);
-      await processLinksOnline(config.opts['links_online']);
+      const filePath = config.opts['nodes_online'];
+      const input = await processNodesOnline(filePath, config);
+      pushAndReport(input, filePath);
+
+      await processLinksOnline(config.opts['links_online'], records);
 
       break;
     }
     case 'csv': {
-      await processNodes(config.opts['nodes_origin']);
-      await processLinks(config.opts['links_origin']);
+      const filePath = config.opts['nodes_origin'];
+      const input = await processNodes(filePath, config);
+      pushAndReport(input, filePath);
+
+      await processLinks(config.opts['links_origin'], records);
 
       break;
     }
@@ -217,7 +152,20 @@ async function modelize(options) {
     }
   }
 
-  const graph = getGraph(records, config);
+  const { graph, brokenEdges } = getGraph(records, config);
+
+  brokenEdges.forEach(({ source, target }) => {
+    const file = recordFiles.get(source);
+    if (!file) {
+      throw new Error('Source record file not found.');
+    }
+
+    reportMap.push({
+      isError: true,
+      locator: { file },
+      message: `Link to "${target}" is broken.`,
+    });
+  });
 
   const { html } = new Template(records, graph, optionsTemplate);
 
@@ -251,18 +199,18 @@ async function modelize(options) {
     });
   }
 
-  if (Report.isItEmpty() === false) {
-    try {
-      await Report.makeDir();
-      const pathSaveReport = await Report.save(config.opts.title);
-      console.log(Report.getAsMessage());
-      console.log(['\x1b[2m', pathSaveReport, '\x1b[0m'].join(''));
-    } catch (err) {
-      console.error(
-        ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-        'cannot save log file in history folder: ' + err,
-      );
+  if (reportMap.length > 0) {
+    const reportHtml = writeReportFile(reportMap, config);
+
+    if (!fs.existsSync(reportDir)) {
+      await fsPromise.mkdir(reportDir);
     }
+
+    const reportFilePath = path.join(reportDir, getTimestampTuple().join('') + '.html');
+    await fsPromise.writeFile(reportFilePath, reportHtml, 'utf8');
+
+    console.log(reportMessage(reportMap));
+    console.log(['\x1b[2m', reportFilePath, '\x1b[0m'].join(''));
   }
 }
 
@@ -277,6 +225,30 @@ function getModelizeMessage(optionsTemplate, originType) {
   const msgSetting =
     settings.length === 0 ? '' : `; settings: \x1b[1m${settings.join(', ')}\x1b[0m`;
   return `Building cosmoscope… (source type: \x1b[1m${originType}\x1b[0m${msgSetting})`;
+}
+
+/**
+ * @param {import('../core/utils/writeReportFile.js').ReportItem[]} items
+ * @returns
+ */
+
+function reportMessage(items) {
+  const errors = items.filter((i) => i.isError);
+  const warnings = items.filter((i) => !i.isError);
+
+  let message = 'Report: ';
+  const sentences = [];
+
+  if (errors.length > 0) {
+    sentences.push(`${errors.length} ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`);
+  }
+  if (warnings.length > 0) {
+    sentences.push(`${warnings.length} ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`);
+  }
+
+  message = message + sentences.join(' and ');
+
+  return message;
 }
 
 export default modelize;

@@ -1,0 +1,17 @@
+select_origin: directory
+files_origin: ./
+export_target: ../../temp
+history: false
+record_types:
+  undefined:
+    stroke: "#eeeeee"
+    fill: "#eeeeee"
+  defined:
+    stroke: "#984ea3"
+    fill: "#984ea3"
+title: "With report"
+record_metas:
+  - href
+csl: ../iso690-author-date-fr.csl
+bibliography: ../references.json
+csl_locale: ../locales.xml

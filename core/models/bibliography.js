@@ -146,11 +146,10 @@ class Bibliography {
 
   constructor(library = {}, cslStyle, xmlLocal) {
     this.library = {};
-    this.ids = new Set();
     for (const { id, ...rest } of Object.values(library)) {
       this.library[id] = { id, ...rest };
-      this.ids.add(id);
     }
+
     this.cslStyle = cslStyle;
     this.xmlLocal = xmlLocal;
 
@@ -187,6 +186,14 @@ class Bibliography {
       [],
       [],
     )[1][0][1];
+  }
+
+  /**
+   * @param {import('../utils/citeExtractor').CiteItem} item
+   */
+
+  existsOnLibrary(item) {
+    return !!this.library[item.id];
   }
 
   /**
