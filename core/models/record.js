@@ -53,23 +53,20 @@ const schema = Joi.object({
 });
 const schemaKeys = Object.keys(schema.describe().keys);
 
-const aliasTable = {
-  tag: 'tags',
-  keywords: 'tags',
-  keyword: 'tags',
-  type: 'types',
-};
-
 export default class Record {
   /**
    * @param {unknown} data
-   * @param {import('../models/config').default} config
    */
 
-  static getErrors(data, config) {
-    data = normalizeInput(data, config);
-    const { error } = schema.validate(data);
+  static getErrors(data) {
+    const { error } = schema.validate(data, { stripUnknown: true });
     return error;
+  }
+
+  /** @param {string} key */
+
+  static isSchemaKey(key) {
+    return schemaKeys.includes(key);
   }
 
   /**
@@ -78,19 +75,21 @@ export default class Record {
    * @param {import('../models/config').default} config
    */
 
-  static recordFromFile(body, head, config) {
-    const props = {
-      ...normalizeInput(head, config),
+  static recordFromFile(body, props, config) {
+    props = configContraints(props, config);
+
+    props = {
+      ...props,
       links: parseWikilinks(body, config),
       content: body,
     };
 
-    const { error } = schema.validate(props);
+    const { error, value: validProps } = schema.validate(props, { stripUnknown: true });
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(props, config);
+    return new Record(validProps, config);
   }
 
   /**
@@ -99,15 +98,15 @@ export default class Record {
    * @param {import('../models/config').default} config
    */
 
-  static recordFromCsv(line, config) {
-    const props = normalizeInput(line, config);
+  static recordFromCsv(props, config) {
+    props = configContraints(props, config);
 
-    const { error } = schema.validate(props);
+    const { error, value: validProps } = schema.validate(props, { stripUnknown: true });
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(props, config);
+    return new Record(validProps, config);
   }
 
   /**
@@ -149,7 +148,7 @@ export default class Record {
 
   static recordWithTimestamp(props, config) {
     props = {
-      ...normalizeInput(props, config),
+      ...props,
       id: getTimestampTuple().join(''),
     };
 
@@ -168,8 +167,10 @@ export default class Record {
    */
 
   static recordWithIncrementedTimestamp(props, config, increment) {
+    props = configContraints(props, config);
+
     props = {
-      ...normalizeInput(props, config),
+      ...props,
       id: timestampIncrement(increment),
     };
 
@@ -268,54 +269,25 @@ export default class Record {
  * @param {import('../models/config').default} config
  */
 
-function normalizeInput(head, config) {
-  if (!head) {
-    throw new Error('Head is required.');
-  }
-
-  const normalizedHead = normalizeWithAliases(aliasTable, head);
-
+function configContraints(props, config) {
   const metas = {};
 
-  for (const key of Object.keys(normalizedHead)) {
-    if (config.opts.record_metas.includes(key)) {
-      metas[key] = normalizedHead[key];
-    }
-
-    if (!schemaKeys.includes(key)) {
-      delete normalizedHead[key];
+  for (const key of Object.keys(props)) {
+    if (config.canSupportRecordMeta(key)) {
+      metas[key] = props[key];
     }
   }
 
-  const props = {
+  props = {
+    ...props,
     metas,
-    ...normalizedHead,
   };
 
-  if (!props.id && props.title) {
-    props.id = props.title;
-  }
-  if (typeof props.types === 'string') {
-    props.types = [props.types];
-  }
-  if (typeof props.tags === 'string') {
-    props.tags = [props.tags];
-  }
-  if (typeof props.begin === 'string') {
-    props.begin = new Date(props.begin).getTime() / 1000;
-  }
-  if (typeof props.end === 'string') {
-    props.end = new Date(props.end).getTime() / 1000;
-  }
-
-  if (props.id) {
-    props.id = slugify(props.id);
-  }
+  props.id = slugify(props.id);
 
   if (props.types) {
-    const knownTypes = config.getTypesRecords();
-    props.types = props.types.reduce((acc, curr, i, arr) => {
-      if (!knownTypes.has(curr)) {
+    props.types = props.types.reduce((acc, curr) => {
+      if (!config.hasRecordType(curr)) {
         if (!acc.includes('undefined')) {
           acc.push('undefined');
         }

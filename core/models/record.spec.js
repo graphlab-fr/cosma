@@ -103,21 +103,21 @@ This is a test content`);
 
 File linked to [[20210901132906]]`;
     const head = {
-      id: '20200501150208',
+      id: 'Test Record',
       title: 'Test Record',
       types: ['people', 'undefined'],
       tags: ['test'],
-      metas: {
-        author: 'Paul Otlet',
-      },
+      author: 'Paul Otlet',
+      'phone number': '+33##########',
       begin: undefined,
       end: undefined,
       thumbnail: undefined,
     };
 
     const result = Record.recordFromFile(body, head, config);
+
     expect(result).toEqual({
-      id: '20200501150208',
+      id: 'test-record',
       title: 'Test Record',
       content: '\n\nFile linked to [[20210901132906]]',
       links: [
@@ -130,39 +130,7 @@ File linked to [[20210901132906]]`;
       ],
       types: ['people', 'undefined'],
       tags: ['test'],
-      metas: {
-        author: 'Paul Otlet',
-      },
-      begin: undefined,
-      end: undefined,
-      thumbnail: undefined,
-      config: config,
-    });
-  });
-
-  it('should title became id if no id', () => {
-    const body = `
-
-Content`;
-    const head = {
-      title: 'Test Record',
-      types: ['unknown'],
-      tags: [],
-      metas: {},
-      begin: undefined,
-      end: undefined,
-      thumbnail: undefined,
-    };
-
-    const result = Record.recordFromFile(body, head, config);
-    expect(result).toEqual({
-      id: 'test-record',
-      title: 'Test Record',
-      content: '\n\nContent',
-      links: [],
-      types: ['undefined'],
-      tags: [],
-      metas: {},
+      metas: { author: 'Paul Otlet' },
       begin: undefined,
       end: undefined,
       thumbnail: undefined,
@@ -224,10 +192,6 @@ Content`;
         type: 'any.required',
       },
     ]);
-  });
-
-  it('should get Joi schema error if props are null', () => {
-    expect(() => Record.getErrors(null, config)).toThrow('Head is required.');
   });
 
   it('should return undefined if no error', () => {

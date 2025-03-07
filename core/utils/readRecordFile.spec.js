@@ -14,7 +14,8 @@ const config = {
   canCssCustom: jest.fn(),
   getConfigConsolMessage: jest.fn(),
   canModelizeFromDirectory: () => true,
-  getTypesRecords: () => new Set(),
+  canSupportRecordMeta: () => true,
+  hasRecordType: jest.fn(() => true),
 };
 
 const bibliography = {
@@ -46,6 +47,34 @@ Test @smith04`;
     expect(result).toEqual({
       records: [expect.objectContaining({ id: 'test-1' })],
       reportItems: [],
+    });
+  });
+
+  it('should get warn for unknown type', async () => {
+    config.hasRecordType.mockReturnValue(false);
+
+    const fileContent = `---
+id: test-1
+title: Test Title
+type: personne
+---
+
+Test`;
+    fsPromise.readFile.mockResolvedValue(fileContent);
+
+    const bibliography = undefined;
+
+    const result = await readRecordFile(filePath, config, bibliography);
+
+    expect(result).toEqual({
+      records: [expect.objectContaining({ types: ['undefined'] })],
+      reportItems: [
+        {
+          locator: { file: filePath },
+          isError: false,
+          message: 'Type "personne" is unknown.',
+        },
+      ],
     });
   });
 

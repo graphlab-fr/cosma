@@ -3,6 +3,8 @@ import { parse } from 'csv-parse';
 import { finished } from 'stream/promises';
 import fs from 'fs';
 import Record from '../models/record.js';
+import formatAsRecord from './formatAsRecord.js';
+import unknownTypesMessage from './unknownTypesMessage.js';
 
 /**
  * @param {string} filePath
@@ -30,7 +32,16 @@ export async function processNodes(filePath, config) {
     while ((line = parser.read()) !== null) {
       i++;
 
-      const error = Record.getErrors(line, config);
+      const props = formatAsRecord(line, config);
+
+      if (props.types) {
+        const message = unknownTypesMessage(props.types, config);
+        if (message) {
+          reportItems.push({ locator: { file: filePath, line: i }, isError: false, message });
+        }
+      }
+
+      const error = Record.getErrors(props);
 
       if (error) {
         reportItems.push({
@@ -41,7 +52,7 @@ export async function processNodes(filePath, config) {
         continue;
       }
 
-      const record = Record.recordFromCsv(line, config);
+      const record = Record.recordFromCsv(props, config);
       records.push(record);
     }
   });
@@ -88,6 +99,15 @@ export async function processNodesOnline(url, config) {
 
     while ((line = parser.read()) !== null) {
       i++;
+
+      const props = formatAsRecord(line, config);
+
+      if (props.types) {
+        const message = unknownTypesMessage(props.types, config);
+        if (message) {
+          reportItems.push({ locator: { file: url, line: i }, isError: false, message });
+        }
+      }
 
       const error = Record.getErrors(line, config);
 

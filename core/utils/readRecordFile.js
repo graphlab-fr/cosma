@@ -2,7 +2,17 @@ import fsPromise from 'node:fs/promises';
 import extractCitations from './citeExtractor.js';
 import readYamlFrontmatter from './yamlfrontmatter.js';
 import citeLinks from './citeLinks.js';
+import formatAsRecord from './formatAsRecord.js';
 import Record from '../models/record.js';
+import normalizeWithAliases from './normalizeWithAliases.js';
+import unknownTypesMessage from './unknownTypesMessage.js';
+
+const aliasTable = {
+  tag: 'tags',
+  keywords: 'tags',
+  keyword: 'tags',
+  type: 'types',
+};
 
 /**
  *
@@ -47,6 +57,15 @@ export default async function readRecordFile(filePath, config, bibliography) {
       records,
       reportItems,
     };
+  }
+
+  props = formatAsRecord(props, config);
+
+  if (props.types) {
+    const message = unknownTypesMessage(props.types, config);
+    if (message) {
+      reportItems.push({ locator: { file: filePath }, isError: false, message });
+    }
   }
 
   const error = Record.getErrors(props, config);
