@@ -75,6 +75,8 @@ async function modelize(options) {
 
   /** @type {Map<string, Record>} */
   const records = new Map();
+  /** @type {Map<string, string>} */
+  const recordFiles = new Map();
 
   /** @type {import('../core/utils/writeReportFile.js').ReportItem[]} */
   const reportMap = [];
@@ -84,10 +86,10 @@ async function modelize(options) {
    *   records: Record[],
    *   reportItems: import('../core/utils/writeReportFile.js').ReportItem[]
    * }} input
-   * @param {Map<string, Record>} records
+   * @param {string} filePath
    */
 
-  function pushAndReport(input) {
+  function pushAndReport(input, filePath) {
     input.records.forEach((r) => {
       if (records.has(r.id)) {
         reportMap.push({
@@ -99,6 +101,7 @@ async function modelize(options) {
       }
 
       records.set(r.id, r);
+      recordFiles.set(r.id, filePath);
     });
 
     reportMap.push(...input.reportItems);
@@ -120,23 +123,25 @@ async function modelize(options) {
       await Promise.all(
         files.map(async (filePath) => {
           const input = await readRecordFile(filePath, config, bibliography);
-          pushAndReport(input);
+          pushAndReport(input, filePath);
         }),
       );
 
       break;
     }
     case 'online': {
-      const input = await processNodesOnline(config.opts['nodes_online'], config);
-      pushAndReport(input);
+      const filePath = config.opts['nodes_online'];
+      const input = await processNodesOnline(filePath, config);
+      pushAndReport(input, filePath);
 
       await processLinksOnline(config.opts['links_online'], records);
 
       break;
     }
     case 'csv': {
-      const input = await processNodes(config.opts['nodes_origin'], config);
-      pushAndReport(input);
+      const filePath = config.opts['nodes_origin'];
+      const input = await processNodes(filePath, config);
+      pushAndReport(input, filePath);
 
       await processLinks(config.opts['links_origin'], records);
 
@@ -147,7 +152,20 @@ async function modelize(options) {
     }
   }
 
-  const { graph } = getGraph(records, config);
+  const { graph, brokenEdges } = getGraph(records, config);
+
+  brokenEdges.forEach(({ source, target }) => {
+    const file = recordFiles.get(source);
+    if (!file) {
+      throw new Error('Source record file not found.');
+    }
+
+    reportMap.push({
+      isError: true,
+      locator: { file },
+      message: `Link to "${target}" is broken.`,
+    });
+  });
 
   const { html } = new Template(records, graph, optionsTemplate);
 

@@ -2,7 +2,7 @@ import modelize from './modelize.js';
 import Config from '../core/models/config.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
 import getGraph from '../core/utils/getGraph.js';
-import fsPromise from 'node:fs/promises';
+import readRecordFile from '../core/utils/readRecordFile.js';
 
 jest.mock('../core/models/config.js');
 jest.mock('../core/models/bibliography.js', () => {
@@ -30,6 +30,7 @@ const mockWriteReportFile = jest.fn(() => 'reportHtml');
 jest.mock('../core/utils/writeReportFile.js', () => {
   return (p) => mockWriteReportFile(p);
 });
+jest.mock('../core/utils/readRecordFile.js');
 jest.mock('../core/utils/getGraph.js');
 jest.mock('../core/utils/csvToNodes.js', () => {
   return {
@@ -66,7 +67,7 @@ const config = {
     record_metas: [],
     references_type_label: 'reference',
   },
-  canCiteproc: () => true,
+  canCiteproc: jest.fn(() => true),
   canCssCustom: jest.fn(),
   getConfigConsolMessage: jest.fn(),
   canModelizeFromDirectory: () => true,
@@ -95,15 +96,122 @@ describe('modelize', () => {
     expect(modelize(options)).rejects.toThrow('Unknown data origin.');
   });
 
-  it('should report if empty file', async () => {
-    mockWriteReportFile.mockClear();
+  it('should record files without bibliography if no citeproc option', async () => {
+    readRecordFile.mockClear();
 
     Config.get.mockReturnValue(config);
-    getGraph.mockReturnValue('graph');
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
 
     findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
 
-    fsPromise.readFile.mockResolvedValue('');
+    readRecordFile.mockResolvedValueOnce({
+      records: [],
+      reportItems: [],
+    });
+
+    await modelize({
+      citeproc: false,
+      customCss: false,
+    });
+
+    expect(readRecordFile).toHaveBeenCalledWith('../file1.md', config, undefined);
+  });
+
+  it('should record files without bibliography if no citeproc config', async () => {
+    readRecordFile.mockClear();
+
+    config.canCiteproc.mockReturnValueOnce(false);
+    Config.get.mockReturnValueOnce(config);
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
+
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
+
+    readRecordFile.mockResolvedValueOnce({
+      records: [],
+      reportItems: [],
+    });
+
+    await modelize({
+      citeproc: true,
+      customCss: false,
+    });
+
+    expect(readRecordFile).toHaveBeenCalledWith('../file1.md', config, undefined);
+  });
+
+  it('should record files with bibliography if citeproc option and config', async () => {
+    readRecordFile.mockClear();
+
+    Config.get.mockReturnValue(config);
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
+
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
+
+    readRecordFile.mockResolvedValueOnce({
+      records: [],
+      reportItems: [],
+    });
+
+    await modelize({
+      citeproc: true,
+      customCss: false,
+    });
+
+    expect(readRecordFile).toHaveBeenCalledWith('../file1.md', config, expect.any(Object));
+  });
+
+  it('should report if duplicated record', async () => {
+    mockWriteReportFile.mockClear();
+
+    Config.get.mockReturnValue(config);
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
+
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md', '../file2.md']);
+
+    readRecordFile
+      .mockResolvedValueOnce({
+        records: [{ id: 'test1' }],
+        reportItems: [],
+      })
+      .mockResolvedValueOnce({
+        records: [{ id: 'test1' }],
+        reportItems: [],
+      });
+
+    await modelize({
+      citeproc: false,
+      customCss: false,
+    });
+
+    expect(mockWriteReportFile).toHaveBeenCalledWith([
+      {
+        locator: { file: '../file2.md' },
+        isError: true,
+        message: 'Id "test1" is duplicated.',
+      },
+    ]);
+  });
+
+  it('should report if broken links', async () => {
+    mockWriteReportFile.mockClear();
+
+    Config.get.mockReturnValue(config);
+    getGraph.mockReturnValue({
+      graph: 'graph',
+      brokenEdges: [{ source: 'test1', target: 'test2' }],
+    });
+
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md', '../file2.md']);
+
+    readRecordFile
+      .mockResolvedValueOnce({
+        records: [{ id: 'test1' }],
+        reportItems: [],
+      })
+      .mockResolvedValueOnce({
+        records: [{ id: 'test2' }],
+        reportItems: [],
+      });
 
     await modelize({
       citeproc: false,
@@ -114,7 +222,7 @@ describe('modelize', () => {
       {
         locator: { file: '../file1.md' },
         isError: true,
-        message: 'Yaml Front Matter is required.',
+        message: 'Link to "test2" is broken.',
       },
     ]);
   });
