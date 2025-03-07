@@ -13,6 +13,7 @@ import Config from '../core/models/config.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
 import isTimestampIncrement from '../core/utils/isTimestampIncrement.js';
 import timestampIncrement from '../core/utils/timestampIncrement.js';
+import formatAsRecord from '../core/utils/formatAsRecord.js';
 
 async function batch(filePath, saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
@@ -93,7 +94,10 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
       throw new Error('Batch data should be array');
     }
 
-    records = data.map((e, i) => Record.recordWithIncrementedTimestamp(e, config, increment + i));
+    records = data.map((e, i) => {
+      e = formatAsRecord(e, config);
+      return Record.recordWithIncrementedTimestamp(e, config, increment + i);
+    });
 
     await Promise.all(
       records.map(async (record) => {

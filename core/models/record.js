@@ -174,7 +174,7 @@ export default class Record {
       id: timestampIncrement(increment),
     };
 
-    const { error } = schema.validate(props);
+    const { error } = schema.validate(props, { stripUnknown: true });
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
