@@ -31,6 +31,12 @@ it('should get one node per created record', () => {
   cy.shouldGraphHasNodes(['Toto', 'Tata', 'Tutu']);
 });
 
+it('should nodes not ignored', () => {
+  cy.visit('temp/report.html');
+
+  cy.shouldGraphHasNodes(['Broken link', 'Unknown meta', 'Unknown type']);
+});
+
 it('should not get bibliographic nodes without citeproc', () => {
   cy.visit('temp/no-citeproc.html');
 

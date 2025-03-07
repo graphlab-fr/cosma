@@ -33,6 +33,12 @@ cd ..
 
 mv ../temp/cosmoscope.html ../temp/online.html
 
+cd report
+cosma modelize --citeproc
+cd ..
+
+mv ../temp/cosmoscope.html ../temp/report.html
+
 cd batch
 cosma batch ./data.json -id
 cosma modelize
