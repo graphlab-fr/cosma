@@ -55,6 +55,10 @@ export default async function readRecordFile(filePath, config, bibliography) {
     };
   }
 
+  if (bibliography && !props.title && bibliography.library[props.id]?.title) {
+    props.title = bibliography.library[props.id].title;
+  }
+
   props = formatAsRecord(props, config);
 
   if (props.types) {
