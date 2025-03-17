@@ -205,7 +205,7 @@ export default class Record {
       title,
       content = '',
       links = [],
-      types = ['undefined'],
+      types = [],
       tags = [],
       metas = {},
       begin,
@@ -236,7 +236,7 @@ export default class Record {
     const ymlContent = yml.stringify({
       id: withId ? this.id : undefined,
       title: this.title,
-      types: this.types,
+      types: this.types.length === 0 ? undefined : this.types,
       tags: this.tags.length === 0 ? undefined : this.tags,
       thumbnail: this.thumbnail,
       ...this.metas,

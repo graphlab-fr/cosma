@@ -55,7 +55,7 @@ describe('Record model', () => {
     expect(record.title).toBe('Default Record');
     expect(record.content).toBe('Content with defaults');
     expect(record.links).toEqual([]);
-    expect(record.types).toEqual(['undefined']);
+    expect(record.types).toEqual([]);
     expect(record.tags).toEqual([]);
     expect(record.metas).toEqual({});
     expect(record.begin).toBeUndefined();
@@ -64,7 +64,7 @@ describe('Record model', () => {
   });
 
   it('should generate YAML front matter with id', () => {
-    const record = new Record({ ...props, tags: undefined }, config);
+    const record = new Record({ ...props }, config);
 
     const file = record.getFileContent(true);
 
@@ -74,6 +74,9 @@ title: Test Record
 types:
   - type1
   - type2
+tags:
+  - tag1
+  - tag2
 thumbnail: img.jpg
 author: John Doe
 ---
@@ -81,16 +84,13 @@ author: John Doe
 This is a test content`);
   });
 
-  it('should generate YAML front matter without id', () => {
-    const record = new Record({ ...props, tags: undefined }, config);
+  it('should generate YAML front matter without id, types and tags', () => {
+    const record = new Record({ ...props, types: undefined, tags: undefined }, config);
 
     const file = record.getFileContent(false);
 
     expect(file).toEqual(`---
 title: Test Record
-types:
-  - type1
-  - type2
 thumbnail: img.jpg
 author: John Doe
 ---
