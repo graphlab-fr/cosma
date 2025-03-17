@@ -103,7 +103,7 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .option('-r, --reference', 'DESCRIPTION.')
+  .option('-r, --reference', 'Create record from quote key.')
   .action(({ project: projectName, reference }) => {
     setConfigFileToRun(projectName);
 
