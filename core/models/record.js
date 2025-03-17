@@ -93,6 +93,20 @@ export default class Record {
   }
 
   /**
+   * @param {unknown} props
+   * @param {import('../models/config').default} config
+   */
+
+  static recordWithReference(props, config) {
+    const { error } = schema.validate(props);
+    if (error) {
+      throw new Error(`Record contains error: ${error.message}`);
+    }
+
+    return new Record(validProps, config);
+  }
+
+  /**
    *
    * @param {unknown} line
    * @param {import('../models/config').default} config

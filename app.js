@@ -16,6 +16,7 @@ import modelize from './controllers/modelize.js';
 import makeRecord from './controllers/record.js';
 import autorecord from './controllers/autorecord.js';
 import batch from './controllers/batch.js';
+import referenceRecord from './controllers/referenceRecord.js';
 
 process.title = app.name;
 
@@ -102,8 +103,15 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action(({ project: projectName }) => {
+  .option('-r, --reference', 'DESCRIPTION.')
+  .action(({ project: projectName, reference }) => {
     setConfigFileToRun(projectName);
+
+    if (reference) {
+      referenceRecord(reference);
+      return;
+    }
+
     makeRecord();
   });
 
