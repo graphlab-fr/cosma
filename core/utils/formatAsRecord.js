@@ -19,6 +19,9 @@ export default function formatAsRecord(props) {
   if (!props.id && props.title) {
     props.id = props.title;
   }
+  if (!props.title && props.id) {
+    props.title = props.id;
+  }
   if (props.types && typeof props.types === 'string') {
     props.types = [props.types];
   }

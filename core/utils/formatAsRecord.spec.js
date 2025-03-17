@@ -1,6 +1,7 @@
 import formatAsRecord from './formatAsRecord';
 
 const data = {
+  id: 'otlet',
   title: 'Paul Otlet',
   type: 'type1',
   tag: 'tag1',
@@ -21,5 +22,15 @@ describe('formatAsRecord', () => {
     const result = formatAsRecord(data);
     expect(result.begin).toEqual(-3198528000);
     expect(result.end).toEqual(-790819200);
+  });
+
+  it('should use id as title if undefined', () => {
+    const result = formatAsRecord({ ...data, id: undefined });
+    expect(result.id).toEqual('Paul Otlet');
+  });
+
+  it('should use title as id if undefined', () => {
+    const result = formatAsRecord({ ...data, title: undefined });
+    expect(result.title).toEqual('otlet');
   });
 });
