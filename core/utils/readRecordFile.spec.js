@@ -127,6 +127,23 @@ Test @smith04`;
     });
   });
 
+  it('should get record title from bibliography', async () => {
+    const fileContent = `---
+id: smith04
+---
+
+About @smith04`;
+    fsPromise.readFile.mockResolvedValue(fileContent);
+
+    const result = await readRecordFile(filePath, config, bibliography);
+
+    expect(result).toEqual({
+      records: [expect.objectContaining({ id: 'smith04', title: 'Smith' })],
+      recordsCiteproc: [expect.objectContaining({ id: 'smith04' })],
+      reportItems: [],
+    });
+  });
+
   it('should get record from bibliography', async () => {
     const fileContent = `---
 id: test-1
