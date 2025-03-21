@@ -10,8 +10,8 @@
   --indicator-background-color: #fafafa;
   --lateral-background-color: white;
   /* typography */
-  --sans: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial',
-    sans-serif;
+  --sans:
+    system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
   --serif: 'Georgia', 'Garamond', 'Time New Roman', 'Times', serif;
   --mono: 'Consolas', 'Courrier New', 'Courrier', monospace;
   --condensed: 'Avenir Next Condensed', 'Arial Condensed', sans-serif;
