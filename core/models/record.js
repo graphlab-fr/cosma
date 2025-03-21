@@ -103,7 +103,7 @@ export default class Record {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(validProps, config);
+    return new Record(props, config);
   }
 
   /**
