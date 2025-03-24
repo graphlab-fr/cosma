@@ -11,7 +11,6 @@ import Bibliography from './bibliography.js';
 import nunjucks from 'nunjucks';
 import mdIt from 'markdown-it';
 import app from '../../package.json';
-import { isAnImagePath } from '../utils/misc.js';
 import slugify from '../utils/slugify.js';
 import langPck from './lang.js';
 import convertWikilinks from '../utils/convertWikilinks.js';
@@ -26,6 +25,7 @@ import extractCitations from '../utils/citeExtractor.js';
 import cssPrint from '../frontend/print.css';
 import cssStyles from '../frontend/styles.css';
 import quotesFromText from '../utils/quotesFromText.js';
+import markdownParser from '../utils/markdownParser.js';
 
 /**
  * @typedef ThumbnailIntegration
@@ -34,63 +34,12 @@ import quotesFromText from '../utils/quotesFromText.js';
  * @property {string} path
  */
 
-const md = new mdIt({
-  html: true,
-  linkify: true,
-  breaks: true,
-});
-
 /**
  * Class to get the Cosmoscope source code
  */
 
 class Template {
   static validParams = new Set(['css_custom', 'citeproc', 'dev']);
-
-  /**
-   * Convert a path to an image to the base64 encoding of the image source
-   * @param {string} imgPath
-   * @returns {string|boolean} False if error
-   */
-
-  static imagePathToBase64(imgPath) {
-    if (isAnImagePath(imgPath) === false) {
-      return '';
-    }
-    const imgFileContent = fs.readFileSync(imgPath);
-    const imgType = path.extname(imgPath).substring(1);
-    const imgBase64 = Buffer.from(imgFileContent).toString('base64');
-    return `data:image/${imgType};base64,${imgBase64}`;
-  }
-
-  /**
-   * Update markdown-it image source, from a path to a base64 encoding
-   * @param {string} imagesPath
-   * @param {Function} state
-   * @returns {String}
-   * @exemple
-   * ```
-   * md.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(imagesPath, state));
-   * ```
-   */
-
-  static mdItImageToBase64(imagesPath, state) {
-    for (let i = 0; i < state.tokens.length; i++) {
-      const token = state.tokens[i];
-      const { type, attrs } = token;
-      if (type === 'image') {
-        const { src, ...rest } = Object.fromEntries(attrs);
-        const imgPath = path.join(imagesPath, src);
-        const imgBase64 = Template.imagePathToBase64(imgPath);
-        if (imgBase64) {
-          state.tokens[i].attrs = Object.entries({
-            src: imgBase64,
-            ...rest,
-          });
-        }
-      }
-    }
-  }
 
   /**
    * Get data from graph and make a web app
@@ -231,12 +180,6 @@ class Template {
 
     const templateEngine = new nunjucks.Environment();
 
-    if (imagesPath) {
-      md.inline.ruler2.push('image_to_base64', (state) =>
-        Template.mdItImageToBase64(imagesPath, state),
-      );
-    }
-
     templateEngine.addFilter('slugify', (input) => {
       return slugify(input);
     });
@@ -254,12 +197,11 @@ class Template {
       return input;
     });
     templateEngine.addFilter('markdown', (input) => {
-      return md.render(input);
+      return markdownParser(input, this.config);
     });
     templateEngine.addFilter('timestampToLocal', (input) => {
       return new Date(input * 1000).toLocaleDateString(lang);
     });
-    templateEngine.addFilter('imgPathToBase64', Template.imagePathToBase64);
 
     this.custom_css = null;
     if (this.params.has('css_custom') === true && this.config.canCssCustom() === true) {

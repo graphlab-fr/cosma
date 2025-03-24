@@ -1,6 +1,7 @@
 select_origin: directory
 files_origin: ./
 export_target: ../../temp
+images_origin: ../records
 history: false
 record_types:
   undefined:

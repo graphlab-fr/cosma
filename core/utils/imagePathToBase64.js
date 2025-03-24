@@ -1,5 +1,21 @@
+/**
+ * Convert a path to an image to the base64 encoding of the image source
+ * @param {string} imgPath
+ * @returns {string|boolean} False if error
+ */
+
 import fs from 'node:fs';
 import path from 'node:path';
+
+export default function imagePathToBase64(imgPath) {
+  if (isAnImagePath(imgPath) === false) {
+    return '';
+  }
+  const imgFileContent = fs.readFileSync(imgPath);
+  const imgType = path.extname(imgPath).substring(1);
+  const imgBase64 = Buffer.from(imgFileContent).toString('base64');
+  return `data:image/${imgType};base64,${imgBase64}`;
+}
 
 /**
  * Verif by file extension and bytes that the image is valid
@@ -10,7 +26,7 @@ import path from 'node:path';
  * ```
  */
 
-export function isAnImagePath(imagePath) {
+function isAnImagePath(imagePath) {
   if (fs.existsSync(imagePath) === false) {
     return false;
   }
