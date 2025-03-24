@@ -1,6 +1,7 @@
 import GraphEngine from 'graphology';
 import { scaleLinear } from 'd3';
 import Config from '../models/config';
+import slugify from './slugify';
 
 /**
  * @typedef BrokenEdge
@@ -113,7 +114,7 @@ export default function getGraph(records, config) {
       }
 
       graph.addDirectedEdge(record.id, link.target, {
-        type: link.type,
+        type: slugify(link.type),
         shape: getLinkShape(link.type, config),
       });
     });
