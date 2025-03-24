@@ -40,6 +40,7 @@ describe('Record model', () => {
     expect(record.begin).toEqual(1609459200);
     expect(record.end).toEqual(1609545600);
     expect(record.thumbnail).toEqual('img.jpg');
+    expect(record.template).toEqual(0);
   });
 
   it('should correctly initialize default values if some properties are not provided', () => {
@@ -134,6 +135,7 @@ File linked to [[20210901132906]]`;
       begin: undefined,
       end: undefined,
       thumbnail: undefined,
+      template: 0,
       config: config,
     });
   });
@@ -173,6 +175,7 @@ File linked to [[20210901132906]]`;
       begin: undefined,
       end: undefined,
       thumbnail: undefined,
+      template: 1,
       config: config,
     });
   });
