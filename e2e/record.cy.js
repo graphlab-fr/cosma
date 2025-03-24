@@ -164,6 +164,23 @@ describe('Record', () => {
     });
   });
 
+  describe('bibliographic record with notes', () => {
+    beforeEach(() => {
+      cy.visit('temp/citeproc.html#engelbart1962');
+      assertRecordPanelIsOpened();
+    });
+
+    it('should not contains quote note', () => {
+      cy.get('#engelbart1962 .csl-entry').should(
+        'not.exist',
+      );
+    });
+
+    it('should has type from config', () => {
+      cy.get('.record.active .record-type').should('contain.text', 'reference');
+    });
+  });
+
   it('should add quote notes at footer of record', () => {
     cy.visit('temp/citeproc.html#tools-for-thought');
 

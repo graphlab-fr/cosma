@@ -8,6 +8,15 @@ import slugify from '../utils/slugify.js';
 import getTimestampTuple from '../utils/timestamp.js';
 
 /**
+ * @enum {number}
+ */
+
+const templates = {
+  default: 0,
+  quote: 1,
+};
+
+/**
  * @typedef RecordLink
  * @type {object}
  * @property {string} type
@@ -148,7 +157,7 @@ export default class Record {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(props, config);
+    return new Record({ ...props, template: templates.quote }, config);
   }
 
   /**
@@ -209,6 +218,7 @@ export default class Record {
    *  begin?: number,
    *  end?: number,
    *  thumbnail?: string,
+   *  template?: templates,
    * }} props
    * @param {import('../models/config').default} config
    */
@@ -225,6 +235,7 @@ export default class Record {
       begin,
       end,
       thumbnail,
+      template = templates.default,
     },
     config,
   ) {
@@ -238,6 +249,7 @@ export default class Record {
     this.begin = begin;
     this.end = end;
     this.thumbnail = thumbnail;
+    this.template = template;
 
     this.config = config;
   }

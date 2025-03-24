@@ -372,7 +372,7 @@
             </header>
 
             <main class="record-content">
-                {% if record.types[0] === graph.config.references_type_label %}
+                {% if record.template == 1 %}
                 <div class="csl-entry">{{ record.content | urlize | safe }}</div>
                 {% else %}
                 {{ record.content | convertLinks(graph.config) | markdown | safe }}
