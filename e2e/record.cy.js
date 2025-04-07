@@ -171,9 +171,7 @@ describe('Record', () => {
     });
 
     it('should not contains quote note', () => {
-      cy.get('#engelbart1962 .csl-entry').should(
-        'not.exist',
-      );
+      cy.get('#engelbart1962 .csl-entry').should('not.exist');
     });
 
     it('should has type from config', () => {
