@@ -66,6 +66,8 @@ export default async function readRecordFile(filePath, config, bibliography) {
     if (message) {
       reportItems.push({ locator: { file: filePath }, isError: false, message });
     }
+  } else {
+    props.types = ['undefined'];
   }
 
   const error = Record.getErrors(props, config);
