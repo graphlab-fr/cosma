@@ -80,6 +80,28 @@ Test`;
     });
   });
 
+  it('should set "undefined" type to record without type', async () => {
+    config.hasRecordType.mockReturnValue(false);
+
+    const fileContent = `---
+id: test-1
+title: Test Title
+---
+
+Test`;
+    fsPromise.readFile.mockResolvedValue(fileContent);
+
+    const bibliography = undefined;
+
+    const result = await readRecordFile(filePath, config, bibliography);
+
+    expect(result).toEqual({
+      records: [expect.objectContaining({ types: ['undefined'] })],
+      recordsCiteproc: [],
+      reportItems: [],
+    });
+  });
+
   it('should get YAML report', async () => {
     const fileContent = `---
 id: test-1
