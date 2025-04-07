@@ -75,7 +75,7 @@ sh e2e/exec-modelize.sh
 ## Maintenance
 
 The software is written in JavaScript. Uses ESM.
-Code is documented wherever possible using (JSDoc)[https://jsdoc.app/], by add heads to functions, classes and variables. You find many exemples on repository.
+Code is documented wherever possible using [JSDoc](https://jsdoc.app/), by add heads to functions, classes and variables. You find many exemples on repository.
 Code from directory `core/frontend` should be executed on web browser, the rest with NodeJS.
 
 ### Build
@@ -84,9 +84,9 @@ The software is build as `back.cjs` NodeJs CommonJs executable, using Webpack. S
 
 ```
                                       ────────────┐             
-                    ───┐    static/icons/**       │             
-   core/frontend/**.js │    static/template/**.njk│             
-   core/frontend/**.css├──► front.raw.js          │             
+                            static/icons/**       │             
+                    ───┐    static/template/**.njk│             
+    core/frontend/**.js├──► front.raw.js          │             
 ───────────────────────┘                          │             
 webpack-front.config.mjs    core/i18n.yml         │             
                             app.js                ├───► back.cjs
