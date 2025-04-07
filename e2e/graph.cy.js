@@ -41,6 +41,7 @@ it('should nodes not ignored', () => {
     'Unknown type',
     'Not quote',
     'Unknown quote',
+    'Image not exists',
   ]);
 });
 
