@@ -48,7 +48,7 @@ export default {
   resolve: {
     extensions: ['.js'],
     alias: {
-
+      katekCss: path.resolve(__dirname, './node_modules/katex/dist/katex.min.css'), // Chemin vers le bundle front
       front: path.resolve(__dirname, './dist/front.raw.js'), // Chemin vers le bundle front
     },
   },
