@@ -9,7 +9,6 @@ import path from 'node:path';
 import Config from './config.js';
 import Bibliography from './bibliography.js';
 import nunjucks from 'nunjucks';
-import mdIt from 'markdown-it';
 import app from '../../package.json';
 import slugify from '../utils/slugify.js';
 import langPck from './lang.js';
@@ -19,6 +18,7 @@ import cosmoscopeTemplate from '../../static/template/cosmoscope.njk';
 import favicon from '../../static/icons/cosmafavicon.png';
 import logo from '../../static/icons/cosmalogo.svg';
 import frontendScript from 'front';
+import katekCss from 'katekCss';
 import GraphEngine from 'graphology';
 import { extent } from 'd3';
 import extractCitations from '../utils/citeExtractor.js';
@@ -301,7 +301,7 @@ class Template {
       translation: langPck.i,
       lang: lang,
 
-      css: cssStyles + cssPrint,
+      css: cssStyles + cssPrint + katekCss,
       customCss: this.custom_css,
 
       views: views || [],

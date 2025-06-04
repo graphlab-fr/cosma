@@ -1,6 +1,8 @@
 import mdIt from 'markdown-it';
 import imagePathToBase64 from './imagePathToBase64';
 import path from 'node:path';
+import mKatek from '@vscode/markdown-it-katex';
+import katex from 'katex';
 
 const md = new mdIt({
   html: true,
