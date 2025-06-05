@@ -12,10 +12,6 @@ const md = new mdIt({
 
 md.use(mKatek, { katex });
 
-md.inline.ruler2.push('image_to_base64', (state) =>
-  mdItImageToBase64(config.opts.images_origin, state),
-);
-
 /**
  *
  * @param {string} markdown
@@ -23,6 +19,10 @@ md.inline.ruler2.push('image_to_base64', (state) =>
  */
 
 export default function markdownParser(markdown, config) {
+  md.inline.ruler2.push('image_to_base64', (state) =>
+    mdItImageToBase64(config.opts.images_origin, state),
+  );
+
   return md.render(markdown);
 }
 
