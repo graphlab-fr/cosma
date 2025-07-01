@@ -1,7 +1,6 @@
 import yml from 'yaml';
-import readYamlFrontmatter from '../utils/yamlfrontmatter.js';
 import Joi from 'joi';
-import normalizeWithAliases from '../utils/normalizeWithAliases.js';
+import formatAsRecord from '../utils/formatAsRecord.js';
 import parseWikilinks from '../utils/parseWikilinks.js';
 import timestampIncrement from '../utils/timestampIncrement.js';
 import slugify from '../utils/slugify.js';
@@ -122,6 +121,7 @@ export default class Record {
    */
 
   static recordFromCsv(props, config) {
+    props = formatAsRecord(props, config);
     props = configContraints(props, config);
 
     const { error, value: validProps } = schema.validate(props, { stripUnknown: true });
