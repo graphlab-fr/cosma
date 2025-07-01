@@ -28,7 +28,7 @@ Cosma's development is publicly funded through [Université Jean Moulin Lyon 3](
 
 ### Install
 
-Need NodeJs v.18 or later.
+Need NodeJs v.20 or later.
 
 You want to install app on your computer:
 
