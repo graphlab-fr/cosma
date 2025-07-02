@@ -406,8 +406,8 @@
                                     <span style="color: var(--n_{{ type | slugify }});">⬤</span>
                                     {% endfor %}
                                 </span>
-                                {% if link.type !== 'undefined' %}
-                                <span class="link-type">({{ link.type }})</span>
+                                {% if link.label !== 'undefined' %}
+                                <span class="link-type">({{ link.label }})</span>
                                 {% endif %}
                                 <span>{{ link.target.title }}</span>
                                 {% if link.context !== '' %}
@@ -438,8 +438,8 @@
                                     <span style="color: var(--n_{{ type | slugify }});">⬤</span>
                                     {% endfor %}
                                 </span>
-                                {% if backlink.type !== 'undefined' %}
-                                <span class="link-type">({{ backlink.type }})</span>
+                                {% if backlink.label !== 'undefined' %}
+                                <span class="link-type">({{ backlink.label }})</span>
                                 {% endif %}
                                 <span>{{ backlink.source.title }}</span>
                                 {% if backlink.context !== '' %}

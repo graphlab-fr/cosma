@@ -235,7 +235,8 @@ describe('Record', () => {
 
     it('should display link type', () => {
       cy.get('@backlink').should('contain.text', 'adjacent concept');
-      cy.get('@link').should('contain.text', 'agreesWith');
+      cy.get('@link').should('contain.text', 'agrees with');
+      cy.get('@link').should('not.contain.text', 'undefined');
     });
   });
 

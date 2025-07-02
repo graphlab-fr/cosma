@@ -28,9 +28,10 @@ link_types:
   adjacent concept:
     stroke: dotted
     color: "#e1e1e1"
-  agreesWith:
+  a:
     stroke: simple
     color: "green"
+    label: "agrees with"
 references_as_nodes: true
 references_type_label: "reference"
 record_filters: []

@@ -5,6 +5,7 @@ import extractParaphs from './paraphExtractor';
  * @typedef Link
  * @type {object}
  * @property {string} type
+ * @property {string} label
  * @property {string} target
  * @property {Set<string>} contexts
  */
@@ -29,13 +30,16 @@ export default function citeLinks(markdown, config) {
           links.get(citation.id).contexts.add(paraph);
         } else {
           let linkType = 'undefined';
+          let linkLabel;
 
           if (linkTypes.has(citation.type)) {
             linkType = citation.type;
+            linkLabel = config.opts.link_types[linkType].label;
           }
 
           links.set(citation.id, {
             type: linkType,
+            label: linkLabel,
             target: citation.id,
             contexts: new Set([paraph]),
           });

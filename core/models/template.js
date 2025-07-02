@@ -221,7 +221,7 @@ class Template {
 
           const recordLinks = links
             .filter((link) => graph.hasNode(link.target))
-            .map(({ contexts, type, target }) => {
+            .map(({ contexts, type, target, label }) => {
               const recordTarget = records.get(target);
 
               return {
@@ -231,7 +231,7 @@ class Template {
                   title: recordTarget.title,
                   types: recordTarget.types,
                 },
-                type,
+                label: label || type,
               };
             });
 
@@ -252,7 +252,7 @@ class Template {
                     title: record.title,
                     types: record.types,
                   },
-                  type: link.type,
+                  label: link.label || link.type,
                 });
               });
           });

@@ -7,25 +7,15 @@ jest.mock('../../static/template/report.njk', () => '');
 jest.mock('../i18n.yml', () => ({}));
 jest.mock('../../static/template/report.njk', () => '');
 
-const config = new Config({
-  link_types: {
-    'is about': {
-      label: 'is about',
-      color: 'blue',
-      icon: 'link',
-    },
-  },
-});
+const link_types = {
+  a: { label: 'is about', color: 'blue', icon: 'link' },
+};
+
+const config = new Config({ link_types });
 const linkSymbol = '->';
 const configWithLinkSymbol = new Config({
   link_symbol: linkSymbol,
-  link_types: {
-    'is about': {
-      label: 'is about',
-      color: 'blue',
-      icon: 'link',
-    },
-  },
+  link_types,
 });
 
 describe('parseWikilinks', () => {
@@ -53,13 +43,14 @@ describe('parseWikilinks', () => {
   });
 
   it('should parse link id and defined type', () => {
-    const paraph = 'Lorem ipsum [[is about:20210901132906]] dolor sit amet.';
+    const paraph = 'Lorem ipsum [[a:20210901132906]] dolor sit amet.';
 
     const result = parseWikilinks(paraph, config);
 
     expect(result).toEqual([
       {
-        type: 'is about',
+        type: 'a',
+        label: 'is about',
         target: '20210901132906',
         text: '20210901132906',
         contexts: [paraph],
@@ -129,7 +120,7 @@ describe('parseWikilinks', () => {
   });
 
   it('should keep last type for link', () => {
-    const paraph = 'Lorem ipsum [[is about:20210901132906]] dolor sit [[20210901132906]] amet.';
+    const paraph = 'Lorem ipsum [[a:20210901132906]] dolor sit [[20210901132906]] amet.';
 
     const result = parseWikilinks(paraph, config);
 

@@ -19,6 +19,7 @@ const templates = {
  * @typedef RecordLink
  * @type {object}
  * @property {string} type
+ * @property {string} [label]
  * @property {string} [text]
  * @property {string} target
  * @property {string[]} contexts
@@ -27,6 +28,7 @@ const templates = {
 const recordLinkSchema = Joi.object({
   type: Joi.string().required(),
   text: Joi.string().optional(),
+  label: Joi.string().optional(),
   target: Joi.string().required(),
   contexts: Joi.array().items(Joi.string()).required(),
 });
