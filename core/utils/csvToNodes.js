@@ -136,14 +136,17 @@ export async function processNodesOnline(url, config) {
 /**
  * @param {string} url
  * @param {Map<string, import('../models/record')>} records
+ * @param {import('../models/config.js').default} config
  */
 
-export async function processLinksOnline(url, records) {
+export async function processLinksOnline(url, records, config) {
   const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch CSV: ${response.statusText}`);
   }
+
+  const linkTypes = config.getTypesLinks();
 
   const readableStream = Readable.fromWeb(response.body);
 
@@ -162,10 +165,16 @@ export async function processLinksOnline(url, records) {
     while ((line = parser.read()) !== null) {
       i++;
 
+      let linkType = 'undefined';
+
+      if (linkTypes.has(line['type'])) {
+        linkType = line['type'];
+      }
+
       records.get(line['source']).addLink({
         contexts: line['label'] ? [line['label']] : [],
         target: line['target'],
-        type: line['type'] || 'undefined',
+        type: linkType,
         text: undefined,
       });
     }
@@ -176,10 +185,13 @@ export async function processLinksOnline(url, records) {
 
 /**
  * @param {string} filePath
- * @param {Map<string, import('../models/record')>} records
+ * @param {Map<string, import('../models/record').default>} records
+ * @param {import('../models/config.js').default} config
  */
 
-export async function processLinks(filePath, records) {
+export async function processLinks(filePath, records, config) {
+  const linkTypes = config.getTypesLinks();
+
   const parser = fs.createReadStream(filePath).pipe(
     parse({
       columns: true,
@@ -194,10 +206,16 @@ export async function processLinks(filePath, records) {
     while ((line = parser.read()) !== null) {
       i++;
 
+      let linkType = 'undefined';
+
+      if (linkTypes.has(line['type'])) {
+        linkType = line['type'];
+      }
+
       records.get(line['source']).addLink({
         contexts: line['label'] ? [line['label']] : [],
         target: line['target'],
-        type: line['type'] || 'undefined',
+        type: linkType,
         text: undefined,
       });
     }

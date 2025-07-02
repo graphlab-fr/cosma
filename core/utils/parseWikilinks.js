@@ -21,6 +21,8 @@ const wikilinkRE = new RegExp(/\[\[((?<type>[^:|\]]+?):)?(?<id>.+?)(\|(?<text>.+
 export default function parseWikilinks(markdown, config) {
   if (!markdown) return [];
 
+  const linkTypes = config.getTypesLinks();
+
   /**
    * @type {Map<string, Link>}
    */
@@ -30,8 +32,14 @@ export default function parseWikilinks(markdown, config) {
     const [full, _, type, id, __, placeholder] = match;
     const target = slugify(id);
 
+    let linkType = 'undefined';
+
+    if (linkTypes.has(type)) {
+      linkType = type;
+    }
+
     linksDict.set(target, {
-      type: type || 'undefined',
+      type: linkType,
       target,
       text: config.opts['link_symbol'] || placeholder || target,
       contexts: new Set(),

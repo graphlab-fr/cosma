@@ -13,6 +13,7 @@ const config = {
   canCiteproc: () => true,
   canCssCustom: jest.fn(),
   getConfigConsolMessage: jest.fn(),
+  getTypesLinks: () => new Set(['reference', 'concept']),
   canModelizeFromDirectory: () => true,
   canSupportRecordMeta: () => true,
   hasRecordType: jest.fn(() => true),

@@ -7,10 +7,25 @@ jest.mock('../../static/template/report.njk', () => '');
 jest.mock('../i18n.yml', () => ({}));
 jest.mock('../../static/template/report.njk', () => '');
 
-const config = new Config({});
+const config = new Config({
+  link_types: {
+    'is about': {
+      label: 'is about',
+      color: 'blue',
+      icon: 'link',
+    },
+  },
+});
 const linkSymbol = '->';
 const configWithLinkSymbol = new Config({
   link_symbol: linkSymbol,
+  link_types: {
+    'is about': {
+      label: 'is about',
+      color: 'blue',
+      icon: 'link',
+    },
+  },
 });
 
 describe('parseWikilinks', () => {
@@ -37,7 +52,7 @@ describe('parseWikilinks', () => {
     ]);
   });
 
-  it('should parse link id and type', () => {
+  it('should parse link id and defined type', () => {
     const paraph = 'Lorem ipsum [[is about:20210901132906]] dolor sit amet.';
 
     const result = parseWikilinks(paraph, config);
@@ -45,6 +60,21 @@ describe('parseWikilinks', () => {
     expect(result).toEqual([
       {
         type: 'is about',
+        target: '20210901132906',
+        text: '20210901132906',
+        contexts: [paraph],
+      },
+    ]);
+  });
+
+  it('should replace undefined type', () => {
+    const paraph = 'Lorem ipsum [[unknown:20210901132906]] dolor sit amet.';
+
+    const result = parseWikilinks(paraph, config);
+
+    expect(result).toEqual([
+      {
+        type: 'undefined',
         target: '20210901132906',
         text: '20210901132906',
         contexts: [paraph],

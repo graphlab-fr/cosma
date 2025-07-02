@@ -155,7 +155,7 @@ async function modelize(options) {
       const input = await processNodesOnline(filePath, config);
       pushAndReport(input, filePath);
 
-      await processLinksOnline(config.opts['links_online'], records);
+      await processLinksOnline(config.opts['links_online'], records, config);
 
       break;
     }
@@ -164,7 +164,7 @@ async function modelize(options) {
       const input = await processNodes(filePath, config);
       pushAndReport(input, filePath);
 
-      await processLinks(config.opts['links_origin'], records);
+      await processLinks(config.opts['links_origin'], records, config);
 
       break;
     }

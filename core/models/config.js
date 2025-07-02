@@ -46,8 +46,8 @@ import Joi from 'joi';
  * @property {string} export_target
  * @property {boolean} history
  * @property {number} focus_max
- * @property {Object<string, RecordType>} record_types
- * @property {Object<string, LinkType>} link_types
+ * @property {Record<string, RecordType>} record_types
+ * @property {Record<string, LinkType>} link_types
  * @property {boolean} references_as_nodes
  * @property {string} references_type_label
  * @property {RecordFilters} record_filters
