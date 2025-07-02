@@ -24,6 +24,7 @@ import Joi from 'joi';
  * @type {object}
  * @property {string} stroke
  * @property {string} color
+ * @property {string} [label]
  */
 
 /**
@@ -90,6 +91,7 @@ const recordTypeItemSchema = Joi.object({
 const linkTypeItemSchema = Joi.object({
   stroke: Joi.string().required(),
   color: Joi.string().required(),
+  label: Joi.string().optional(),
 });
 
 const recordFilterItemSchema = Joi.object({

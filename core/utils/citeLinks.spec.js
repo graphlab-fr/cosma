@@ -3,9 +3,10 @@ import citeLinks from './citeLinks';
 
 const config = new Config({
   link_types: {
-    agreeWith: {
+    a: {
       color: '#000',
       stroke: '#000',
+      label: 'agree with',
     },
   },
 });
@@ -35,12 +36,13 @@ describe('citeLinks', () => {
 
   it('should get as link type first occurence', () => {
     const text =
-      'Lorem ipsum, dolor sit amet [agreeWith: @engelbart1962] consectetur adipisicing [other: @engelbart1962] elit.';
+      'Lorem ipsum, dolor sit amet [a: @engelbart1962] consectetur adipisicing [other: @engelbart1962] elit.';
 
     const result = citeLinks(text, config);
     expect(result).toEqual([
       {
-        type: 'agreeWith',
+        type: 'a',
+        label: 'agree with',
         target: 'engelbart1962',
         contexts: [text],
       },
