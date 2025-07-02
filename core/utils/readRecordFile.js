@@ -109,7 +109,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
         }),
     );
 
-    citeLinks(record.content).forEach((link) => record.addLink(link));
+    citeLinks(record.content, config).forEach((link) => record.addLink(link));
   }
 
   return {

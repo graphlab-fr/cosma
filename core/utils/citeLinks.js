@@ -12,10 +12,13 @@ import extractParaphs from './paraphExtractor';
 /**
  *
  * @param {string} markdown
+ * @param {import('../models/config').default} config
  * @returns {import('../models/record').RecordLink[]}
  */
 
-export default function citeLinks(markdown) {
+export default function citeLinks(markdown, config) {
+  const linkTypes = config.getTypesLinks();
+
   /** @type {Map<string, Link>} */
   const links = new Map();
 
@@ -25,8 +28,14 @@ export default function citeLinks(markdown) {
         if (links.has(citation.id)) {
           links.get(citation.id).contexts.add(paraph);
         } else {
+          let linkType = 'undefined';
+
+          if (linkTypes.has(citation.type)) {
+            linkType = citation.type;
+          }
+
           links.set(citation.id, {
-            type: citation.type || 'undefined',
+            type: linkType,
             target: citation.id,
             contexts: new Set([paraph]),
           });
