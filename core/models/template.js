@@ -11,7 +11,6 @@ import Bibliography from './bibliography.js';
 import nunjucks from 'nunjucks';
 import app from '../../package.json';
 import slugify from '../utils/slugify.js';
-import langPck from './lang.js';
 import convertWikilinks from '../utils/convertWikilinks.js';
 import convertQuotes from '../utils/convertQuotes.js';
 import cosmoscopeTemplate from '../../static/template/cosmoscope.njk';
@@ -27,6 +26,7 @@ import cssStyles from '../frontend/styles.css';
 import quotesFromText from '../utils/quotesFromText.js';
 import markdownParser from '../utils/markdownParser.js';
 import imagePathToBase64 from '../utils/imagePathToBase64.js';
+import content from '../i18n.yml';
 
 /**
  * @typedef ThumbnailIntegration
@@ -298,8 +298,8 @@ class Template {
         };
       })(),
 
-      translation: langPck.i,
-      lang: lang,
+      translation: content,
+      lang: this.config.opts.lang,
 
       css: cssStyles + cssPrint + katekCss,
       customCss: this.custom_css,
