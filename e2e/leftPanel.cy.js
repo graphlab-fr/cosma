@@ -18,6 +18,10 @@ describe('left panel', () => {
       cy.get('#menu-container').scrollTo('bottom');
     });
 
+    it('should display number of records', () => {
+      cy.get('.menu-index .menu-title').find('.badge').should('contain.text', '8');
+    });
+
     it('should display each record with alphabetical order', () => {
       cy.shouldIndexHasItems([
         'Douglas Engelbart (1925–2013)',
@@ -54,5 +58,21 @@ describe('left panel', () => {
         'Tools for thought',
       ]);
     });
+  });
+});
+
+it('should display types of records', () => {
+  cy.visit('temp/batch.html');
+
+  cy.contains('Index').click();
+
+  [
+    { id: 'melvil-dewey', nb: 1 },
+    { id: 'paul-otlet', nb: 2 },
+  ].forEach(({ id, nb }) => {
+    cy.get(`[data-index="${id}"]`)
+      .find('.record-type-points')
+      .find('span')
+      .should('have.length', nb);
   });
 });
