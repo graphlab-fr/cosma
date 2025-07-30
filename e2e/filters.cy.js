@@ -31,6 +31,20 @@ describe('Filters', () => {
     });
   });
 
+  it('should display number of types', () => {
+    cy.get('.menu-types .menu-title').find('.badge').should('contain.text', filters.length);
+  });
+
+  it('should display number of records for each filter', () => {
+    cy.get('@filtersContainer').find('.badge').as('badges');
+
+    cy.get('@badges').should('have.length', filters.length);
+    cy.get('@badges').eq(0).should('contain', '1');
+    cy.get('@badges').eq(1).should('contain', '6');
+    cy.get('@badges').eq(2).should('contain', '1');
+    cy.get('@badges').eq(3).should('contain', '1');
+  });
+
   it('should check all filters if no URL params', () => {
     assertFiltersAreChecked(filters);
   });
