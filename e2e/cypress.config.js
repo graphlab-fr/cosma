@@ -7,7 +7,7 @@ module.exports = defineConfig({
   videosFolder: path.join(__dirname, '../temp'),
   trashAssetsBeforeRuns: false,
   e2e: {
-    specPattern: './**/*cy.js',
+    specPattern: './**/*.cy.js',
     supportFile: path.join(__dirname, './e2e-support.js'),
     setupNodeEvents(on, config) {
       // implement node event listeners here
