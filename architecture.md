@@ -29,6 +29,15 @@ List of main files to develop.
     └── back.cjs                App executable
 ```
 
+## Environments
+
+📁 /cosma/
+├── jsconfig.json         Node.js ESM (code source backend)
+├── 📁 core/frontend/
+│   └── jsconfig.json     Browser ESM (code frontend)
+└── 📁 e2e/
+    └── jsconfig.json     Node.js CommonJS (tests Cypress)
+
 ## Published tree
 
 Only next files will be published on NPM on execute `npm publish`.
@@ -43,3 +52,4 @@ Only next files will be published on NPM on execute `npm publish`.
 ├── man
 └── package.json
 ```
+
