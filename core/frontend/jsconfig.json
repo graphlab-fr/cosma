@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2020"
+    ],
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "**/*.js"
+  ],
+  "exclude": [
+    "../../node_modules",
+    "../../dist",
+    "../../temp"
+  ]
+}
