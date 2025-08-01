@@ -101,6 +101,8 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
   const form = document.getElementById('link-types-form');
+  /** @type {HTMLInputElement[]} */
+  const inputs = form.querySelectorAll('input');
 
   form.reset();
 
@@ -117,5 +119,39 @@ window.addEventListener('DOMContentLoaded', () => {
     const selectedLinks = graph.filterEdges((key, attrs) => selectedTypes.includes(attrs.type));
 
     setLinksDisplaying(selectedLinks);
+  }
+
+  let filterNameAltMode;
+
+  for (const input of inputs) {
+    const { name: filterName } = input;
+
+    input.parentElement.addEventListener('click', (e) => {
+      const altMode = e.altKey;
+      if (altMode) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (filterNameAltMode === filterName) {
+          displayHidden();
+          filterNameAltMode = undefined;
+        } else {
+          hideAllButOne(filterName);
+          filterNameAltMode = filterName;
+        }
+      }
+    });
+  }
+
+  function displayHidden() {
+    form
+      .querySelectorAll(`input:not(:checked)`)
+      .forEach((checkedInput) => (checkedInput.checked = true));
+    form.dispatchEvent(new Event('change'));
+  }
+
+  function hideAllButOne(filterName) {
+    inputs.forEach((input) => (input.checked = filterName === input.name));
+    form.dispatchEvent(new Event('change'));
   }
 });
