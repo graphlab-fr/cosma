@@ -206,4 +206,37 @@ describe('on Citeproc file', () => {
     cy.get('@inputs').first().click();
     cy.get('[data-link]:visible').should('have.length', 2);
   });
+
+  describe('with alt key', () => {
+    function assertFiltersAreChecked(names) {
+      cy.get('@linkFiltersContainer')
+        .find('.filter input:checked')
+        .should('have.length', names.length)
+        .each((elt) => {
+          expect(elt.attr('name')).to.be.oneOf(names);
+        });
+    }
+
+    const linkNames = linkFilters.map(({ label }) => label);
+
+    it('should uncheck all link inputs but not clicked one if alt key is pressed', () => {
+      assertFiltersAreChecked(linkNames);
+
+      cy.get('@linkFiltersContainer').contains('adjacent-concept').click({ altKey: true });
+
+      assertFiltersAreChecked(['adjacent-concept']);
+    });
+
+    it('should check all link inputs if alt key is pressed on a second click on same filter', () => {
+      assertFiltersAreChecked(linkNames);
+
+      cy.get('@linkFiltersContainer').contains('adjacent-concept').click({ altKey: true });
+
+      assertFiltersAreChecked(['adjacent-concept']);
+
+      cy.get('@linkFiltersContainer').contains('adjacent-concept').click({ altKey: true });
+
+      assertFiltersAreChecked(linkNames);
+    });
+  });
 });
