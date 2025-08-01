@@ -291,6 +291,13 @@ aside.menu {
   color: var(--offblack);
 }
 
+aside.menu h3 {
+  font-size: 1rem;
+  margin: 1rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
 aside.menu:not(.active) {
   display: none;
 }

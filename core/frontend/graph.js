@@ -16,6 +16,8 @@ import hotkeys from 'hotkeys-js';
 /** Data serialization
 ------------------------------------------------------------*/
 
+/** @type {GraphEngine<import('../utils/getGraph.js').Node, import('../utils/getGraph.js').Edge>} */
+
 const graph = new GraphEngine({ multi: true });
 graph.import(data);
 
@@ -27,6 +29,7 @@ graph.updateEachNodeAttributes((node, attr) => {
 });
 
 const allNodeIds = graph.nodes();
+const allLinkIds = graph.edges();
 
 /** Box sizing
 ------------------------------------------------------------*/
@@ -380,6 +383,18 @@ function getNodeNetwork(nodeId) {
   };
 }
 
+/**
+ * @param {string[]} linksIds - Ids of link to display
+ */
+
+function setLinksDisplaying(linksIds) {
+  const toDisplay = linksIds;
+  const toHide = Array.from(d3.difference(allLinkIds, toDisplay));
+
+  displayLinks(toDisplay);
+  hideLinks(toHide);
+}
+
 function setNodesDisplaying(nodeIds) {
   const toDisplay = nodeIds;
   const toHide = Array.from(d3.difference(allNodeIds, toDisplay));
@@ -400,6 +415,16 @@ graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
   }
 });
 
+graph.on('edgeAttributesUpdated', function ({ key, attributes }) {
+  const link = elts.links.filter((link) => link.key === key);
+
+  if (attributes.hidden) {
+    link.node().classList.add('hide');
+  } else {
+    link.node().classList.remove('hide');
+  }
+});
+
 /**
  * Hide some nodes & their links, by their id
  * @param {array} nodeIds - List of nodes ids
@@ -407,6 +432,24 @@ graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
 
 function hideNodes(nodeIds) {
   nodeIds.forEach((nodeId) => graph.setNodeAttribute(nodeId, 'hidden', true));
+}
+
+/**
+ * Display some links by their id
+ * @param {array} linkIds - List of link ids
+ */
+
+function displayLinks(linkIds) {
+  linkIds.forEach((linkId) => graph.setEdgeAttribute(linkId, 'hidden', false));
+}
+
+/**
+ * Hide some links by their id
+ * @param {array} linkIds - List of link ids
+ */
+
+function hideLinks(linkIds) {
+  linkIds.forEach((linkId) => graph.setEdgeAttribute(linkId, 'hidden', true));
 }
 
 /**
@@ -630,6 +673,7 @@ export {
   displayNodes,
   displayNodesAll,
   setNodesDisplaying,
+  setLinksDisplaying,
   highlightNodes,
   unlightNodes,
   translate,

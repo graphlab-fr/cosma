@@ -79,6 +79,8 @@ class Template {
     let bibliography;
 
     /** @type {Map<string, Set<string>>} */
+    const linksDict = new Map();
+    /** @type {Map<string, Set<string>>} */
     const filtersDict = new Map();
     /** @type {Map<string, Set<string>>} */
     const tagsDict = new Map();
@@ -109,6 +111,14 @@ class Template {
     const tagsDictAsArrays = Array.from(tagsDict, (arr) => {
       arr[1] = Array.from(arr[1]);
       return arr;
+    });
+
+    graph.forEachEdge((edge, attrs) => {
+      if (linksDict.has(attrs.type)) {
+        linksDict.get(attrs.type).add(edge);
+      } else {
+        linksDict.set(attrs.type, new Set([edge]));
+      }
     });
 
     const tagsListAlphabetical = tagsDictAsArrays
@@ -306,6 +316,7 @@ class Template {
 
       views: views || [],
       filters: Object.fromEntries(filtersDictAsArrays),
+      linkFilters: Object.fromEntries(linksDict),
       tags: Object.fromEntries(tagsDictAsArrays),
 
       references: [...references.values()],
