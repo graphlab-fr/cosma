@@ -60,8 +60,12 @@
         <details class="menu-types" open="open">
             <summary class="menu-title">
                 {{ translation.left_panel.menu_types.title[lang] }}
-                <span id="types-counter" class="badge">{{ filters | length }}</span>
             </summary>
+
+            <h3 class="node-types-title">
+                {{ translation.left_panel.menu_types.subtitle_node[lang] }}
+                <span id="types-counter" class="badge">{{ filters | length }}</span>
+            </h3>
 
             <form id="types-form" class="menu-types-container">
                 {% for filterName, nodes in filters %}
@@ -69,6 +73,21 @@
                     <input type="checkbox" name="{{ filterName }}">
                     <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
                     <span class="badge">{{ nodes | length }}</span>
+                </label>
+                {% endfor %}
+            </form>
+
+            <h3 class="link-types-title">
+                {{ translation.left_panel.menu_types.subtitle_link[lang] }}
+                <span id="types-counter" class="badge">{{ linkFilters | length }}</span>
+            </h3>
+
+            <form id="link-types-form" class="menu-types-container">
+                {% for filterName, links in linkFilters %}
+                <label class="filter">
+                    <input type="checkbox" name="{{ filterName }}" checked>
+                    <span class="label" style="color: var(--l_{{ filterName | slugify }});">{{ filterName }}</span>
+                    <span class="badge">{{ links | length }}</span>
                 </label>
                 {% endfor %}
             </form>

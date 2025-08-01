@@ -24,6 +24,12 @@ left_panel:
     title:
       fr: Types
       en: Types
+    subtitle_node:
+      fr: Nœuds
+      en: Nodes
+    subtitle_link:
+      fr: Liens
+      en: Links
 
   menu_keywords:
     title:

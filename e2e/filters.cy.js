@@ -26,23 +26,11 @@ describe('Filters', () => {
   const filters = ['œuvre', 'personne', 'institution', 'otlet'];
 
   it('should display filter for each type', () => {
+    cy.get('@filtersContainer').find('.filter input').should('have.length', filters.length);
+
     filters.forEach((filterName) => {
       cy.get('@filtersContainer').contains(filterName).should('be.visible');
     });
-  });
-
-  it('should display number of types', () => {
-    cy.get('.menu-types .menu-title').find('.badge').should('contain.text', filters.length);
-  });
-
-  it('should display number of records for each filter', () => {
-    cy.get('@filtersContainer').find('.badge').as('badges');
-
-    cy.get('@badges').should('have.length', filters.length);
-    cy.get('@badges').eq(0).should('contain', '1');
-    cy.get('@badges').eq(1).should('contain', '6');
-    cy.get('@badges').eq(2).should('contain', '1');
-    cy.get('@badges').eq(3).should('contain', '1');
   });
 
   it('should check all filters if no URL params', () => {
@@ -136,5 +124,86 @@ describe('Filters', () => {
 
       assertFiltersAreChecked(filters);
     });
+  });
+});
+
+describe('on Citeproc file', () => {
+  beforeEach(() => {
+    cy.visit('temp/citeproc.html');
+    cy.get('#types-form').as('filtersContainer');
+    cy.get('#link-types-form').as('linkFiltersContainer');
+  });
+
+  const nodeFilters = [
+    {
+      label: 'reference',
+      count: 2,
+    },
+    {
+      label: 'insight',
+      count: 4,
+    },
+    {
+      label: 'concept',
+      count: 2,
+    },
+  ];
+
+  const linkFilters = [
+    {
+      label: 'undefined',
+      count: 5,
+    },
+    {
+      label: 'adjacent-concept',
+      count: 1,
+    },
+    {
+      label: 'a',
+      count: 1,
+    },
+  ];
+
+  it('should display number of node types', () => {
+    cy.get('.node-types-title').find('.badge').should('contain.text', nodeFilters.length);
+  });
+
+  it('should display number of link types', () => {
+    cy.get('.link-types-title').find('.badge').should('contain.text', linkFilters.length);
+  });
+
+  it('should display number of link for each filter', () => {
+    cy.get('@linkFiltersContainer').find('.badge').as('badges');
+
+    cy.get('@badges').should('have.length', linkFilters.length);
+    linkFilters.forEach(({ label, count }, index) => {
+      cy.get('@badges').eq(index).should('contain', count);
+    });
+  });
+
+  it('should display number of records for each filter', () => {
+    cy.get('@filtersContainer').find('.badge').as('badges');
+
+    cy.get('@badges').should('have.length', nodeFilters.length);
+    nodeFilters.forEach(({ label, count }, index) => {
+      cy.get('@badges').eq(index).should('contain', count);
+    });
+  });
+
+  it('should display filter for each link type', () => {
+    cy.get('@linkFiltersContainer').find('.filter input').should('have.length', linkFilters.length);
+
+    linkFilters.forEach(({ label }) => {
+      cy.get('@linkFiltersContainer').contains(label).should('be.visible');
+    });
+  });
+
+  it('should hide links on click on link type', () => {
+    cy.get('@linkFiltersContainer').find('.filter input').as('inputs');
+
+    cy.get('[data-link]:visible').should('have.length', 7);
+
+    cy.get('@inputs').first().click();
+    cy.get('[data-link]:visible').should('have.length', 2);
   });
 });

@@ -4,7 +4,7 @@
  * @copyright GNU GPL 3.0 Cosma's authors
  */
 
-import { setNodesDisplaying } from './graph.js';
+import { setNodesDisplaying, setLinksDisplaying, graph } from './graph.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
@@ -95,5 +95,27 @@ window.addEventListener('DOMContentLoaded', () => {
   function hideAllButOne(filterName) {
     inputs.forEach((input) => (input.checked = filterName === input.name));
     form.dispatchEvent(new Event('change'));
+  }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  /** @type {HTMLFormElement} */
+  const form = document.getElementById('link-types-form');
+
+  form.reset();
+
+  changeTypesState();
+
+  form.addEventListener('change', changeTypesState);
+
+  function changeTypesState() {
+    let formState = new FormData(form);
+    formState = Object.fromEntries(formState);
+
+    const selectedTypes = Object.keys(formState);
+
+    const selectedLinks = graph.filterEdges((key, attrs) => selectedTypes.includes(attrs.type));
+
+    setLinksDisplaying(selectedLinks);
   }
 });
