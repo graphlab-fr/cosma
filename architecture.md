@@ -2,41 +2,49 @@
 
 ## Files tree
 
-List of main files to develop.
+Main project structure:
 
 ```
 .
-├── controllers/
+├── app.js                      CLI entry point, command root
+├── controllers/                Business logic controllers
 ├── core/
-│   ├── frontend                Web browser files: JS, CSS
-│   ├── models                  Business models and unit tests
-│   ├── utils                   Business functions and unit tests
-│   └── i18n.yml
+│   ├── frontend/               Browser files: JS, CSS, UI components
+│   ├── models/                 Business models and unit tests
+│   ├── utils/                  Utility functions and unit tests
+│   └── i18n.yml                Translation file
 ├── docs/                       User documentation
 ├── e2e/
-│   ├── **/config.yml           Options for each export
-│   ├── exec-modelize.sh        Series of commands to generate exports to execute E2E tests
-│   └── **.cy.js                Cypress E2E testing files
+│   ├── cypress.config.js       Cypress configuration file
+│   ├── e2e-support.js          Cypress support utilities
+│   ├── exec-modelize.sh        Shell script for E2E export automation
+│   ├── *.cy.js                 Cypress test files
+│   └── jsconfig.json           Node.js config for tests
+├── man/                        Manual pages and related scripts
 ├── static/
-│   ├── icons                   Images
-│   └── template                Contains app exports (cosmoscope, report) templates
-├── app.js                      Root, CLI commands rooting
-├── webpack-back.config.mjs     Webpack config to build executable (JS+raw)
-├── webpack-front.config.mjs    Webpack config to build frontend bundle (JS+CSS)
-│
-├── temp/                       E2E tests exports
-└── dist/                       Webpack bundles
-    └── back.cjs                App executable
+│   ├── icons/                  Images and icons
+│   └── template/               Export templates (cosmoscope, report)
+├── temp/                       Temporary exports for E2E tests
+├── dist/                       Webpack bundles
+│   └── back.cjs                Main executable
+├── babel.config.js             Babel configuration
+├── jest.config.js              Jest configuration
+├── package.json                NPM dependencies and scripts
+├── README.md                   Main documentation
+├── webpack-back.config.mjs     Webpack backend config
+└── webpack-front.config.mjs    Webpack frontend config
 ```
 
 ## Environments
 
-📁 /cosma/
-├── jsconfig.json         Node.js ESM (code source backend)
-├── 📁 core/frontend/
-│   └── jsconfig.json     Browser ESM (code frontend)
-└── 📁 e2e/
-    └── jsconfig.json     Node.js CommonJS (tests Cypress)
+Project environments:
+
+```
+.
+├── jsconfig.json                  Node.js ESM config (backend source code)
+├── core/frontend/jsconfig.json    Browser ESM config (frontend code)
+└── e2e/jsconfig.json              Node.js CommonJS config (Cypress tests)
+```
 
 ## Published tree
 
