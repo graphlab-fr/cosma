@@ -106,7 +106,7 @@ class Template {
     const filtersDictAsArrays = Array.from(filtersDict, (arr) => {
       arr[1] = Array.from(arr[1]);
       return arr;
-    });
+    }).sort(([a], [b]) => a.localeCompare(b));
     /** @type {[string, string[]]} */
     const tagsDictAsArrays = Array.from(tagsDict, (arr) => {
       arr[1] = Array.from(arr[1]);
@@ -120,6 +120,9 @@ class Template {
         linksDict.set(attrs.type, new Set([edge]));
       }
     });
+
+    /** @type {[string, string[]]} */
+    const linksDictAsArrays = Array.from(linksDict, ([key, value]) => [key, Array.from(value)]).sort(([a], [b]) => a.localeCompare(b));
 
     const tagsListAlphabetical = tagsDictAsArrays
       .map(([name]) => name)
@@ -316,7 +319,7 @@ class Template {
 
       views: views || [],
       filters: Object.fromEntries(filtersDictAsArrays),
-      linkFilters: Object.fromEntries(linksDict),
+      linkFilters: Object.fromEntries(linksDictAsArrays),
       tags: Object.fromEntries(tagsDictAsArrays),
 
       references: [...references.values()],

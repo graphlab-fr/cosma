@@ -148,7 +148,7 @@ describe('Filters', () => {
         label: 'reference',
         count: 2,
       },
-    ];
+    ].sort((a, b) => a.label.localeCompare(b.label));
 
     const linkFilters = [
       {
@@ -163,7 +163,7 @@ describe('Filters', () => {
         label: 'undefined',
         count: 5,
       },
-    ];
+    ].sort((a, b) => a.label.localeCompare(b.label));
 
     it('should display number of node types', () => {
       cy.get('.node-types-title').find('.badge').should('contain.text', nodeFilters.length);
@@ -173,21 +173,23 @@ describe('Filters', () => {
       cy.get('.link-types-title').find('.badge').should('contain.text', linkFilters.length);
     });
 
-    it('should display number of link for each filter', () => {
+    it('should display number of link for each filter in alphabetical order', () => {
       cy.get('@linkFiltersContainer').find('.badge').as('badges');
 
       cy.get('@badges').should('have.length', linkFilters.length);
-      linkFilters.forEach(({ count }, index) => {
+      linkFilters.forEach(({ count, label }, index) => {
         cy.get('@badges').eq(index).should('contain', count);
+        cy.get('@linkFiltersContainer').find('.filter').eq(index).should('contain', label);
       });
     });
 
-    it('should display number of records for each filter', () => {
+    it('should display number of records for each filter in alphabetical order', () => {
       cy.get('@filtersContainer').find('.badge').as('badges');
 
       cy.get('@badges').should('have.length', nodeFilters.length);
-      nodeFilters.forEach(({ count }, index) => {
+      nodeFilters.forEach(({ count, label }, index) => {
         cy.get('@badges').eq(index).should('contain', count);
+        cy.get('@filtersContainer').find('.filter').eq(index).should('contain', label);
       });
     });
 
