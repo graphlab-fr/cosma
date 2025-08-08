@@ -239,4 +239,40 @@ describe('on Citeproc file', () => {
       assertFiltersAreChecked(linkNames);
     });
   });
+
+  it('should reset all filters with alt+r shortcut', () => {
+    const allNodeFilters = nodeFilters.map(({ label }) => label);
+    const allLinkFilters = linkFilters.map(({ label }) => label);
+
+    cy.get('@filtersContainer')
+      .find('.filter input:checked')
+      .should('have.length', allNodeFilters.length);
+
+    cy.get('@linkFiltersContainer')
+      .find('.filter input:checked')
+      .should('have.length', allLinkFilters.length);
+
+    cy.get('@filtersContainer').contains('reference').click();
+    cy.get('@filtersContainer').contains('concept').click();
+    cy.get('@linkFiltersContainer').contains('undefined').click();
+    cy.get('@linkFiltersContainer').contains('a').click();
+
+    cy.get('@filtersContainer')
+      .find('.filter input:checked')
+      .should('have.length', allNodeFilters.length - 2);
+
+    cy.get('@linkFiltersContainer')
+      .find('.filter input:checked')
+      .should('have.length', allLinkFilters.length - 2);
+
+    cy.get('body').type('{alt}r');
+
+    cy.get('@filtersContainer')
+      .find('.filter input:checked')
+      .should('have.length', allNodeFilters.length);
+
+    cy.get('@linkFiltersContainer')
+      .find('.filter input:checked')
+      .should('have.length', allLinkFilters.length);
+  });
 });

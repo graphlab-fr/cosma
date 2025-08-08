@@ -6,6 +6,26 @@
 
 import { setNodesDisplaying, setLinksDisplaying, graph } from './graph.js';
 
+/**
+ * Display all hidden elements by checking all unchecked inputs
+ * @param {HTMLFormElement} form - The form containing the filters
+ */
+function displayAllHidden(form) {
+  form.querySelectorAll('input:not(:checked)').forEach((input) => (input.checked = true));
+  form.dispatchEvent(new Event('change'));
+}
+
+/**
+ * Hide all elements except the specified one
+ * @param {HTMLFormElement} form - The form containing the filters
+ * @param {HTMLInputElement[]} inputs - List of form inputs
+ * @param {string} filterName - Name of the filter to keep visible
+ */
+function hideAllExceptOne(form, inputs, filterName) {
+  inputs.forEach((input) => (input.checked = filterName === input.name));
+  form.dispatchEvent(new Event('change'));
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
   const form = document.getElementById('types-form');
@@ -61,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let filterNameAltMode;
   for (const input of inputs) {
-    const { name: filterName, checked: active } = input;
+    const { name: filterName } = input;
 
     input.parentElement.addEventListener('click', (e) => {
       const altMode = e.altKey;
@@ -70,10 +90,10 @@ window.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         if (filterNameAltMode === filterName) {
-          displayHidden();
+          displayAllHidden(form);
           filterNameAltMode = undefined;
         } else {
-          hideAllButOne(filterName);
+          hideAllExceptOne(form, inputs, filterName);
           filterNameAltMode = filterName;
         }
       }
@@ -82,20 +102,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   hotkeys('alt+r', (e) => {
     e.preventDefault();
-    displayHidden();
+    displayAllHidden(form);
   });
-
-  function displayHidden() {
-    form
-      .querySelectorAll(`input:not(:checked)`)
-      .forEach((checkedInput) => (checkedInput.checked = true));
-    form.dispatchEvent(new Event('change'));
-  }
-
-  function hideAllButOne(filterName) {
-    inputs.forEach((input) => (input.checked = filterName === input.name));
-    form.dispatchEvent(new Event('change'));
-  }
 });
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -133,25 +141,18 @@ window.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         if (filterNameAltMode === filterName) {
-          displayHidden();
+          displayAllHidden(form);
           filterNameAltMode = undefined;
         } else {
-          hideAllButOne(filterName);
+          hideAllExceptOne(form, inputs, filterName);
           filterNameAltMode = filterName;
         }
       }
     });
   }
 
-  function displayHidden() {
-    form
-      .querySelectorAll(`input:not(:checked)`)
-      .forEach((checkedInput) => (checkedInput.checked = true));
-    form.dispatchEvent(new Event('change'));
-  }
-
-  function hideAllButOne(filterName) {
-    inputs.forEach((input) => (input.checked = filterName === input.name));
-    form.dispatchEvent(new Event('change'));
-  }
+  hotkeys('alt+r', (e) => {
+    e.preventDefault();
+    displayAllHidden(form);
+  });
 });
