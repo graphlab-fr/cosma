@@ -2,69 +2,86 @@ graph:
   btn_zoom_reset:
     fr: Réinitialiser
     en: Reset
+    de: Zurücksetzen
   btn_focus:
     fr: Focus
     en: Focus
+    de: Fokus
   btn_chrono:
     fr: Mode chronologique
     en: Chronological mode
+    de: Chronologischer Modus
 
 left_panel:
   header:
     spatialization_bar_desc:
       fr: Spatialisation (Espace)
       en: Spatialization (Space)
+      de: Räumliche Darstellung (Leertaste)
 
   input_search:
     placeholder:
       fr: Rechercher…
       en: Search…
+      de: Suchen
 
   menu_types:
     title:
       fr: Types
       en: Types
+      de: Arten
     subtitle_node:
       fr: Nœuds
       en: Nodes
+      de: Knoten
     subtitle_link:
       fr: Liens
       en: Links
+      de: Links
 
   menu_keywords:
     title:
       fr: Mots-clés
       en: Keywords
+      de: Schlüsselwörter
     sort:
       digital:
         fr: Croissant
         en: Ascending
+        de: Aufsteigend
       digital_reverse:
         fr: Décroissant
         en: Descending
+        de: Absteigend
 
   menu_index:
     title:
       fr: Index
       en: Index
+      de: Index
     sort:
       chronological:
         fr: Chronologique
         en: Chronological
+        de: Chronologisch
       chronological_reverse:
         fr: Antéchronologique
         en: Antechronological
+        de: Antechronologisch
 
   menu_views:
     title:
       fr: Vue
       en: View
+      de: Ansicht
     btn_reset:
       fr: Réinitialiser la vue
       en: Reset the view
+      de: Ansicht zurücksetzen
     btn_save:
       fr: Appliquer la vue actuelle à l'URL
       en: Set URL to current view
+      de: URL auf aktuelle Ansicht setzen
     tooltip:
       fr: >
         Applique l'état actuel de l'interface
@@ -76,25 +93,35 @@ left_panel:
         (selected record, filters, focus…)
         to the URL, which can then be used to
         access the current view.
+      de: >
+        Wende den aktuellen Status der Schnittstelle
+        (ausgewählter Datensatz, Filter, Fokus…)
+        auf die URL an, die dann verwendet werden kann, um
+        auf die aktuelle Ansicht zuzugreifen.
 
   menu_controls:
     title:
       fr: Paramètres du graphe
       en: Graph parameters
+      de: Graphenparameter
     input_links_show:
       fr: Afficher les liens
       en: Display links
+      de: Links anzeigen
     input_labels_show:
       fr: Afficher les étiquettes
       en: Display labels
+      de: Labels anzeigen
     input_highlight_hover_node:
       fr: Surbrillance au survol
       en: Highlight on hover
+      de: Hervorheben beim Darüberfahren
 
     form_attraction:
       title:
         fr: Forces
         en: Forces
+        de: Kräfte
       help:
         fr: >
           Contrôlez la répartition des nœuds dans l’espace
@@ -102,55 +129,72 @@ left_panel:
         en: >
           Tweak the force-layout simulation to control
           the way nodes are displayed.
+        de: >
+          Passen Sie die Force-Layout-Simulation an, um
+          die Darstellung der Knoten zu steuern.
       input_force:
         fr: répulsion
         en: repulsion
+        de: Abstossung
       input_distance_max:
         fr: distance max
         en: max distance
+        de: max Distanz
       input_vertical:
         fr: attraction verticale
         en: vertical attraction
+        de: vertikale Anziehungskraft
       input_horizontal:
         fr: attraction horizontale
         en: horizontal attraction
+        de: horizontale Anziehungskraft
 
     form_text:
       title:
         fr: Étiquettes
         en: Labels
+        de: Labels
       input_size:
         fr: taille du texte
         en: font size
-    
+        de: Schriftgrösse
+
     focus_type:
       title:
         fr: Type de focus
         en: Focus type
+        de: Fokusart
       focus_type_select:
         directed:
           fr: Tous les liens
           en: All links
+          de: Alle Links
         inbound:
           fr: Liens entrants
           en: Inbound links
+          de: Interne Links
         outbound:
           fr: Liens sortants
           en: Outbound links
+          de: Externe Links
 
   footer:
     btn_data:
       fr: Données
       en: Data
+      de: Daten
     btn_help:
       fr: Aide
       en: Help
+      de: Hilfe
     btn_about:
       fr: À propos
       en: About
+      de: Über
     publish_mark:
       fr: Fabriqué avec Cosma –
       en: Made with Cosma –
+      de: Hergestellt mit Cosma –
 
 right_panel:
   record:
@@ -158,46 +202,58 @@ right_panel:
       btn_close:
         fr: Fermer (Echap)
         en: Close (Escape)
+        de: Schliessen (Escape)
     empty:
       fr: Cliquez sur un nœud du graphe ou dans un élément de l'index pour ouvrir une fiche.
       en: To open a record, select a node in the graph or a title in the index.
+      de: Klicken Sie auf einen Knotenpunkt des Diagramms oder auf ein Element des Index, um eine Karteikarte zu öffnen.
 
     metadata:
       id:
         fr: id
         en: id
+        de: id
       last_edit:
         fr: dernière modification
         en: last modified
+        de: letzte Änderung
       type:
         fr: types
         en: types
+        de: Arten
       keywords:
         fr: mots-clés
         en: keywords
+        de: Schlüsselwörter
       begin:
         fr: Début
         en: Begin
+        de: Anfang
       end:
         fr: Fin
         en: End
+        de: Ende
 
     bibliography:
       fr: Bibliographie
       en: Bibliography
+      de: Bibliographie
 
     footer:
       list_links:
         fr: liens
         en: links
+        de: Links
       list_backlinks:
         fr: rétroliens
         en: backlinks
+        de: backlinks
 
   help:
     title:
       fr: Aide
       en: Help
+      de: Hilfe
 
     documentation_link_href:
       fr: https://cosma.arthurperret.fr/
@@ -205,83 +261,105 @@ right_panel:
     documentation_link_placeholder:
       fr: Cliquez ici pour accéder à la documentation de Cosma
       en: Click here to access Cosma's documentation
+      de: Klicken Sie hier, um zur Dokumentation von Cosma zu gelangen.
 
     shortcuts:
       title:
         fr: Raccourcis
         en: Shortcuts
+        de: Verknüpfungen
       space:
         key:
           fr: Espace
           en: Space
+          de: Leerschlag
         effect:
           fr: Réactiver l'algorithme de dessin du graphe
           en: Re-run the force-layout algorithm
+          de: Den Algorithmus zum Zeichnen des Graphen reaktivieren
       s:
         key:
           fr: S
           en: S
+          de: S
         effect:
           fr: Déplacer le curseur dans le champ Recherche
           en: Move the cursor to Search
+          de: Bewegen Sie den Cursor in das Suchfeld.
       alt_click:
         key:
           fr: Alt + clic
           en: Alt + click
+          de: Alt + Klick
         effect:
           fr: (sur un type de fiche) Désélectionner les autres types
           en: (on a record type) Deselect other types
+          de: (auf einem Kartentyp) Andere Typen abwählen
       r:
         key:
           fr: R
           en: R
+          de: R
         effect:
           fr: Réinitialiser le zoom
           en: Reset zoom
+          de: Zoom zurücksetzen
       alt_r:
         key:
           fr: Alt + R
           en: Alt + R
+          de: Alt + R
         effect:
           fr: Réinitialiser l'affichage
           en: Reset the display
+          de: Anzeige zurücksetzen
       c:
         key:
           fr: C
           en: C
+          de: C
         effect:
           fr: Zoomer et centrer sur le nœud sélectionné
           en: Zoom in on the selected node
+          de: Zoomen und Zentrieren auf den ausgewählten Knoten
       f:
         key:
           fr: F
           en: F
+          de: F
         effect:
           fr: Passer en mode Focus
           en: Switch to Focus mode
+          de: In den Fokusmodus wechseln
       escap:
         key:
           fr: Echap
           en: Escape
+          de: Verlassen
         effect:
           fr: Fermer la fiche sélectionnée
           en: Close the active record
+          de: Ausgewählte Karteikarte schliessen
 
   credits:
     version:
       fr: Version
       en: Version
+      de: Version
     license:
       fr: Licence
       en: License
+      de: Lizenz
     ANR_program:
       fr: Programme ANR
       en: ANR research programme
+      de: ANR-Programm
 
   bibliography_data:
     title:
       fr: Données bibliographiques
       en: Bibliographical data
+      de: Bibliografische Angaben
     description:
       fr: >
         Les données ci-dessous correspondent aux références citées dans ce cosmoscope.
@@ -295,157 +373,211 @@ right_panel:
         This format is recognized by most popular bibliographic management software,
         such as Zotero, Mendeley or Papers.
         Click on the button below to download the data.
+      de: >
+        Die folgenden Daten entsprechen den in diesem Kosmoskop zitierten Referenzen.
+        Sie sind gemäss dem Citation Style Language Standard strukturiert und in JSON ausgedrückt.
+        Dieses Format wird von den meisten Literaturverwaltungsprogrammen wie
+        Zotero, Mendeley oder Papers erkannt.
+        Klicken Sie auf die Schaltfläche unten, um die Daten herunterzuladen.
     btn_download:
       fr: Télécharger
       en: Download
+      de: Herunterladen
 
 config:
   errors:
     no_name:
       fr: La configuration n'a pas de nom
       en: The configuration has no name
+      de: Die Konfiguration hat keinen Namen
     name_already_used:
       fr: Ce nom de configuration est déjà utilisé
       en: This name is already used
+      de: Dieser Name wird bereits verwendet
     name:
       fr: Le nom de configuration est invalide
       en: The configuration name is invalid
+      de: Der Konfigurationsname ist ungültig
     invalid_path:
       fr: Le chemin vers la configuration est invalide
       en: The config file path is invalid
+      de: Der Pfad zur Konfigurationsdatei ist ungültig
     select_origin:
       fr: Ce type de source de données n'est pas valide
       en: This type of data origin is invalid
+      de: Dieser Datentyp ist ungültig
     files_origin:
       fr: Le chemin vers le répertoire de fiches sélectionné est invalide
       en: Invalid records directory path
+      de: Der ausgewählte Pfad zum Verzeichnis der Dateien ist ungültig
     nodes_origin:
       fr: Le chemin vers la feuille de calcul sélectionnée est invalide
       en: Invalid spreadsheet directory path
+      de: Der Pfad zur ausgewählten Tabellenkalkulation ist ungültig
     links_origin:
       fr: Le chemin vers la feuille de calcul sélectionnée est invalide
       en: Invalid spreadsheet directory path
+      de: Der Pfad zur ausgewählten Tabellenkalkulation ist ungültig
     images_origin:
       fr: Le chemin vers l'image sélectionnée est invalide
       en: Invalid image file path
+      de: Der Pfad zur ausgewählten Bilddatei ist ungültig
     nodes_online:
       fr: L'url vers la feuille de calcul sélectionnée est invalide
       en: Invalid spreadsheet directory path
+      de: Die URL zur ausgewählten Tabellenkalkulation ist ungültig
     links_online:
       fr: L'url vers la feuille de calcul sélectionnée est invalide
       en: Invalid spreadsheet directory path
+      de: Die URL zur ausgewählten Tabellenkalkulation ist ungültig
     export_target:
       fr: Le chemin vers le répertoire d'export du cosmocope est invalide
       en: Invalid export directory path
+      de: Der Pfad zum Exportverzeichnis ist ungültig
     bibliography:
       fr: Le chemin vers le fichier de références bibliographiques est invalide
       en: Invalid bibliographical data file path
+      de: Der Pfad zur Datei mit bibliografischen Daten ist ungültig
     csl:
       fr: Le chemin vers le fichier de style bibliographique est invalide
       en: Invalid bibliographical style file path
+      de: Der Pfad zur Datei mit bibliografischem Stil ist ungültig
     csl_locale:
       fr: Le chemin vers le fichier de localisation bibliographique est invalide
       en: Invalid bibliographical locale file path
+      de: Der Pfad zur Datei mit bibliografischer Lokalisierung ist ungültig
     css_custom:
       fr: Le chemin vers la CSS personnalisée est invalide
       en: Invalid custom CSS file path
+      de: Der Pfad zur benutzerdefinierten CSS-Datei ist ungültig
     record_metas:
       fr: La liste des métadonnées des fiches est invalide
       en: The list of metadata of the records is invalid
+      de: Die Liste der Metadaten der Dateien ist ungültig
     record_filters:
       fr: La liste des filtres de fiches est invalide
       en: The list of filters of the records is invalid
+      de: Die Liste der Filter der Dateien ist ungültig
     focus_max:
       fr: Le niveau maximum de focus est invalide
       en: Invalid maximum focus level
+      de: Ungültiger maximaler Fokuslevel
     graph_text_size:
       fr: La taille du texte des étiquettes doit être supérieure ou égale à $1
       en: Labels font size must be $1 or higher
+      de: Die Schriftgröße der Etiketten muss $1 oder höher sein
     attraction_force:
       fr: La force de répulsion doit être supérieure ou égale à $1
       en: Repulsion force must be $1 or higher
+      de: Die Abstoßungskraft muss $1 oder höher sein
     attraction_distance_max:
       fr: La distance maximum doit être supérieure ou égale à $1
       en: Maximum distance between nodes must be $1 or higher
+      de: Die maximale Distanz zwischen Knoten muss $1 oder höher sein
     attraction_vertical:
       fr: La force d'attraction verticale doit être supérieure ou égale à $1
       en: Vertical attraction must be $1 or higher
+      de: Die vertikale Anziehungskraft muss $1 oder höher sein
     attraction_horizontal:
       fr: La force d'attraction verticale doit être supérieure ou égale à $1
       en: Horizontal attraction must be $1 or higher
+      de: Die horizontale Anziehungskraft muss $1 oder höher sein
     node_size_method:
       fr: Cette méthode de dimensionnement des nœuds est invalide
       en: This method of sizing nodes is invalid
+      de: Dieses Verfahren zur Größenanpassung der Knoten ist ungültig
     node_size:
       fr: La taille des nœuds doit être supérieur ou égale à $1
       en: Nodes size must be $1 or higher
+      de: Die Größe der Knoten muss $1 oder höher sein
     node_size_min:
       fr: La taille minimum des nœuds doit être supérieur ou égale à $1
       en: Min nodes size must be $1 or higher
+      de: Die minimale Größe der Knoten muss $1 oder höher sein
     node_size_max:
       fr: La taille maximum des nœuds doit être supérieur ou égale à $1
       en: Max nodes size must be $1 or higher
+      de: Die maximale Größe der Knoten muss $1 oder höher sein
     history:
       fr: La commande d'enregistrement de l'historique est invalide
       en: Invalid history recording command
+      de: Ungültiger Befehl zur Historikaufzeichnung
     views:
       fr: L'enregistrement de la vue a échoué
       en: View registration failed
+      de: Die Ansichtsregistrierung ist fehlgeschlagen
     graph_highlight_on_hover:
       fr: La commande de surbrillance des nœuds au survol est invalide
       en: Invalid command to highlight nodes on the flyover
+      de: Ungültiger Befehl zur Hervorhebung der Knoten beim Überfliegen
     graph_arrows:
       fr: La commande de fléchage des liens est invalide
       en: Invalid link arrow command
+      de: Ungültiger Befehl für Linkpfeile
     devtools:
       fr: La commande d'activation des outils de développement est invalide
       en: Invalid devtools activation command
+      de: Ungültiger Befehl zur Aktivierung der Entwicklertools
     minify:
       fr: La commande de compression de l'export est invalide
       en: Invalid export minification command
+      de: Ungültiger Befehl zur Exportminifizierung
     record_types:
       fr: La liste des types de fiches est invalide
       en: Invalid record types list
+      de: Die Liste der Datensatztypen ist ungültig
     link_types:
       fr: La liste des types de liens est invalide
       en: Invalid link types list
+      de: Die Liste der Linktypen ist ungültig
     graph_background_color:
       fr: Cette couleur de fond n'est pas valide
       en: This background color is invalid
+      de: Diese Hintergrundfarbe ist ungültig
     graph_highlight_color:
       fr: Cette couleur de surbrillance n'est pas valide
       en: This highlight color is invalid
+      de: Diese Hervorhebungsfarbe ist ungültig
     title:
       fr: Le titre d'export n'est pas valide
       en: The export title is invalid
+      de: Der Exporttitel ist ungültig
     author:
       fr: L'auteur de l'export n'est pas valide
       en: The export author is invalid
+      de: Der Exportautor ist ungültig
     description:
       fr: La description de l'export n'est pas valide
       en: The export description is invalid
+      de: Die Exportbeschreibung ist ungültig
     keywords:
       fr: Les mots-clés de l'export ne sont pas valides
       en: Export keywords are invalid
+      de: Die Exportschlüsselwörter sind ungültig
     link_symbol:
       fr: Le symbole de remplacement des liens n'est pas valide
       en: The link replacement symbol is invalid
+      de: Das Symbol zum Ersetzen von Links ist ungültig
     lang:
       fr: La langue n'est pas configurée
       en: Language not set
+      de: Sprache nicht eingestellt
   list:
     label:
       fr: Liste des configurations enregistrées
       en: List of saved configurations
+      de: Liste der gespeicherten Konfigurationen
   info:
     lang:
       fr: Le changement de langue sera effectif après un redémarrage de l'application
       en: The change of language will be effective after restarting the application
+      de: Die Sprachänderung wird nach einem Neustart der Anwendung wirksam
 
 demo:
   title:
     fr: Démo de Cosma
     en: Cosma demo
+    de: Cosma-Demo
   description:
     fr: >
       Cosma est un logiciel de visualisation et de partage pour les travailleurs de la connaissance.
@@ -457,68 +589,93 @@ demo:
       From a directory of files written in Markdown, Cosma generates a collection of cards
       in HTML format, assembled in a single file: the cosmoscope.
       This demonstration cosmoscope has been exported with Cosma.
+    de: >
+      Cosma ist eine Software zur Visualisierung und zum Teilen für Wissensarbeiter.
+      Aus einem Verzeichnis von Dateien, die in Markdown geschrieben sind, erstellt Cosma eine Sammlung von Karten
+      im HTML-Format, die in einer einzigen Datei zusammengefasst sind: der Cosmoscope.
+      Dieser Demonstrations-Cosmoscope wurde mit Cosma exportiert.
 
 record:
   errors:
     title:
       fr: Titre manquant
       en: Missing title
+      de: Fehlender Titel
     type:
       fr: Type inconnu
       en: Unknown type
+      de: Unbekannter Typ
     id:
       fr: Identifiant invalid
       en: Invalid id
+      de: Ungültige ID
     overwriting:
       fr: Un fichier existe déjà avec ce nom
       en: This file name is already taken
+      de: Eine Datei mit diesem Namen existiert bereits
 
 report:
   title:
     fr: Rapport
     en: Log file
+    de: Bericht
   project:
     fr: Projet "$1"
     en: Project "$1"
+    de: Projekt "$1"
   section_error:
     fr: Erreurs ($1 fiches)
     en: Errors ($1 records)
+    de: Fehler ($1 Datensätze)
   csv_error:
     fr: Lecture fichiers CSV
     en: CSV files reading
+    de: CSV-Dateien einlesen
   section_warning:
     fr: Avertissements ($1 fiches)
     en: Warnings ($1 records)
+    de: Warnungen ($1 Datensätze)
   no_id:
     fr: Le fichier "$1" n'a pas d'identifiant
     en: The file "$1" has no identifier
+    de: Die Datei "$1" hat keine ID
   duplicated_ids:
     fr: La fiche "$2" ($1) a un identifiant commun avec la fiche "$3"
     en: The file "$2" ($1) has a common identifier with the file "$3"
+    de: Der Datensatz "$2" ($1) hat eine gemeinsame ID mit dem Datensatz "$3"
   broken_links:
     fr: Dans la fiche "$1", le paragraphe suivant contient un lien dont la cible n'a pas été trouvée <em>"$2"</em>
     en: The following paragraph contains a broken link <em>"$2"</em>
+    de: Der folgende Absatz enthält einen defekten Link <em>"$2"</em>
   link_type_change:
     fr: Type "$3" du lien "$2" dans la fiche "$1" non reconnu, interprété comme "undefined"
     en: Type "$3" of link "$2" in the record "$1" unrecognized, treated as "undefined"
+    de: Typ "$3" des Links "$2" im Datensatz "$1" nicht erkannt, als "undefined" interpretiert
   record_type_change:
     fr: Type "$2" de la fiche "$1" non reconnu, interprété comme "undefined"
     en: Type "$2" of record "$1" unrecognized, treated as "undefined"
+    de: Typ "$2" des Datensatzes "$1" nicht erkannt, als "undefined" interpretiert
   ignored_record_meta:
     fr: Métadonnée "$2" de la fiche "$1" non reconnue, ignorée
     en: Ignored unknown metadata "$2" from record "$1"
+    de: Metadaten "$2" des Datensatzes "$1" nicht erkannt, ignoriert
   null_record_meta:
     fr: Métadonnée "$2" de la fiche "$1" ignorée (valeur nulle)
     en: Ignored metadata "$2" from record "$1" (null value)
+    de: Metadaten "$2" des Datensatzes "$1" ignoriert (kein Wert)
   invalid_record_time_begin:
     fr: La date de début "$2" de la fiche "$1" est invalide
     en: Invalid start date "$2" for record "$1"
+    de: Ungültiges Startdatum "$2" für Datensatz "$1"
   invalid_record_time_end:
     fr: La date de fin "$2" de la fiche "$1" est invalide
     en: Invalid end date "$2" for record "$1"
+    de: Ungültiges Enddatum "$2" für Datensatz "$1"
   unknown_bibliographic_reference:
     fr: Clé de citation "$2" dans la fiche "$1" non trouvée dans les données bibliographiques
     en: Citation key "$2" in record "$1" not found in bibliographic data
+    de: Zitierkey "$2" im Datensatz "$1" nicht in bibliografischen Daten gefunden
   ignored_csv_line:
     fr: 'Ligne CSV n°$3 pour les $2 ignorée : colonne(s) $4 manquante(s)'
     en: 'Ignored CSV line number $3 for $2: col(s) $4 left'
+    de: 'CSV-Zeile $3 für $2 ignoriert: Spalten $4 fehlen'
