@@ -23,13 +23,13 @@ left_panel:
     placeholder:
       fr: Rechercher…
       en: Search…
-      de: Suchen
+      de: Suchen…
 
   menu_types:
     title:
       fr: Types
       en: Types
-      de: Arten
+      de: Typen
     subtitle_node:
       fr: Nœuds
       en: Nodes
@@ -94,10 +94,10 @@ left_panel:
         to the URL, which can then be used to
         access the current view.
       de: >
-        Wende den aktuellen Status der Schnittstelle
+        Den aktuellen Status der Schnittstelle
         (ausgewählter Datensatz, Filter, Fokus…)
-        auf die URL an, die dann verwendet werden kann, um
-        auf die aktuelle Ansicht zuzugreifen.
+        auf die URL anwenden, die dann verwendet werden kann, 
+        um auf die aktuelle Ansicht zuzugreifen.
 
   menu_controls:
     title:
@@ -130,7 +130,7 @@ left_panel:
           Tweak the force-layout simulation to control
           the way nodes are displayed.
         de: >
-          Passen Sie die Force-Layout-Simulation an, um
+          Die Kräfte-Layout-Simulation anpassen, um
           die Darstellung der Knoten zu steuern.
       input_force:
         fr: répulsion
@@ -194,7 +194,7 @@ left_panel:
     publish_mark:
       fr: Fabriqué avec Cosma –
       en: Made with Cosma –
-      de: Hergestellt mit Cosma –
+      de: Erstellt mit Cosma –
 
 right_panel:
   record:
@@ -202,17 +202,17 @@ right_panel:
       btn_close:
         fr: Fermer (Echap)
         en: Close (Escape)
-        de: Schliessen (Escape)
+        de: Schliessen (ESC)
     empty:
       fr: Cliquez sur un nœud du graphe ou dans un élément de l'index pour ouvrir une fiche.
       en: To open a record, select a node in the graph or a title in the index.
-      de: Klicken Sie auf einen Knotenpunkt des Diagramms oder auf ein Element des Index, um eine Karteikarte zu öffnen.
+      de: Um eine Karteikarte zu öffnen, auf einen Knotenpunkt des Diagramms oder ein Element des Index klicken.
 
     metadata:
       id:
         fr: id
         en: id
-        de: id
+        de: ID
       last_edit:
         fr: dernière modification
         en: last modified
@@ -247,7 +247,7 @@ right_panel:
       list_backlinks:
         fr: rétroliens
         en: backlinks
-        de: backlinks
+        de: Backlinks
 
   help:
     title:
@@ -262,7 +262,7 @@ right_panel:
     documentation_link_placeholder:
       fr: Cliquez ici pour accéder à la documentation de Cosma
       en: Click here to access Cosma's documentation
-      de: Klicken Sie hier, um zur Dokumentation von Cosma zu gelangen.
+      de: Hier klicken, um zur Dokumentation von Cosma zu gelangen
 
     shortcuts:
       title:
@@ -286,7 +286,7 @@ right_panel:
         effect:
           fr: Déplacer le curseur dans le champ Recherche
           en: Move the cursor to Search
-          de: Bewegen Sie den Cursor in das Suchfeld.
+          de: Den Cursor in das Suchfeld bewegen
       alt_click:
         key:
           fr: Alt + clic
@@ -322,7 +322,7 @@ right_panel:
         effect:
           fr: Zoomer et centrer sur le nœud sélectionné
           en: Zoom in on the selected node
-          de: Zoomen und Zentrieren auf den ausgewählten Knoten
+          de: Zoomen und auf den ausgewählten Knoten zentrieren
       f:
         key:
           fr: F
@@ -379,7 +379,7 @@ right_panel:
         Sie sind gemäss dem Citation Style Language Standard strukturiert und in JSON ausgedrückt.
         Dieses Format wird von den meisten Literaturverwaltungsprogrammen wie
         Zotero, Mendeley oder Papers erkannt.
-        Klicken Sie auf die Schaltfläche unten, um die Daten herunterzuladen.
+        Auf die Schaltfläche unten klicken, um die Daten herunterzuladen.
     btn_download:
       fr: Télécharger
       en: Download
@@ -466,11 +466,11 @@ config:
     graph_text_size:
       fr: La taille du texte des étiquettes doit être supérieure ou égale à $1
       en: Labels font size must be $1 or higher
-      de: Die Schriftgröße der Etiketten muss $1 oder höher sein
+      de: Die Schriftgrösse der Etiketten muss $1 oder höher sein
     attraction_force:
       fr: La force de répulsion doit être supérieure ou égale à $1
       en: Repulsion force must be $1 or higher
-      de: Die Abstoßungskraft muss $1 oder höher sein
+      de: Die Abstossungskraft muss $1 oder höher sein
     attraction_distance_max:
       fr: La distance maximum doit être supérieure ou égale à $1
       en: Maximum distance between nodes must be $1 or higher
@@ -486,19 +486,19 @@ config:
     node_size_method:
       fr: Cette méthode de dimensionnement des nœuds est invalide
       en: This method of sizing nodes is invalid
-      de: Dieses Verfahren zur Größenanpassung der Knoten ist ungültig
+      de: Dieses Verfahren zur Grössenanpassung der Knoten ist ungültig
     node_size:
       fr: La taille des nœuds doit être supérieur ou égale à $1
       en: Nodes size must be $1 or higher
-      de: Die Größe der Knoten muss $1 oder höher sein
+      de: Die Grösse der Knoten muss $1 oder höher sein
     node_size_min:
       fr: La taille minimum des nœuds doit être supérieur ou égale à $1
       en: Min nodes size must be $1 or higher
-      de: Die minimale Größe der Knoten muss $1 oder höher sein
+      de: Die minimale Grösse der Knoten muss $1 oder höher sein
     node_size_max:
       fr: La taille maximum des nœuds doit être supérieur ou égale à $1
       en: Max nodes size must be $1 or higher
-      de: Die maximale Größe der Knoten muss $1 oder höher sein
+      de: Die maximale Grösse der Knoten muss $1 oder höher sein
     history:
       fr: La commande d'enregistrement de l'historique est invalide
       en: Invalid history recording command
