@@ -152,15 +152,18 @@ describe('Filters', () => {
 
     const linkFilters = [
       {
-        label: 'a',
+        label: 'adjacent-concept',
+        key: 'adjacent-concept',
         count: 1,
       },
       {
-        label: 'adjacent-concept',
+        label: 'agrees with',
+        key: 'a',
         count: 1,
       },
       {
         label: 'undefined',
+        key: 'undefined',
         count: 5,
       },
     ].sort((a, b) => a.label.localeCompare(b.label));
@@ -222,7 +225,7 @@ describe('Filters', () => {
           });
       }
 
-      const linkNames = linkFilters.map(({ label }) => label);
+      const linkNames = linkFilters.map(({ key }) => key);
 
       it('should uncheck all link inputs but not clicked one if alt key is pressed', () => {
         assertLinkFiltersAreChecked(linkNames);
