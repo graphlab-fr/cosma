@@ -70,6 +70,7 @@ class Template {
       keywords,
       focus_max: focusMax,
       record_types: recordTypes,
+      link_types: linkTypes,
       hide_id_from_record_header: hideIdFromRecordHeader,
     } = this.config.opts;
 
@@ -121,8 +122,15 @@ class Template {
       }
     });
 
-    /** @type {[string, string[]]} */
-    const linksDictAsArrays = Array.from(linksDict, ([key, value]) => [key, Array.from(value)]).sort(([a], [b]) => a.localeCompare(b));
+    /** @type {[string, {type: string, label: string, links: string[]}]} */
+    const linksDictAsArrays = Array.from(linksDict, ([key, value]) => [
+      key,
+      {
+        type: key,
+        label: linkTypes[key]?.label || key,
+        links: Array.from(value),
+      },
+    ]).sort(([, a], [, b]) => a.label.localeCompare(b.label));
 
     const tagsListAlphabetical = tagsDictAsArrays
       .map(([name]) => name)

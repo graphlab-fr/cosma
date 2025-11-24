@@ -83,11 +83,11 @@
             </h3>
 
             <form id="link-types-form" class="menu-types-container">
-                {% for filterName, links in linkFilters %}
+                {% for filterName, linkData in linkFilters %}
                 <label class="filter">
-                    <input type="checkbox" name="{{ filterName }}" checked>
-                    <span class="label" style="color: var(--l_{{ filterName | slugify }});">{{ filterName }}</span>
-                    <span class="badge">{{ links | length }}</span>
+                    <input type="checkbox" name="{{ linkData.type }}" checked>
+                    <span class="label" style="color: var(--l_{{ linkData.type | slugify }});">{{ linkData.label }}</span>
+                    <span class="badge">{{ linkData.links | length }}</span>
                 </label>
                 {% endfor %}
             </form>
