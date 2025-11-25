@@ -351,6 +351,8 @@ record_metas: [author, date, lang]
 
 ## Content
 
+### Basic Markdown
+
 Cosma interprets files as being written in [CommonMark](https://spec.commonmark.org/0.30/), a strictly defined version of Markdown, a popular lightweight markup language.
 
 ::: tip
@@ -378,6 +380,18 @@ To reduce the size of the cosmoscope, use images hosted on the web and included 
 ```
 ![Alternative text](http://domain.com/image.jpg)
 ```
+
+### Pandoc's Markdown
+
+In addition to basic Markdown, our goal is to progressively support [Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown). Currently, this includes only citations and mathematics.
+
+For citations, see the dedicated [Citations and bibliographies](#citations-and-bibliographies) section below.
+
+For mathematics, quoting from Pandoc's manual:
+
+> "Anything between two `$` characters will be treated as TeX math. The opening `$` must have a non-space character immediately to its right, while the closing `$` must have a non-space character immediately to its left, and must not be followed immediately by a digit. Thus, `$20,000` and `$30,000` won’t parse as math. If for some reason you need to enclose text in literal `$` characters, backslash-escape them and they won’t be treated as math delimiters.
+>
+> For display math, use `$$` delimiters. (In this case, the delimiters may be separated from the formula by whitespace. However, there can be no blank lines between the opening and closing `$$` delimiters.)"
 
 ## Links
 
@@ -454,6 +468,8 @@ cosma record --project <name>
 ```
 
 This command allows you to create a record in the manner of a form. Once the command is launched, the software prompts you for a title, one or several types, and one or several keywords. Only the title is required.
+
+To create a record with a citation key as its identifier, use `cosma record --reference`. See [Citations and bibliographies](#citations-and-bibliographies) below
 
 ## `autorecord` : create a record (“one-liner” mode)
 
@@ -761,6 +777,21 @@ When references are treated as nodes, you can use link types on citations. Link 
 On writing as a technology of the intellect [cites as authority:@goody1977, 46-52]...
 ```
 
+Starting from v2.6, you can create a Markdown file with a citation key as the identifier, either manually or by using `cosma record --reference`. The properties (type, keywords…) and contents (text, links…) of this file are carried over to the corresponding (automatically-created) reference node and record in the cosmoscope. You can set `type` to any value; it will also implicitly have the value of `references_type_label`.
+
+```
+---
+title: Goody (1977) The Domestication of the Savage Mind
+id: goody1977
+type: book report
+tags: [core readings, completed]
+---
+
+Goody on writing as a [[technology of the intellect]].
+```
+
+Essentially, this allows you to manage bibliographic references with the appropriate software (i.e. a reference manager such as Zotero), write notes about each of these references in Markdown files (with all the usual features from Cosma), and cite them using Pandoc's Markdown syntax, all in one seamless environment. (We're quite proud of this feature.)
+
 # Using the cosmoscope
 
 ## Layout
@@ -858,7 +889,16 @@ Record type filters, keywords and Focus mode all modify the display of the index
 
 ## View
 
-The view is the state of the cosmoscope at any time (selected record, active filters, focus mode, etc.). The view can be reset by clicking the “Reset the view” button in the “View” section of the left panel. The view can also be saved by clicking “Set URL to current view” then copying the URL, which can be used as a bookmark to access that view directly.
+The view is the state of the cosmoscope at any time (selected record, active filters, focus mode, etc.).
+
+The view can be reset by clicking the “Reset the view” button in the “View” section of the left panel.
+
+The view can also be saved by clicking “Set URL to current view” then copying the URL, which can be used as a bookmark to access that view directly. These views can be saved in the configuration and will then show up in the cosmoscope:
+
+```
+views:
+  name: <url>
+```
 
 # Sharing and publishing a cosmoscope
 

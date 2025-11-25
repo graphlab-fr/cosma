@@ -2,6 +2,28 @@
 title: Changelog
 ---
 
+# v2.6.0
+
+## Additions
+
+- Cosma now recognizes [Pandoc's Markdown math](https://pandoc.org/MANUAL.html#math) and typesets it by using [KaTeX](https://katex.org).
+
+- Back in v2.2, we added a feature that treats bibliographic references as nodes, and citations as links: when `reference_as_nodes` is set to `true` in the configuration, for each cited reference, a bibliographic record is automatically generated in the cosmoscope. Starting with v2.6, you can customize these records: you can create a Markdown file with a citation key as the identifier, either manually or by using `cosma record --reference`. The properties (type, keywords…) and contents (text, links…) of this file are carried over to the corresponding (automatically-created) reference node and record in the cosmoscope. Essentially, this allows you to manage bibliographic references with the appropriate software (i.e. a reference manager such as Zotero), write notes about each of these references in Markdown files (with all the usual features from Cosma), and cite them using Pandoc's Markdown syntax, all in one seamless environment. (We're quite proud of this feature.)
+
+- Link types can now have an optional `label` parameter. This allows you to use a short name for the link type, to avoid cluttering your writing, and have a longer name for displaying in the cosmoscope. For instance, you can create a link type defined as `f` with `label: friend`, then write `My best friend is [[f:Paul]].`, and have "friend" show in the cosmoscope.
+
+- Added link types filters in the cosmoscope: the "Types" section of the menu is now divided between node types and link types. Link type labels (see above) are used here as well. (Unlike records, most of your links probably don't have types, so you will see "undefined" in the link type filters; if this feels jarring, you can customize the "undefined" type with a `label` too.)
+
+## Bug fixes
+
+- Fixed [issue 110](https://github.com/graphlab-fr/cosma/issues/110): the @ sign no longers triggers citation parsing outside citations (e.g. in URLS) and may be escaped using a backslash character `\@` to further ensure citation parsing does not trigger when unexpected.
+
+- Some bugs that have been reported while we were working on this version may have been fixed by some changes we made. Check the [Issues](https://github.com/graphlab-fr/cosma/issues) page on Cosma's GitHub repository for more information.
+
+## Under the hood
+
+- Switched to [Graphology](https://graphology.github.io) for graph modelization.
+
 # v2.5.4
 
 ## Bug fixes
