@@ -24,6 +24,10 @@ Cosma's development is publicly funded through [Université Jean Moulin Lyon 3](
 <img src="https://cosma.arthurperret.fr/img/logo-universite-bordeaux-montaigne.png" title="Université Bordeaux Montaigne - logo" height="100px" width="auto" style="display: inline; background-color: #fff;" />
 </div>
 
+## License
+
+This work is dual-licensed under GPL 3.0 and CeCILL 2.1. You can choose between one of them if you use this work.
+
 ## Commands
 
 ### Install
