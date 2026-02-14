@@ -88,9 +88,9 @@ class Bibliography {
     let bib, cslStyle, xmlLocal;
 
     try {
-      (bib = JSON.parse(fs.readFileSync(bibFilePath, 'utf-8'))),
+      ((bib = JSON.parse(fs.readFileSync(bibFilePath, 'utf-8'))),
         (cslStyle = fs.readFileSync(cslFilePath, 'utf-8')),
-        (xmlLocal = fs.readFileSync(cslLocalFilePath, 'utf-8'));
+        (xmlLocal = fs.readFileSync(cslLocalFilePath, 'utf-8')));
     } catch (error) {
       throw `You can not get bibliographic files from config because of file read error : ${error}`;
     }
