@@ -20,6 +20,8 @@ COPY --chown=cosmauser:cosmauser . .
 RUN ./node_modules/.bin/webpack build --config ./webpack-front.config.mjs --mode development
 RUN ./node_modules/.bin/webpack build --config ./webpack-back.config.mjs --mode development
 
+RUN npm i . --global
+
 # Create the user data directory with correct permissions
 RUN mkdir -p /home/cosmauser/.local/share && \
     chown -R cosmauser:cosmauser /home/cosmauser/.local
