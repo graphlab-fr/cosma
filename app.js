@@ -72,8 +72,13 @@ program
   .description('Create a configuration file in the current directory.')
   .argument('[name]', 'Configuration name.')
   .option('-g, --global', 'Create the file in the user data directory.')
-  .action((title, options) => {
-    makeConfigFile(title, options);
+  .action(async (title, options) => {
+    try {
+      makeConfigFile(title, options);
+    } catch (err) {
+      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+      process.exit(1);
+    }
   });
 
 program
@@ -88,9 +93,14 @@ program
   .option('--custom-css', 'Apply custom CSS.')
   .option('--sample', 'Create a sample cosmoscope.')
   .option('--fake', 'Create a fake cosmoscope for testing purposes.')
-  .action(({ project: projectName, ...rest }) => {
-    setConfigFileToRun(projectName);
-    modelize(rest);
+  .action(async ({ project: projectName, ...rest }) => {
+    try {
+      setConfigFileToRun(projectName);
+      await modelize(rest);
+    } catch (err) {
+      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+      process.exit(1);
+    }
   });
 
 program
@@ -104,15 +114,20 @@ program
     'Use the configuration file for project <name> from the user data directory.',
   )
   .option('-r, --reference', 'Create record from quote key.')
-  .action(({ project: projectName, reference }) => {
-    setConfigFileToRun(projectName);
+  .action(async ({ project: projectName, reference }) => {
+    try {
+      setConfigFileToRun(projectName);
 
-    if (reference) {
-      referenceRecord(reference);
-      return;
+      if (reference) {
+        await referenceRecord(reference);
+        return;
+      }
+
+      await makeRecord();
+    } catch (err) {
+      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+      process.exit(1);
     }
-
-    makeRecord();
   });
 
 program
@@ -130,10 +145,17 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action((title, type, tags, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
-    setConfigFileToRun(projectName);
-    autorecord(title, type, tags, saveIdOnYmlFrontMatter);
-  })
+  .action(
+    async (title, type, tags, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
+      try {
+        setConfigFileToRun(projectName);
+        autorecord(title, type, tags, saveIdOnYmlFrontMatter);
+      } catch (err) {
+        console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+        process.exit(1);
+      }
+    },
+  )
   .showHelpAfterError('("autorecord --help" for additional information)');
 
 program
@@ -149,9 +171,14 @@ program
     '-p, --project <name>',
     'Use the configuration file for project <name> from the user data directory.',
   )
-  .action((filePath, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
-    setConfigFileToRun(projectName);
-    batch(filePath, saveIdOnYmlFrontMatter);
+  .action(async (filePath, { project: projectName, generateId: saveIdOnYmlFrontMatter }) => {
+    try {
+      setConfigFileToRun(projectName);
+      await batch(filePath, saveIdOnYmlFrontMatter);
+    } catch (err) {
+      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
+      process.exit(1);
+    }
   })
   .showHelpAfterError('("batch --help" for additional information)');
 
@@ -201,12 +228,3 @@ function setConfigFileToRun(projectName) {
     Config.configFilePath = Config.defaultConfigPath;
   }
 }
-
-process.on('uncaughtException', (err) => {
-  console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-  process.exit(1);
-});
-process.on('unhandledRejection', (err) => {
-  console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), err.message);
-  process.exit(1);
-});
