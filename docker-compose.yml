@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  cosma-test:
+    build: .
+    volumes:
+      - ./e2e:/app/e2e
+      - ./temp:/app/temp
+    environment:
+      - NODE_ENV=test
