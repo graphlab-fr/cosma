@@ -1,3 +1,5 @@
+# Run on local / CI
+
 cd e2e/
 
 rm -rf ../temp
