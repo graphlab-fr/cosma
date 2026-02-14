@@ -70,7 +70,11 @@ function makeConfigFile(title, { global: isGlobal }) {
         `: ${['\x1b[2m', configFileDir, '/', '\x1b[0m', configFileName].join('')}`,
       );
     } catch (error) {
-      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'could not save configuration file');
+      console.error(
+        ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
+        'could not save configuration file : ',
+        error?.message,
+      );
     }
   }
 }
