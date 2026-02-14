@@ -1,38 +1,38 @@
 FROM node:22-alpine
 
-# Créer un utilisateur non-root avant les copies
+# Create a non-root user before copying files
 RUN addgroup -S cosmauser && adduser -S cosmauser -G cosmauser
 
-# Définir le répertoire de travail et le rendre accessible à cosmauser
+# Set the working directory and make it accessible to cosmauser
 WORKDIR /app
 RUN chown cosmauser:cosmauser /app
 
-# Copier les fichiers de dépendances avec permissions directes
+# Copy dependency files with direct permissions
 COPY --chown=cosmauser:cosmauser package.json package-lock.json* ./
 
-# Installer les dépendances (--ignore-scripts pour éviter que prepare ne lance le build)
+# Install dependencies (--ignore-scripts to prevent prepare from triggering the build)
 RUN npm ci --ignore-scripts
 
-# Copier le code source avec permissions directes
+# Copy source code with direct permissions
 COPY --chown=cosmauser:cosmauser . .
 
-# Builder l'application (webpack front + back)
+# Build the application (webpack front + back)
 RUN ./node_modules/.bin/webpack build --config ./webpack-front.config.mjs --mode development
 RUN ./node_modules/.bin/webpack build --config ./webpack-back.config.mjs --mode development
 
-# Créer le répertoire de données utilisateur avec les bonnes permissions
+# Create the user data directory with correct permissions
 RUN mkdir -p /home/cosmauser/.local/share && \
     chown -R cosmauser:cosmauser /home/cosmauser/.local
 
-# Basculer vers l'utilisateur non-root
-# À partir d'ici, cosmauser a :
-# - Accès en écriture à /app (pour config.yml en mode local)
-# - Accès en écriture à /home/cosmauser/.local/share (pour --global et user data dir)
+# Switch to the non-root user
+# From this point, cosmauser has:
+# - Write access to /app (for config.yml in local mode)
+# - Write access to /home/cosmauser/.local/share (for --global and user data dir)
 USER cosmauser
 
-# Le répertoire de données utilisateur sera dans /home/cosmauser/.local/share/cosma-cli/
-# grâce à env-paths
+# The user data directory will be in /home/cosmauser/.local/share/cosma-cli/
+# thanks to env-paths
 
-# Point d'entrée par défaut
+# Default entrypoint
 ENTRYPOINT ["node", "dist/back.cjs"]
 CMD ["--help"]
