@@ -55,8 +55,8 @@ docker run --rm --entrypoint npx cosma-test jest core/models/config.docker.spec.
 docker run --rm -it --entrypoint /bin/sh cosma-test
 
 # Then inside the container:
-node dist/back.cjs --version
-node dist/back.cjs --help
+cosma --version
+cosma --help
 
 exit
 ```
