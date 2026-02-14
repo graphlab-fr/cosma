@@ -111,6 +111,8 @@ npm run test:unit -- --verbose --watchAll
 npm run test:unit -- --runTestsByPath <filepath> --verbose --watchAll
 ```
 
+You can also run the unit tests in an isolated Linux environment using Docker. See `docs/docker.md`. This is useful to reproduce issues on a clean system or to avoid installing Node.js locally.
+
 **E2E testing**: generate Cosma's .html and .md files and make some asserts on.
 Uses [Cypress](https://www.cypress.io/).
 
