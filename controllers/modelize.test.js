@@ -3,6 +3,7 @@ import Config from '../core/models/config.js';
 import findMarkdownFilesRecursively from '../core/utils/findMarkdownFilesRecursively.js';
 import getGraph from '../core/utils/getGraph.js';
 import readRecordFile from '../core/utils/readRecordFile.js';
+import fsPromise from 'node:fs/promises';
 
 jest.mock('../core/models/config.js');
 jest.mock('../core/models/bibliography.js', () => {
@@ -275,5 +276,40 @@ describe('modelize', () => {
         message: 'Link to "test2" is broken.',
       },
     ]);
+  });
+
+  it('should not create report dir if no report items', async () => {
+    fsPromise.mkdir.mockClear();
+
+    Config.get.mockReturnValue(config);
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
+    readRecordFile.mockResolvedValueOnce({
+      records: [],
+      recordsCiteproc: [],
+      reportItems: [],
+    });
+
+    await modelize({ citeproc: false, customCss: false });
+
+    expect(fsPromise.mkdir).not.toHaveBeenCalled();
+  });
+
+  it('should create report dir recursively when report items exist', async () => {
+    fsPromise.mkdir.mockClear();
+
+    Config.get.mockReturnValue(config);
+    getGraph.mockReturnValue({ graph: 'graph', brokenEdges: [] });
+    findMarkdownFilesRecursively.mockResolvedValue(['../file1.md']);
+    readRecordFile.mockResolvedValueOnce({
+      records: [{ id: 'test1' }],
+      recordsCiteproc: [],
+      reportItems: [{ isError: true, locator: { file: '../file1.md' }, message: 'error' }],
+    });
+
+    await modelize({ citeproc: false, customCss: false });
+
+    expect(fsPromise.mkdir).toHaveBeenCalledTimes(1);
+    expect(fsPromise.mkdir.mock.calls[0][1]).toEqual({ recursive: true });
   });
 });
