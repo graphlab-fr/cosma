@@ -30,27 +30,27 @@ describe('Record model', () => {
   it('should correctly initialize the Record instance with provided properties', () => {
     const record = new Record(props, config);
 
-    expect(record.id).toEqual('20200501150208');
-    expect(record.title).toEqual('Test Record');
-    expect(record.content).toEqual('This is a test content');
+    expect(record.id).toBe('20200501150208');
+    expect(record.title).toBe('Test Record');
+    expect(record.content).toBe('This is a test content');
     expect(record.links).toEqual([]);
     expect(record.types).toEqual(['type1', 'type2']);
     expect(record.tags).toEqual(['tag1', 'tag2']);
     expect(record.metas).toEqual({ author: 'John Doe' });
-    expect(record.begin).toEqual(1609459200);
-    expect(record.end).toEqual(1609545600);
-    expect(record.thumbnail).toEqual('img.jpg');
-    expect(record.template).toEqual(0);
+    expect(record.begin).toBe(1609459200);
+    expect(record.end).toBe(1609545600);
+    expect(record.thumbnail).toBe('img.jpg');
+    expect(record.template).toBe(0);
   });
 
   it('should correctly initialize default values if some properties are not provided', () => {
-    const props = {
+    const defaultProps = {
       id: '20200501150208',
       title: 'Default Record',
       content: 'Content with defaults',
     };
 
-    const record = new Record(props, config);
+    const record = new Record(defaultProps, config);
 
     expect(record.id).toBe('20200501150208');
     expect(record.title).toBe('Default Record');
@@ -69,7 +69,7 @@ describe('Record model', () => {
 
     const file = record.getFileContent(true);
 
-    expect(file).toEqual(`---
+    expect(file).toBe(`---
 id: "20200501150208"
 title: Test Record
 types:
@@ -90,7 +90,7 @@ This is a test content`);
 
     const file = record.getFileContent(false);
 
-    expect(file).toEqual(`---
+    expect(file).toBe(`---
 title: Test Record
 thumbnail: img.jpg
 author: John Doe
@@ -136,7 +136,7 @@ File linked to [[20210901132906]]`;
       end: undefined,
       thumbnail: undefined,
       template: 0,
-      config: config,
+      config,
     });
   });
 
@@ -176,7 +176,7 @@ File linked to [[20210901132906]]`;
       end: undefined,
       thumbnail: undefined,
       template: 1,
-      config: config,
+      config,
     });
   });
 
@@ -185,8 +185,8 @@ File linked to [[20210901132906]]`;
 
     expect(Joi.isError(result)).toBe(true);
 
-    expect(result.message).toEqual('"id" is required');
-    expect(result.name).toEqual('ValidationError');
+    expect(result.message).toBe('"id" is required');
+    expect(result.name).toBe('ValidationError');
     expect(result.details).toEqual([
       {
         context: { key: 'id', label: 'id' },

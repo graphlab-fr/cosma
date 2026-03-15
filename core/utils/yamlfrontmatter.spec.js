@@ -1,7 +1,7 @@
 import { YAMLParseError } from 'yaml';
 import readYamlFrontmatter from './yamlfrontmatter';
 
-describe('YAML Front Matter parser', function () {
+describe('YAML Front Matter parser', () => {
   it('With "---" separator', () => {
     const input = `---
 id: 20210901132906

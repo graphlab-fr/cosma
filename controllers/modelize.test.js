@@ -80,8 +80,8 @@ const options = {
 };
 
 describe('modelize', () => {
-  it('should throw an error for unknown data origin', () => {
-    const config = {
+  it('should throw an error for unknown data origin', async () => {
+    const unknownConfig = {
       opts: {
         select_origin: 'unknown',
       },
@@ -91,9 +91,9 @@ describe('modelize', () => {
       canModelizeFromDirectory: () => true,
     };
 
-    Config.get.mockReturnValue(config);
+    Config.get.mockReturnValue(unknownConfig);
 
-    expect(modelize(options)).rejects.toThrow('Unknown data origin.');
+    await expect(modelize(options)).rejects.toThrow('Unknown data origin.');
   });
 
   it('should record files without bibliography if no citeproc option', async () => {

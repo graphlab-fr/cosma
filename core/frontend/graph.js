@@ -8,9 +8,7 @@
 import * as d3 from 'd3';
 import GraphEngine from 'graphology';
 
-import View from './view.js';
 import { getRecordIdFromHash } from './records.js';
-import { setCounters } from './counter.js';
 import hotkeys from 'hotkeys-js';
 
 /** Data serialization
@@ -77,14 +75,17 @@ window.updateForces = function () {
   simulation.alpha(1).restart();
 };
 
-updateForces();
+window.updateForces();
 
 hotkeys('space', (e) => {
   e.preventDefault();
-  updateForces();
+  window.updateForces();
 });
 
-simulation.on('tick', function () {
+const elts = {};
+const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
+
+simulation.on('tick', () => {
   elts.links
     .attr('x1', (d) => d.source.x)
     .attr('y1', (d) => d.source.y)
@@ -101,9 +102,6 @@ simulation.on('tick', function () {
 /** Elements
 ------------------------------------------------------------*/
 
-const elts = {};
-const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
-
 /** @type {d3.Selection<SVGLineElement, Link, SVGElement, any>} */
 elts.links = svgSub
   .append('g')
@@ -116,13 +114,13 @@ elts.links = svgSub
   .attr('data-link', (d) => d.key)
   .attr('data-source', (d) => d.source.key)
   .attr('data-target', (d) => d.target.key)
-  .attr('stroke-dasharray', function (d) {
+  .attr('stroke-dasharray', (d) => {
     if (d.attributes.shape.stroke === 'dash' || d.attributes.shape.stroke === 'dotted') {
       return d.attributes.shape.dashInterval;
     }
     return false;
   })
-  .attr('filter', function (d) {
+  .attr('filter', (d) => {
     if (d.attributes.shape.stroke === 'double') {
       return 'url(#double)';
     }
@@ -146,17 +144,21 @@ elts.nodes = svgSub
   .call(
     d3
       .drag()
-      .on('start', function (e, d) {
-        if (!e.active) simulation.alphaTarget(0.3).restart();
+      .on('start', (e, d) => {
+        if (!e.active) {
+          simulation.alphaTarget(0.3).restart();
+        }
         d.fx = d.x;
         d.fy = d.y;
       })
-      .on('drag', function (e, d) {
+      .on('drag', (e, d) => {
         d.fx = e.x;
         d.fy = e.y;
       })
-      .on('end', function (e, d) {
-        if (!e.active) simulation.alphaTarget(0.0001);
+      .on('end', (e, d) => {
+        if (!e.active) {
+          simulation.alphaTarget(0.0001);
+        }
         d.fx = null;
         d.fy = null;
       }),
@@ -180,7 +182,7 @@ elts.nodes = svgSub
     nodesTransparent.nodes().forEach((elt) => elt.classList.add('translucent'));
     linksTransparent.nodes().forEach((elt) => elt.classList.add('translucent'));
   })
-  .on('mouseout', (e, { key: nodeId }) => {
+  .on('mouseout', (_e, { key: _nodeId }) => {
     if (!graphProperties.graph_highlight_on_hover) {
       return;
     }
@@ -213,7 +215,7 @@ elts.nodes = svgSub
 
 elts.nodes.each(function (d) {
   const node = d3.select(this);
-  const link = node.append('a').attr('href', (d) => '#' + d.key);
+  const link = node.append('a').attr('href', (_d) => '#' + _d.key);
 
   const getFill = (fill) => {
     if (imageFileValidExtnames.has(fill.split('.').at(-1))) {
@@ -403,7 +405,7 @@ function setNodesDisplaying(nodeIds) {
   hideNodes(toHide);
 }
 
-graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
+graph.on('nodeAttributesUpdated', ({ key, attributes }) => {
   const { links, node } = getNodeNetwork(key);
 
   if (attributes.hidden) {
@@ -415,13 +417,13 @@ graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
   }
 });
 
-graph.on('edgeAttributesUpdated', function ({ key, attributes }) {
-  const link = elts.links.filter((link) => link.key === key);
+graph.on('edgeAttributesUpdated', ({ key, attributes }) => {
+  const edgeLink = elts.links.filter((l) => l.key === key);
 
   if (attributes.hidden) {
-    link.node().classList.add('hide');
+    edgeLink.node().classList.add('hide');
   } else {
-    link.node().classList.remove('hide');
+    edgeLink.node().classList.remove('hide');
   }
 });
 
@@ -544,6 +546,8 @@ window.updateFontsize = function () {
   elts.labels.attr('font-size', graphProperties.text_size);
 };
 
+const position = { x: 0, y: 0, zoom: 1 };
+
 function translate() {
   const minX = d3.min(data.nodes, (d) => d.x);
   const maxX = d3.max(data.nodes, (d) => d.x);
@@ -558,9 +562,13 @@ function translate() {
   const screenMin = d3.min([screenHeight, screenWidth]);
 
   let viewBoxWidth = maxX - minX;
-  if (viewBoxWidth < screenMin) viewBoxWidth = screenMin;
+  if (viewBoxWidth < screenMin) {
+    viewBoxWidth = screenMin;
+  }
   let viewBoxHeight = maxY - minY;
-  if (viewBoxHeight < screenMin) viewBoxHeight = screenMin;
+  if (viewBoxHeight < screenMin) {
+    viewBoxHeight = screenMin;
+  }
 
   if (0 > minX || 0 > minY) {
     const viewBox = [
@@ -593,8 +601,6 @@ window.addEventListener('resize', () => {
 
   zoomInterval = Math.log2(density);
 });
-
-const position = { x: 0, y: 0, zoom: 1 };
 
 const zoom = d3
   .zoom()
@@ -644,7 +650,9 @@ function zoomToNode(nodeId) {
 
   const node = nodes.find(({ key }) => key === nodeId);
 
-  if (!node) return;
+  if (!node) {
+    return;
+  }
   const { x, y } = node;
 
   const meanX = d3.mean(nodes, (d) => d.x);

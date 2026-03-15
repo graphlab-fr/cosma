@@ -8,7 +8,7 @@ import extractParaphs from './paraphExtractor';
  */
 
 export default function quoteIdsWithContexts(markdown) {
-  let quotes = {};
+  const quotes = {};
 
   extractParaphs(markdown).forEach((paraph) => {
     extractCitations(paraph).forEach((result) => {

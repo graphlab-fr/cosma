@@ -1,3 +1,3 @@
-export default function makeRecord(props, config) {
+export default function makeRecord(props, _config) {
   props.begin;
 }

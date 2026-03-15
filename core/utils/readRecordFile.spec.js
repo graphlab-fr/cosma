@@ -41,9 +41,9 @@ title: Test Title
 Test @smith04`;
     fsPromise.readFile.mockResolvedValue(fileContent);
 
-    const bibliography = undefined;
+    const noBib = undefined;
 
-    const result = await readRecordFile(filePath, config, bibliography);
+    const result = await readRecordFile(filePath, config, noBib);
 
     expect(result).toEqual({
       records: [expect.objectContaining({ id: 'test-1' })],
@@ -64,9 +64,7 @@ type: personne
 Test`;
     fsPromise.readFile.mockResolvedValue(fileContent);
 
-    const bibliography = undefined;
-
-    const result = await readRecordFile(filePath, config, bibliography);
+    const result = await readRecordFile(filePath, config, undefined);
 
     expect(result).toEqual({
       records: [expect.objectContaining({ types: ['undefined'] })],
@@ -92,9 +90,7 @@ title: Test Title
 Test`;
     fsPromise.readFile.mockResolvedValue(fileContent);
 
-    const bibliography = undefined;
-
-    const result = await readRecordFile(filePath, config, bibliography);
+    const result = await readRecordFile(filePath, config, undefined);
 
     expect(result).toEqual({
       records: [expect.objectContaining({ types: ['undefined'] })],
@@ -112,9 +108,7 @@ id: test-1
 Test @smith04`;
     fsPromise.readFile.mockResolvedValue(fileContent);
 
-    const bibliography = undefined;
-
-    const result = await readRecordFile(filePath, config, bibliography);
+    const result = await readRecordFile(filePath, config, undefined);
 
     expect(result).toEqual({
       records: [],
@@ -133,9 +127,7 @@ Test @smith04`;
     const fileContent = 'Test';
     fsPromise.readFile.mockResolvedValue(fileContent);
 
-    const bibliography = undefined;
-
-    const result = await readRecordFile(filePath, config, bibliography);
+    const result = await readRecordFile(filePath, config, undefined);
 
     expect(result).toEqual({
       records: [],

@@ -1,7 +1,7 @@
 import yml from 'yaml';
 
 // Thanks to https://github.com/dworthen/js-yaml-front-matter/blob/master/src/index.js
-const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|\.]{3})?([\w\W]*)*/;
+const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)[-|.]{3})?([\w\W]*)*/;
 
 /**
  * Read head of markdown files as YAML content
@@ -21,13 +21,13 @@ export default function readYamlFrontmatter(fileContent, options = {}) {
   }
 
   const windowsCariageReturn = new RegExp(/\r\n/g);
-  fileContent = fileContent.replace(windowsCariageReturn, '\n');
+  const normalizedContent = fileContent.replace(windowsCariageReturn, '\n');
 
-  const [, withDash, withoutDash, body] = regex.exec(fileContent);
+  const [, , withoutDash, body] = regex.exec(normalizedContent);
 
   if (withoutDash === undefined) {
     return {
-      body: fileContent,
+      body: normalizedContent,
       head: null,
     };
   }

@@ -6,7 +6,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const closeRightSideButton = document.getElementById('close-right-side');
 
   const recordId = getRecordIdFromHash();
-  if (recordId) openRecord(recordId);
+  if (recordId) {
+    openRecord(recordId);
+  }
 
   let hasRightSideClosedByClick = false;
   closeRightSideButton.addEventListener('click', () => {
@@ -27,10 +29,10 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('hashchange', () => {
-    const recordId = getRecordIdFromHash();
-    if (recordId) {
-      openRecord(recordId);
-      zoomToNode(recordId);
+    const changedRecordId = getRecordIdFromHash();
+    if (changedRecordId) {
+      openRecord(changedRecordId);
+      zoomToNode(changedRecordId);
     } else {
       recordContainer.classList.remove('active');
       unlightNodes();
@@ -110,7 +112,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-graph.on('nodeAttributesUpdated', function ({ key, attributes }) {
+graph.on('nodeAttributesUpdated', ({ key, attributes }) => {
   const elt = indexContainer.querySelector(`[data-index="${key}"]`);
   elt.style.display = attributes.hidden ? 'none' : null;
 });

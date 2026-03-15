@@ -1,6 +1,5 @@
 import imagePathToBase64 from './imagePathToBase64';
 import fs from 'node:fs';
-import path from 'path';
 
 jest.mock('node:fs');
 
@@ -21,11 +20,11 @@ describe('imagePathToBase64', () => {
   });
 
   it('should return empty string for invalid image path', () => {
-    const imgPath = '/path/to/invalid.txt';
+    const invalidImgPath = '/path/to/invalid.txt';
 
     fs.existsSync.mockReturnValue(false);
 
-    const result = imagePathToBase64(imgPath);
+    const result = imagePathToBase64(invalidImgPath);
 
     expect(result).toBe('');
   });

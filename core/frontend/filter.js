@@ -5,6 +5,7 @@
  */
 
 import { setNodesDisplaying, setLinksDisplaying, graph } from './graph.js';
+import hotkeys from 'hotkeys-js';
 
 /**
  * Display all hidden elements by checking all unchecked inputs
@@ -71,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const nodeIdsToDisplay = new Set();
 
     types
-      .filter(([name]) => !!formState[name])
+      .filter(([name]) => Boolean(formState[name]))
       .forEach(([, nodes]) => {
         nodes.forEach((id) => nodeIdsToDisplay.add(id));
       });

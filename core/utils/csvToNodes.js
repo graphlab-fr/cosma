@@ -1,7 +1,7 @@
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 import { parse } from 'csv-parse';
-import { finished } from 'stream/promises';
-import fs from 'fs';
+import { finished } from 'node:stream/promises';
+import fs from 'node:fs';
 import Record from '../models/record.js';
 import formatAsRecord from './formatAsRecord.js';
 import unknownTypesMessage from './unknownTypesMessage.js';
@@ -25,7 +25,7 @@ export async function processNodes(filePath, config) {
       cast: (value) => (value === '' ? undefined : value),
     }),
   );
-  parser.on('readable', function () {
+  parser.on('readable', () => {
     let line;
     let i = 1;
 
@@ -93,7 +93,7 @@ export async function processNodesOnline(url, config) {
     }),
   );
 
-  parser.on('readable', function () {
+  parser.on('readable', () => {
     let line;
     let i = 1;
 
@@ -158,13 +158,10 @@ export async function processLinksOnline(url, records, config) {
     }),
   );
 
-  parser.on('readable', function () {
+  parser.on('readable', () => {
     let line;
-    let i = 1;
 
     while ((line = parser.read()) !== null) {
-      i++;
-
       let linkType = 'undefined';
 
       if (linkTypes.has(line['type'])) {
@@ -199,13 +196,10 @@ export async function processLinks(filePath, records, config) {
       cast: (value) => (value === '' ? undefined : value),
     }),
   );
-  parser.on('readable', function () {
+  parser.on('readable', () => {
     let line;
-    let i = 1;
 
     while ((line = parser.read()) !== null) {
-      i++;
-
       let linkType = 'undefined';
 
       if (linkTypes.has(line['type'])) {

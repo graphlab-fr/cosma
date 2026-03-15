@@ -10,7 +10,7 @@ module.exports = defineConfig({
   e2e: {
     specPattern: './**/*.cy.js',
     supportFile: path.join(__dirname, './e2e-support.js'),
-    setupNodeEvents(on, config) {
+    setupNodeEvents(_on, _config) {
       // implement node event listeners here
     },
   },

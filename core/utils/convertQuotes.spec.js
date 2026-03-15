@@ -80,7 +80,7 @@ describe('convertQuotes', () => {
       [],
     );
 
-    expect(result).toEqual(
+    expect(result).toBe(
       'Lorem (<a href="#matuschak2019" title="Matuschak 2019" class="record-link highlight">Matuschak, 2019</a>) ipsum dolor est.',
     );
   });
@@ -136,7 +136,7 @@ describe('convertQuotes', () => {
       [],
     );
 
-    expect(result).toEqual(
+    expect(result).toBe(
       'Lorem (<a href="#engelbart1962" title="Engelbart 1962" class="record-link ">Engelbart, 1962</a> ; <a href="#matuschak2019" title="Matuschak 2019" class="record-link highlight">quoted by Matuschak, Nielsen, 2019</a>) ipsum dolor est.',
     );
   });
@@ -146,13 +146,13 @@ describe('convertQuotes', () => {
 
     const result = convertQuotes(text, bibliography, records, 'matuschak2019');
 
-    expect(result).toEqual('Lorem ipsum dolor est.');
+    expect(result).toBe('Lorem ipsum dolor est.');
   });
 
   it('should not add "highlight" class if unknown record', () => {
     const text = 'Lorem @matuschak2019 ipsum dolor est.';
 
-    expect(convertQuotes(text, bibliography, records, 'unknown')).toEqual(
+    expect(convertQuotes(text, bibliography, records, 'unknown')).toBe(
       'Lorem (<a href="#matuschak2019" title="Matuschak 2019" class="record-link ">Matuschak, 2019</a>) ipsum dolor est.',
     );
   });
@@ -160,7 +160,7 @@ describe('convertQuotes', () => {
   it('should not get anchor if no record', () => {
     const text = 'Lorem @matuschak2019 ipsum dolor est.';
 
-    expect(convertQuotes(text, bibliography, new Map(), 'matuschak2019')).toEqual(
+    expect(convertQuotes(text, bibliography, new Map(), 'matuschak2019')).toBe(
       'Lorem (Matuschak, 2019) ipsum dolor est.',
     );
   });
@@ -168,7 +168,7 @@ describe('convertQuotes', () => {
   it('should return original if unknown quote id from library', () => {
     const text = 'Lorem [@matuschak2019; @unknown] ipsum dolor est.';
 
-    expect(convertQuotes(text, bibliography, records, 'matuschak2019')).toEqual(
+    expect(convertQuotes(text, bibliography, records, 'matuschak2019')).toBe(
       'Lorem [@matuschak2019; @unknown] ipsum dolor est.',
     );
   });

@@ -102,6 +102,7 @@ export default async function readRecordFile(filePath, config, bibliography) {
             locator: { file: filePath },
             message: `Quote "${citeItem.id}" has no reference from library.`,
           });
+          return false;
         })
         .forEach((citeItem) => {
           const recordCite = Record.recordFromCiteItem(citeItem, config, bibliography);

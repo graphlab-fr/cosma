@@ -16,7 +16,9 @@ function convertWikilinks(markdown, records, opts, idToHighlight) {
   return markdown.replace(wikilinkRE, (match, _, type, targetId, __, text) => {
     const record = records.get(slugify(targetId));
 
-    if (!record) return match;
+    if (!record) {
+      return match;
+    }
 
     let linkLibelle;
     if (text) {

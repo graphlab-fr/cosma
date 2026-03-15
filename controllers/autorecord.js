@@ -27,13 +27,14 @@ function autorecord(title = '', type = 'undefined', tags = '', saveIdOnYmlFrontM
     return;
   }
 
+  let shouldSaveId;
   if (config.opts['generate_id'] === 'never') {
-    saveIdOnYmlFrontMatter = false;
+    shouldSaveId = false;
   } else {
-    saveIdOnYmlFrontMatter = config.opts['generate_id'] === 'always' || !!saveIdOnYmlFrontMatter;
+    shouldSaveId = config.opts['generate_id'] === 'always' || Boolean(saveIdOnYmlFrontMatter);
   }
 
-  createRecord(title, type, tags, config, saveIdOnYmlFrontMatter);
+  createRecord(title, type, tags, config, shouldSaveId);
 }
 
 export default autorecord;

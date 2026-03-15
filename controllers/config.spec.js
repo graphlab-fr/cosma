@@ -18,8 +18,8 @@ const mockConfigGet = jest.fn(() => ({ opts, getYaml: mockGetYaml }));
 const mockDefaultConfigExists = jest.fn(() => false);
 
 jest.mock('../core/models/config.js', () => ({
-  get: (path) => mockConfigGet(path),
-  getFrom: (opts) => mockConfigGet(opts),
+  get: (_path) => mockConfigGet(_path),
+  getFrom: (_opts) => mockConfigGet(_opts),
   defaultConfigExists: () => mockDefaultConfigExists(),
   configDirPath: 'configDirPath',
   executionConfigPath: 'executionConfigPath.yml',
@@ -51,7 +51,9 @@ describe('makeConfigFile', () => {
 
   it('should not make config file if global and config directory does not exist', () => {
     mockFileExists.mockImplementation((path) => {
-      if (path === 'configDirPath') return false;
+      if (path === 'configDirPath') {
+        return false;
+      }
       return true;
     });
 
@@ -71,7 +73,9 @@ describe('makeConfigFile', () => {
     beforeEach(() => {
       mockDefaultConfigExists.mockReturnValue(false);
       mockFileExists.mockImplementation((path) => {
-        if (path === 'configDirPath') return true;
+        if (path === 'configDirPath') {
+          return true;
+        }
         return false;
       });
     });
@@ -145,8 +149,12 @@ describe('makeConfigFile', () => {
     beforeEach(() => {
       mockDefaultConfigExists.mockReturnValue(true);
       mockFileExists.mockImplementation((path) => {
-        if (path === 'configDirPath') return true;
-        if (path === 'defaultConfigPath.yml') return true;
+        if (path === 'configDirPath') {
+          return true;
+        }
+        if (path === 'defaultConfigPath.yml') {
+          return true;
+        }
         return false;
       });
     });
@@ -207,7 +215,7 @@ describe('makeConfigFile', () => {
   describe('when config file already exists', () => {
     beforeEach(() => {
       mockDefaultConfigExists.mockReturnValue(false);
-      mockFileExists.mockImplementation((path) => {
+      mockFileExists.mockImplementation((_path) => {
         return true;
       });
     });

@@ -108,12 +108,12 @@ const minValues = {
   attraction_horizontal: 0,
 };
 
-function pathExists(path, helpers) {
-  if (fs.existsSync(path)) {
-    return path;
+function pathExists(filePath, helpers) {
+  if (fs.existsSync(filePath)) {
+    return filePath;
   }
   return helpers.error('any.invalid', {
-    message: `File ${path} does not exists.`,
+    message: `File ${filePath} does not exists.`,
   });
 }
 
@@ -329,7 +329,7 @@ class Config {
 
     try {
       files = fs.readdirSync(Config.configDirPath, 'utf-8');
-    } catch (error) {
+    } catch (_error) {
       throw new ReadUserDataDirError('try to get config files', Config.configDirPath);
     }
     return files
@@ -346,12 +346,12 @@ class Config {
    */
 
   static getFrom(opts) {
-    opts = {
+    const mergedOpts = {
       ...Config.base,
       ...opts,
     };
 
-    const { error, value } = optionsSchema.validate(opts, { stripUnknown: true });
+    const { error, value } = optionsSchema.validate(mergedOpts, { stripUnknown: true });
     if (error) {
       const details = (error?.details || [])
         .flatMap((detail) => [detail.message, detail.context.message])
@@ -421,27 +421,29 @@ class Config {
   }
 
   canModelizeFromDirectory() {
-    return !!this.opts.files_origin;
+    return Boolean(this.opts.files_origin);
   }
 
   canModelizeFromCsvFiles() {
-    return !!this.opts.nodes_origin && !!this.opts.links_origin;
+    return Boolean(this.opts.nodes_origin) && Boolean(this.opts.links_origin);
   }
 
   canModelizeFromOnline() {
-    return !!this.opts.nodes_online && !!this.opts.links_online;
+    return Boolean(this.opts.nodes_online) && Boolean(this.opts.links_online);
   }
 
   canCiteproc() {
-    return !!this.opts.csl && !!this.opts.bibliography && !!this.opts.csl_locale;
+    return (
+      Boolean(this.opts.csl) && Boolean(this.opts.bibliography) && Boolean(this.opts.csl_locale)
+    );
   }
 
   canCssCustom() {
-    return !!this.opts.css_custom;
+    return Boolean(this.opts.css_custom);
   }
 
   canSaveRecords() {
-    return !!this.opts.files_origin;
+    return Boolean(this.opts.files_origin);
   }
 
   getTypesRecords() {

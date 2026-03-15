@@ -19,14 +19,16 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
   const config = Config.get(Config.configFilePath);
   console.log(config.getConfigConsolMessage());
 
+  let shouldSaveId;
   if (config.opts['generate_id'] === 'never') {
-    saveIdOnYmlFrontMatter = false;
+    shouldSaveId = false;
   } else {
-    saveIdOnYmlFrontMatter = config.opts['generate_id'] === 'always' || !!saveIdOnYmlFrontMatter;
+    shouldSaveId = config.opts['generate_id'] === 'always' || Boolean(saveIdOnYmlFrontMatter);
   }
 
   if (fs.existsSync(filePath) === false) {
-    return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Data file does not exist.');
+    console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Data file does not exist.');
+    return;
   }
 
   const files = await findMarkdownFilesRecursively(config.opts['files_origin']);
@@ -35,8 +37,8 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
   const timestamps = [todayMaxTimestamp];
 
   await Promise.all(
-    files.map(async (filePath) => {
-      const content = await fsPromises.readFile(filePath, 'utf8');
+    files.map(async (mdFile) => {
+      const content = await fsPromises.readFile(mdFile, 'utf8');
       const record = Record.recordFromFile(content, config);
       if (isTimestampIncrement(record.id)) {
         timestamps.push(record.id);
@@ -51,62 +53,62 @@ async function batch(filePath, saveIdOnYmlFrontMatter) {
   /** @type {Record[]} */
   let records = [];
 
-  fs.readFile(filePath, 'utf-8', async (err, data) => {
+  fs.readFile(filePath, 'utf-8', async (err, rawData) => {
     if (err) {
-      return console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Cannot read data file.');
+      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'Cannot read data file.');
+      return;
     }
+
+    let parsedData;
 
     switch (path.extname(filePath)) {
       case '.json':
         try {
-          data = JSON.parse(data);
-        } catch (error) {
-          return console.error(
-            ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-            'JSON data file is invalid.',
-          );
+          parsedData = JSON.parse(rawData);
+        } catch (_error) {
+          console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'JSON data file is invalid.');
+          return;
         }
         break;
 
       case '.csv':
         try {
-          data = parse(data, {
+          parsedData = parse(rawData, {
             columns: true,
             skip_empty_lines: true,
             cast: (value) => (value === '' ? undefined : value),
           });
-        } catch (error) {
-          return console.error(
-            ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-            'CSV data file is invalid.',
-          );
+        } catch (_error) {
+          console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'CSV data file is invalid.');
+          return;
         }
         break;
 
       default:
-        return console.error(
+        console.error(
           ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
           'Data file format unrecognized. Supported file extensions: .json, .csv.',
         );
+        return;
     }
 
-    if (!Array.isArray(data)) {
+    if (!Array.isArray(parsedData)) {
       throw new Error('Batch data should be array');
     }
 
-    records = data.map((e, i) => {
-      e = formatAsRecord(e, config);
-      return Record.recordWithIncrementedTimestamp(e, config, increment + i);
+    records = parsedData.map((entry, i) => {
+      const formatted = formatAsRecord(entry, config);
+      return Record.recordWithIncrementedTimestamp(formatted, config, increment + i);
     });
 
     await Promise.all(
       records.map(async (record) => {
-        const filePath = path.join(config.opts['files_origin'], record.getFileName());
-        if (fs.existsSync(filePath)) {
-          throw new Error(`File ${filePath} already exist`);
+        const recordPath = path.join(config.opts['files_origin'], record.getFileName());
+        if (fs.existsSync(recordPath)) {
+          throw new Error(`File ${recordPath} already exist`);
         }
 
-        await fsPromises.writeFile(filePath, record.getFileContent(saveIdOnYmlFrontMatter));
+        await fsPromises.writeFile(recordPath, record.getFileContent(shouldSaveId));
       }),
     );
 

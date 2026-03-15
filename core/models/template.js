@@ -18,7 +18,6 @@ import favicon from '../../static/icons/cosmafavicon.png';
 import logo from '../../static/icons/cosmalogo.svg';
 import frontendScript from 'front';
 import katekCss from 'katekCss';
-import GraphEngine from 'graphology';
 import { extent } from 'd3';
 import extractCitations from '../utils/citeExtractor.js';
 import cssPrint from '../frontend/print.css';
@@ -54,7 +53,7 @@ class Template {
    * ```
    */
 
-  constructor(records, graph, params = [], opts = {}) {
+  constructor(records, graph, params = [], _opts = {}) {
     this.params = new Set(params.filter((param) => Template.validParams.has(param)));
     this.config = Config.get(Config.configFilePath);
 
@@ -62,14 +61,12 @@ class Template {
       images_origin: imagesPath,
       css_custom: cssCustomPath,
       lang,
-      link_symbol: linkSymbol,
       views,
       title,
       author,
       description,
       keywords,
       focus_max: focusMax,
-      record_types: recordTypes,
       link_types: linkTypes,
       hide_id_from_record_header: hideIdFromRecordHeader,
     } = this.config.opts;
@@ -137,22 +134,30 @@ class Template {
       .sort((a, b) => a.localeCompare(b));
     const tagsListIncreasing = tagsDictAsArrays
       .sort(([, aNodes], [, bNodes]) => {
-        if (aNodes.length < bNodes.length) return -1;
-        if (aNodes.length > bNodes.length) return 1;
+        if (aNodes.length < bNodes.length) {
+          return -1;
+        }
+        if (aNodes.length > bNodes.length) {
+          return 1;
+        }
         return 0;
       })
       .map(([name]) => name);
 
     const recordsListAlphabetical = [...records.values()]
       .sort((a, b) => a.title.localeCompare(b.title))
-      .map(({ title }) => title);
+      .map(({ title: recordTitle }) => recordTitle);
     const recordsListChronological = [...records.values()]
       .sort((a, b) => {
-        if (a.begin < b.begin) return -1;
-        if (a.begin > b.begin) return 1;
+        if (a.begin < b.begin) {
+          return -1;
+        }
+        if (a.begin > b.begin) {
+          return 1;
+        }
         return 0;
       })
-      .map(({ title }) => title);
+      .map(({ title: recordTitle }) => recordTitle);
 
     if (this.params.has('citeproc') && this.config.canCiteproc()) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
@@ -187,7 +192,7 @@ class Template {
         }
       });
 
-      Object.entries(this.config.opts.record_types).forEach(([type, { fill }]) => {
+      Object.entries(this.config.opts.record_types).forEach(([_type, { fill }]) => {
         if (
           validExtnames.has(path.extname(fill)) &&
           fs.existsSync(path.join(this.config.opts.images_origin, fill))
@@ -205,18 +210,18 @@ class Template {
     templateEngine.addFilter('slugify', (input) => {
       return slugify(input);
     });
-    templateEngine.addFilter('convertLinks', (input, opts, idToHighlight) => {
-      input = convertWikilinks(input, records, opts, idToHighlight);
+    templateEngine.addFilter('convertLinks', (input, filterOpts, idToHighlight) => {
+      let result = convertWikilinks(input, records, filterOpts, idToHighlight);
 
       if (bibliography) {
-        const citeItems = quotesFromText(input);
+        const citeItems = quotesFromText(result);
 
         if (citeItems.every((item) => bibliography.existsOnLibrary(item))) {
-          input = convertQuotes(input, bibliography, records, idToHighlight);
+          result = convertQuotes(result, bibliography, records, idToHighlight);
         }
       }
 
-      return input;
+      return result;
     });
     templateEngine.addFilter('markdown', (input) => {
       return markdownParser(input, this.config);
@@ -237,7 +242,7 @@ class Template {
       hideIdFromRecordHeader,
       records: [...records.values()]
         .sort((a, b) => a.title.localeCompare(b.title))
-        .map(({ thumbnail, links, bibliographicLinks, content, ...rest }) => {
+        .map(({ thumbnail, links, content: recordContent, ...rest }) => {
           const backNodes = graph.inNeighbors(rest.id);
 
           const recordLinks = links
@@ -282,7 +287,7 @@ class Template {
           let citeNotes = [];
 
           if (bibliography) {
-            const citeItems = quotesFromText(content);
+            const citeItems = quotesFromText(recordContent);
 
             if (citeItems.every((item) => bibliography.existsOnLibrary(item))) {
               citeNotes = new Set(bibliography.getNotes(citeItems));
@@ -295,7 +300,7 @@ class Template {
             backlinks: recordBacklinks,
             links: recordLinks,
             bibliography: citeNotes,
-            content,
+            content: recordContent,
             thumbnail: thumbnailsMap.has(thumbnail) ? thumbnailsMap.get(thumbnail).path : undefined,
           };
         }),
@@ -307,7 +312,7 @@ class Template {
       },
 
       timeline: (() => {
-        let dates = [];
+        const dates = [];
         for (const { begin, end } of [...records.values()]) {
           dates.push(begin, end);
         }
@@ -315,7 +320,7 @@ class Template {
         return {
           begin,
           // Add margin of one second to display oldest node at end of timeline
-          end: end,
+          end,
         };
       })(),
 
@@ -354,9 +359,9 @@ class Template {
       }),
 
       sorting: {
-        records: [...records.values()].map(({ title }) => ({
-          alphabetical: recordsListAlphabetical.indexOf(title),
-          chronological: recordsListChronological.indexOf(title),
+        records: [...records.values()].map(({ title: recordTitle }) => ({
+          alphabetical: recordsListAlphabetical.indexOf(recordTitle),
+          chronological: recordsListChronological.indexOf(recordTitle),
         })),
         tags: tagsDictAsArrays.map(([name]) => ({
           alphabetical: tagsListAlphabetical.indexOf(name),
@@ -364,16 +369,12 @@ class Template {
         })),
       },
 
-      app: app, // app version, description, license…
+      app, // app version, description, license…
       script: frontendScript,
       favicon,
       logo,
     });
   }
-}
-
-function escapeQuotes(text) {
-  return text.replace(/'/g, '&apos;').replace(/"/g, '&quot;');
 }
 
 export default Template;
