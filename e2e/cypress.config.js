@@ -6,6 +6,7 @@ module.exports = defineConfig({
   screenshotsFolder: path.join(__dirname, '../temp'),
   videosFolder: path.join(__dirname, '../temp'),
   trashAssetsBeforeRuns: false,
+  allowCypressEnv: false,
   e2e: {
     specPattern: './**/*.cy.js',
     supportFile: path.join(__dirname, './e2e-support.js'),
