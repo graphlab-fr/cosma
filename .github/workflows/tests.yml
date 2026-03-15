@@ -26,6 +26,12 @@ jobs:
       - name: Install dependencies and build
         run: npm install
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test:unit -- --verbose
+
       - name: Install Cosma
         run: npm install . --global
 
@@ -34,12 +40,6 @@ jobs:
 
       - name: Build cosmoscopes
         run: sh ./e2e/exec-modelize.sh
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Run unit tests
-        run: npm run test:unit -- --verbose
 
       - name: Run E2E tests
         run: npm run test:e2e
