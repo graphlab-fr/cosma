@@ -5,7 +5,7 @@ import Config from '../core/models/config.js';
 import slugify from '../core/utils/slugify.js';
 
 /**
- * Make config file on execution dir or global dir
+ * Create a config file in the execution or global directory
  * @param {string} title Config name
  * @param {{ global: boolean }} options
  * @returns {void}
@@ -13,8 +13,8 @@ import slugify from '../core/utils/slugify.js';
 
 function makeConfigFile(title, { global: isGlobal }) {
   isGlobal = !!isGlobal;
-  console.log(Config.configDirPath);
 
+  // Early validations
   if (isGlobal && fs.existsSync(Config.configDirPath) === false) {
     return console.log(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
@@ -26,23 +26,41 @@ function makeConfigFile(title, { global: isGlobal }) {
   if (process.cwd() === Config.configDirPath && isGlobal === false) {
     return console.log(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-      'Can not create local config file in global config directory.',
-      'To create global config file, use "cosma config --global".',
+      'Cannot create a local config file in the global config directory.',
+      'To create a global config file, use "cosma config --global".',
     );
   }
 
-  const isGlobalDefaultConfig = isGlobal && !title;
+  const defaultConfigExists = Config.defaultConfigExists();
+  const hasTitle = !!title;
 
-  let opts, configFilePath;
+  let opts;
+  let configSource;
 
-  if (isGlobalDefaultConfig) {
+  if (isGlobal && !hasTitle) {
     opts = Config.base;
-    configFilePath = Config.defaultConfigPath;
-  } else {
+    configSource = 'base';
+  } else if (defaultConfigExists) {
     opts = Config.get(Config.defaultConfigPath).opts;
-    configFilePath = isGlobal
-      ? path.join(Config.configDirPath, slugify(title) + '.yml')
-      : Config.executionConfigPath;
+    configSource = 'default';
+  } else {
+    opts = Config.base;
+    configSource = 'base';
+  }
+
+  // Note: title is only relevant for global configs (cosma config --global <name>)
+  let configFilePath;
+  let configScope;
+
+  if (isGlobal && hasTitle) {
+    configFilePath = path.join(Config.configDirPath, slugify(title) + '.yml');
+    configScope = 'global';
+  } else if (isGlobal && !hasTitle) {
+    configFilePath = Config.defaultConfigPath;
+    configScope = 'global default';
+  } else {
+    configFilePath = Config.executionConfigPath;
+    configScope = 'local';
   }
 
   const { dir: configFileDir, base: configFileName } = path.parse(configFilePath);
@@ -66,13 +84,18 @@ function makeConfigFile(title, { global: isGlobal }) {
       fs.writeFileSync(configFilePath, config.getYaml());
 
       console.log(
-        ['\x1b[32m', 'Configuration file created', '\x1b[0m'].join(''),
+        ['\x1b[32m', 'Configuration created', '\x1b[0m'].join(''),
+        `: You are creating a ${['\x1b[1m', configScope, '\x1b[0m'].join('')} config`,
+        `with parameters from ${['\x1b[1m', configSource, '\x1b[0m'].join('')}`,
+      );
+      console.log(
+        ['\x1b[2m', 'Path', '\x1b[0m'].join(''),
         `: ${['\x1b[2m', configFileDir, '/', '\x1b[0m', configFileName].join('')}`,
       );
     } catch (error) {
       console.error(
         ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-        'could not save configuration file : ',
+        'Could not save configuration file: ',
         error?.message,
       );
     }

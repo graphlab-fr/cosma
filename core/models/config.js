@@ -306,6 +306,15 @@ class Config {
   static executionConfigPath = path.join(process.cwd(), 'config.yml');
 
   /**
+   * Check if the global default config file exists
+   * @returns {boolean}
+   */
+
+  static defaultConfigExists() {
+    return fs.existsSync(Config.defaultConfigPath);
+  }
+
+  /**
    * Get config files from user data directory
    * @returns {{name: string, filePath: string}[]}
    * @throws {UserDataDirNotExists}
