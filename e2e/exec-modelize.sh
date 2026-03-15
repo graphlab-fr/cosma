@@ -1,4 +1,5 @@
 # Run on local / CI
+set -e
 
 cd e2e/
 

@@ -223,12 +223,7 @@ async function modelize(options) {
   if (reportMap.length > 0) {
     const reportHtml = writeReportFile(reportMap, config);
 
-    if (!fs.existsSync(envPathLogDir)) {
-      await fsPromise.mkdir(envPathLogDir);
-    }
-    if (!fs.existsSync(reportDir)) {
-      await fsPromise.mkdir(reportDir);
-    }
+    await fsPromise.mkdir(reportDir, { recursive: true });
 
     const reportFilePath = path.join(reportDir, getTimestampTuple().join('') + '.html');
     await fsPromise.writeFile(reportFilePath, reportHtml, 'utf8');
