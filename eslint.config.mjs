@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import pluginNode from 'eslint-plugin-n';
 import pluginJest from 'eslint-plugin-jest';
+import pluginCypress from 'eslint-plugin-cypress';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -114,7 +115,7 @@ export default [
       sourceType: 'script',
       globals: {
         ...globals.browser,
-        // Globals Cypress/Mocha
+        // Globals Cypress
         cy: 'readonly',
         Cypress: 'readonly',
         describe: 'readonly',
@@ -128,8 +129,9 @@ export default [
         require: 'readonly',
       },
     },
+    plugins: { cypress: pluginCypress },
     rules: {
-      // ...existing code...
+      ...pluginCypress.configs.recommended.rules,
     },
   },
 ];
