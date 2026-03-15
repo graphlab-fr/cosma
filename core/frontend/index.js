@@ -1,6 +1,7 @@
 import './records.js';
 import './search.js';
 import './graph.js';
+import './view.js';
 import './bibliography.js';
 import './timeline.js';
 import './filter.js';

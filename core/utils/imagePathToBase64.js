@@ -14,7 +14,9 @@ export default function imagePathToBase64(imgPath) {
   const imgFileContent = fs.readFileSync(imgPath);
   const imgType = getImageType(imgFileContent);
 
-  if (!imgType) return '';
+  if (!imgType) {
+    return '';
+  }
 
   const imgBase64 = imgFileContent.toString('base64');
   return `data:image/${imgType};base64,${imgBase64}`;

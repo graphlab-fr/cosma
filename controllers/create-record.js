@@ -30,20 +30,20 @@ function createRecord(
     throw new Error('Need instance of Config to create record');
   }
 
-  typeString = typeString.trim();
-  tagsString = tagsString.trim();
+  const trimmedType = typeString.trim();
+  const trimmedTags = tagsString.trim();
 
   let types = [];
   let tags = [];
 
-  if (typeString !== '') {
-    types = typeString
+  if (trimmedType !== '') {
+    types = trimmedType
       .split(',')
       .map((s) => s.trim())
       .filter((s) => s !== '');
   }
-  if (tagsString !== '') {
-    tags = tagsString
+  if (trimmedTags !== '') {
+    tags = trimmedTags
       .split(',')
       .map((s) => s.trim())
       .filter((s) => s !== '');
@@ -75,7 +75,7 @@ function createRecord(
   const filePath = path.join(config.opts['files_origin'], fileName);
 
   const save = () =>
-    fs.writeFile(filePath, record.getFileContent(saveIdOnYmlFrontMatter), (err) => {
+    fs.writeFile(filePath, record.getFileContent(saveIdOnYmlFrontMatter), (_err) => {
       logRecordIsSaved();
     });
 
@@ -97,10 +97,10 @@ function createRecord(
   save();
 
   function logRecordIsSaved() {
-    const { dir: fileDir, base: fileName } = path.parse(filePath);
+    const { dir: fileDir, base: recordFileName } = path.parse(filePath);
     console.log(
       ['\x1b[32m', 'Record created', '\x1b[0m'].join(''),
-      `: ${['\x1b[2m', fileDir, '/', '\x1b[0m', fileName].join('')}`,
+      `: ${['\x1b[2m', fileDir, '/', '\x1b[0m', recordFileName].join('')}`,
     );
   }
 }

@@ -6,7 +6,9 @@ window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
   const form = document.getElementById('tags-form');
 
-  if (!form) return;
+  if (!form) {
+    return;
+  }
 
   /** @type {HTMLSelectElement} */
   const sortSelect = document.querySelector('.menu-tags .sorting-select');
@@ -15,7 +17,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const tags = Object.entries(tagList);
 
   const tagsSorting = sorting.tags;
-  let tagsState;
 
   /**
    * Default state
@@ -69,8 +70,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const nodeIdsToDisplay = new Set();
 
-    tagsState = tags
-      .filter(([name]) => !!formState[name])
+    tags
+      .filter(([name]) => Boolean(formState[name]))
       .forEach(([, nodes]) => {
         nodes.forEach((id) => nodeIdsToDisplay.add(id));
       });

@@ -8,7 +8,7 @@ const defaults = {
   suffix: undefined,
 };
 
-describe('extractCitations', function () {
+describe('extractCitations', () => {
   it('extracts a regular, full citation containing three IDs', () => {
     const input = 'Blah blah [@doe99; @smith2000; @smith2004].';
     const expected = [
@@ -118,7 +118,7 @@ describe('extractCitations', function () {
     expect(extractCitations(input)).toEqual(expected);
   });
 
-  it('extracts citation with composite page locator and suffix', () => {
+  it('extracts citation with page locator and prefix', () => {
     const input = 'Another one [see @engelbart1962 p. 34-35].';
     const expected = [
       {

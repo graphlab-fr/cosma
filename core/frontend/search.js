@@ -8,8 +8,8 @@ const fuse = new Fuse([], {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  let maxResultNb = 5,
-    resultList = [],
+  const maxResultNb = 5;
+  let resultList = [],
     selectedResult = 0;
 
   const input = document.getElementById('search');
@@ -33,14 +33,18 @@ window.addEventListener('DOMContentLoaded', () => {
       selectedResult = 0;
       resultList = [];
 
-      if (input.value === '') return;
+      if (input.value === '') {
+        return;
+      }
 
       resultList = fuse.search(input.value);
 
-      if (resultList.length === 0) return;
+      if (resultList.length === 0) {
+        return;
+      }
 
       for (let i = 0; i < Math.min(maxResultNb, resultList.length); i++) {
-        let {
+        const {
           item: {
             key,
             attributes: { label, types },

@@ -56,7 +56,7 @@ export class DowloadOnlineCsvFilesError extends CoreError {
 }
 
 export class FindUserDataDirError extends CoreError {
-  constructor(cause) {
+  constructor(_cause) {
     super(
       'Cosma user data directory does not exist. Use "cosma --create-user-data-dir"',
       undefined,

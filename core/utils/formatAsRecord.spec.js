@@ -20,17 +20,17 @@ describe('formatAsRecord', () => {
 
   it('should convert date strings to timestamps', () => {
     const result = formatAsRecord(data);
-    expect(result.begin).toEqual(-3198528000);
-    expect(result.end).toEqual(-790819200);
+    expect(result.begin).toBe(-3198528000);
+    expect(result.end).toBe(-790819200);
   });
 
   it('should use id as title if undefined', () => {
     const result = formatAsRecord({ ...data, id: undefined });
-    expect(result.id).toEqual('Paul Otlet');
+    expect(result.id).toBe('Paul Otlet');
   });
 
   it('should use title as id if undefined', () => {
     const result = formatAsRecord({ ...data, title: undefined });
-    expect(result.title).toEqual('otlet');
+    expect(result.title).toBe('otlet');
   });
 });

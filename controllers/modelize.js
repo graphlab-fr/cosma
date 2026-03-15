@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import fsPromise from 'node:fs/promises';
 import path from 'node:path';
-import Record from '../core/models/record.js';
 import Bibliography from '../core/models/bibliography.js';
 import Config from '../core/models/config.js';
 import Template from '../core/models/template.js';
@@ -23,18 +22,19 @@ const { log: envPathLogDir } = envPaths('cosma-cli', { suffix: '' });
 const reportDir = path.join(envPathLogDir, 'logs');
 
 async function modelize(options) {
-  let config = Config.get(Config.configFilePath);
+  const config = Config.get(Config.configFilePath);
 
-  options['citeproc'] = !!options['citeproc'] && config.canCiteproc();
-  options['css_custom'] = !!options['customCss'] && config.canCssCustom();
+  const processedOptions = { ...options };
+  processedOptions['citeproc'] = Boolean(processedOptions['citeproc']) && config.canCiteproc();
+  processedOptions['css_custom'] = Boolean(processedOptions['customCss']) && config.canCssCustom();
 
-  options = Object.entries(options)
+  const optionsList = Object.entries(processedOptions)
     .map(([name, value]) => {
       return { name, value };
     })
     .filter(({ value }) => value === true);
 
-  const optionsTemplate = options
+  const optionsTemplate = optionsList
     .filter(({ name }) => Template.validParams.has(name))
     .map(({ name }) => name);
 
@@ -43,26 +43,29 @@ async function modelize(options) {
   switch (config.opts.select_origin) {
     case 'directory':
       if (config.canModelizeFromDirectory() === false) {
-        return console.error(
+        console.error(
           ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
           'Cannot modelize from directory with this config.',
         );
+        return;
       }
       break;
     case 'csv':
       if (config.canModelizeFromCsvFiles() === false) {
-        return console.error(
+        console.error(
           ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
           'Cannot modelize from csv files with this config.',
         );
+        return;
       }
       break;
     case 'online':
       if (config.canModelizeFromOnline() === false) {
-        return console.error(
+        console.error(
           ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
           'Cannot modelize from online csv files with this config.',
         );
+        return;
       }
       break;
     default:
@@ -193,10 +196,8 @@ async function modelize(options) {
   fs.writeFile(path.join(config.opts.export_target, 'cosmoscope.html'), html, (err) => {
     // Cosmoscope file for export folder
     if (err) {
-      return console.error(
-        ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
-        'write Cosmoscope file: ' + err,
-      );
+      console.error(['\x1b[31m', 'Err.', '\x1b[0m'].join(''), 'write Cosmoscope file: ' + err);
+      return;
     }
     console.log(
       ['\x1b[34m', 'Cosmoscope generated', '\x1b[0m'].join(''),

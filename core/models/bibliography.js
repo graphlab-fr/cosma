@@ -36,7 +36,7 @@ class Bibliography {
 
   static getBibliographicLinksFromText(recordContent) {
     /** @type {BibliographicRecord[]} */
-    let quotes = [];
+    const quotes = [];
 
     extractParaphs(recordContent).forEach((paraph) => {
       extractCitations(paraph).forEach((result) => {
@@ -60,7 +60,7 @@ class Bibliography {
    */
 
   static getBibliographicLinksFromList(quotesId = []) {
-    return quotesId.map((quoteId, index) => {
+    return quotesId.map((quoteId, _index) => {
       return {
         contexts: [],
         target: quoteId,
@@ -193,7 +193,7 @@ class Bibliography {
    */
 
   existsOnLibrary(item) {
-    return !!this.library[item.id];
+    return Boolean(this.library[item.id]);
   }
 
   /**
@@ -223,7 +223,7 @@ class Bibliography {
     }
 
     this.citeproc.updateItems(ids);
-    let record = this.citeproc
+    const record = this.citeproc
       .makeBibliography()[1]
       .map((t) => Bibliography.getFormatedHtmlBibliographicRecord(t));
 

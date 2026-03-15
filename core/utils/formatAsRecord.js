@@ -14,26 +14,26 @@ const aliasTable = {
  */
 
 export default function formatAsRecord(props) {
-  props = normalizeWithAliases(aliasTable, props);
+  const result = normalizeWithAliases(aliasTable, props);
 
-  if (!props.id && props.title) {
-    props.id = props.title;
+  if (!result.id && result.title) {
+    result.id = result.title;
   }
-  if (!props.title && props.id) {
-    props.title = props.id;
+  if (!result.title && result.id) {
+    result.title = result.id;
   }
-  if (props.types && typeof props.types === 'string') {
-    props.types = [props.types];
+  if (result.types && typeof result.types === 'string') {
+    result.types = [result.types];
   }
-  if (props.tags && typeof props.tags === 'string') {
-    props.tags = [props.tags];
+  if (result.tags && typeof result.tags === 'string') {
+    result.tags = [result.tags];
   }
-  if (props.begin && typeof props.begin === 'string') {
-    props.begin = new Date(props.begin).getTime() / 1000;
+  if (result.begin && typeof result.begin === 'string') {
+    result.begin = new Date(result.begin).getTime() / 1000;
   }
-  if (props.end && typeof props.end === 'string') {
-    props.end = new Date(props.end).getTime() / 1000;
+  if (result.end && typeof result.end === 'string') {
+    result.end = new Date(result.end).getTime() / 1000;
   }
 
-  return props;
+  return result;
 }

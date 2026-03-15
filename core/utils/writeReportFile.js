@@ -33,8 +33,12 @@ export default function writeReportFile(items, config) {
   });
 
   const sortItems = (a, b) => {
-    if (a.locator.line === undefined) return 1;
-    if (b.locator.line === undefined) return -1;
+    if (a.locator.line === undefined) {
+      return 1;
+    }
+    if (b.locator.line === undefined) {
+      return -1;
+    }
     return a.locator.line - b.locator.line;
   };
 

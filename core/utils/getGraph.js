@@ -1,6 +1,5 @@
 import GraphEngine from 'graphology';
 import { scaleLinear } from 'd3';
-import Config from '../models/config';
 import slugify from './slugify';
 
 /**
@@ -46,7 +45,7 @@ function getNodeSize(degree, minDegree, maxDegree, config) {
   switch (config.opts['node_size_method']) {
     case 'unique':
       return config.opts['node_size'];
-    case 'degree':
+    case 'degree': {
       const compute = scaleLinear()
         .domain([minDegree, maxDegree])
         .range([config.opts['node_size_min'], config.opts['node_size_max']]);
@@ -54,6 +53,9 @@ function getNodeSize(degree, minDegree, maxDegree, config) {
       const size = compute(degree);
       // round at most two decimals
       return Math.round(size * 100) / 100;
+    }
+    default:
+      return config.opts['node_size'];
   }
 }
 
@@ -69,13 +71,13 @@ function getLinkShape(linkType, config) {
 
   switch (stroke) {
     case 'simple':
-      return { stroke: stroke, dashInterval: null };
+      return { stroke, dashInterval: null };
     case 'double':
-      return { stroke: stroke, dashInterval: null };
+      return { stroke, dashInterval: null };
     case 'dash':
-      return { stroke: stroke, dashInterval: '4, 5' };
+      return { stroke, dashInterval: '4, 5' };
     case 'dotted':
-      return { stroke: stroke, dashInterval: '1, 3' };
+      return { stroke, dashInterval: '1, 3' };
   }
   return { stroke: 'simple', dashInterval: null };
 }

@@ -42,32 +42,33 @@ async function makeRecord() {
       });
     }
 
-    metas.title = await new Promise((resolve, reject) => {
+    metas.title = await new Promise((resolve, _reject) => {
       rl.question(`${['\x1b[1m', 'title', '\x1b[0m'].join('')} (required): `, (answer) => {
         if (answer.trim() === '') {
-          reject('Title is required');
+          _reject('Title is required');
         }
 
         resolve(answer);
       });
     });
 
-    metas.type = await new Promise((resolve, reject) => {
+    metas.type = await new Promise((resolve, _reject) => {
       rl.question(
         `${['\x1b[1m', 'type', '\x1b[0m'].join(
           '',
         )} (optional; enter as comma-separated values; if left blank, will be set as "undefined"): `,
         (answer) => {
+          let resolved = answer;
           if (answer.trim() === '') {
-            answer = 'undefined';
+            resolved = 'undefined';
           }
 
-          resolve(answer);
+          resolve(resolved);
         },
       );
     });
 
-    metas.tags = await new Promise((resolve, reject) => {
+    metas.tags = await new Promise((resolve, _reject) => {
       rl.question(
         `${['\x1b[1m', 'tags', '\x1b[0m'].join('')} (optional; enter as comma-separated values): `,
         (answer) => {

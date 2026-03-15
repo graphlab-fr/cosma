@@ -8,13 +8,14 @@ import extractCitations from './citeExtractor';
  */
 
 function convertQuotes(markdown, bibliography, records, idToHighlight) {
-  extractCitations(markdown).forEach((quote, index) => {
+  let result = markdown;
+  extractCitations(result).forEach((quote, index) => {
     const originalText = quote.source; // => "[@engelbart1962; quoted by @matuschak2019]"
 
     const idsDictionnary = new Map();
 
-    if (!quote.citations.every(({ id }) => !!bibliography.library[id])) {
-      return markdown;
+    if (!quote.citations.every(({ id }) => Boolean(bibliography.library[id]))) {
+      return;
     }
 
     for (const item of quote.citations) {
@@ -48,17 +49,19 @@ function convertQuotes(markdown, bibliography, records, idToHighlight) {
       quoteText = quoteText.replace(key, () => {
         const record = records.get(recordId);
 
-        if (!record) return key;
+        if (!record) {
+          return key;
+        }
         return `<a href="#${record.id}" title="${record.title}" class="record-link ${record.id === idToHighlight ? 'highlight' : ''}">${key}</a>`;
       });
     });
 
     // "[@engelbart1962; quoted by @matuschak2019]" =>
     // (<a>Engelbart, 1962</a> ; <a>quoted by Matuschak, Nielsen, 2019</a>)
-    markdown = markdown.replace(originalText, quoteText);
+    result = result.replace(originalText, quoteText);
   });
 
-  return markdown;
+  return result;
 }
 
 export default convertQuotes;

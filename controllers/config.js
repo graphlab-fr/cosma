@@ -12,32 +12,34 @@ import slugify from '../core/utils/slugify.js';
  */
 
 function makeConfigFile(title, { global: isGlobal }) {
-  isGlobal = !!isGlobal;
+  const globalFlag = Boolean(isGlobal);
 
   // Early validations
-  if (isGlobal && fs.existsSync(Config.configDirPath) === false) {
-    return console.log(
+  if (globalFlag && fs.existsSync(Config.configDirPath) === false) {
+    console.log(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
       'To create global configuration files, first create a user data directory by running',
       ['\x1b[1m', 'cosma --create-user-data-dir', '\x1b[0m'].join(''),
       '.',
     );
+    return;
   }
-  if (process.cwd() === Config.configDirPath && isGlobal === false) {
-    return console.log(
+  if (process.cwd() === Config.configDirPath && globalFlag === false) {
+    console.log(
       ['\x1b[31m', 'Err.', '\x1b[0m'].join(''),
       'Cannot create a local config file in the global config directory.',
       'To create a global config file, use "cosma config --global".',
     );
+    return;
   }
 
   const defaultConfigExists = Config.defaultConfigExists();
-  const hasTitle = !!title;
+  const hasTitle = Boolean(title);
 
   let opts;
   let configSource;
 
-  if (isGlobal && !hasTitle) {
+  if (globalFlag && !hasTitle) {
     opts = Config.base;
     configSource = 'base';
   } else if (defaultConfigExists) {
@@ -52,10 +54,10 @@ function makeConfigFile(title, { global: isGlobal }) {
   let configFilePath;
   let configScope;
 
-  if (isGlobal && hasTitle) {
+  if (globalFlag && hasTitle) {
     configFilePath = path.join(Config.configDirPath, slugify(title) + '.yml');
     configScope = 'global';
-  } else if (isGlobal && !hasTitle) {
+  } else if (globalFlag && !hasTitle) {
     configFilePath = Config.defaultConfigPath;
     configScope = 'global default';
   } else {

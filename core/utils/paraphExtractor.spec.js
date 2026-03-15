@@ -63,10 +63,8 @@ This is a paragraph`,
   },
 ];
 
-describe('paraphExtractor', function () {
-  for (const test of tests) {
-    it(test.description, () => {
-      expect(extractParaphs(test.input)).toEqual(test.expected);
-    });
-  }
+describe('paraphExtractor', () => {
+  it.each(tests)('$description', ({ input, expected }) => {
+    expect(extractParaphs(input)).toEqual(expected);
+  });
 });

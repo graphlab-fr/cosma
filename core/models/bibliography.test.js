@@ -1,6 +1,4 @@
 import Bibliography from './bibliography';
-import fs from 'node:fs';
-import CSL from 'citeproc';
 
 jest.mock('node:fs');
 jest.mock('citeproc');

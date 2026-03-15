@@ -99,16 +99,16 @@ function parseSuffix(suffix, containsLocator) {
     return retValue;
   }
 
-  suffix = suffix.trim();
+  const trimmedSuffix = suffix.trim();
 
   for (const label in locatorLabels) {
     for (const natural of locatorLabels[label]) {
-      if (suffix.toLowerCase().startsWith(natural.toLowerCase())) {
+      if (trimmedSuffix.toLowerCase().startsWith(natural.toLowerCase())) {
         retValue.label = label;
         if (containsLocator) {
-          retValue.locator = suffix.substr(natural.length).trim();
+          retValue.locator = trimmedSuffix.substr(natural.length).trim();
         } else {
-          retValue.suffix = suffix.substr(natural.length).trim();
+          retValue.suffix = trimmedSuffix.substr(natural.length).trim();
           const match = locatorRE.exec(retValue.suffix);
           if (match !== null) {
             retValue.locator = match[0];
@@ -121,14 +121,14 @@ function parseSuffix(suffix, containsLocator) {
   }
 
   if (containsLocator) {
-    retValue.locator = suffix;
+    retValue.locator = trimmedSuffix;
   } else {
-    const match = locatorRE.exec(suffix);
+    const match = locatorRE.exec(trimmedSuffix);
     if (match !== null) {
       retValue.locator = match[0];
-      retValue.suffix = suffix.substr(match[0].length).trim();
+      retValue.suffix = trimmedSuffix.substr(match[0].length).trim();
     } else {
-      retValue.suffix = suffix;
+      retValue.suffix = trimmedSuffix;
     }
   }
 
@@ -145,7 +145,7 @@ export default function extractCitations(markdown) {
 
   for (const match of markdown.matchAll(citationRE)) {
     let from = match.index;
-    let to = from + match[0].length;
+    const to = from + match[0].length;
     /** @type {CiteToto[]} */
     const citations = [];
     let composite = false;
@@ -161,13 +161,13 @@ export default function extractCitations(markdown) {
 
     if (fullCitation !== undefined) {
       for (const citationPart of fullCitation.split(';')) {
-        const match = fullCitationRE.exec(citationPart.trim());
-        if (match === null) {
+        const citationMatch = fullCitationRE.exec(citationPart.trim());
+        if (citationMatch === null) {
           continue;
         }
 
         const thisCitation = {
-          id: match.groups.citekey.replace(/{(.+)}/, '$1'),
+          id: citationMatch.groups.citekey.replace(/{(.+)}/, '$1'),
           prefix: undefined,
           locator: undefined,
           label: 'page',
@@ -175,7 +175,7 @@ export default function extractCitations(markdown) {
           suffix: undefined,
         };
 
-        const rawPrefix = match.groups.prefix;
+        const rawPrefix = citationMatch.groups.prefix;
         if (rawPrefix !== undefined) {
           thisCitation['suppress-author'] = rawPrefix.trim().endsWith('-');
           if (thisCitation['suppress-author']) {
@@ -187,9 +187,9 @@ export default function extractCitations(markdown) {
           }
         }
 
-        const explicitLocator = match.groups.explicitLocator;
-        const explicitLocatorInSuffix = match.groups.explicitLocatorInSuffix;
-        const rawSuffix = match.groups.suffix;
+        const explicitLocator = citationMatch.groups.explicitLocator;
+        const explicitLocatorInSuffix = citationMatch.groups.explicitLocatorInSuffix;
+        const rawSuffix = citationMatch.groups.suffix;
 
         let suffixToParse;
         let containsLocator = true;

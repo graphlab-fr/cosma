@@ -11,7 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLDataListElement} */
   const ticks = document.getElementById('timeline-ticks');
 
-  if (!form) return;
+  if (!form) {
+    return;
+  }
 
   /** @type {HTMLOutputElement} */
   const output = form.querySelector('output');
@@ -43,20 +45,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const toDisplay = [];
 
-    for (let {
+    for (const {
       attributes: { begin: nodeBegin, end: nodeEnd },
       key,
     } of data.nodes) {
-      console.log({ nodeBegin, nodeEnd });
+      let effectiveEnd = nodeEnd;
+      let effectiveBegin = nodeBegin;
 
       if (nodeEnd === undefined) {
-        nodeEnd = end;
+        effectiveEnd = end;
       }
       if (nodeBegin === undefined) {
-        nodeBegin = begin;
+        effectiveBegin = begin;
       }
 
-      if (timestamp >= nodeBegin && timestamp <= nodeEnd) {
+      if (timestamp >= effectiveBegin && timestamp <= effectiveEnd) {
         toDisplay.push(key);
       }
     }

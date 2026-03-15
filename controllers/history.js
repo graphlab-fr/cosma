@@ -32,14 +32,16 @@ async function getHistorySavePath(projectName, projectScope) {
   }
   const pathFile = path.join(pathDir, `${getTimestampTuple().join('')}.html`);
 
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (fs.existsSync(pathDir) === false) {
       fs.mkdir(pathDir, { recursive: true }, (err) => {
         if (err) {
           reject(err.message);
+          return;
         }
         resolve(pathFile);
       });
+      return;
     }
     resolve(pathFile);
   });

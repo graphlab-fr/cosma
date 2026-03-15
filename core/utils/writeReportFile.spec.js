@@ -1,4 +1,3 @@
-import { warn } from 'yaml/util';
 import writeReportFile from './writeReportFile';
 import nunjucks from 'nunjucks';
 

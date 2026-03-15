@@ -86,15 +86,15 @@ export default class Record {
    */
 
   static recordFromFile(body, props, config) {
-    props = configContraints(props, config);
+    let p = configContraints(props, config);
 
-    props = {
-      ...props,
+    p = {
+      ...p,
       links: parseWikilinks(body, config),
       content: body,
     };
 
-    const { error, value: validProps } = schema.validate(props, { stripUnknown: true });
+    const { error, value: validProps } = schema.validate(p, { stripUnknown: true });
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
@@ -123,10 +123,10 @@ export default class Record {
    */
 
   static recordFromCsv(props, config) {
-    props = formatAsRecord(props, config);
-    props = configContraints(props, config);
+    let p = formatAsRecord(props, config);
+    p = configContraints(p, config);
 
-    const { error, value: validProps } = schema.validate(props, { stripUnknown: true });
+    const { error, value: validProps } = schema.validate(p, { stripUnknown: true });
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
@@ -172,17 +172,17 @@ export default class Record {
    */
 
   static recordWithTimestamp(props, config) {
-    props = {
+    const p = {
       ...props,
       id: getTimestampTuple().join(''),
     };
 
-    const { error } = schema.validate(props);
+    const { error } = schema.validate(p);
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(props, config);
+    return new Record(p, config);
   }
 
   /**
@@ -192,19 +192,19 @@ export default class Record {
    */
 
   static recordWithIncrementedTimestamp(props, config, increment) {
-    props = configContraints(props, config);
+    let p = configContraints(props, config);
 
-    props = {
-      ...props,
+    p = {
+      ...p,
       id: timestampIncrement(increment),
     };
 
-    const { error } = schema.validate(props, { stripUnknown: true });
+    const { error } = schema.validate(p, { stripUnknown: true });
     if (error) {
       throw new Error(`Record contains error: ${error.message}`);
     }
 
-    return new Record(props, config);
+    return new Record(p, config);
   }
 
   /**
@@ -306,15 +306,15 @@ function configContraints(props, config) {
     }
   }
 
-  props = {
+  const result = {
     ...props,
     metas,
   };
 
-  props.id = slugify(props.id);
+  result.id = slugify(result.id);
 
-  if (props.types) {
-    props.types = props.types.reduce((acc, curr) => {
+  if (result.types) {
+    result.types = result.types.reduce((acc, curr) => {
       if (!config.hasRecordType(curr)) {
         if (!acc.includes('undefined')) {
           acc.push('undefined');
@@ -326,5 +326,5 @@ function configContraints(props, config) {
     }, []);
   }
 
-  return props;
+  return result;
 }

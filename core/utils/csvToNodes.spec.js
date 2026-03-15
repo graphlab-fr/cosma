@@ -1,7 +1,6 @@
-import { PassThrough } from 'stream';
-import fs from 'fs';
-import { processNodes, processNodesOnline } from './csvToNodes';
-const { Readable } = require('stream');
+import { PassThrough } from 'node:stream';
+import fs from 'node:fs';
+import { processNodes } from './csvToNodes';
 
 jest.mock('fs');
 
