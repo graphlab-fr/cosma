@@ -2,6 +2,16 @@
 title: Changelog
 ---
 
+# v2.6.1
+
+## Bug fixes
+
+- The `defaults.yml` file is now optional again. This eliminates the issue new users encountered with v2.6.0, where you would install Cosma, run `cosma config` for the first time (as indicated in the tutorial) and encounter an error (issue [194](https://github.com/graphlab-fr/cosma/issues/194)).
+
+## Development
+
+- Cosma now provides a test and development Docker image to run the application in an isolated and reproducible Linux environment. See the `docker.md` file in the repository.
+
 # v2.6.0
 
 ## Additions
