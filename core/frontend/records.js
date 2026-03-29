@@ -38,6 +38,16 @@ window.addEventListener('DOMContentLoaded', () => {
       unlightNodes();
     }
   });
+  // if start_page set, and hash not set, set it on page load, make sure its done after the event listener is registered
+  if (graphProperties.start_page != "" && window.location.hash == "") {
+    window.location.hash = graphProperties.start_page;
+    const recordId = getRecordIdFromHash();
+    if (recordId) {
+      openRecord(recordId);
+      // comment this out to prevent the jarring translation when clicking on nodes
+      // zoomToNode(recordId);
+    }
+  }
 
   function openRecord(id) {
     const recordContent = document.getElementById(id);
