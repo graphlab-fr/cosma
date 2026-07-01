@@ -128,8 +128,13 @@ elts.links = svgSub
   });
 
 if (graphProperties.graph_arrows === true) {
-  elts.links.attr('marker-end', 'url(#arrow)');
+  if (graphProperties.graph_arrows_reversed === true) {
+    elts.links.attr('marker-start', 'url(#arrow-reversed)');
+  } else {
+    elts.links.attr('marker-end', 'url(#arrow)');
+  }
 }
+
 
 const strokeWidth = 2;
 
