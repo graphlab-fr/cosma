@@ -503,9 +503,8 @@ function highlightNodes(nodeIds) {
   nodeIds
     .filter((nodeId) => graph.hasNode(nodeId))
     .forEach((nodeId) => {
-      const { links, node } = getNodeNetwork(nodeId);
+      const { node } = getNodeNetwork(nodeId);
       node.node().classList.add('highlight');
-      links.nodes().forEach((elt) => elt.classList.add('highlight'));
     });
 
   highlightedNodes = highlightedNodes.concat(nodeIds);
@@ -520,14 +519,7 @@ function unlightNodes() {
     return;
   }
 
-  highlightedNodes
-    .filter((nodeId) => graph.hasNode(nodeId))
-    .forEach((nodeId) => {
-      const { links, node } = getNodeNetwork(nodeId);
-      node.node().classList.remove('highlight');
-      links.nodes().forEach((elt) => elt.classList.remove('highlight'));
-    });
-
+  elts.nodes.nodes().forEach((elt) => elt.classList.remove('highlight'));
   highlightedNodes = [];
 }
 
