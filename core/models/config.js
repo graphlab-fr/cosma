@@ -57,6 +57,7 @@ import Joi from 'joi';
  * @property {boolean} graph_highlight_on_hover
  * @property {number} graph_text_size
  * @property {boolean} graph_arrows
+ * @property {boolean} graph_arrows_reversed
  * @property {'unique'|'degree'} node_size_method
  * @property {number} node_size
  * @property {number} [node_size_max]
@@ -183,6 +184,7 @@ const optionsSchema = Joi.object({
   graph_highlight_on_hover: Joi.boolean(),
   graph_text_size: Joi.number(),
   graph_arrows: Joi.boolean(),
+  graph_arrows_reversed: Joi.boolean(),
   node_size_method: Joi.string().valid('unique', 'degree'),
   node_size: Joi.number().integer().min(0),
   node_size_max: Joi.number().integer().min(0).optional(),
@@ -254,6 +256,7 @@ class Config {
     graph_highlight_on_hover: true,
     graph_text_size: 10,
     graph_arrows: true,
+    graph_arrows_reversed: false,
     node_size_method: 'degree',
     node_size: 10,
     node_size_max: 20,

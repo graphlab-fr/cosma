@@ -397,6 +397,9 @@ config:
     graph_arrows:
       fr: La commande de fléchage des liens est invalide
       en: Invalid link arrow command
+    graph_arrows_reversed:
+      fr: La commande d'inversion des flèches est invalide
+      en: Invalid reverse arrow command
     devtools:
       fr: La commande d'activation des outils de développement est invalide
       en: Invalid devtools activation command

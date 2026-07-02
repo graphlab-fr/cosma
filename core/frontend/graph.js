@@ -85,12 +85,25 @@ hotkeys('space', (e) => {
 const elts = {};
 const imageFileValidExtnames = new Set(['jpg', 'jpeg', 'png']);
 
+// Precompute bidirectional edges
+const edgeSet = new Set(data.edges.map((e) => `${e.source.key}--${e.target.key}`));
+const bidirectionalEdges = new Set(
+  data.edges
+    .filter((e) => edgeSet.has(`${e.target.key}--${e.source.key}`))
+    .map((e) => e.key)
+);
+
 simulation.on('tick', () => {
   elts.links
-    .attr('x1', (d) => d.source.x)
-    .attr('y1', (d) => d.source.y)
-    .attr('x2', (d) => d.target.x)
-    .attr('y2', (d) => d.target.y);
+  .attr('d', (d) => {
+    const dx = d.target.x - d.source.x;
+    const dy = d.target.y - d.source.y;
+    const dr = Math.sqrt(dx * dx + dy * dy);
+    if (bidirectionalEdges.has(d.key)) {
+      return `M ${d.source.x},${d.source.y} A ${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+    }
+    return `M ${d.source.x},${d.source.y} L ${d.target.x},${d.target.y}`;
+  });
 
   elts.nodes.attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
 
@@ -105,10 +118,11 @@ simulation.on('tick', () => {
 /** @type {d3.Selection<SVGLineElement, Link, SVGElement, any>} */
 elts.links = svgSub
   .append('g')
-  .selectAll('line')
+  .selectAll('path')
   .data(data.edges)
   .enter()
-  .append('line')
+  .append('path')
+  .attr('fill', 'none')
   .attr('stroke', (d) => `var(--l_${d.attributes.type})`)
   .attr('title', (d) => d.attributes.title)
   .attr('data-link', (d) => d.key)
@@ -128,8 +142,13 @@ elts.links = svgSub
   });
 
 if (graphProperties.graph_arrows === true) {
-  elts.links.attr('marker-end', 'url(#arrow)');
+  if (graphProperties.graph_arrows_reversed === true) {
+    elts.links.attr('marker-start', 'url(#arrow-reversed)');
+  } else {
+    elts.links.attr('marker-end', 'url(#arrow)');
+  }
 }
+
 
 const strokeWidth = 2;
 
@@ -484,9 +503,8 @@ function highlightNodes(nodeIds) {
   nodeIds
     .filter((nodeId) => graph.hasNode(nodeId))
     .forEach((nodeId) => {
-      const { links, node } = getNodeNetwork(nodeId);
+      const { node } = getNodeNetwork(nodeId);
       node.node().classList.add('highlight');
-      links.nodes().forEach((elt) => elt.classList.add('highlight'));
     });
 
   highlightedNodes = highlightedNodes.concat(nodeIds);
@@ -501,14 +519,7 @@ function unlightNodes() {
     return;
   }
 
-  highlightedNodes
-    .filter((nodeId) => graph.hasNode(nodeId))
-    .forEach((nodeId) => {
-      const { links, node } = getNodeNetwork(nodeId);
-      node.node().classList.remove('highlight');
-      links.nodes().forEach((elt) => elt.classList.remove('highlight'));
-    });
-
+  elts.nodes.nodes().forEach((elt) => elt.classList.remove('highlight'));
   highlightedNodes = [];
 }
 

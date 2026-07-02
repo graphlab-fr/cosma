@@ -714,8 +714,8 @@ text {
 /* arrows */
 marker {
   /* set into config.yml file by 'undefined' link type */
-  stroke: var(--l_undefined);
-  fill: var(--l_undefined);
+  stroke: context-stroke;
+  fill: context-stroke;
 }
 
 /* ---
